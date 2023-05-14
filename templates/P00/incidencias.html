@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Incidencias de los Clientes Internos.</h1>
+                    <h1 class="m-0 text-dark">Incidencias.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -45,22 +45,27 @@
                                     Número
                                 </th>
                                 <th>
-                                    Fecha de Recibido
+                                    Número de consecutivo
+                                </th>
+                                <th>
+                                    Fecha y Hora de Recibido 
+                                </th>
+                                <th>
+                                    Asunto
+                                </th>
+                                <th>
+                                    Solicitante de incidencia
+                                </th>
+                                <th>
+                                    Resumen
                                 </th>
                                 <th>
                                     Estado
                                 </th>
-                                <th>
-                                    Proceso
-                                </th>
-
-                                <th>
-                                    Acciones
-                                </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for incidencia in incidencias %}
+                            {% comment %} {% for incidencia in incidencias %}
 
                                 <tr>
                                         <td>
@@ -79,19 +84,54 @@
 
 
 
-                                    <td>
+                                    <td>{% endcomment %}
                                     <span class="input-group-sm">
+                                        <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
+                                        class="form" title="Mes">
+                                        <Select>
+                                            <option selected="selected"> Enero </option>
+                                            <option>Febrero</option>
+                                            <option>Marzo </option>
+                                            <option>Abril </option>
+                                            <option>Mayo</option>
+                                            <option>Junio  </option>
+                                            <option>Julio</option>
+                                            <option>Agosto </option>
+                                            <option>Septiembre </option>
+                                            <option>Octubre</option>
+                                            <option> Noviembre</option>
+                                            <option>Diciemnbre
+                                    
+                                            </option>
+                                        <Select/><a/>
+
+
+                                       
+                                   <i class="fa fa-eye"></i>
+
+                                   <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
+                                        class="form" title="Ano">
+                                        <Select>
+                                            <option selected="selected"> 2022 </option>
+                                            <option>2023</option>
+                                         <Select/><a/>
+
+                                        
+                                       
+                                   <i class="fa fa-eye"></i>
+                                   </a>
                                     {% if perms.SISGDDO.view_incidencias %}
                                     <a href="{% url 'detalle_incidencia' incidencia.pk %}"
                                          class="btn btn-sm btn-primary" title="detalles">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
+                                    
 
                                     </span>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                           {% comment %} {% endfor %}{% endcomment %}
                             </tbody>
 
                         </table>

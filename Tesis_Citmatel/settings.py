@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 
 # Application definition
@@ -45,14 +46,7 @@ INSTALLED_APPS = [
     'notifications',
     'captcha',
     'tempus_dominus',
-    'nested_admin',
 
-    # NEW APPS ABEL
-    'apps.base',  # Aplicacion basica con todas las definiciones generales del proyecto, nomencladores etc
-    'apps.effectiveness',  # Eficacia
-    'apps.licenses',  # Licencias
-    'apps.complaints',  # Quejas
-    'apps.iproperty',  # Propiedad Industrial
     ]
 
 MIDDLEWARE = [
@@ -84,7 +78,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'ProyectoBaseApp.my_context_processor.notifications',
-                # 'ProyectoBaseApp.my_context_processor.user_app',
+                'ProyectoBaseApp.my_context_processor.user_app',
             ],
         },
     },
@@ -92,20 +86,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sisgddo',
-        'USER': 'masqueradmin',
-        'PASSWORD': 'masqueradmin',
+        'NAME': 'SISGEPO',
+        #'USER': 'pgadmin4@pgadmin.org',
+        'USER': 'postgres',
+        'PASSWORD': '12345678',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -189,7 +184,7 @@ STATICFILES_DIRS = [
 #Fotos de las reservas de cuadro
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 LOGIN_REDIRECT_URL = reverse_lazy('inicio')
 LOGOUT_REDIRECT_URL = reverse_lazy('ce_login')
@@ -209,8 +204,7 @@ if DEBUG:
     EMAIL_PORT = 1026
     DEFAULT_FROM_EMAIL = 'comercial@yourproject.cu'
 
-# import locale
-# locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
+import locale
+locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
 
 
-SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

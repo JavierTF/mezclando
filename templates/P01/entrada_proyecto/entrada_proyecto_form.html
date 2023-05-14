@@ -113,20 +113,20 @@ left: 24px !important;
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form id="formAddEntrada" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_entrada_proyecto' proy.consecutivo.id %}">
                         {% csrf_token %}
                         <div class="row">
                             <div class="form-group col-md-1">
                                 <label class="control-label"><label for="id_activo">Activo*:</label></label>
                                 <div>
-                                    <input type="checkbox" name="activo2" class=" form-control checkbox sm" id="id_activo" checked>
+                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" checked>
                                     <small class="text-red"></small>
                                 </div>
                                 
                             </div>  
 
                             <div class="form-group col-md-7">
-                                <label class="control-label"><label for="id_costo">Proyecto*:</label></label>
+                                <label class="control-label"><label for="id_proy">Proyecto*:</label></label>
                                 <div>
                                     <label class="control-label">{{ proy }}</label>
                                 </div>
@@ -281,7 +281,7 @@ left: 24px !important;
                                                                     <form action="{% url 'act_desactentrada_proyecto' lt.id %}" method="POST" class="form-activate">
                                                                         {% csrf_token %}
                                                                         <span style="display: none">{{ lt.activo }}</span>
-                                                                        <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                                                                        <input type="checkbox" name="activo2" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
                                                                     </form>
                                                                 <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                                                 </div>
@@ -381,6 +381,27 @@ left: 24px !important;
 
     $('#id_dictamen').on('change', function(){
         validar_archivos($('#id_dictamen'), ['pdf', 'doc', 'docx']);            
+    });
+
+    $('#formAddEntrada').on('submit', function (e) {
+        e.preventDefault();
+
+        var href = $(this).attr('formaction');
+        var data = $(this).serializeArray();
+
+        if ($('.is-invalid').length > 0){
+            return false;
+        }
+        else{
+            $.post( href, data).always(function(response){
+                if (response.result == 'error'){
+                    alert(response.message);
+                    $('button[type="submit"]').prop("disabled", "true");
+                } else {
+                    window.location.reload();
+                }
+            })
+        }
     });
 
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO

@@ -40,7 +40,7 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form id="formAddConsecutivo" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_consecutivo' %}">
+                    <form id="formAddConsecutivo" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_consecutivo' %}" formsuccess="{% url 'listar_consecutivo' %}">
                         {% csrf_token %}
                         <div class="row">
                             <div class="form-group col-md-1">
@@ -213,9 +213,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre*:</label></label>
+                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre:</label></label>
                                         <div>
-                                            <input type="date" name="fecha_cierre" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_cierre">
+                                            <input type="date" name="fecha_cierre" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_cierre">
                                             <small class="text-red"></small>
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_informe_apertura">Informe apertura:</label></label>
                                 <div>
-                                    <input type="file" name="informe_apertura" id="id_informe_apertura" value="">
+                                    <input type="file" name="informe_apertura" id="id_informe_apertura" value="" accept=".pdf,.doc,.docx">
                                     <small class="text-red"></small>
                                 </div>
                             </div>   
@@ -249,7 +249,7 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_informe_cierre">Informe cierre:</label></label>
                                 <div>
-                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="">
+                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="" accept=".pdf,.doc,.docx">
                                     <small class="text-red"></small>
                                 </div>
                             </div>                   
@@ -404,6 +404,9 @@
         });
 
         $('#id_formato').on('change', function(event){
+            if ($('#id_codigo').val().substr(0, 2) == 'DES'){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+            }            
             validar_comparar_valores_contables($(this), 6, 'menor_igual');
         });
 
@@ -419,7 +422,9 @@
 
         $('#id_fecha_inicio').on('change', function(e){
             validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual');
-            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor');
+            if ($('fecha_cierre').val() !== undefined){
+                validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor');
+            }            
         });
 
         $('#id_fecha_interrupcion').on('change', function(e){
@@ -438,45 +443,100 @@
             validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual');
         });
 
-        $('#id_informe_apertura').on('change', function(){
+        {% comment %} $('#id_informe_apertura').on('change', function(){
             validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);            
         });
 
         $('#id_informe_cierre').on('change', function(){
             validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
-        });
+        }); {% endcomment %}
 
         $('#id_no').prop("disabled", true);
 
-        /*$('#formAddConsecutivo').on('submit', function (e) {
-            e.preventDefault();
-            let f1 = validar_existencia_ambos(document.getElementById('id_aprobacion_consejo'), document.getElementById('id_fecha_aprobacion'));
-            let f2 = validar_existencia_ambos(document.getElementById('id_causa_interrupcion'), document.getElementById('id_fecha_interrupcion'));
+        $('#formAddConsecutivo').on('submit', function (e) {
+            e.preventDefault();    
+            
+            if ($('#id_codigo').val().substr(0, 3) == 'SER'){
+                if ($('#id_formato').val().length > 0){
+                    alert('Los servicios no hacen aplicaciones ni llevan formatos');
+                    $('#id_formato').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }
 
-            var href = $(this).attr('formaction');
-            var data = $(this).serializeArray();
+            if ($('#id_informe_cierre').val().length > 0){
+                if ($('#id_fecha_cierre').val().length = 0){
+                    alert('El campo informe de cierre está cargado. Llene la fecha de cierre');
+                    $('#id_fecha_cierre').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }
+            
+            let f1 = validar_existencia_ambos(document.getElementById('id_aprobacion_consejo'), document.getElementById('id_fecha_aprobacion'));
+            let f2 = validar_existencia_ambos(document.getElementById('id_causa_interrupcion'), document.getElementById('id_fecha_interrupcion'));            
 
             if (typeof f1 !== 'undefined'){
                 if (!f1){
+                    console.log('f1 false');
                     return false;
                 }
             }
 
             if (typeof f2 !== 'undefined'){
                 if (!f2){
+                    console.log('f2 false');
                     return false;
                 }
             }
+
+            var href = $(this).attr('formaction');
+            var listarConsecutivo = $(this).attr('formsuccess');
+            var data = $(this).serializeArray();
 
             if ($('.is-invalid').length > 0){
                 return false;
             }
             else{
-                console.log("valido");
-                $.post( href, data);
-                return true;
+                $('button[type="submit"]').prop("disabled", true);
+
+                var form = document.getElementById("formAddConsecutivo");
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+                form_data.append("informe_apertura", document.getElementById('id_informe_apertura').files[0]);
+                form_data.append("informe_cierre", document.getElementById('id_informe_cierre').files[0]);
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+
+                $.ajax({
+                    url: $(this).attr("formaction"),
+                    type: $(this).attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data, status)
+                    {
+                        window.location.replace(listarConsecutivo);
+                    },
+                    error: function (xhr, desc, err)
+                    {
+                        if (response.result == 'error'){
+                            alert(response.message);
+                        }      
+                        $('button[type="submit"]').prop("disabled", false);      
+                    },
+                    always: function (response){
+                        if (response.result == 'error'){
+                            alert(response.message);
+                        }
+                        if (response.result == 'success'){
+                            window.location.replace(listarConsecutivo);
+                        }
+                        $('button[type="submit"]').prop("disabled", false);
+                    }
+                });
             }
-        });*/
+        });
 
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
 
