@@ -45,7 +45,14 @@ INSTALLED_APPS = [
     'notifications',
     'captcha',
     'tempus_dominus',
+    'nested_admin',
 
+    # NEW APPS ABEL
+    'apps.base',  # Aplicacion basica con todas las definiciones generales del proyecto, nomencladores etc
+    'apps.effectiveness',  # Eficacia
+    'apps.licenses',  # Licencias
+    'apps.complaints',  # Quejas
+    'apps.iproperty',  # Propiedad Industrial
     ]
 
 MIDDLEWARE = [
@@ -77,7 +84,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'ProyectoBaseApp.my_context_processor.notifications',
-                'ProyectoBaseApp.my_context_processor.user_app',
+                # 'ProyectoBaseApp.my_context_processor.user_app',
             ],
         },
     },
@@ -92,13 +99,23 @@ WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SISGDDO',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': 'sisgddo',
+        'USER': 'masqueradmin',
+        'PASSWORD': 'masqueradmin',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'sisgepo',
+#         'USER': 'root',
+#         'PASSWORD': 'mariadb',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -192,5 +209,8 @@ if DEBUG:
     EMAIL_PORT = 1026
     DEFAULT_FROM_EMAIL = 'comercial@yourproject.cu'
 
-import locale
-locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
+# import locale
+# locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
+
+
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

@@ -1,5 +1,5 @@
 {% extends 'index.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block miestilo %}
     <link rel="stylesheet" href="{% static 'assets/cropme/css/cropper.min.css' %}">
 {% endblock %}
@@ -84,6 +84,7 @@
                     return true;
                 }
         });
+        
         $('#formUpload').submit(function (event) {
             if ($('.is-invalid').length>0){
                 event.preventDefault();

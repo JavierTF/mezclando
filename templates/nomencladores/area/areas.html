@@ -148,7 +148,7 @@ left: 24px !important;
                                             <form action="{% url 'act_desactarea' area.id %}" method="POST" class="form-activate">
                                                 {% csrf_token %}
                                                 <span style="display: none">{{ area.activo }}</span>
-                                                <input type="checkbox" name="activate" {% if area.activo %} checked {% endif %} class="checkbox-activate"/>
+                                                <input type="checkbox" name="activo" {% if area.activo %} checked {% endif %} class="checkbox-activate"/>
                                             </form>
                                             <div class="switch {% if area.activo %} switchOn {% endif %}">
                                             </div>

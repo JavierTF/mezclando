@@ -1,0 +1,389 @@
+{% extends 'P01/proyecto/proyecto.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Adicionar Entrada de Proyecto.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyecto</a></li>
+                            <li class="breadcrumb-item active">Adicionar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.btn-primary-transparent{
+    color: #007bff;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/* Codigo para el boton On/Off */
+.checkbox-activate
+{
+    display:none;
+}
+
+.switch {
+    width: 42px;
+    height: 22px;
+    background: #E5E5E5;
+    z-index: 0;
+    margin-right: 5px;
+    padding: 0;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 16px; /*IE 11*/
+    -moz-border-radius: 16px; /*Mozilla*/
+    -webkit-border-radius: 16px;/*Chrome and Safari*/
+    }
+
+.switch:before
+{
+    width: 42px;
+    height: 22px;
+background: #E5E5E5;
+z-index: 0;
+margin: 0;
+padding: 0;
+appearance: none;
+border: none;
+cursor: pointer;
+position: relative;
+border-radius:16px; /*IE 11*/
+-moz-border-radius:16px; /*Mozilla*/
+-webkit-border-radius:16px; /*Chrome and Safari*/
+}
+
+.switch:after
+{
+content: ' ';
+height: 19px;
+width: 19px;
+border-radius: 28px;
+z-index: 2;
+background: #FFFFFF;
+position: absolute;
+-webkit-transition-duration: 300ms;
+transition-duration: 300ms;
+top: 1px;
+left: 1px;
+-webkit-box-shadow: 0 2px 5px #999999;
+box-shadow: 0 2px 5px #999999;
+}
+.switchOn , .switchOn:before
+{
+background: #007bff !important;
+}
+.switchOn:after
+{
+left: 24px !important;
+}
+</style>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                                <div>
+                                    <input type="checkbox" name="activo2" class=" form-control checkbox sm" id="id_activo" checked>
+                                    <small class="text-red"></small>
+                                </div>
+                                
+                            </div>  
+
+                            <div class="form-group col-md-7">
+                                <label class="control-label"><label for="id_costo">Proyecto*:</label></label>
+                                <div>
+                                    <label class="control-label">{{ proy }}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha_entrada">Fecha de entrada*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_entrada" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_entrada">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha_salida">Fecha de salida*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_salida" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_salida">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_entregado_por">Entregado por*:</label></label>
+                                <div>
+                                    <select name="entregado_por" class=" form-control texto select2" autocomplete="on" required id="id_entregado_por">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}">
+                                                {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>                  
+                       
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_formato">Formato*:</label></label>
+                                <div>
+                                    <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple required>
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tformatos %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                              
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_estado">Estado*:</label></label>
+                                <div>
+                                    <select name="estado" class=" form-control texto select2" autocomplete="on" id="id_estado" required>
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in test %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %} 
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>   
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_dictamen">Dictamen:</label></label>
+                                <div>
+                                    <input type="file" name="dictamen" id="id_dictamen" value="">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>       
+                        <div class="row">  
+                            {% block content2 %}
+                            <section class="content">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            {% comment %} <div class="card-header">
+                                                <h3 class="card-title">Listado de Entrada de Proyecto </h3>
+                                                {% if perms.SISGDDO.add_entrada_proyecto %}
+                                                <a href="{% url 'adicionar_entrada_proyecto' %}" class="btn btn-primary fa-pull-right">
+                                                    <span class="fa fa-plus"> Adicionar </span>
+                                                </a>
+                                                {% endif %}
+                                            </div> {% endcomment %}
+                                            <!-- /.card-header -->
+
+                                            <div class="card-body">
+                                                <table id="example1" class="table table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Número
+                                                        </th>
+                                                        <th>
+                                                            Fecha de entrada
+                                                        </th>
+                                                        <th>
+                                                            Fecha de salida
+                                                        </th>
+                                                        <th>
+                                                            Entregado por
+                                                        </th>
+                                                        <th>
+                                                            Formato
+                                                        </th>
+                                                        <th>
+                                                            Estado
+                                                        </th>
+                                                        <th>
+                                                            DT
+                                                        </th>
+                                                        <th>
+                                                            Activo
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% comment %} {% c = 0 %} {% endcomment %}
+                                                    {% for lt in lista %}
+                                                        <tr id="{{ lt.id }}">
+                                                            <td>
+                                                                {{ forloop.counter }}
+                                                            </td>
+                                                            <td>
+                                                                {{ lt.fecha_entrada }}
+                                                            </td>
+                                                            <td>
+                                                                {{ lt.fecha_salida }}
+                                                            </td>
+                                                            <td>
+                                                                {{ lt.entregado_por }}
+                                                            </td>
+                                                            <td>
+                                                                {% for formato in lt.formato.all %}
+                                                                    {{ formato }} {% if not forloop.last %} - {% endif %}
+                                                                {% endfor %}
+                                                            </td> 
+                                                            <td>
+                                                                {{ lt.estado }}
+                                                            </td>  
+                                                            <td>
+                                                                {% if lt.dt %}
+                                                                    {{ lt.dt }}
+                                                                {% else %}
+                                                                    -----
+                                                                {% endif %}
+                                                            </td>  
+                                                            <td>
+                                                                <span class="input-group">
+                                                                {% if perms.SISGDDO.change_entrada_proyecto %}
+                                                                <label>
+                                                                    <form action="{% url 'act_desactentrada_proyecto' lt.id %}" method="POST" class="form-activate">
+                                                                        {% csrf_token %}
+                                                                        <span style="display: none">{{ lt.activo }}</span>
+                                                                        <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                                                                    </form>
+                                                                <div class="switch {% if lt.activo %} switchOn {% endif %}">
+                                                                </div>
+                                                                </label>
+                                                                {% endif %}
+                                                                {% if perms.SISGDDO.change_entrada_proyecto %}
+                                                                <a href="{% url 'modificar_entrada_proyecto' lt.id %}"
+                                                                    class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                                                <i class="fa fa-edit"></i>
+                                                                </a>
+                                                                {% endif %}
+                                                                {% if perms.SISGDDO.delete_entrada_proyecto %}
+                                                                    <a href="{% url 'eliminar_entrada_proyecto' lt.pk %}"
+                                                                        class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                                                    <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                {% endif %} 
+                                                            </span>
+                                                            </td>
+                                                        </tr>
+                                                        {% comment %} {% c = c + 1 %} {% endcomment %}
+                                                    {% endfor %}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.card -->
+
+                                        <!-- /.card -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </section>
+
+                            {% endblock %} 
+                        </div>    
+                    {% block error %}
+                    {% endblock %}
+                    {% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+
+//VALIDACION CAMPOS VACIOS
+    $('#id_proyecto').prop("disabled", true);
+    
+    var d2 = new Date(Date.now());
+    d2 = d2.toISOString();
+    var d3 = d2.substr(0, 10);
+
+    $('#id_fecha_entrada').val(d3);
+
+    $('#id_fecha_entrada').prop("disabled", true);    
+
+    $('#id_entregado_por').on('change', function(e){
+        validate_select($('#id_entregado_por'), e);
+    });
+
+    $('#id_estado').on('change', function(e){
+        validate_select($('#id_estado'), e);
+    });
+
+    $('#id_formato').on('change', function(event){
+        validar_comparar_valores_contables($(this), 0, 'mayor');
+        validar_comparar_valores_contables($(this), 6, 'menor_igual');
+    });
+
+    $('#id_fecha_entrada').on('change', function(e){
+        validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual');
+        validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_salida'), 'menor');
+    });
+
+    $('#id_fecha_salida').on('change', function(e){
+        validar_comparar_fechas(document.getElementById('id_fecha_salida'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+    });
+
+    $('#id_dictamen').on('change', function(){
+        validar_archivos($('#id_dictamen'), ['pdf', 'doc', 'docx']);            
+    });
+
+//VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
+
+</script>
+{% endblock %}

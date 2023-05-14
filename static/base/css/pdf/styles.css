@@ -1,0 +1,102 @@
+@page {
+    margin-top: .5cm;
+    margin-left: .5cm;
+    margin-right: .5cm;
+    margin-bottom: 2cm;
+    @top-center {
+        content: element(header);
+        width: 100%;
+    }
+    @bottom-center {
+        content: element(footer);
+        width: 100%;
+    }
+    @bottom-right {
+        vertical-align: middle;
+        line-height: .6;
+        white-space: pre;
+        overflow-x: auto;
+        width: 35% !important;
+    }
+    @bottom-right-corner {
+        content: counter(page);
+    }
+    size: landscape;
+}
+header {
+  /* position: running(header); */
+  position: relative;
+  /*border: 0.1cm solid black;*/
+  width: 100%;
+}
+footer {
+  position: relative;
+  /*border: 0.1cm solid blue;*/
+  height: 1cm;
+  bottom: -1cm;
+  width: 100%;
+}
+.header-recipe {
+    padding: 0.2rem 0.2rem 0.2rem 2rem;
+    width: 100%;
+    display: flex;
+}
+.kt-portlet__body {
+  position: relative;
+  /*border: 0.1cm solid red;*/
+  box-decoration-break: clone;
+}
+.detail-recipe {
+    border-left: 2px solid black;
+    padding-left: .8rem;
+    height: 5.8rem;
+}
+.detail-recipe p {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    margin-bottom: 0.1rem;
+}
+.logo-header-recipe {
+    height: 18.5rem;
+    margin-left: 1rem;
+    margin-right: 15rem;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.logo1-header-recipe {
+    height: 18.5rem;
+    margin-left: 15rem;
+    margin-right: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.content-recipe {
+    /*margin-top: 2rem;*/
+    min-height: 10rem;
+    /*max-height: 17rem;*/
+}
+.content-recipe h3 {
+    margin-bottom: 3rem;
+}
+.footer-recipe {
+    font-size: 0.8rem;
+}
+.contact-footer-recipe {
+    min-width: 100% !important;
+    vertical-align: middle;
+    margin: auto;
+    white-space: nowrap;
+}
+.contact-footer-recipe p {
+    margin-bottom: 0;
+    text-align: center;
+    line-height: 1rem;
+}
+.text-center {
+    text-align: center !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.text-bold { font-weight: 700 !important; }
+

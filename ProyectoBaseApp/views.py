@@ -59,18 +59,20 @@ def loguear(request):
         if access is not None:
             if access.is_active:
                 login(request, access)
-                userApp = models.UserApp.objects.get(pk=request.user.pk)
                 register_logs(request, User, "", "", 4)
                 messages.success(request, "Usted se ha autenticado con éxito")
                 if 'redireccion_url' in request.POST:
-                    redireccion_url= request.POST['redireccion_url']
+                    redireccion_url = request.POST['redireccion_url']
                 else:
-                    redireccion_url= '/'
+                    redireccion_url = '/'
                 response = HttpResponseRedirect(redireccion_url)
                 response.set_cookie("user", request.user.username)
 
-                if userApp.image:
-                    response.set_cookie("user_photo", userApp.image)
+                userApp = models.UserApp.objects.filter(pk=request.user.pk)
+                if userApp:
+                    userApp.first()
+                    if userApp.image:
+                        response.set_cookie("user_photo", userApp.image)
                 else:
                     response.set_cookie("user_photo", "static/users/userDefault4.png")
                 return response

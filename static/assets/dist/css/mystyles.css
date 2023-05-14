@@ -44,6 +44,10 @@ img.captcha{
     -webkit-border-radius: 16px;/*Chrome and Safari*/
     }
 
+.no-padding-left{
+    padding-left: 0 !important;
+}
+
 .switch:before
 {
 width: 62px;

@@ -78,7 +78,7 @@
     <script type="application/javascript">
 
 //VALIDACION CAMPOS VACIOS
-$('#id_nombre').bind('focusout',function(){
+{% comment %} $('#id_nombre').bind('focusout',function(){
     validate_campos_vacios($(this));
 });
    //VALIDACION SOLO LETRAS INCLUYENDO Ñ Y ñ
@@ -86,6 +86,7 @@ $('#id_nombre').keypress(function( event )
 {
     //CAMPOS VACIOS
     return validate_only_text($(this), event);
-});
+}); {% endcomment %}
+
 </script>
 {% endblock %}

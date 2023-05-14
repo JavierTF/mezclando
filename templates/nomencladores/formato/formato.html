@@ -150,7 +150,7 @@ left: 24px !important;
                                         <form action="{% url 'act_desactformato' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
                                             <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activate" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
                                         </form>
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>

@@ -1,0 +1,86 @@
+{% load static i18n %}
+<div class="card-body">
+    <table id="example1" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+<!--            <th>-->
+<!--                Número-->
+<!--            </th>-->
+            <th>
+                Proceso
+            </th>
+            <th>
+                Responsable
+            </th>
+            <th>
+                Semestre I
+            </th>
+            <th>
+                Semestre II
+            </th>
+            <th>
+                Evaluación
+            </th>
+            <th>
+                Eficaz
+            </th>
+            <th>
+                Año
+            </th>
+            <th>
+                Opciones
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for model in models %}
+
+            <tr id="{{ model.id }}">
+<!--                <td style="width: 2%">-->
+<!--                    {{ forloop.counter }}-->
+<!--                </td>-->
+                <td>
+                    {{ model.process }}
+                </td>
+                <td>
+                    {{ model.get_evaluator }}
+                </td>
+                <td>
+                    {% for semester in model.semesters.all|filter:"semester:1" %}
+                        {{ semester.total_evaluation|floatformat:2|default_if_none:"-" }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for semester in model.semesters.all|filter:"semester:2" %}
+                        {{ semester.total_evaluation|floatformat:2|default_if_none:"-" }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ model.total_evaluation|floatformat:1 }}
+                </td>
+                <td>
+                    {{ model.is_effective|yesno|upper }}
+                </td>
+                <td>
+                    {{ model.year }}
+                </td>
+                <td>
+                    <span class="input-group">
+                    <a href="{% url 'effectiveness:details_effectiveness' model.id %}"
+                        class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Detalles">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                    {% if perms.effectiveness.delete_effectiveness %}
+                        <a href="#" model-url="{% url 'effectiveness:delete_effectiveness' model.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_effectiveness" title="eliminar">
+                        <i class="fa fa-trash"></i>
+                        </a>
+                    {% endif %}
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>

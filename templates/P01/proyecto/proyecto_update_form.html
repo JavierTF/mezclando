@@ -1,0 +1,502 @@
+{% extends 'P01/proyecto/proyecto.html' %}
+{% load static %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar Proyecto</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyecto</a></li>
+                            <li class="breadcrumb-item active">Modificar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Rol de trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form id="formEditProyecto" class="form-horizontal" method="post" enctype="multipart/form-data" data-post-url="{% url 'modificar_proyecto' form.id %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                                <div>
+                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" 
+                                    {% if form.activo %}
+                                    checked
+                                    {% endif %}
+                                    >
+                                    <small class="text-red"></small>
+                                </div>
+                                
+                            </div>  
+                            <div class="form-group col-md-3">
+                                <label class=" control-label"><label for="id_no">Número*:</label></label>
+                                <div>
+                                    <input type="number" name="no" class=" form-control" min="1" max="100000" value={{ form.no }} maxlength="10" required id="id_no">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_especialista_calidad">Especialista de calidad*:</label></label>
+                                    <div>
+                                        <select name="especialista_calidad" class=" form-control texto select2" autocomplete="on" required id="id_especialista_calidad">
+                                            <option value="">Escriba y seleccione...</option>                                        
+                                            {% for option in ttrab %}
+                                                <option value="{{ option.id }}"
+                                                    {% if option.id == calidad %} selected {% endif %}>
+                                                    {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                </option>
+                                            {% endfor %}    
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_disennador">Diseñador*:</label></label>
+                                        <div>
+                                            <select name="disennador" class="form-control texto select2" autocomplete="on" required id="id_disennador">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in ttrab %}
+                                                    <option value="{{ option.id }}"
+                                                        {% if option.id == disennador %} selected {% endif %}>
+                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                    </option>
+                                                {% endfor %} 
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                            </div>                                                    
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_tipo_codigo">Tipo de código*:</label></label>
+                                <div>
+                                    <select name="tipo_codigo" class=" form-control texto select2" autocomplete="on" required id="id_tipo_codigo">
+                                        {% for option in tcod %}
+                                            <option value="{{ option.id }}"
+                                                {% if option.id == form.tipo_codigo.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        
+                            <div class="form-group  col-md-4">
+                                <label class="control-label"><label for="id_codigo">Código generado*:</label></label>
+                                <div>
+                                    <input type="text" name="codigo" class=" form-control" value={{ form.codigo }} placeholder="Último código {{ previouscode }}" maxlength="10" required id="id_codigo">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha_entrada">Fecha de entrada*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_entrada" value="{{ form.fecha_entrada | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_entrada">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            
+                        
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="control-label"><label for="id_nombre_proyecto">Nombre*:</label></label>
+                                <div>
+                                    <textarea name="nombre_proyecto" cols="40" rows="5" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="250" required id="id_nombre_proyecto">{{ form.nombre_proyecto }}</textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_formato">Formato:</label></label>
+                                        <div>
+                                            <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple>
+                                                {% for option in tformatos %}
+                                                    <option value="{{ option.id }}"
+                                                    {% if option in myformats %}
+                                                        selected
+                                                    {% endif %}
+                                                        >{{ option.nombre }}
+                                                    </option>
+                                                {% endfor %}
+                                                </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_tipo">Tipo de proyecto*:</label></label>
+                                        <div>
+                                            <select name="tipo" class=" form-control texto select2" autocomplete="on" required id="id_tipo">
+                                                {% for option in tproy %}
+                                                    <option value="{{ option.id }}"
+                                                        {% if option.id == form.tipo.id %} selected {% endif %}>
+                                                        {{ option.nombre }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_area">Área*:</label></label>
+                                        <div>
+                                            <select name="area" class="form-control texto select2" autocomplete="on" required id="id_area">
+                                                {% for option in tareas %}
+                                                    <option value="{{ option.id }}"
+                                                        {% if option.id == form.area.id %} selected {% endif %}>
+                                                        {{ option.nombre }}
+                                                    </option>
+                                                {% endfor %}                                        
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_jefe_proyecto">Jefe de proyecto*:</label></label>
+                                        <div>
+                                            <select name="jefe_proyecto" class=" form-control texto select2" autocomplete="on" required id="id_jefe_proyecto">
+                                                {% for option in ttrab %}
+                                                    <option value="{{ option.id }}"
+                                                        {% if option.id == jefe %} selected {% endif %}>
+                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                    </option>
+                                                {% endfor %}    
+                                        
+                                        </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>       
+                        <div class="row">                            
+                            <div class="col-md-8">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_inicio">Fecha de inicio*:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_inicio" value="{{ form.fecha_inicio | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_terminacion">Fecha de terminación:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_terminacion" value="{{ form.fecha_terminacion | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_terminacion">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_extension">Fecha de extensión:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_extension" value="{{ form.fecha_extension | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_extension">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre*:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_cierre" value="{{ form.fecha_cierre | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_cierre">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_observacion">Observación:</label></label>
+                                <div>
+                                    <textarea name="observacion" cols="40" rows="5" class="form-control" autocomplete="on" placeholder="Introduzca la observación" maxlength="250" id="id_observacion">{% if form.observacion %}{{ form.observacion }}{% endif %}</textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_costo">Costo (CUP)*:</label></label>
+                                <div>
+                                    <input type="text" name="costo" class="form-control texto" placeholder="Introduzca el costo" required id="id_costo" value="{{ form.costo }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_informe_apertura">Informe apertura:</label></label>
+                                <div>
+                                    {% comment %} <span>{{ form.informe_apertura.url }}</span>     {% endcomment %}
+                                    <input type="file" name="informe_apertura" id="id_informe_apertura">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>   
+                        
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_informe_cierre">Informe cierre:</label></label>
+                                <div>
+                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="{{ form.informe_cierre }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                   
+                        </div>  
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_linea_tematica">Línea temática:</label></label>
+                                <div>
+                                    <select name="linea_tematica" class=" form-control texto select2" autocomplete="on" id="id_linea_tematica">
+                                        {% for option in tlin %}
+                                            <option value="{{ option.id }}"
+                                                {% if option.id == form.linea_tematica.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}
+
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fuente_financiamiento">Fuente de financiamiento*:</label></label>
+                                <div>
+                                    <select name="fuente_financiamiento" class=" form-control texto select2" autocomplete="on" id="id_fuente_financiamiento">
+                                        {% for option in tfue %}
+                                            <option value="{{ option.id }}"
+                                                {% if option.id == form.fuente_financiamiento.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}
+
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_estado">Estado*:</label></label>
+                                <div>
+                                    <select name="estado" class=" form-control texto select2" autocomplete="on" id="id_estado">
+                                        {% for option in test %}
+                                            <option value="{{ option.id }}"
+                                                {% if option.id == form.estado.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}
+
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>     
+                                                                      
+                        </div>  
+                        <div class="row">                            
+                            <div class="col-md-4">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_costo">Aprobación del Consejo:</label></label>
+                                        <div>
+                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" id="id_aprobacion_consejo" value="{% if form.aprobacion_consejo %}{{ form.aprobacion_consejo }}{% endif %}">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_fecha_aprobacion">Fecha de aprobación:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_aprobacion" value="{{ form.fecha_aprobacion | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_aprobacion">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_fecha_interrupcion">Fecha de interrupción:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_interrupcion" value="{{ form.fecha_interrupcion | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_interrupcion">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-8">
+                                <label class="control-label"><label for="id_causa_interrupcion">Causa(s) de la interrupción:</label></label>
+                                <div>
+                                    <textarea name="causa_interrupcion" cols="40" rows="9" class="form-control" autocomplete="on" placeholder="Introduzca las causas de la interrupción" maxlength="250" id="id_causa_interrupcion">{% if form.causa_interrupcion %}{{ form.causa_interrupcion }}{% endif %}</textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>     
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="botonSubmit" type="submit" class="btn btn-primary">Modificar</button>
+                                <a href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+        $('#id_codigo').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_nombre_proyecto').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_costo').bind('focusout', function(){
+            validate_campos_vacios($(this));
+        });
+
+        //VALIDACION SOLO NUMEROS
+        $('#id_costo').keypress(function( event )
+        {
+            //CAMPOS VACIOS
+            return validate_only_number($(this), event);
+        });
+
+        function setCodigo(){
+            siglasServ = $('#id_tipo_codigo option:selected').text().trim().substr(0,3).toUpperCase();
+            numerosCod = $('#id_codigo').val().substr(3);
+            document.getElementById('id_codigo').value = siglasServ + numerosCod;
+        }
+
+        $('#id_tipo_codigo').change(function(event){
+            validate_select($('#id_tipo_codigo'), event);
+            setCodigo();
+        });              
+
+        $('#id_tipo').change(function(event){
+            validate_select($('#id_tipo'), event);
+        });
+
+        $('#id_area').on('change', function(e){
+            validate_select($('#id_area'), e);
+        });
+
+        $('#id_jefe_proyecto').on('change', function(e){
+            validate_select($('#id_jefe_proyecto'), e);
+        });
+
+        $('#id_fuente_financiamiento').on('change', function(e){
+            validate_select($('#id_fuente_financiamiento'), e);
+        });
+
+        $('#id_estado').on('change', function(e){
+            validate_select($('#id_estado'), e);
+        });
+
+        $('#id_formato').on('change', function(event){
+            validar_comparar_valores_contables($(this), 6, 'menor_igual');
+        });
+
+        $('#id_fecha_entrada').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_terminacion'), 'menor');
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_extension'), 'menor');
+        });
+
+        $('#id_fecha_aprobacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobacion'), '', 'menor_igual');
+        });
+
+        $('#id_fecha_inicio').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor');
+        });
+
+        $('#id_fecha_interrupcion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_interrupcion'), '', 'menor_igual');
+        });
+
+        $('#id_fecha_terminacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+        });
+
+        $('#id_fecha_extension').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_extension'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+        });
+
+        $('#id_fecha_cierre').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual');
+        });
+
+        $('#id_informe_apertura').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);            
+        });
+
+        $('#id_informe_cierre').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
+        });
+
+        $('#id_no').prop("disabled", true);
+
+        /*$('#formEditProyecto').on('submit', function (e) {
+            e.preventDefault();
+            let f1 = validar_existencia_ambos(document.getElementById('id_aprobacion_consejo'), document.getElementById('id_fecha_aprobacion'));
+            let f2 = validar_existencia_ambos(document.getElementById('id_causa_interrupcion'), document.getElementById('id_fecha_interrupcion'));
+
+            var href = $(this).attr('formaction');
+            var data = $(this).serializeArray();
+
+            if (typeof f1 !== 'undefined'){
+                if (!f1){
+                    return false;
+                }
+            }
+
+            if (typeof f2 !== 'undefined'){
+                if (!f2){
+                    return false;
+                }
+            }
+
+            if ($('.is-invalid').length > 0){
+                return false;
+            }
+            else{
+                $.post( href, data);
+                return true;
+            }
+        });*/
+
+</script>
+{% endblock %}

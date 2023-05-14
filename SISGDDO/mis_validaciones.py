@@ -5,6 +5,7 @@ from django.http import request
 from django.shortcuts import render
 
 class my_validates():
+    list_ext = ['image/jpeg', 'image/jpg', 'image/png']
 
     def future_year(anno: int) -> bool:
         if anno > datetime.now().strftime('%Y'):
@@ -29,3 +30,6 @@ class my_validates():
             except:
                 return False
         return True
+
+    def validar_extensiones_archivos(obj, list_ext = []):
+        pass

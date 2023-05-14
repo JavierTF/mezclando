@@ -1,0 +1,1332 @@
+1667498424161	geckodriver	INFO	Listening on 127.0.0.1:10605
+1667498427214	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4ENckJ"
+1667498432014	Marionette	INFO	Marionette enabled
+JavaScript error: chrome://browser/content/tabbrowser.js, line 5318: TypeError: this.PictureInPicture is undefined
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4ENckJ\\search.json.mozlz4", (void 0)))
+JavaScript error: resource:///modules/CustomizableUI.jsm, line 4103: Error: Area not yet restored
+JavaScript error: chrome://browser/content/tabbrowser.js, line 5318: TypeError: this.PictureInPicture is undefined
+JavaScript error: chrome://browser/content/tabbrowser.js, line 5318: TypeError: this.PictureInPicture is undefined
+1667498944518	geckodriver	INFO	Listening on 127.0.0.1:10932
+1667498947609	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileGSpVh6"
+1667499054033	geckodriver	INFO	Listening on 127.0.0.1:11096
+1667499057047	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileYXNaU7"
+1667499060109	Marionette	INFO	Marionette enabled
+1667499060118	Marionette	INFO	Listening on port 11114
+Read port: 11114
+1667499060625	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileYXNaU7\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+JavaScript error: http://localhost:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://localhost:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667499080108	Marionette	INFO	Stopped listening on port 11114
+1667499082573	geckodriver	INFO	Listening on 127.0.0.1:11174
+1667499085605	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile3AC07P"
+1667499086719	Marionette	INFO	Marionette enabled
+1667499086727	Marionette	INFO	Listening on port 11190
+Read port: 11190
+1667499087246	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile3AC07P\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+JavaScript error: http://localhost:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://localhost:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667499147419	Marionette	INFO	Stopped listening on port 11190
+1667499940216	geckodriver	INFO	Listening on 127.0.0.1:12317
+1667499943107	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilenNG4hw"
+1667499944532	Marionette	INFO	Marionette enabled
+1667499944550	Marionette	INFO	Listening on port 12336
+Read port: 12336
+1667499945552	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilenNG4hw\\search.json.mozlz4", (void 0)))
+1667499976925	Marionette	INFO	Stopped listening on port 12336
+1667500013699	geckodriver	INFO	Listening on 127.0.0.1:12434
+1667500016765	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile1Egyhp"
+1667500018103	Marionette	INFO	Marionette enabled
+1667500018115	Marionette	INFO	Listening on port 12451
+Read port: 12451
+1667500018851	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile1Egyhp\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://localhost:8000."
+JavaScript error: http://localhost:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://localhost:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://localhost:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667500185010	Marionette	INFO	Stopped listening on port 12451
+[Parent 13396, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+mote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilek4bw6g"
+1667500130137	Marionette	INFO	Marionette enabled
+1667500130147	Marionette	INFO	Listening on port 12657
+Read port: 12657
+1667500130338	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilek4bw6g\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667500185502	Marionette	INFO	Stopped listening on port 12657
+1667501241920	geckodriver	INFO	Listening on 127.0.0.1:6847
+1667501244899	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTWhEm1"
+1667501246521	Marionette	INFO	Marionette enabled
+1667501246531	Marionette	INFO	Listening on port 6864
+Read port: 6864
+Read port: 6864
+1667501247937	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTWhEm1\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667501293835	Marionette	INFO	Stopped listening on port 6864
+1667501310312	geckodriver	INFO	Listening on 127.0.0.1:6978
+1667501313292	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4SViDv"
+1667501314673	Marionette	INFO	Marionette enabled
+1667501314685	Marionette	INFO	Listening on port 6998
+Read port: 6998
+1667501315436	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4SViDv\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667501324411	Marionette	INFO	Stopped listening on port 6998
+[Parent 5020, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+[Parent 5020, IPC I/O Parent] WARNING: DuplicateHandle failed for handle 0 in TransferHandles: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:723
+1667501335316	geckodriver	INFO	Listening on 127.0.0.1:7057
+1667501338332	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5Pp3pJ"
+1667501339697	Marionette	INFO	Marionette enabled
+1667501339709	Marionette	INFO	Listening on port 7072
+Read port: 7072
+1667501340567	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5Pp3pJ\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667501849754	addons.xpi	ERROR	System addon update list error Error: Failed downloading XML, status: 0, reason: error
+1667504969758	Marionette	INFO	Stopped listening on port 7072
+7502667382	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKD6tBx"
+1667502669734	Marionette	INFO	Marionette enabled
+1667502669752	Marionette	INFO	Listening on port 7487
+Read port: 7487
+1667502669993	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKD6tBx\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667504970182	Marionette	INFO	Stopped listening on port 7487
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+rogram Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilegSS0Ff"
+1667504332035	Marionette	INFO	Marionette enabled
+1667504332046	Marionette	INFO	Listening on port 8832
+Read port: 8832
+1667504332228	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilegSS0Ff\\search.json.mozlz4", (void 0)))
+1667504970464	Marionette	INFO	Stopped listening on port 8832
+7504370425	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilekB2uBJ"
+1667504371532	Marionette	INFO	Marionette enabled
+1667504371555	Marionette	INFO	Listening on port 8939
+Read port: 8939
+1667504371787	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilekB2uBJ\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667504970940	Marionette	INFO	Stopped listening on port 8939
+[Parent 19300, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+\\rust_mozprofileYoRuik"
+1667504917532	Marionette	INFO	Marionette enabled
+1667504917543	Marionette	INFO	Listening on port 9359
+Read port: 9359
+1667504917739	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileYoRuik\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667504971378	Marionette	INFO	Stopped listening on port 9359
+1667505955980	geckodriver	INFO	Listening on 127.0.0.1:9910
+1667505958906	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileP0do0b"
+1667505960454	Marionette	INFO	Marionette enabled
+1667505960466	Marionette	INFO	Listening on port 9924
+Read port: 9924
+1667505961645	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileP0do0b\\search.json.mozlz4", (void 0)))
+1667505996077	Marionette	INFO	Stopped listening on port 9924
+[Parent 10732, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1667506019646	geckodriver	INFO	Listening on 127.0.0.1:10032
+1667506022609	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile2L5TOA"
+1667506023949	Marionette	INFO	Marionette enabled
+1667506023961	Marionette	INFO	Listening on port 10046
+Read port: 10046
+1667506024708	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile2L5TOA\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667506038726	Marionette	INFO	Stopped listening on port 10046
+1667506116061	geckodriver	INFO	Listening on 127.0.0.1:10131
+1667506119050	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledQLWWB"
+1667506120532	Marionette	INFO	Marionette enabled
+1667506120544	Marionette	INFO	Listening on port 10146
+Read port: 10146
+1667506121367	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledQLWWB\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667506197808	Marionette	INFO	Stopped listening on port 10141667506198762	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile3jdxCg"
+1667506199658	Marionette	INFO	Marionette enabled
+1667506199669	Marionette	INFO	Listening on port 10263
+Read port: 10263
+1667506199885	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile3jdxCg\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667506510300	Marionette	INFO	Stopped listening on port 10263
+7506467502	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileuyqC8S"
+1667506468617	Marionette	INFO	Marionette enabled
+1667506468628	Marionette	INFO	Listening on port 10489
+Read port: 10489
+1667506468804	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileuyqC8S\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667506510586	Marionette	INFO	Stopped listening on port 10489
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+rogram Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCPtAJM"
+1667506511881	Marionette	INFO	Marionette enabled
+1667506511892	Marionette	INFO	Listening on port 10572
+Read port: 10572
+1667506512109	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCPtAJM\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://proyecto:hectoralonso87@127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667506615514	Marionette	INFO	Stopped listening on port 10572
+1667506943219	geckodriver	INFO	Listening on 127.0.0.1:10863
+1667506946226	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHOGug7"
+1667506947572	Marionette	INFO	Marionette enabled
+1667506947583	Marionette	INFO	Listening on port 10876
+Read port: 10876
+1667506948593	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHOGug7\\search.json.mozlz4", (void 0)))
+1667507012649	Marionette	INFO	Stopped listening on port 10876
+7507010100	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilehrpL5U"
+1667507011146	Marionette	INFO	Marionette enabled
+1667507011159	Marionette	INFO	Listening on port 10995
+Read port: 10995
+1667507011393	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilehrpL5U\\search.json.mozlz4", (void 0)))
+1667507054263	Marionette	INFO	Stopped listening on port 10995
+1667507056466	geckodriver	INFO	Listening on 127.0.0.1:11075
+1667507059453	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilekZnyPl"
+1667507060872	Marionette	INFO	Marionette enabled
+1667507060884	Marionette	INFO	Listening on port 11089
+Read port: 11089
+1667507061737	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilekZnyPl\\search.json.mozlz4", (void 0)))
+1667507078980	Marionette	INFO	Stopped listening on port 11089
+1667507140696	geckodriver	INFO	Listening on 127.0.0.1:11165
+1667507143679	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileSICMpG"
+1667507145071	Marionette	INFO	Marionette enabled
+1667507145083	Marionette	INFO	Listening on port 11180
+Read port: 11180
+1667507145937	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileSICMpG\\search.json.mozlz4", (void 0)))
+1667507356767	Marionette	INFO	Stopped listening on port 11180
+7507309644	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilepc7wnJ"
+1667507310696	Marionette	INFO	Marionette enabled
+1667507310709	Marionette	INFO	Listening on port 11321
+Read port: 11321
+1667507310929	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilepc7wnJ\\search.json.mozlz4", (void 0)))
+1667507354328	Marionette	INFO	Stopped listening on port 11321
+1667507381738	geckodriver	INFO	Listening on 127.0.0.1:11366
+1667507384672	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileGbQikq"
+1667507386841	Marionette	INFO	Marionette enabled
+1667507386853	Marionette	INFO	Listening on port 11380
+Read port: 11380
+Read port: 11380
+1667507388373	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileGbQikq\\search.json.mozlz4", (void 0)))
+1667507398166	Marionette	WARN	Ignoring event 'pageshow' because document has an invalid readyState of 'uninitialized'.
+1667507456830	Marionette	INFO	Stopped listening on port 11380
+1667507627794	geckodriver	INFO	Listening on 127.0.0.1:11537
+1667507630786	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileifOpJg"
+1667507632201	Marionette	INFO	Marionette enabled
+1667507632212	Marionette	INFO	Listening on port 11551
+Read port: 11551
+1667507632985	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileifOpJg\\search.json.mozlz4", (void 0)))
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667507711426	Marionette	INFO	Stopped listening on port 11551
+1667507737824	geckodriver	INFO	Listening on 127.0.0.1:11643
+1667507740829	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTsFN6j"
+1667507742270	Marionette	INFO	Marionette enabled
+1667507742282	Marionette	INFO	Listening on port 11657
+Read port: 11657
+1667507743045	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTsFN6j\\search.json.mozlz4", (void 0)))
+1667508252354	addons.xpi	ERROR	System addon update list error Error: Failed downloading XML, status: 0, reason: error
+1667520591594	Marionette	INFO	Stopped listening on port 11657
+1667520919622	geckodriver	INFO	Listening on 127.0.0.1:4556
+1667520922567	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileOOhIck"
+1667520924069	Marionette	INFO	Marionette enabled
+1667520924080	Marionette	INFO	Listening on port 4575
+Read port: 4575
+1667520925146	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileOOhIck\\search.json.mozlz4", (void 0)))
+1667520949790	Marionette	INFO	Stopped listening on port 4575
+1667521016441	geckodriver	INFO	Listening on 127.0.0.1:4748
+1667521019436	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiletVznKA"
+1667521020773	Marionette	INFO	Marionette enabled
+1667521020785	Marionette	INFO	Listening on port 4768
+Read port: 4768
+1667521021508	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiletVznKA\\search.json.mozlz4", (void 0)))
+1667521070404	Marionette	INFO	Stopped listening on port 4768
+1667521326400	geckodriver	INFO	Listening on 127.0.0.1:5115
+1667521329398	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileJeFfDo"
+1667521330791	Marionette	INFO	Marionette enabled
+1667521330801	Marionette	INFO	Listening on port 5132
+Read port: 5132
+1667521331569	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileJeFfDo\\search.json.mozlz4", (void 0)))
+1667521351782	Marionette	INFO	Stopped listening on port 5132
+1667521501950	geckodriver	INFO	Listening on 127.0.0.1:5487
+1667521504921	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKYTrBA"
+1667521506308	Marionette	INFO	Marionette enabled
+1667521506316	Marionette	INFO	Listening on port 5508
+Read port: 5508
+1667521507105	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKYTrBA\\search.json.mozlz4", (void 0)))
+JavaScript error: resource:///actors/LightweightThemeChild.jsm, line 38: TypeError: this.browsingContext.topChromeWindow is null
+JavaScript error: resource:///actors/LightweightThemeChild.jsm, line 38: TypeError: this.browsingContext.topChromeWindow is null
+JavaScript error: resource:///actors/LightweightThemeChild.jsm, line 38: TypeError: this.browsingContext.topChromeWindow is null
+1667521561031	Marionette	INFO	Stopped listening on port 5508
+1667521605385	geckodriver	INFO	Listening on 127.0.0.1:5724
+1667521608771	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileB1FTJN"
+1667521610739	Marionette	INFO	Marionette enabled
+1667521610762	Marionette	INFO	Listening on port 5746
+Read port: 5746
+1667521611694	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileB1FTJN\\search.json.mozlz4", (void 0)))
+1667521772500	Marionette	INFO	Stopped listening on port 5746
+7521663785	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilebtfwUw"
+1667521664870	Marionette	INFO	Marionette enabled
+1667521664881	Marionette	INFO	Listening on port 5894
+Read port: 5894
+1667521665170	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilebtfwUw\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667521772927	Marionette	INFO	Stopped listening on port 5894
+1667521775740	geckodriver	INFO	Listening on 127.0.0.1:6173
+1667521778583	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilecCG6iN"
+1667521780018	Marionette	INFO	Marionette enabled
+1667521780029	Marionette	INFO	Listening on port 6195
+Read port: 6195
+1667521780896	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilecCG6iN\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522453130	Marionette	INFO	Stopped listening on port 6195
+7521865660	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileIteptm"
+1667521866468	Marionette	INFO	Marionette enabled
+1667521866477	Marionette	INFO	Listening on port 6431
+Read port: 6431
+1667521866687	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileIteptm\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522454046	Marionette	INFO	Stopped listening on port 6431
+67522451901	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile8tnYCg"
+1667522452804	Marionette	INFO	Marionette enabled
+1667522452817	Marionette	INFO	Listening on port 13125
+Read port: 13125
+1667522453121	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile8tnYCg\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522484831	Marionette	INFO	Stopped listening on port 13125
+1667522486943	geckodriver	INFO	Listening on 127.0.0.1:13229
+1667522489935	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileRevVel"
+1667522491329	Marionette	INFO	Marionette enabled
+1667522491341	Marionette	INFO	Listening on port 13248
+Read port: 13248
+1667522492213	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileRevVel\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522551322	Marionette	INFO	Stopped listening on port 13248
+1667522553724	geckodriver	INFO	Listening on 127.0.0.1:13410
+1667522556729	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilejygWIn"
+1667522558175	Marionette	INFO	Marionette enabled
+1667522558186	Marionette	INFO	Listening on port 13430
+Read port: 13430
+1667522559040	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilejygWIn\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667522653024	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522911638	Marionette	INFO	Stopped listening on port 13430
+7522834849	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKHr8oq"
+1667522836045	Marionette	INFO	Marionette enabled
+1667522836057	Marionette	INFO	Listening on port 14020
+Read port: 14020
+1667522836246	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKHr8oq\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522912081	Marionette	INFO	Stopped listening on port 14021667522914615	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile84PBTq"
+1667522916259	Marionette	INFO	Marionette enabled
+1667522916271	Marionette	INFO	Listening on port 14238
+Read port: 14238
+Read port: 14238
+1667522917652	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile84PBTq\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667522941325	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667522972277	Marionette	INFO	Stopped listening on port 14238
+JavaScript error: resource://gre/modules/CrashManager.jsm, line 905: AbortError: IOUtils: Shutting down and refusing additional I/O tasks
+1667522976330	geckodriver	INFO	Listening on 127.0.0.1:14400
+1667522979325	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileya6Zxn"
+1667522982008	Marionette	INFO	Marionette enabled
+1667522982019	Marionette	INFO	Listening on port 14422
+Read port: 14422
+Read port: 14422
+1667522983838	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileya6Zxn\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667523063850	Marionette	INFO	Stopped listening on port 14421667523065675	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5TQKtS"
+1667523067261	Marionette	INFO	Marionette enabled
+1667523067273	Marionette	INFO	Listening on port 14641
+Read port: 14641
+1667523068197	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5TQKtS\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667523340531	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667523471792	Marionette	INFO	Stopped listening on port 14641
+[Parent 10564, IPC I/O Parent] WARNING: pipe error: 232: file /builds/worker/checkouts/gecko/ipc/chromium/src/chrome/common/ipc_channel_win.cc:554
+[Parent 10564, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1667523475579	geckodriver	INFO	Listening on 127.0.0.1:1572
+1667523478601	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4HlgBQ"
+1667523479910	Marionette	INFO	Marionette enabled
+1667523479921	Marionette	INFO	Listening on port 1592
+Read port: 1592
+1667523480891	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4HlgBQ\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667523500756	Marionette	INFO	Stopped listening on port 1592
+1667523695524	geckodriver	INFO	Listening on 127.0.0.1:2047
+1667523698518	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileo1t5Cv"
+1667523700048	Marionette	INFO	Marionette enabled
+1667523700060	Marionette	INFO	Listening on port 2068
+Read port: 2068
+1667523701075	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileo1t5Cv\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667523862192	Marionette	INFO	Stopped listening on port 2068
+1667523967006	geckodriver	INFO	Listening on 127.0.0.1:2691
+1667523969988	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileagxTVH"
+1667523971572	Marionette	INFO	Marionette enabled
+1667523971584	Marionette	INFO	Listening on port 2707
+Read port: 2707
+Read port: 2707
+1667523972956	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileagxTVH\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667524118890	Marionette	INFO	Stopped listening on port 2707
+1667524258285	geckodriver	INFO	Listening on 127.0.0.1:3143
+1667524261282	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileoPTjMj"
+1667524262758	Marionette	INFO	Marionette enabled
+1667524262765	Marionette	INFO	Listening on port 3165
+Read port: 3165
+1667524263641	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileoPTjMj\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667524269379	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667524285440	Marionette	INFO	Stopped listening on port 3165
+1667524288448	geckodriver	INFO	Listening on 127.0.0.1:3264
+1667524291386	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTL5xfN"
+1667524292809	Marionette	INFO	Marionette enabled
+1667524292822	Marionette	INFO	Listening on port 3284
+Read port: 3284
+1667524293585	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileTL5xfN\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667524539753	Marionette	INFO	Stopped listening on port 32841667524540804	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilesOis7I"
+1667524542976	Marionette	INFO	Marionette enabled
+1667524542991	Marionette	INFO	Listening on port 14387
+Read port: 14387
+1667524544031	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilesOis7I\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667525214911	Marionette	INFO	Stopped listening on port 14387
+1667525217915	geckodriver	INFO	Listening on 127.0.0.1:1966
+1667525220654	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileWW3A3A"
+1667525222178	Marionette	INFO	Marionette enabled
+1667525222190	Marionette	INFO	Listening on port 1988
+Read port: 1988
+Read port: 1988
+1667525223860	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileWW3A3A\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667525304977	Marionette	INFO	Stopped listening on port 1988
+1667525307065	geckodriver	INFO	Listening on 127.0.0.1:2249
+1667525310137	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileBaQEo2"
+1667525311556	Marionette	INFO	Marionette enabled
+1667525311567	Marionette	INFO	Listening on port 2273
+Read port: 2273
+1667525312527	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileBaQEo2\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667525420469	Marionette	INFO	Stopped listening on port 2273
+1667526729659	geckodriver	INFO	Listening on 127.0.0.1:5603
+1667526732670	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileDRZcgU"
+1667526734405	Marionette	INFO	Marionette enabled
+1667526734416	Marionette	INFO	Listening on port 5626
+Read port: 5626
+Read port: 5626
+1667526735898	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileDRZcgU\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667526851357	Marionette	INFO	Stopped listening on port 5626
+1667526853911	geckodriver	INFO	Listening on 127.0.0.1:5920
+1667526856890	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5WGKgK"
+1667526858561	Marionette	INFO	Marionette enabled
+1667526858569	Marionette	INFO	Listening on port 5942
+Read port: 5942
+1667526859404	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile5WGKgK\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667526932031	Marionette	INFO	Stopped listening on port 5941667526934213	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilevn8Eo3"
+1667526935277	Marionette	INFO	Marionette enabled
+1667526935288	Marionette	INFO	Listening on port 6147
+Read port: 6147
+1667526935524	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilevn8Eo3\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667527206075	Marionette	INFO	Stopped listening on port 6147
+7527111606	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileEQAOiE"
+1667527112390	Marionette	INFO	Marionette enabled
+1667527112402	Marionette	INFO	Listening on port 6551
+Read port: 6551
+1667527112579	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileEQAOiE\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667527206738	Marionette	INFO	Stopped listening on port 6551
+1667527389542	geckodriver	INFO	Listening on 127.0.0.1:7160
+1667527392553	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilej6gkPw"
+1667527394015	Marionette	INFO	Marionette enabled
+1667527394025	Marionette	INFO	Listening on port 7182
+Read port: 7182
+1667527394881	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilej6gkPw\\search.json.mozlz4", (void 0)))
+1667527423858	Marionette	INFO	Stopped listening on port 7182
+[Parent 8872, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1667527430271	geckodriver	INFO	Listening on 127.0.0.1:7289
+1667527433253	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHfV5hC"
+1667527434786	Marionette	INFO	Marionette enabled
+1667527434796	Marionette	INFO	Listening on port 7311
+Read port: 7311
+1667527435671	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHfV5hC\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667527503596	Marionette	INFO	Stopped listening on port 7311
+1667527506175	geckodriver	INFO	Listening on 127.0.0.1:7492
+1667527509188	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileagnhTd"
+1667527510579	Marionette	INFO	Marionette enabled
+1667527510588	Marionette	INFO	Listening on port 7514
+Read port: 7514
+1667527511329	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileagnhTd\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667527539772	Marionette	INFO	Stopped listening on port 7514
+1667527542695	geckodriver	INFO	Listening on 127.0.0.1:7633
+1667527545683	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileZNyZeh"
+1667527547008	Marionette	INFO	Marionette enabled
+1667527547020	Marionette	INFO	Listening on port 7655
+Read port: 7655
+1667527547719	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileZNyZeh\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667527904132	Marionette	INFO	Stopped listening on port 7655
+1667527966457	geckodriver	INFO	Listening on 127.0.0.1:8647
+1667527969432	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilefTsvxH"
+1667527970842	Marionette	INFO	Marionette enabled
+1667527970851	Marionette	INFO	Listening on port 8669
+Read port: 8669
+Read port: 8669
+1667527972403	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilefTsvxH\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667528396955	Marionette	INFO	Stopped listening on port 8669
+1667528401570	geckodriver	INFO	Listening on 127.0.0.1:9685
+1667528404564	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileGjOZRL"
+1667528405964	Marionette	INFO	Marionette enabled
+1667528405974	Marionette	INFO	Listening on port 9706
+Read port: 9706
+1667528406901	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileGjOZRL\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667528513804	Marionette	INFO	Stopped listening on port 9706
+1667528516008	geckodriver	INFO	Listening on 127.0.0.1:9992
+1667528519002	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileUALv5R"
+1667528520462	Marionette	INFO	Marionette enabled
+1667528520474	Marionette	INFO	Listening on port 10014
+Read port: 10014
+1667528521291	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileUALv5R\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667528973235	Marionette	INFO	Stopped listening on port 10014
+1667528975518	geckodriver	INFO	Listening on 127.0.0.1:11011
+1667528978514	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileASjGfQ"
+1667528979845	Marionette	INFO	Marionette enabled
+1667528979854	Marionette	INFO	Listening on port 11032
+Read port: 11032
+1667528980719	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileASjGfQ\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529290630	Marionette	INFO	Stopped listening on port 11032
+1667529292803	geckodriver	INFO	Listening on 127.0.0.1:11663
+1667529295803	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileH2E3hW"
+1667529297181	Marionette	INFO	Marionette enabled
+1667529297191	Marionette	INFO	Listening on port 11684
+Read port: 11684
+1667529297983	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileH2E3hW\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529343312	Marionette	INFO	Stopped listening on port 11684
+1667529345768	geckodriver	INFO	Listening on 127.0.0.1:11843
+1667529348763	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHwBIBZ"
+1667529350186	Marionette	INFO	Marionette enabled
+1667529350195	Marionette	INFO	Listening on port 11864
+Read port: 11864
+1667529350974	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHwBIBZ\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529418607	Marionette	INFO	Stopped listening on port 11864
+1667529426042	geckodriver	INFO	Listening on 127.0.0.1:12073
+1667529429050	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledIPsLs"
+1667529430535	Marionette	INFO	Marionette enabled
+1667529430545	Marionette	INFO	Listening on port 12097
+Read port: 12097
+1667529431254	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledIPsLs\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529543730	Marionette	INFO	Stopped listening on port 12097
+1667529546099	geckodriver	INFO	Listening on 127.0.0.1:12285
+1667529549104	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileyt9S8j"
+1667529550982	Marionette	INFO	Marionette enabled
+1667529550992	Marionette	INFO	Listening on port 12300
+Read port: 12300
+1667529551863	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileyt9S8j\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529596305	Marionette	INFO	Stopped listening on port 12300
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+1667529599236	geckodriver	INFO	Listening on 127.0.0.1:12424
+1667529602239	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileWLmnta"
+1667529603695	Marionette	INFO	Marionette enabled
+1667529603704	Marionette	INFO	Listening on port 12443
+Read port: 12443
+1667529604755	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileWLmnta\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667529650497	Marionette	INFO	Stopped listening on port 12443
+1667529653437	geckodriver	INFO	Listening on 127.0.0.1:12547
+1667529656602	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileAqvVwl"
+1667529658560	Marionette	INFO	Marionette enabled
+1667529658572	Marionette	INFO	Listening on port 12564
+Read port: 12564
+Read port: 12564
+1667529660173	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileAqvVwl\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+1667529716651	Marionette	INFO	Stopped listening on port 12564
+1667529720120	geckodriver	INFO	Listening on 127.0.0.1:12700
+1667529722735	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileH4dVj8"
+1667529724179	Marionette	INFO	Marionette enabled
+1667529724188	Marionette	INFO	Listening on port 12717
+Read port: 12717
+1667529724931	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileH4dVj8\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+1667529847768	Marionette	INFO	Stopped listening on port 12717
+JavaScript error: resource:///modules/WindowsJumpLists.jsm, line 231: TypeError: this._builder is undefined
+JavaScript error: resource:///modules/WindowsJumpLists.jsm, line 231: TypeError: this._builder is undefined
+1667529954625	geckodriver	INFO	Listening on 127.0.0.1:13079
+1667529957612	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilewMx9QX"
+1667529959194	Marionette	INFO	Marionette enabled
+1667529959206	Marionette	INFO	Listening on port 13101
+Read port: 13101
+1667529959992	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilewMx9QX\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: , line 0: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667530047316	Marionette	INFO	Stopped listening on port 13101
+1667531689867	geckodriver	INFO	Listening on 127.0.0.1:1866
+1667531692858	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilefdjeoc"
+1667531694454	Marionette	INFO	Marionette enabled
+1667531694468	Marionette	INFO	Listening on port 1888
+Read port: 1888
+Read port: 1888
+1667531696098	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilefdjeoc\\search.json.mozlz4", (void 0)))
+1667531704998	Marionette	WARN	Ignoring event 'pageshow' because document has an invalid readyState of 'uninitialized'.
+1667531730336	Marionette	INFO	Stopped listening on port 1888
+1667532121456	geckodriver	INFO	Listening on 127.0.0.1:2760
+1667532124347	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKb52n0"
+1667532125760	Marionette	INFO	Marionette enabled
+1667532125771	Marionette	INFO	Listening on port 2782
+Read port: 2782
+1667532126819	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileKb52n0\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667532133063	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667532168643	Marionette	INFO	Stopped listening on port 2782
+[Parent 14468, IPC I/O Parent] WARNING: file /builds/worker/checkouts/gecko/ipc/chromium/src/base/process_util_win.cc:167
+1667532171817	geckodriver	INFO	Listening on 127.0.0.1:2943
+1667532174804	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4t55Ug"
+1667532177250	Marionette	INFO	Marionette enabled
+1667532177260	Marionette	INFO	Listening on port 2968
+Read port: 2968
+1667532178192	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile4t55Ug\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667532228755	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/static/assets/dist/js/myjs.js, line 133: TypeError: event is undefined
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/AsyncShutdown.jsm, line 576: NotFoundError: No such JSWindowActor 'DevToolsFrame'
+1667532420971	Marionette	INFO	Stopped listening on port 2968
+1667532484869	geckodriver	INFO	Listening on 127.0.0.1:3684
+1667532487893	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile9aoDgv"
+1667532489459	Marionette	INFO	Marionette enabled
+1667532489471	Marionette	INFO	Listening on port 3706
+Read port: 3706
+1667532490369	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile9aoDgv\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667532542502	Marionette	INFO	Stopped listening on port 3706
+1667532545101	geckodriver	INFO	Listening on 127.0.0.1:3886
+1667532548100	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiles3WgMY"
+1667532549622	Marionette	INFO	Marionette enabled
+1667532549634	Marionette	INFO	Listening on port 3907
+Read port: 3907
+1667532550448	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiles3WgMY\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667532931419	Marionette	INFO	Stopped listening on port 3901667532933092	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileNvo5Nh"
+1667532934898	Marionette	INFO	Marionette enabled
+1667532934910	Marionette	INFO	Listening on port 4776
+Read port: 4776
+Read port: 4776
+1667532936246	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileNvo5Nh\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+1667532993292	Marionette	WARN	TimedPromise timed out after 500 ms: stacktrace:
+TimedPromise/<@chrome://remote/content/marionette/sync.js:236:24
+TimedPromise@chrome://remote/content/marionette/sync.js:221:10
+interaction.flushEventLoop@chrome://remote/content/marionette/interaction.js:431:10
+webdriverClickElement@chrome://remote/content/marionette/interaction.js:179:31
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667533044698	Marionette	INFO	Stopped listening on port 4771667533047301	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHn1T1g"
+1667533048848	Marionette	INFO	Marionette enabled
+1667533048860	Marionette	INFO	Listening on port 5089
+Read port: 5089
+1667533049868	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileHn1T1g\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1578: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1627: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1691: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667533210794	Marionette	INFO	Stopped listening on port 5089
+1667564167619	geckodriver	INFO	Listening on 127.0.0.1:10996
+1667564170561	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledpJwIF"
+1667564172244	Marionette	INFO	Marionette enabled
+1667564172257	Marionette	INFO	Listening on port 11010
+Read port: 11010
+Read port: 11010
+1667564173820	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofiledpJwIF\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+1667564198731	Marionette	INFO	Stopped listening on port 11010
+JavaScript error: chrome://remote/content/marionette/cert.js, line 57: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1667587477494	geckodriver	INFO	Listening on 127.0.0.1:9861
+1667587480494	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilewiUaTu"
+1667587482229	Marionette	INFO	Marionette enabled
+1667587482243	Marionette	INFO	Listening on port 13952
+Read port: 13952
+1667587483235	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilewiUaTu\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667587581611	Marionette	INFO	Stopped listening on port 13952
+JavaScript error: chrome://remote/content/marionette/cert.js, line 57: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1667587583480	geckodriver	INFO	Listening on 127.0.0.1:14311
+1667587586527	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilejR9FIn"
+1667587587981	Marionette	INFO	Marionette enabled
+1667587587992	Marionette	INFO	Listening on port 5609
+Read port: 5609
+1667587588890	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofilejR9FIn\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+1667587663358	Marionette	INFO	Stopped listening on port 5609
+JavaScript error: chrome://remote/content/marionette/cert.js, line 57: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1667590021073	geckodriver	INFO	Listening on 127.0.0.1:2631
+1667590023943	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile2vZNxt"
+1667590029789	Marionette	INFO	Marionette enabled
+1667590029799	Marionette	INFO	Listening on port 2652
+Read port: 2652
+Read port: 2652
+Read port: 2652
+Read port: 2652
+1667590033472	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofile2vZNxt\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+1667590040999	Marionette	WARN	Ignoring event 'pageshow' because document has an invalid readyState of 'uninitialized'.
+1667590044429	Marionette	INFO	Stopped listening on port 2652
+1667590144771	geckodriver	INFO	Listening on 127.0.0.1:2703
+1667590147666	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCaaV8D"
+1667590148712	Marionette	INFO	Marionette enabled
+1667590148722	Marionette	INFO	Listening on port 2718
+Read port: 2718
+1667590149338	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCaaV8D\\search.json.mozlz4", (void 0)))
+console.error: Region.jsm: "Error fetching region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 768))
+console.error: Region.jsm: "Failed to fetch region" (new Error("TIMEOUT", "resource://gre/modules/Region.jsm", 420))
+1667590190367	Marionette	INFO	Stopped listening on port 2718
+JavaScript error: chrome://remote/content/marionette/cert.js, line 57: NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsICertOverrideService.setDisableAllSecurityChecksAndLetAttackersInterceptMyData]
+1667694990885	geckodriver	INFO	Listening on 127.0.0.1:2392
+1667694993922	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCznwwq"
+1667694995723	Marionette	INFO	Marionette enabled
+1667694995732	Marionette	INFO	Listening on port 2406
+Read port: 2406
+Read port: 2406
+1667694997104	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.error: Region.jsm: "Error fetching region" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: Region.jsm: "Failed to fetch region" (new Error("NO_RESULT", "resource://gre/modules/Region.jsm", 420))
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileCznwwq\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1687: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1736: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1800: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/actors/DateTimePickerChild.jsm, line 64: TypeError: aElement is null
+1667695078574	Marionette	INFO	Stopped listening on port 2406
+7695044636	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "-no-remote" "-profile" "C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileMnnOZg"
+1667695045438	Marionette	INFO	Marionette enabled
+1667695045447	Marionette	INFO	Listening on port 2455
+Read port: 2455
+1667695045615	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.error: Region.jsm: "Error fetching region" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: Region.jsm: "Failed to fetch region" (new Error("NO_RESULT", "resource://gre/modules/Region.jsm", 420))
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\lenovo\\AppData\\Local\\Temp\\rust_mozprofileMnnOZg\\search.json.mozlz4", (void 0)))
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+console.warn: LoginRecipes: "Falling back to a synchronous message for: http://127.0.0.1:8000."
+JavaScript error: http://127.0.0.1:8000/, line 1192: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/, line 1241: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/, line 1305: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: resource://gre/modules/XULStore.jsm, line 58: Error: Can't find profile directory.
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1687: SyntaxError: expected expression, got '}'
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1736: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/adicionar/consecutivo, line 1800: SyntaxError: expected expression, got ','
+JavaScript error: http://127.0.0.1:8000/static/assets/plugins/sparklines/sparkline.js, line 28: TypeError: this.element is undefined
+JavaScript error: resource://gre/actors/DateTimePickerChild.jsm, line 64: TypeError: aElement is null
+1667695062540	Marionette	INFO	Stopped listening on port 2455

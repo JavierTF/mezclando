@@ -1,0 +1,128 @@
+{% extends 'index.html' %}
+{% block property %}
+    active
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Propiedad Industrial.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Integración</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Propiedades Industrial.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.border-dark {
+    padding: 15px;
+    height: auto;
+    border: 2px solid black;
+}
+.no-data {
+    float: right;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-header">
+                    <div class="row col-md-12">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4"><span class="text-bold">Modalidad</span> <p>{{ model.get_modality }}</p></div>
+                                    <div class="col-md-4"><span class="text-bold">Nombre</span> <p>{{ model.name }}</p></div>
+                                    <div class="col-md-2"><span class="text-bold">País</span> <p>{{ model.country.name }}</p></div>
+                                    <div class="col-md-2"><span class="text-bold">Estado</span> <p>{{ model.get_status }}</p></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><span class="text-bold">Fecha de solicitud</span> <p>{{ model.application_date|date }}</p></div>
+                                    <div class="col-md-4"><span class="text-bold">Número de solicitud</span> <p>{{ model.application_number }}</p></div>
+                                    <div class="col-md-4"><span class="text-bold">Número de certificado</span> <p>{{ model.certificate_number }}</p></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row col-md-12">
+                            {% if model.grant_date %}
+                                <div class="col-md-6">
+                                <h5>Fecha de otorgamiento: <span>{{ model.grant_date|date }}</span></h5>
+                                </div>
+                            {% endif %}
+                            {% if model.type_legal_document %}
+                            <div class="col-md-6">
+                                <h5>Tipo de documento legal: <span>{{ model.type_legal_document }}</span></h5>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="row col-md-12">
+                            {% if model.expiration_date %}
+                                <div class="col-md-6">
+                                <h5>Fecha de vencimiento: <span>{{ model.expiration_date|date }}</span></h5>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                            {% if model.granted_resolution %}
+                                <h5>Concedido por resolusión: <span>{{ model.granted_resolution }}</span></h5>
+                            {% endif %}
+                            </div>
+                        </div>
+                        <div class="row col-md-12">
+                            {% if model.products.exists %}
+                                <div class="col-md-6">
+                                    <h5>Clasificación productos y servicios: <ul>{{ model.products.all|unordered_list }}</ul></h5>
+                                </div>
+                            {% endif %}
+                            {% if model.patents.exists %}
+                                <div class="col-md-6">
+                                    <h5>Clasificación internacional de patentes: <ul>{{ model.patents.all|unordered_list }}</ul></h5>
+                                </div>
+                            {% endif %}
+                            {% if model.figurative_elements.exists %}
+                                <div class="col-md-6">
+                                    <h5>Clasificación internacional de elementos figurativos: <ul>{{ model.figurative_elements.all|unordered_list }}</ul></h5>
+                                </div>
+                            {% endif %}
+                            {% if model.drawings.exists %}
+                                <div class="col-md-6">
+                                    <h5>Clasificación dibujo y modelos industriales: <ul>{{ model.drawings.all|unordered_list }}</ul></h5>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if model.observation %}
+                        <div class="row col-md-12">
+                            <div class="col-md-6">
+                                <h5>Observación: <span>{{ model.observation }}</span></h5>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Archivo digital: <a href="{{ model.file.url }}" target="_blank">{{ model.file.name }}</a></h5>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <br>
+                        <div class="row col-md-12">
+                            <a href="{% url 'iproperty:list_properties' %}" class="btn btn-sm btn-default">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}{% endblock %}

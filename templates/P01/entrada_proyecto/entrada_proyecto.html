@@ -1,0 +1,243 @@
+{% extends 'index.html' %}
+
+{% block entrada %}
+    active
+{% endblock %}
+
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Listar Entrada de Proyecto</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Entrada de Proyecto.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.btn-primary-transparent{
+    color: #007bff;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/* Codigo para el boton On/Off */
+.checkbox-activate
+{
+    display:none;
+}
+
+.switch {
+    width: 42px;
+    height: 22px;
+    background: #E5E5E5;
+    z-index: 0;
+    margin-right: 5px;
+    padding: 0;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 16px; /*IE 11*/
+    -moz-border-radius: 16px; /*Mozilla*/
+    -webkit-border-radius: 16px;/*Chrome and Safari*/
+    }
+
+.switch:before
+{
+    width: 42px;
+    height: 22px;
+background: #E5E5E5;
+z-index: 0;
+margin: 0;
+padding: 0;
+appearance: none;
+border: none;
+cursor: pointer;
+position: relative;
+border-radius:16px; /*IE 11*/
+-moz-border-radius:16px; /*Mozilla*/
+-webkit-border-radius:16px; /*Chrome and Safari*/
+}
+
+.switch:after
+{
+content: ' ';
+height: 19px;
+width: 19px;
+border-radius: 28px;
+z-index: 2;
+background: #FFFFFF;
+position: absolute;
+-webkit-transition-duration: 300ms;
+transition-duration: 300ms;
+top: 1px;
+left: 1px;
+-webkit-box-shadow: 0 2px 5px #999999;
+box-shadow: 0 2px 5px #999999;
+}
+.switchOn , .switchOn:before
+{
+background: #007bff !important;
+}
+.switchOn:after
+{
+left: 24px !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Entrada de Proyecto </h3>
+                        {% if perms.SISGDDO.add_entrada_proyecto %}
+                        <a href="{% url 'adicionar_entrada_proyecto' %}" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Adicionar </span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Fecha de entrada
+                                </th>
+                                <th>
+                                    Fecha de salida
+                                </th>
+                                <th>
+                                    Entregado por
+                                </th>
+                                <th>
+                                    Formato
+                                </th>
+                                <th>
+                                    Proyecto
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    DT
+                                </th>
+                                <th>
+                                    Activo
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% comment %} {% c = 0 %} {% endcomment %}
+                            {% for lt in lista %}
+                                <tr id="{{ lt.id }}">
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+                                    <td>
+                                        {{ lt.fecha_entrada }}
+                                    </td>
+                                    <td>
+                                        {{ lt.fecha_salida }}
+                                    </td>
+                                    <td>
+                                        {{ lt.entregado_por }}
+                                    </td>
+                                    <td>
+                                        {% for formato in lt.formato.all %}
+                                            {{ formato }} {% if not forloop.last %} - {% endif %}
+                                        {% endfor %}
+                                    </td>                                    
+                                    <td>
+                                        {{ lt.proyeto }}
+                                    </td>
+                                    <td>
+                                        {{ lt.dt }}
+                                    </td>    
+                                    <td>
+                                        {{ lt.estado }}
+                                    </td>                                    
+                                    <td>
+                                    <span class="input-group">
+                                    {% comment %} {% if perms.SISGDDO.change_entrada_proyecto %} 
+                                    <label>
+                                        <form action="{% url 'act_desactconsecutivo' lt.consecutivo.id %}" method="POST" class="form-activate">
+                                            {% csrf_token %}
+                                            <span style="display: none">{{ lt.activo }}</span>
+                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                                        </form>
+                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
+                                    </div>
+                                    </label>
+                                    {% endif %}
+                                    {% if perms.SISGDDO.change_Entrada de Entrada de Entrada de Proyecto %}
+                                    <a href="{% url 'modificar_Entrada de Entrada de Entrada de Proyecto' lt.consecutivo.id %}"
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perms.SISGDDO.delete_Entrada de Entrada de Entrada de Proyecto %}
+                                        <a href="{% url 'eliminar_Entrada de Entrada de Entrada de Proyecto' lt.consecutivo.id %}"
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                        <i class="fa fa-trash"></i>
+                                        </a>
+                                    {% endif %} 
+                                    {% endcomment %}
+                                </span>
+                                    </td>
+                                </tr>
+                                {% comment %} {% c = c + 1 %} {% endcomment %}
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+{% block script %}
+<script>
+      $(document).ready(function()
+{
+
+$('.switch').click(function()
+    {
+        $(this).toggleClass("switchOn");
+    });
+
+});
+    $('.checkbox-activate').change(function()
+{
+$(this).form().submit();
+});
+
+</script>
+{% endblock %}

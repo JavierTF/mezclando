@@ -4,6 +4,7 @@ import sys
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.models import LogEntry
 from django.shortcuts import render
+from requests import request
 from SISGDDO import models
 from django.views.generic import ListView
 import uuid
@@ -23,8 +24,11 @@ from notifications.signals import notify
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from SISGDDO import models, form
-from SISGDDO.models import cliente, consecutivo, estado_indicador_objetivos, licencia, plan_medidas,estado_entradas_proyecto,entradas_proyecto,acuerdo,linea_tematica,incidencia,propiedad_industrial,sosi,proyecto,auditoria_externa,auditoria_interna,eficacia,area,proceso,curso,formato,metodosprueba,estado_acuerdo,estado_proyecto,indicador,trabajador
-from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_consecutivo, rol_trabajador_proyecto
+from SISGDDO.models import cliente, consecutivo, estado_indicador_objetivos, licencia, plan_medidas,estado_entradas_proyecto, entrada_proyecto, acuerdo,linea_tematica,incidencia,propiedad_industrial,sosi,proyecto,auditoria_externa,auditoria_interna,eficacia,area,proceso,curso,formato,estado_acuerdo,estado_proyecto,indicador,trabajador, trabajador_consecutivo, trabajador_proyecto
+from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_proyecto
+from SISGDDO.models import tipo_codigo
+from SISGDDO.models import modalidad
+from SISGDDO.models import tipo_de_obra, estado_cenda, cenda
 from django.views.generic.edit import CreateView,UpdateView,BaseUpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView
@@ -40,6 +44,11 @@ from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
 from xhtml2pdf import pisa
 from SISGDDO.mis_validaciones import my_validates
+from pathlib import Path
+from django.core.files import File
+#import magic
+import copy
+from django.core.exceptions import ObjectDoesNotExist
 
 def ControllerNotificaciones(licencias, proyectos, acuerdos, ahora):
     for p in proyectos:
@@ -205,8 +214,8 @@ class DashboardGraficoLine(LoginRequiredMixin,TemplateView):
 
 class CambiarLogotipo(LoginRequiredMixin,CreateView):
     model = models.CambiarLogotipo
-    # form_class = form.cambiarlogoForm
-    form_class = ''
+    form_class = form.cambiarlogoForm
+    #form_class = ''
     template_name = 'logo/cambiar_logo.html'
     success_url = reverse_lazy('inicio')
 
@@ -296,7 +305,7 @@ def listar_no_conformidad(request):
 @login_required()
 def acuerdo_create(request):
     if request.POST:
-        forms = form.acuerdoForm(request.POST)
+        forms = form.estado_acuerdo_Form(request.POST)
         if forms.is_valid():
             forms.save()
             id_acuerdo = acuerdo.objects.last()
@@ -311,19 +320,19 @@ def acuerdo_create(request):
     args['forms'] = forms
     return render(request, 'P14/acuerdo_form.html', args)
 
-# class acuerdoUpdate(LoginRequiredMixin,UpdateView):
-#     model = acuerdo
-#     form_class = form.acuerdoForm
-#     template_name = 'P14/acuerdo_update_form.html'
+class acuerdoUpdate(LoginRequiredMixin,UpdateView):
+    model = acuerdo
+    form_class = form.estado_acuerdo_form
+    template_name = 'P14/acuerdo_update_form.html'
 
-#     def get_success_url(self):
-#         return reverse_lazy('listar_acuerdos')
+    def get_success_url(self):
+        return reverse_lazy('listar_acuerdos')
 
-#     def post(self, request, *args, **kwargs):
-#         register_logs(request, acuerdo, self.get_object().pk, self.get_object().__str__(), 2)
-#         self.object = self.get_object()
-#         messages.success(request, "Acuerdo modificado con éxito")
-#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        register_logs(request, acuerdo, self.get_object().pk, self.get_object().__str__(), 2)
+        self.object = self.get_object()
+        messages.success(request, "Acuerdo modificado con éxito")
+        return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
 class AcuerdosConsejoDetailView(LoginRequiredMixin,DetailView):
     model = acuerdo
@@ -425,6 +434,169 @@ class incidenciaUpdate(LoginRequiredMixin,UpdateView):
         self.object = self.get_object()
         messages.success(request, "Incidencia modificada con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+##########CRUD Dayana Nomenclador tipo de obra#######################################        
+@login_required()
+def eliminar_tipo_de_obra(request, id):
+    objeto = models.tipo_de_obra.objects.get(id = id)
+    template_name = 'nomencladores/tipo de obra/tipo_de_obra_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Tipo de obra eliminada con éxito")
+        return redirect('listar_tipo_de_obra')
+    return render(request, template_name, contexto)
+
+# listar tipo de obra    
+@login_required()
+def listar_tipo_de_obra(request):
+    contexto = {
+        'lista': models.tipo_de_obra.objects.all()
+        }
+    # print(contexto['lista'])
+    return render(request, 'nomencladores/tipo de obra/tipo_de_obra.html', contexto)
+
+### modificar obra
+class tipo_de_obra_update(LoginRequiredMixin,UpdateView):
+    model = tipo_de_obra
+    form_class = form.tipo_de_obra_form
+    template_name = 'nomencladores/tipo de obra/tipo_de_obra_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('listar_tipo_de_obra')
+
+    def post(self, request, *args, **kwargs):
+        register_logs(request, tipo_de_obra, self.get_object().pk, self.get_object().__str__(), 2)
+        self.object = self.get_object()
+        messages.success(request, "Registro modificado con éxito")
+        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+### desactivar obra
+
+@login_required()
+def act_desacttipodeobra(request, id):
+    valor = request.POST.get('activate')
+    print(valor)
+    tipo_de_obra = models.tipo_de_obra.objects.get(id = id)
+    tipo_de_obra.activo = True if valor == "on" else False
+    tipo_de_obra.save()
+    return redirect('listar_tipo_de_obra')
+
+#dayana nomenclador obra
+class nomtipodeobra(LoginRequiredMixin,CreateView):
+    model = tipo_de_obra
+    template_name = 'nomencladores/tipo de obra/tipo_de_obra_form.html'
+    success_url = reverse_lazy('listar_tipo_de_obra')
+    contexto = {
+            'form' : form.tipo_de_obra_form
+        }
+
+    def get(self, request):
+        return render(request, self.template_name, self.contexto)
+
+    def get_success_url(self):
+        return reverse_lazy('listar_tipo_de_obra')
+
+    def post(self, request, *args, **kwargs):
+        forms = form.tipo_de_obra_form(request.POST)
+        if forms.is_valid():
+            forms.save()
+            id_tipo_de_obra = tipo_de_obra.objects.last()
+            register_logs(request, tipo_de_obra, id_tipo_de_obra.pk, id_tipo_de_obra.__str__(), 1)
+            messages.success(request, "Obra creada con éxito")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            if forms.errors:
+                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+                dicc = forms.errors.values()
+                msg = str(dicc).split('\'')
+                messages.error(request, msg[1])
+            return render(self.request, self.template_name, self.contexto)
+
+@login_required()
+def eliminar_estado_cenda(request, id):
+    objeto = models.estado_cenda.objects.get(id = id)
+    template_name = 'nomencladores/estado_cenda/estado_cenda_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Estado Cenda eliminada con éxito")
+        return redirect('listar_estado_cenda')
+    return render(request, template_name, contexto)
+
+# listar tipo de estado 
+@login_required()
+def listar_estado_cenda(request):
+    contexto = {
+        'lista': models.estado_cenda.objects.all()
+        }
+    # print(contexto['lista'])
+    return render(request, 'nomencladores/estado_cenda/estado_cenda.html', contexto)
+class estado_cenda_update(LoginRequiredMixin,UpdateView):
+    model = estado_cenda
+    form_class = form.estado_cenda_form
+    template_name = 'nomencladores/estado_cenda/estado_cenda_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('listar_estado_cenda')
+
+    def post(self, request, *args, **kwargs):
+        register_logs(request, estado_cenda, self.get_object().pk, self.get_object().__str__(), 2)
+        self.object = self.get_object()
+        messages.success(request, "Registro modificado con éxito")
+        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+@login_required()
+def act_desactestadocenda(request, id):
+    valor = request.POST.get('activate')
+    print(valor)
+    estado_cenda = models.estado_cenda.objects.get(id = id)
+    estado_cenda.activo = True if valor == "on" else False
+    estado_cenda.save()
+    return redirect('listar_estado_cenda')
+
+class nomestado_cenda(LoginRequiredMixin,CreateView):
+    model = estado_cenda
+    template_name = 'nomencladores/estado_cenda/estado_cenda_form.html'
+    success_url = reverse_lazy('listar_estado_cenda')
+    contexto = {
+            'form' : form.estado_cenda_form
+        }
+
+    def get(self, request):
+        return render(request, self.template_name, self.contexto)
+
+    def get_success_url(self):
+        return reverse_lazy('listar_estado_cenda')
+
+    def post(self, request, *args, **kwargs):
+        forms = form.estado_cenda_form(request.POST)
+        if forms.is_valid():
+            forms.save()
+            id_estado_cenda = estado_cenda.objects.last()
+            register_logs(request, estado_cenda, id_estado_cenda.pk, id_estado_cenda.__str__(), 1)
+            messages.success(request, "estado creado con éxito")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            if forms.errors:
+                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+                dicc = forms.errors.values()
+                msg = str(dicc).split('\'')
+                messages.error(request, msg[1])
+            return render(self.request, self.template_name, self.contexto)
+
+@login_required()
+def listar_cenda(request):
+    datos = models.cenda.objects.all()
+    contexto = {
+        'lista': datos,
+    }
+
+    return render(request, 'P14/cenda/cenda.html', contexto)
+#####################FIN DEL MODULO DAYANA#######################
 
 class IncidenciasDetailView(LoginRequiredMixin,DetailView):
     model = incidencia
@@ -450,35 +622,13 @@ def listar_sosi(request):
     }
     return render(request, 'P01/sosi.html', contexto)
 
-@login_required()
-def listar_cenda(request):
-    listcenda = models.CENDA.objects.all()
-    contexto = {
-        'listcenda': listcenda
-    }
-    return render(request, 'P01/CENDA.html', contexto)
-
-@login_required()
-def listar_proyectos(request):
-    listproyectos= models.proyecto.objects.all()
-    contexto = {
-        'listproyectos': listproyectos
-    }
-    return render(request, 'P01/Proyectos.html', contexto)
-
-class ProyectoDetailView(LoginRequiredMixin,DetailView):
-    model = proyecto
-    template_name = 'P01/Proyectos_detail.html'
-
-    def get_success_url(self):
-        return reverse_lazy('listar_proyectos')
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Detalles del Proyecto'
-        context['list_url'] = reverse_lazy('listar_proyectos')
-        return context
+# @login_required()
+# def listar_cenda(request):
+#     listcenda = models.CENDA.objects.all()
+#     contexto = {
+#         'listcenda': listcenda
+#     }
+#     return render(request, 'P01/CENDA.html', contexto)
 
 class sosiDetailView(LoginRequiredMixin,DetailView):
     model = sosi
@@ -559,86 +709,54 @@ class sosiUpdate(LoginRequiredMixin,UpdateView):
         messages.success(request, "Registro en el sosi modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-@login_required()
-def proyecto_create(request):
-    if request.POST:
-        forms = form.proyectoForm(request.POST)
-        if forms.is_valid():
-            forms.save()
-            id_proyecto = proyecto.objects.last()
-            register_logs(request, proyecto, id_proyecto.pk, id_proyecto.__str__(), 1)
-            messages.success(request, "Proyecto creado con éxito")
-            return HttpResponseRedirect('/listar/proyectos')
-        else:
-            messages.error(request, "Error en el formulario")
-    else:
-        forms = form.proyectoForm()
-    args = {}
-    args['forms'] = forms
-    return render(request, 'P01/Proyectos_form.html', args)
 
-class proyectoUpdate(LoginRequiredMixin,UpdateView):
-    model = proyecto
-    form_class = form.proyectoForm
-    template_name = 'P01/Proyectos_update_form.html'
+# @login_required()
+# def EntradasProyectos_create(request):
+#     if request.POST:
+#         forms = form.entradaproyectoForm(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_entproy = Entradas_proyecto.objects.last()
+#             register_logs(request, Entradas_proyecto, id_entproy.pk, id_entproy.__str__(), 1)
+#             messages.success(request, "Entrada creada con éxito")
+#             return HttpResponseRedirect('/listar/entradasproyectos')
+#         else:
+#             messages.error(request, "Error en el formulario")
+#     else:
+#         forms = form.entradaproyectoForm()
+#     args = {}
+#     args['forms'] = forms
+#     return render(request, 'P03/Entradas_Proyectos_form.html', args)
 
-    def get_success_url(self):
-        return reverse_lazy('listar_proyectos')
+# class EntradasProyectosUpdate(LoginRequiredMixin,UpdateView):
+#     model = entradas_proyecto
+#     form_class = form.entradaproyectoForm
+#     template_name = 'P03/Entradas_Proyectos_update_form.html'
+#     success_url = reverse_lazy('listar_entradasproyectos')
 
-    def post(self, request, *args, **kwargs):
-        register_logs(request, proyecto, self.get_object().pk, self.get_object().__str__(), 2)
-        self.object = self.get_object()
-        messages.success(request, "Proyecto modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+#     def get_success_url(self):
+#         return reverse_lazy('listar_entradasproyectos')
 
+#     def post(self, request, *args, **kwargs):
+#         register_logs(request, entradas_proyecto, self.get_object().pk, self.get_object().__str__(), 2)
+#         self.object = self.get_object()
+#         messages.success(request, "Entrada modificada con éxito")
+#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-@login_required()
-def EntradasProyectos_create(request):
-    if request.POST:
-        forms = form.entradaproyectoForm(request.POST)
-        if forms.is_valid():
-            forms.save()
-            id_entproy = Entradas_proyecto.objects.last()
-            register_logs(request, Entradas_proyecto, id_entproy.pk, id_entproy.__str__(), 1)
-            messages.success(request, "Entrada creada con éxito")
-            return HttpResponseRedirect('/listar/entradasproyectos')
-        else:
-            messages.error(request, "Error en el formulario")
-    else:
-        forms = form.entradaproyectoForm()
-    args = {}
-    args['forms'] = forms
-    return render(request, 'P03/Entradas_Proyectos_form.html', args)
-
-class EntradasProyectosUpdate(LoginRequiredMixin,UpdateView):
-    model = entradas_proyecto
-    form_class = form.entradaproyectoForm
-    template_name = 'P03/Entradas_Proyectos_update_form.html'
-    success_url = reverse_lazy('listar_entradasproyectos')
-
-    def get_success_url(self):
-        return reverse_lazy('listar_entradasproyectos')
-
-    def post(self, request, *args, **kwargs):
-        register_logs(request, entradas_proyecto, self.get_object().pk, self.get_object().__str__(), 2)
-        self.object = self.get_object()
-        messages.success(request, "Entrada modificada con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
-
-class EntradasProyectosDetailView(LoginRequiredMixin,DetailView):
-    model = entradas_proyecto
-    template_name = 'P03/Entradas_Proyectos_detail.html'
+# class EntradasProyectosDetailView(LoginRequiredMixin,DetailView):
+#     model = entradas_proyecto
+#     template_name = 'P03/Entradas_Proyectos_detail.html'
 
 
-    def get_success_url(self):
-        return reverse_lazy('listar_entradasproyectos')
+#     def get_success_url(self):
+#         return reverse_lazy('listar_entradasproyectos')
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Detalles de la Entrada'
-        context['list_url'] = reverse_lazy('listar_entradasproyectos')
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['title'] = 'Detalles de la Entrada'
+#         context['list_url'] = reverse_lazy('listar_entradasproyectos')
+#         return context
 
 
 # class HistoricoEntradasProyectosDetailView(LoginRequiredMixin,DetailView):
@@ -1042,7 +1160,287 @@ class nomarea(LoginRequiredMixin,CreateView):
                 messages.error(request, msg[1])
             return render(self.request, self.template_name, self.contexto)
 
-# It creates a new area.
+# It creates a new pais.
+# class nompais(LoginRequiredMixin,CreateView):
+#     model = pais
+#     template_name = 'nomencladores/pais/pais_form.html'
+#     success_url = reverse_lazy("listar_paises")
+#     contexto = {
+#             'form' : form.pais_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_paises')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.pais_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_pais = pais.objects.last()
+#             register_logs(request, pais, id_pais.pk, id_pais.__str__(), 1)
+#             messages.success(request, "Pais creado con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# It creates a new proceso.
+class nomproceso(LoginRequiredMixin,CreateView):
+    model = proceso
+    template_name = 'nomencladores/proceso/proceso_form.html'
+    success_url = reverse_lazy("listar_procesos")
+    contexto = {
+            'form' : form.procesoForm
+        }
+
+    def get(self, request):
+        return render(request, self.template_name, self.contexto)
+
+    def get_success_url(self):
+        return reverse_lazy('listar_procesos')
+
+    def post(self, request, *args, **kwargs):
+        forms = form.proceso_form(request.POST)
+        if forms.is_valid():
+            forms.save()
+            id_proceso = proceso.objects.last()
+            register_logs(request, proceso, id_proceso.pk, id_proceso.__str__(), 1)
+            messages.success(request, "Proceso creado con éxito")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            if forms.errors:
+                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+                dicc = forms.errors.values()
+                msg = str(dicc).split('\'')
+                messages.error(request, msg[1])
+            return render(self.request, self.template_name, self.contexto)
+
+# It creates a new modalidad.
+# class nommodalidad(LoginRequiredMixin,CreateView):
+#     model = modalidad
+#     template_name = 'nomencladores/modalidad/modalidad_form.html'
+#     success_url = reverse_lazy("listar_modalidades")
+#     contexto = {
+#             'form' : form.modalidad_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_modalidades')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.modalidad_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_modalidad = modalidad.objects.last()
+#             register_logs(request, modalidad, id_modalidad.pk, id_modalidad.__str__(), 1)
+#             messages.success(request, "Modalidad creada con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# It creates a new modalidad.
+# class nomclasificacion_dibujo_modelo_industrial(LoginRequiredMixin,CreateView):
+#     model = clasificacion_dibujo_modelo_industrial
+#     template_name = 'nomencladores/clasificacion_dibujo_modelo_industrial/clasificacion_dibujo_modelo_industrial_form.html'
+#     success_url = reverse_lazy("listar_clasificaciones_dibujo_modelo_industrial")
+#     contexto = {
+#             'form' : form.clasificacion_dibujo_modelo_industrial_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_dibujo_modelo_industrial')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.clasificacion_dibujo_modelo_industrial_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_clasificacion_dibujo_modelo_industrial = clasificacion_dibujo_modelo_industrial.objects.last()
+#             register_logs(request, clasificacion_dibujo_modelo_industrial, id_clasificacion_dibujo_modelo_industrial.pk, id_clasificacion_dibujo_modelo_industrial.__str__(), 1)
+#             messages.success(request, "Clasificación de dibujo y modelo industrial creada con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# # It creates a new Clasificacion de elemento figurativo.
+# class nomclasificacion_elemento_figurativo(LoginRequiredMixin,CreateView):
+#     model = clasificacion_elemento_figurativo
+#     template_name = 'nomencladores/clasificacion_elemento_figurativo/clasificacion_elemento_figurativo_form.html'
+#     success_url = reverse_lazy("listar_clasificaciones_elemento_figurativo")
+#     contexto = {
+#             'form' : form.clasificacion_elemento_figurativo_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_elemento_figurativo')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.clasificacion_elemento_figurativo_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_clasificacion_elemento_figurativo = clasificacion_elemento_figurativo.objects.last()
+#             register_logs(request, clasificacion_elemento_figurativo, id_clasificacion_elemento_figurativo.pk, id_clasificacion_elemento_figurativo.__str__(), 1)
+#             messages.success(request, "Clasificación de elemento figurativo creada con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# # It creates a new Clasificación de Viena.
+# class nomclasificacion_viena(LoginRequiredMixin,CreateView):
+#     model = clasificacion_viena
+#     template_name = 'nomencladores/clasificacion_viena/clasificacion_viena_form.html'
+#     success_url = reverse_lazy("listar_clasificaciones_viena")
+#     contexto = {
+#             'form' : form.clasificacion_viena_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_viena')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.clasificacion_viena_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_clasificacion_viena = clasificacion_viena.objects.last()
+#             register_logs(request, clasificacion_viena, id_clasificacion_viena.pk, id_clasificacion_viena.__str__(), 1)
+#             messages.success(request, "Clasificación de Viena creada con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# It creates a new estado_licencia.
+# class nomestado_licencia(LoginRequiredMixin,CreateView):
+#     model = estado_licencia
+#     template_name = 'nomencladores/estado_licencia/estado_licencia_form.html'
+#     success_url = reverse_lazy("listar_estados_licencia")
+#     contexto = {
+#             'form' : form.estado_licencia_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_estados_licencia')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.estado_licencia_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_estado_licencia = estado_licencia.objects.last()
+#             register_logs(request, estado_licencia, id_estado_licencia.pk, id_estado_licencia.__str__(), 1)
+#             messages.success(request, "Estado de licencia creado con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# It creates a new estado_propiedad_industrial.
+# class nomestado_propiedad_industrial(LoginRequiredMixin,CreateView):
+#     model = estado_propiedad_industrial
+#     template_name = 'nomencladores/estado_propiedad_industrial/estado_propiedad_industrial_form.html'
+#     success_url = reverse_lazy("listar_estados_propiedad_industrial")
+#     contexto = {
+#             'form' : form.estado_propiedad_industrial_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_estados_propiedad_industrial')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.estado_propiedad_industrial_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_estado_propiedad_industrial = estado_propiedad_industrial.objects.last()
+#             register_logs(request, estado_propiedad_industrial, id_estado_propiedad_industrial.pk, id_estado_propiedad_industrial.__str__(), 1)
+#             messages.success(request, "Estado propiedad industrial creado con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+# It creates a new clasificacion_productos_servicios.
+# class nomclasificacion_productos_servicios(LoginRequiredMixin,CreateView):
+#     model = clasificacion_productos_servicios
+#     template_name = 'nomencladores/clasificacion_productos_servicios/clasificacion_productos_servicios_form.html'
+#     success_url = reverse_lazy("listar_clasificaciones_productos_servicios")
+#     contexto = {
+#             'form' : form.clasificacion_productos_servicios_form
+#         }
+
+#     def get(self, request):
+#         return render(request, self.template_name, self.contexto)
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_productos_servicios')
+
+#     def post(self, request, *args, **kwargs):
+#         forms = form.clasificacion_productos_servicios_form(request.POST)
+#         if forms.is_valid():
+#             forms.save()
+#             id_clasificacion_productos_servicios = clasificacion_productos_servicios.objects.last()
+#             register_logs(request, clasificacion_productos_servicios, id_clasificacion_productos_servicios.pk, id_clasificacion_productos_servicios.__str__(), 1)
+#             messages.success(request, "Clasificación productos y servicios creado con éxito")
+#             return HttpResponseRedirect(self.success_url)
+#         else:
+#             if forms.errors:
+#                 """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+#                 dicc = forms.errors.values()
+#                 msg = str(dicc).split('\'')
+#                 messages.error(request, msg[1])
+#             return render(self.request, self.template_name, self.contexto)
+
+
+# It creates a new estado_acuerdo.
 class nomestado_acuerdo(LoginRequiredMixin,CreateView):
     model = estado_acuerdo
     template_name = 'nomencladores/estado_acuerdo/estado_acuerdo_form.html'
@@ -1305,92 +1703,328 @@ class nomrol_trabajador_proyecto(LoginRequiredMixin,CreateView):
                 messages.error(request, msg[1])
             return render(self.request, self.template_name, self.contexto)
 
-class nomconsecutivo(LoginRequiredMixin,CreateView):
-    model = consecutivo
-    template_name = 'nomencladores/consecutivo/consecutivo_form.html'
+@login_required
+def nomconsecutivo(request):
+    tcod = tipo_codigo.objects.filter(activo = True)
+    tproy = tipo_proyecto.objects.filter(activo = True)
+    tareas = area.objects.filter(activo = True)
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    tlin = linea_tematica.objects.filter(activo = True)
+    test = estado_proyecto.objects.filter(activo = True)
+    tfue = fuente_financiamiento.objects.filter(activo = True)
+
+    template_name = 'P01/consecutivo/consecutivo_form.html'
     success_url = reverse_lazy("listar_consecutivo")
     contexto = {
-            'form' : form.consecutivo_form,
-        }
+        'no' : form.consecutivo_form.Meta.get_no_consecutivo(),
+        'tproy' : tproy,
+        'tcod' : tcod,
+        'tareas' : tareas,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        'tlin' : tlin,
+        'test' : test,
+        'tfue' : tfue,
+        'previouscode' : form.consecutivo_form.Meta.get_codigo(),
+        'vistaProy' : False
+    }
 
-    def get(self, request):
-        return render(request, self.template_name, self.contexto)
+    if request.method == "GET":
+        return render(request, template_name, contexto)
 
-    def get_success_url(self):
-        return reverse_lazy('listar_consecutivo')
+    if request.method == "POST":
+        forms = form.consecutivo_form(request.POST, request.FILES)
 
-    def post(self, request, *args, **kwargs):
-        forms = form.consecutivo_form(request.POST)
-        # print(forms)
-        # pass
+        objeto = consecutivo.objects.create(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto.formato.add(felem)
+            except:
+                pass
 
+        trabajador_consecutivo.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            consecutivo = objeto,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
 
+        objeto.save()  
 
+        proy = proyecto.objects.create(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value(),
+                consecutivo = objeto   
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                proy.formato.add(felem)
+            except:
+                pass
 
-        # gt = my_validates.comparar_valor_gt(forms['formato'].value(), 6)
-        # if gt == False:
-        #     messages.error(request, "Los formatos no pueden ser más de seis")
-        #     return render(request, self.template_name, self.contexto)
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            proyecto = proy,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
 
-        # obtener el value valor dentro del forms
-        # fe = my_validates.future_year(forms['fecha_entrada'].value())
-        # fi = my_validates.future_year(forms['fecha_inicio'].value())
-        # ft = my_validates.future_year(forms['fecha_terminacion'].value())
-        # fex = my_validates.future_year(forms['fecha_extension'].value())
-        # ff = my_validates.future_year(forms['fecha_cierre'].value())
-        # if fe == False or fi == False or ft == False:
-        #     messages.error(request, "La fecha no puede ser posterior a la actual")
-        #     return render(request, self.template_name, self.contexto)
-        # if ft > fe or fex > fe:
-        #     messages.error(request, "La fecha no puede ser mayor que la fecha de entrega")
-        #     return render(request, self.template_name, self.contexto)
-        # if ff < fi:
-        #     messages.error(request, "La fecha de fin no puede ser menor que la fecha de inicio")
-        #     return render(request, self.template_name, self.contexto)
+        proy.save()
 
-        if forms.is_valid():
-            forms.save()
-            id_consecutivo = consecutivo.objects.last()
-            register_logs(request, consecutivo, id_consecutivo.pk, id_consecutivo.__str__(), 1)
-            messages.success(request, "Consecutivo creado con éxito")
-            return HttpResponseRedirect(self.success_url)
-        else:
-            if forms.errors:
-                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
-                dicc = forms.errors.values()
-                msg = str(dicc).split('\'')
-                messages.error(request, msg[1])
-            return render(self.request, self.template_name, self.contexto)
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
 
-class nomrol_trabajador_consecutivo(LoginRequiredMixin,CreateView):
-    model = rol_trabajador_consecutivo
-    template_name = 'nomencladores/rol_trabajador_consecutivo/rol_trabajador_consecutivo_form.html'
-    success_url = reverse_lazy("listar_rol_trabajador_consecutivo")
+        messages.success(request, "Consecutivo y Proyecto creados con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def nomentrada_proyecto(request, id):
+    proy = proyecto.objects.get(consecutivo = id)
+
+    lista = entrada_proyecto.objects.filter(proyecto = proy)
+
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    test = estado_entradas_proyecto.objects.filter(activo = True)
+
+    template_name = 'P01/entrada_proyecto/entrada_proyecto_form.html'
     contexto = {
-            'form' : form.rol_trabajador_consecutivo_form
-        }
+        'lista' : lista,
+        'proy' : proy,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        'test' : test,
+    }
 
-    def get(self, request):
-        return render(request, self.template_name, self.contexto)
+    if request.method == "GET":
+        return render(request, template_name, contexto)
 
-    def get_success_url(self):
-        return reverse_lazy('listar_rol_trabajador_consecutivo')
+    if request.method == "POST":
+        forms = form.entrada_proyecto_form(request.POST, request.FILES)
 
-    def post(self, request, *args, **kwargs):
-        forms = form.rol_trabajador_consecutivo_form(request.POST)
-        if forms.is_valid():
-            forms.save()
-            id_rol_trabajador_consecutivo = rol_trabajador_consecutivo.objects.last()
-            register_logs(request, rol_trabajador_consecutivo, id_rol_trabajador_consecutivo.pk, id_rol_trabajador_consecutivo.__str__(), 1)
-            messages.success(request, "Rol en el consecutivo creado con éxito")
-            return HttpResponseRedirect(self.success_url)
-        else:
-            if forms.errors:
-                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
-                dicc = forms.errors.values()
-                msg = str(dicc).split('\'')
-                messages.error(request, msg[1])
-            return render(self.request, self.template_name, self.contexto)
+        entrada = entrada_proyecto.objects.create(
+                proyecto = proy,
+                fecha_entrada = datetime.now().strftime('%Y-%m-%d'),
+                fecha_salida = forms['fecha_salida'].value(),
+                entregado_por = trabajador.objects.get(pk = forms['entregado_por'].value()),
+                dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
+                estado = estado_entradas_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+
+        entrada.save()          
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        formatos = forms['formato'].value()
+     
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                # print(formatos)
+                # pass
+                entrada.formato.add(felem)
+            except:
+                pass
+
+        entrada.save()  
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+        messages.success(request, "Entrada de proyecto creada con éxito")
+        return render(request, template_name, contexto)
+        # return HttpResponseRedirect(success_url)
+
+@login_required
+def nomproyecto(request):
+    tcod = tipo_codigo.objects.filter(activo = True)
+    tproy = tipo_proyecto.objects.filter(activo = True)
+    tareas = area.objects.filter(activo = True)
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    tlin = linea_tematica.objects.filter(activo = True)
+    test = estado_proyecto.objects.filter(activo = True)
+    tfue = fuente_financiamiento.objects.filter(activo = True)
+
+    # el template es consecutivo # template proyecto_form no existe
+    template_name = 'P01/consecutivo/consecutivo_form.html'
+    success_url = reverse_lazy("listar_proyecto")
+    contexto = {
+        'no' : form.consecutivo_form.Meta.get_no_consecutivo(),
+        'tproy' : tproy,
+        'tcod' : tcod,
+        'tareas' : tareas,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        'tlin' : tlin,
+        'test' : test,
+        'tfue' : tfue,
+        'previouscode' : form.consecutivo_form.Meta.get_codigo(),
+        'vistaProy' : True
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.consecutivo_form(request.POST, request.FILES)
+
+        objeto = consecutivo.objects.create(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto.formato.add(felem)
+            except:
+                pass
+
+        trabajador_consecutivo.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            consecutivo = objeto,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
+
+        objeto.save()  
+
+        proy = proyecto.objects.create(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value(),
+                consecutivo = objeto   
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                proy.formato.add(felem)
+            except:
+                pass
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            proyecto = proy,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )        
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['especialista_calidad'].value()),
+            proyecto = proy,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
+        )
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['disennador'].value()),
+            proyecto = proy,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
+        )
+
+        proy.save()
+
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+
+        messages.success(request, "Consecutivo y Proyecto creados con éxito")
+        return HttpResponseRedirect(success_url)
 
 class nomfuente_financiamiento(LoginRequiredMixin,CreateView):
     model = fuente_financiamiento
@@ -1462,6 +2096,103 @@ def eliminar_rol_trabajador_consecutivo(request, id):
         return redirect('listar_rol_trabajador_consecutivo')
     return render(request, template_name, contexto)
 
+class proceso_update(LoginRequiredMixin, UpdateView):
+    model = proceso
+    form_class = form.procesoForm
+    template_name = 'nomencladores/proceso/proceso_update_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('listar_procesos')
+
+    def post(self, request, *args, **kwargs):
+        register_logs(request, proceso, self.get_object().pk, self.get_object().__str__(), 2)
+        self.object = self.get_object()
+        messages.success(request, "Registro modificado con éxito")
+        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+@login_required()
+def eliminar_proceso(request, id):
+    objeto = models.proceso.objects.get(id = id)
+    template_name = 'nomencladores/proceso/proceso_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Proceso eliminado con éxito")
+        return redirect('listar_procesos')
+    return render(request, template_name, contexto)
+
+
+
+# class modalidad_update(LoginRequiredMixin, UpdateView):
+#     model = modalidad
+#     form_class = form.modalidad_form
+#     template_name = 'nomencladores/modalidad/modalidad_update_form.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_modalidades')
+
+#     def post(self, request, *args, **kwargs):
+#         register_logs(request, modalidad, self.get_object().pk, self.get_object().__str__(), 2)
+#         self.object = self.get_object()
+#         messages.success(request, "Registro modificado con éxito")
+#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+@login_required()
+def eliminar_modalidad(request, id):
+    objeto = models.modalidad.objects.get(id = id)
+    template_name = 'nomencladores/modalidad/modalidad_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Modalidad eliminado con éxito")
+        return redirect('listar_modalidades')
+    return render(request, template_name, contexto)
+
+# class clasificacion_dibujo_modelo_industrial_update(LoginRequiredMixin, UpdateView):
+#     model = clasificacion_dibujo_modelo_industrial
+#     form_class = form.clasificacion_dibujo_modelo_industrial_form
+#     template_name = 'nomencladores/clasificacion_dibujo_modelo_industrial/clasificacion_dibujo_modelo_industrial_update_form.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_dibujo_modelo_industrial')
+
+#     def post(self, request, *args, **kwargs):
+#         register_logs(request, clasificacion_dibujo_modelo_industrial, self.get_object().pk, self.get_object().__str__(), 2)
+#         self.object = self.get_object()
+#         messages.success(request, "Registro modificado con éxito")
+#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+@login_required()
+def eliminar_clasificacion_dibujo_modelo_industrial(request, id):
+    objeto = models.clasificacion_dibujo_modelo_industrial.objects.get(id = id)
+    template_name = 'nomencladores/clasificacion_dibujo_modelo_industrial/clasificacion_dibujo_modelo_industrial_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Clasificación dibujo y modelo industrial eliminado con éxito")
+        return redirect('listar_clasificaciones_dibujo_modelo_industrial')
+    return render(request, template_name, contexto)
+
+# class clasificacion_elemento_figurativo_update(LoginRequiredMixin, UpdateView):
+#     model = clasificacion_elemento_figurativo
+#     form_class = form.clasificacion_elemento_figurativo_form
+#     template_name = 'nomencladores/clasificacion_elemento_figurativo/clasificacion_elemento_figurativo_update_form.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_clasificaciones_elemento_figurativo')
+
+#     def post(self, request, *args, **kwargs):
+#         register_logs(request, clasificacion_elemento_figurativo, self.get_object().pk, self.get_object().__str__(), 2)
+#         self.object = self.get_object()
+#         messages.success(request, "Registro modificado con éxito")
+#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
 @login_required()
 def eliminar_rol_trabajador_proyecto(request, id):
     objeto = models.rol_trabajador_proyecto.objects.get(id = id)
@@ -1473,6 +2204,214 @@ def eliminar_rol_trabajador_proyecto(request, id):
         objeto.delete()
         messages.success(request, "Rol trabajador-proyecto eliminado con éxito")
         return redirect('listar_rol_trabajador_proyecto')
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_consecutivo(request, id):
+    objeto = models.consecutivo.objects.get(id = id)
+    template_name = 'P01/consecutivo/consecutivo_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Consecutivo y Proyecto eliminados con éxito")
+        return redirect('listar_consecutivo')
+    return render(request, template_name, contexto)
+
+# class estado_licencia_update(LoginRequiredMixin, UpdateView):
+#     model = estado_licencia
+#     form_class = form.estado_licencia_form
+#     template_name = 'nomencladores/estado_licencia/estado_licencia_update_form.html'
+
+#     def get_success_url(self):
+#         return reverse_lazy('listar_estados_licencia')
+
+#     def post(self, request, *args, **kwargs):
+#         register_logs(request, estado_licencia, self.get_object().pk, self.get_object().__str__(), 2)
+#         self.object = self.get_object()
+#         messages.success(request, "Registro modificado con éxito")
+#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+
+@login_required()
+def eliminar_entrada_proyecto(request, id):
+    objeto = models.entrada_proyecto.objects.get(id = id)
+    consec = objeto.proyecto.consecutivo
+    template_name = 'P01/entrada_proyecto/entrada_proyecto_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Entrada de proyecto eliminada con éxito")
+        url = reverse('adicionar_entrada_proyecto', kwargs={'id': consec.id})
+        return HttpResponseRedirect(url)
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_proyecto(request, id):
+    objeto = models.proyecto.objects.get(consecutivo = id)
+
+    template_name = 'P01/proyecto/proyecto_confirm_delete.html'
+    contexto = {
+        'object' : objeto,
+    }
+
+    if request.method == "POST":
+        objeto.consecutivo.delete()
+        messages.success(request, "Consecutivo y Proyecto eliminados con éxito")
+        return redirect('listar_proyecto')
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_consecutivo(request, id):
+    objeto = models.consecutivo.objects.get(id = id)
+
+    def dias_atraso(self) -> int:
+        dias_atraso = 0
+        hoy = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), "%Y-%m-%d")
+        hoy = hoy.date()
+        if self.fecha_cierre > hoy:
+            try:
+                dias_atraso = self.fecha_cierre - hoy
+            except:
+                pass
+            return int(dias_atraso.days)
+        return 0    
+
+    def costo_diario(self):
+        # hay que levar duracion a dias
+        duracion = self.fecha_cierre - self.fecha_inicio
+        duracion = duracion.days
+        try:
+            costo_diario = self.costo / duracion
+        except:
+            costo_diario = 0
+        costo_diario = round(costo_diario, 2)
+        return costo_diario
+    
+    def costo_no_calidad(self):
+        costo = costo_diario(self) * dias_atraso(self)
+        return round(costo, 2)
+
+    def costo_real(self):
+        costo =  self.costo + costo_no_calidad(self)
+        return round(costo, 2)
+
+    rol_jefe = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+
+    jefe = trabajador.objects.get(
+        consecutivo = objeto,
+        trabajador_consecutivo__rol = rol_jefe
+    )
+
+    template_name = 'P01/consecutivo/consecutivo_detail.html'
+    contexto = {
+        'object' : objeto,
+        'costo_no_calidad': costo_no_calidad(objeto),
+        'costo_real': costo_real(objeto),
+        'dias_atraso': dias_atraso(objeto),
+        'jefe': jefe
+    }
+
+@login_required()
+def eliminar_rol_trabajador_proyecto(request, id):
+    objeto = models.rol_trabajador_proyecto.objects.get(id = id)
+    template_name = 'nomencladores/rol_trabajador_proyecto/rol_trabajador_proyecto_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Rol trabajador-proyecto eliminado con éxito")
+        return redirect('listar_rol_trabajador_proyecto')
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_proyecto(request, id):
+    objeto = models.proyecto.objects.get(consecutivo = id)
+
+    lista = entrada_proyecto.objects.filter(activo = True, proyecto = objeto)
+
+    def dias_atraso(self) -> int:
+        dias_atraso = 0
+        hoy = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), "%Y-%m-%d")
+        hoy = hoy.date()
+        if self.fecha_cierre > hoy:
+            try:
+                dias_atraso = self.fecha_cierre - hoy
+            except:
+                pass
+            return int(dias_atraso.days)
+        return 0    
+
+    def costo_diario(self):
+        # hay que levar duracion a dias
+        duracion = self.fecha_cierre - self.fecha_inicio
+        duracion = duracion.days
+        try:
+            costo_diario = self.costo / duracion
+        except:
+            costo_diario = 0
+        costo_diario = round(costo_diario, 2)
+        return costo_diario
+    
+    def costo_no_calidad(self):
+        costo = costo_diario(self) * dias_atraso(self)
+        return round(costo, 2)
+
+    def costo_real(self):
+        costo =  self.costo + costo_no_calidad(self)
+        return round(costo, 2)
+
+    rol_jefe = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+
+    try:
+        jefe = trabajador.objects.get(
+            proyecto = objeto,
+            trabajador_proyecto__rol = rol_jefe
+        )
+    except:
+        jefe = ''
+        pass
+
+    rol_calidad = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
+    
+    try:
+        calidad = trabajador.objects.get(
+            proyecto = objeto,
+            trabajador_proyecto__rol = rol_calidad
+        )
+    except:
+        calidad = ''
+        pass
+
+    rol_disennador = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
+
+    try:
+        disennador = trabajador.objects.get(
+            proyecto = objeto,
+            trabajador_proyecto__rol = rol_disennador
+        )
+    except:
+        disennador = ''
+        pass
+
+    template_name = 'P01/proyecto/proyecto_detail.html'
+    contexto = {
+        'object' : objeto,
+        'costo_no_calidad': costo_no_calidad(objeto),
+        'costo_real': costo_real(objeto),
+        'dias_atraso': dias_atraso(objeto),
+        'jefe': jefe,
+        'calidad': calidad,
+        'disennador': disennador,
+        'lista': lista,        
+    }
+
     return render(request, template_name, contexto)
 
 @login_required()
@@ -1593,10 +2532,10 @@ def eliminar_linea_tematica(request, id):
     
 @login_required()
 def act_desactarea(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     area = models.area.objects.get(id = id)
     area.activo = True if valor == "on" else False
-    area.save()
+    area.save()        
     return redirect('listar_areas')
 
 class nomproceso(LoginRequiredMixin,CreateView):
@@ -1945,21 +2884,6 @@ class estado_indicador_update(LoginRequiredMixin,UpdateView):
         messages.success(request, "Registro modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-class rol_trabajador_consecutivo_update(LoginRequiredMixin,UpdateView):
-    model = rol_trabajador_consecutivo
-    form_class = form.rol_trabajador_consecutivo_form
-    template_name = 'nomencladores/rol_trabajador_consecutivo/rol_trabajador_consecutivo_update_form.html'
-    success_url = reverse_lazy('listar_rol_trabajador_consecutivo')
-
-    def get_success_url(self):
-        return reverse_lazy('listar_rol_trabajador_consecutivo')
-
-    def post(self, request, *args, **kwargs):
-        register_logs(request, rol_trabajador_consecutivo, self.get_object().pk, self.get_object().__str__(), 2)
-        self.object = self.get_object()
-        messages.success(request, "Registro modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
-
 class rol_trabajador_proyecto_update(LoginRequiredMixin,UpdateView):
     model = rol_trabajador_proyecto
     form_class = form.rol_trabajador_proyecto_form
@@ -1990,24 +2914,403 @@ class linea_tematica_update(LoginRequiredMixin,UpdateView):
         messages.success(request, "Registro modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-class consecutivo_update(LoginRequiredMixin,UpdateView):
-    model = consecutivo
-    form_class = form.consecutivo_form
-    template_name = 'nomencladores/consecutivo/consecutivo_update_form.html'
-    success_url = reverse_lazy('listar_consecutivo')
+@login_required
+def consecutivo_update(request, id):
 
-    def get_success_url(self):
-        return reverse_lazy('listar_consecutivo')
+    objeto = consecutivo.objects.get(id = id)
 
-    def post(self, request, *args, **kwargs):
-        register_logs(request, consecutivo, self.get_object().pk, self.get_object().__str__(), 2)
-        self.object = self.get_object()
+    tcod = tipo_codigo.objects.filter(activo = True)
+    tproy = tipo_proyecto.objects.filter(activo = True)
+    tareas = area.objects.filter(activo = True)
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    tlin = linea_tematica.objects.filter(activo = True)
+    test = estado_proyecto.objects.filter(activo = True)
+    tfue = fuente_financiamiento.objects.filter(activo = True)
+    myformats = objeto.formato.all()
+
+    template_name = 'P01/consecutivo/consecutivo_update_form.html'
+    success_url = reverse_lazy("listar_consecutivo")
+    contexto = {
+        'form' : objeto,
+        'tproy' : tproy,
+        'tcod' : tcod,
+        'tareas' : tareas,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        'tlin' : tlin,
+        'test' : test,
+        'tfue' : tfue,
+        'myformats' : myformats,
+        'previouscode' : form.consecutivo_form.Meta.get_codigo,
+
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.consecutivo_form(request.POST, request.FILES)
+
+        consec = consecutivo.objects.filter(id = id)
+
+        consec.update(
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto.formato.clear()
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto.formato.add(felem)
+            except:
+                pass
+
+        objeto.trabajador.clear()
+
+        trabajador_consecutivo.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            consecutivo = objeto,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
+
+        objeto.save()  
+
+        objeto2 = models.proyecto.objects.get(consecutivo = id)
+        proy = models.proyecto.objects.filter(consecutivo = id)
+
+        proy.update(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value(),
+                consecutivo = objeto   
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto2.formato.clear()
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto2.formato.add(felem)
+            except:
+                pass
+
+        objeto2.trabajador.clear()
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            consecutivo = objeto2,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
+
+        objeto2.save() 
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
         messages.success(request, "Registro modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def entrada_proyecto_update(request, id):
+    # el id es una entrada
+    objeto = entrada_proyecto.objects.get(id = id)
+    myformats = objeto.formato.all()
+    
+    lista = entrada_proyecto.objects.filter(proyecto = objeto.proyecto)
+
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    test = estado_entradas_proyecto.objects.filter(activo = True)
+
+    template_name = 'P01/entrada_proyecto/entrada_proyecto_update_form.html'
+    success_url = reverse('adicionar_entrada_proyecto', kwargs={'id': objeto.proyecto.consecutivo.id})
+
+    contexto = {
+        'form' : objeto,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        # 'mitrab' : objeto.entregado_por.id,
+        'test' : test,
+        # 'miestado' : objeto.estado.id,
+        'lista' : lista,
+        'myformats' : myformats,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.entrada_proyecto_form(request.POST, request.FILES)
+
+        myformats = objeto.formato.all()
+        print(objeto.proyecto)
+        pass
+
+        entrada = entrada_proyecto.objects.filter(id = id)
+
+        entrada.update(
+                fecha_entrada = forms['fecha_entrada'].value(),
+                fecha_salida = forms['fecha_salida'].value(),
+                entregado_por = trabajador.objects.get(pk = forms['entregado_por'].value()),
+                dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto.formato.clear()
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto.formato.add(felem)
+            except:
+                pass
+
+        objeto.save()  
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def proyecto_update(request, id):
+    # objeto es un consecutivo
+    objeto = consecutivo.objects.get(id = id)
+    proy = proyecto.objects.get(consecutivo = objeto)
+
+    tcod = tipo_codigo.objects.filter(activo = True)
+    tproy = tipo_proyecto.objects.filter(activo = True)
+    tareas = area.objects.filter(activo = True)
+    tformatos = formato.objects.filter(activo = True)
+    ttrab = trabajador.objects.filter(activo = True)
+    tlin = linea_tematica.objects.filter(activo = True)
+    test = estado_proyecto.objects.filter(activo = True)
+    tfue = fuente_financiamiento.objects.filter(activo = True)
+    myformats = objeto.formato.all()
+
+    try:
+        rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+
+        jefe = trabajador_proyecto.objects.get(
+            proyecto = proy.id,
+            rol = rol.id
+        )
+    except:
+        jefe = ''
+        pass
+
+    try:
+        rol = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
+
+        calidad = trabajador_proyecto.objects.get(
+            proyecto = proy.id,
+            rol = rol.id
+        )
+    except:
+        calidad = ''
+        pass
+
+    try:
+        rol = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
+
+        disennador = trabajador_proyecto.objects.get(
+            proyecto = proy.id,
+            rol = rol.id
+        )
+    except:
+        disennador = ''
+        pass
+
+    print("CALIDA", calidad)
+    print("DISENNADOR", disennador)
+
+    template_name = 'P01/proyecto/proyecto_update_form.html'
+    success_url = reverse_lazy("listar_proyecto")
+    contexto = {
+        'form' : objeto,
+        'tproy' : tproy,
+        'tcod' : tcod,
+        'tareas' : tareas,
+        'tformatos' : tformatos,
+        'ttrab' : ttrab,
+        'tlin' : tlin,
+        'test' : test,
+        'tfue' : tfue,
+        'myformats' : myformats,
+        'jefe' : jefe.trabajador.id,
+        'calidad' : calidad.trabajador.id,
+        'disennador' : disennador.trabajador.id,
+        'previouscode' : form.consecutivo_form.Meta.get_codigo,
+
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.consecutivo_form(request.POST, request.FILES)
+
+        consec = consecutivo.objects.filter(id = id)
+
+        consec.update(
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto.formato.clear()
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto.formato.add(felem)
+            except:
+                pass
+
+        objeto.trabajador.clear()
+
+        trabajador_consecutivo.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            consecutivo = objeto,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
+
+        objeto2 = models.proyecto.objects.get(consecutivo = id)
+        proy = models.proyecto.objects.filter(consecutivo = id)
+
+        proy.update(
+                no = form.consecutivo_form.Meta.get_no_consecutivo(),
+                tipo_codigo = tipo_codigo.objects.get(pk = forms['tipo_codigo'].value()),
+                codigo = forms['codigo'].value(),
+                fecha_entrada = forms['fecha_entrada'].value(),
+                nombre_proyecto = forms['nombre_proyecto'].value(),
+                tipo = tipo_proyecto.objects.get(pk = forms['tipo'].value()),
+                area = area.objects.get(pk = forms['area'].value()),                
+                fuente_financiamiento = fuente_financiamiento.objects.get(pk = forms['fuente_financiamiento'].value()),
+                aprobacion_consejo = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_aprobacion = forms['fecha_aprobacion'].value() if forms['fecha_aprobacion'].value() else None,
+                fecha_inicio = forms['fecha_inicio'].value(),
+                fecha_interrupcion = forms['fecha_interrupcion'].value() if forms['fecha_interrupcion'].value() else None,
+                causa_interrupcion = forms['causa_interrupcion'].value() if forms['causa_interrupcion'].value() else None,
+                fecha_terminacion = forms['fecha_terminacion'].value() if forms['fecha_terminacion'].value() else None,
+                fecha_extension = forms['fecha_extension'].value() if forms['fecha_extension'].value() else None,
+                fecha_cierre = forms['fecha_cierre'].value(),
+                costo = forms['costo'].value(),
+                observacion = forms['observacion'].value().strip() if forms['observacion'].value().strip() else None,
+                informe_apertura = forms['informe_apertura'].value() if forms['informe_apertura'].value() else None,
+                informe_cierre = forms['informe_cierre'].value() if forms['informe_cierre'].value() else None,
+                linea_tematica = linea_tematica.objects.get(pk = forms['linea_tematica'].value()) if forms['linea_tematica'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value(),
+                consecutivo = objeto   
+            )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto2.formato.clear()
+        formatos = forms['formato'].value()
+        for f in formatos:
+            try:
+                felem = formato.objects.get(pk = f)
+                objeto2.formato.add(felem)
+            except:
+                pass
+
+        objeto2.trabajador.clear()
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['jefe_proyecto'].value()),
+            proyecto = objeto2,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
+        )
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['especialista_calidad'].value()),
+            proyecto = objeto2,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
+        )
+
+        trabajador_proyecto.objects.create(
+            trabajador = trabajador.objects.get(pk = forms['disennador'].value()),
+            proyecto = objeto2,
+            rol = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
+        )
+
+        objeto.save()  
+        objeto2.save() 
+        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
 
 @login_required()
 def act_desactlinea_tematica(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.linea_tematica.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2015,15 +3318,51 @@ def act_desactlinea_tematica(request, id):
 
 @login_required()
 def act_desactestado_acuerdo(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.estado_acuerdo.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
     return redirect('listar_estado_acuerdo')
 
 @login_required()
+def act_desactentrada_proyecto(request, id):
+    valor = request.POST.get('activo')
+    col = models.entrada_proyecto.objects.get(id = id)
+    proy = col.proyecto
+    consec = proy.consecutivo
+
+    col.activo = True if valor == "on" else False
+    col.save()
+    url = reverse('act_desactentrada_proyecto', kwargs={'id': id})
+    return HttpResponseRedirect(url)
+    # return redirect(f'adicionar/entrada_proyecto/{consec}')
+
+@login_required()
+def act_desactconsecutivo(request, id):
+    valor = request.POST.get('activo')
+    col = models.consecutivo.objects.get(id = id)
+
+    proy = proyecto.objects.get(consecutivo = col)
+    col.activo = True if valor == "on" else False
+    proy.activo = True if valor == "on" else False
+    col.save()
+    proy.save()
+    return redirect('listar_consecutivo')
+
+@login_required()
+def act_desactproyecto(request, id):
+    valor = request.POST.get('activo')
+    proy = models.proyecto.objects.get(consecutivo = id)
+    col = proy.consecutivo
+    proy.activo = True if valor == "on" else False
+    col.activo = True if valor == "on" else False
+    proy.save()
+    col.save()
+    return redirect('listar_proyecto')
+
+@login_required()
 def act_desactestado_proyecto(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.estado_proyecto.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2031,7 +3370,7 @@ def act_desactestado_proyecto(request, id):
 
 @login_required()
 def act_desacttipo_proyecto(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.tipo_proyecto.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2039,7 +3378,7 @@ def act_desacttipo_proyecto(request, id):
 
 @login_required()
 def act_desactfuente_financiamiento(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.fuente_financiamiento.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2047,7 +3386,7 @@ def act_desactfuente_financiamiento(request, id):
 
 @login_required()
 def act_desactformato(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.formato.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2055,7 +3394,7 @@ def act_desactformato(request, id):
 
 @login_required()
 def act_desactentidad(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.entidad.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2063,7 +3402,7 @@ def act_desactentidad(request, id):
 
 @login_required()
 def act_desactestado_entrada(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.estado_indicador_objetivos.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2071,7 +3410,7 @@ def act_desactestado_entrada(request, id):
 
 @login_required()
 def act_desactestado_indicador(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.estado_indicador_objetivos.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2079,7 +3418,7 @@ def act_desactestado_indicador(request, id):
 
 @login_required()
 def act_desactrol_consecutivo(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.rol_trabajador_consecutivo.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2087,7 +3426,7 @@ def act_desactrol_consecutivo(request, id):
 
 @login_required()
 def act_desactrol_proyecto(request, id):
-    valor = request.POST.get('activate')
+    valor = request.POST.get('activo')
     col = models.rol_trabajador_proyecto.objects.get(id = id)
     col.activo = True if valor == "on" else False
     col.save()
@@ -2095,7 +3434,7 @@ def act_desactrol_proyecto(request, id):
 
 @login_required()
 def act_desactProc(request,id):
-    valor_campo = request.POST.get('activate')
+    valor_campo = request.POST.get('activo')
     proc = models.proceso.objects.get(id=id)
     proc.activo = True if valor_campo == "on" else False
     proc.save()
@@ -2104,7 +3443,7 @@ def act_desactProc(request,id):
 
 @login_required()
 def act_desactClienteExterno(request,id):
-    valor_campo = request.POST.get('activate')
+    valor_campo = request.POST.get('activo')
     client = models.cliente_externo.objects.get(id=id)
     client.activo = True if valor_campo == "on" else False
     client.save()
@@ -2112,7 +3451,7 @@ def act_desactClienteExterno(request,id):
 
 @login_required()
 def act_desactconformidadEficacia(request,id):
-    valor_campo = request.POST.get('activate')
+    valor_campo = request.POST.get('activo')
     eficacia = models.eficacia.objects.get(id=id)
     eficacia.conformidad = True if valor_campo == "on" else False
     eficacia.save()
@@ -2120,7 +3459,7 @@ def act_desactconformidadEficacia(request,id):
 
 @login_required()
 def act_desactTrabajador(request,id):
-    valor_campo = request.POST.get('activate')
+    valor_campo = request.POST.get('activo')
     trabajador = models.trabajador.objects.get(id=id)
     trabajador.activo = True if valor_campo == "on" else False
     trabajador.save()
@@ -2176,55 +3515,30 @@ def listar_rol_trabajador_proyecto(request):
 
 @login_required()
 def listar_consecutivo(request):
-    datos = models.consecutivo.objects.filter()
+    datos = models.consecutivo.objects.all()
     contexto = {
-        'lista': datos
+        'lista': datos,
     }
-    return render(request, 'nomencladores/consecutivo/consecutivo.html', contexto)
 
-class nommetodosprueba(LoginRequiredMixin,CreateView):
-    model = metodosprueba
-    form_class = form.metpruebaForm
-    template_name = 'nomencladores/metodosprueba_form.html'
-    success_url = reverse_lazy("listar_metodospruebas")
-
-    def get_success_url(self):
-        return reverse_lazy('listar_metodospruebas')
-
-    def post(self, request, *args, **kwargs):
-        forms = form.metpruebaForm(request.POST)
-        if forms.is_valid():
-            forms.save()
-            id_metprueba = metodosprueba.objects.last()
-            register_logs(request, metodosprueba, id_metprueba.pk, id_metprueba.__str__(), 1)
-            messages.success(request, "Registro creado con éxito")
-            return HttpResponseRedirect(self.success_url)
-        else:
-            messages.error(request, "Existen errores en el formulario")
-            return render(request,self.template_name)
+    return render(request, 'P01/consecutivo/consecutivo.html', contexto)
 
 @login_required()
-def listar_metodosprueb(request):
-    listmetprueb= models.metodosprueba.objects.all()
+def listar_entrada_proyecto(request):
+    datos = models.entradas_proyecto.objects.all()
     contexto = {
-        'listmetprueb': listmetprueb
+        'lista': datos,
     }
-    return render(request, 'nomencladores/metodosprueba.html', contexto)
 
-class metodosUpdate(LoginRequiredMixin,UpdateView):
-    model = metodosprueba
-    form_class = form.metpruebaForm
-    template_name = 'nomencladores/metodosprueba_update_form.html'
-    success_url = reverse_lazy('listar_metodospruebas')
+    return render(request, 'P01/entrada_proyecto/entrada_proyecto.html', contexto)
 
-    def get_success_url(self):
-        return reverse_lazy('listar_metodospruebas')
+@login_required()
+def listar_proyecto(request):
+    datos = models.proyecto.objects.all()
+    contexto = {
+        'lista': datos,
+    }
 
-    def post(self, request, *args, **kwargs):
-        register_logs(request, metodosprueba, self.get_object().pk, self.get_object().__str__(), 2)
-        self.object = self.get_object()
-        messages.success(request, "Registro modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+    return render(request, 'P01/proyecto/proyecto.html', contexto)
 
 # class nomestado_no_conformidad(LoginRequiredMixin,CreateView):
 #     model = estado_no_conformidad

@@ -1,0 +1,257 @@
+{% extends 'P01/consecutivo/consecutivo.html' %}
+{% load static %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Detalles de Consecutivo </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_consecutivo' %}">P01 / Consecutivo</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<style>
+    .no-padding-left{
+        padding-left: 0 !important;
+    }
+
+    .bordear{
+        border-radius: 16px;
+        border: 1px solid #ccc !important;
+        padding: 0.01em 16px;
+    }
+</style>
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %}<div class="card-header">
+                        <h3 class="card-title">Detalle de la Incidencia</h3>
+                    </div>
+                    <!-- /.card-header -->{% endcomment %}
+                    <div class="card-body">
+                    <div class="row portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="col-md-6 modal-body">
+                            <div class="row no-padding-left">
+                                <div class="col-md-12" style="display: inline-block">
+                                    <label>No:</label>
+                                    <span>{{ object.no }}</span> 
+                                </div>                                
+                            </div>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Estado:</label><br>
+                                    <span id="estado" style="padding: 5px; border-radius: 16px;
+                                    border: 1px solid #ccc !important;">{{ object.estado }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Informe de apertura:</label><br>
+                                    {% if object.informe_apertura %}
+                                        <a href="{{ object.informe_apertura.url }}" target="_blank">Descargar</a>
+                                    {% else %}
+                                        <span>-----</span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Informe de cierre:</label><br>
+                                    {% if object.informe_cierre %}
+                                        <a href="{{ object.informe_cierre.url }}" download>Descargar</a>
+                                    {% else %}
+                                        <span>-----</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Código:</label><br>
+                                    <span>{{ object.codigo }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Formatos:</label><br>
+                                    <span>
+                                        {% for formato in object.formato.all %}
+                                            {{ formato }} {% if not forloop.last %} - {% endif %}
+                                        {% endfor %}
+                                    </span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Nombre del proyecto:</label><br>
+                                    <span>{{ object.nombre_proyecto }}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de entrada:</label><br>
+                                    <span>{{ object.fecha_entrada }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de terminación:</label><br>
+                                    <span>{{ object.fecha_cierre }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de extensión:</label><br>
+                                    <span>
+                                        {% if object.fecha_extension %}
+                                        {{ object.fecha_extension }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                    </span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Tipo de proyecto:</label><br>
+                                    <span>{{ object.tipo }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Área:</label><br>
+                                    <span>{{ object.area }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Jefe de proyecto:</label><br>
+                                    <span>{{ jefe }}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fuente de financiamiento:</label><br>
+                                    <span>{{ object.fuente_financiamiento }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Aprobación Consejo Editorial:</label><br>
+                                    <span>
+                                    {% if object.aprobacion_consejo %}
+                                        {{ object.aprobacion_consejo }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                    </span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha aprobación Consejo:</label><br>
+                                    <span>
+                                    {% if object.fecha_aprobacion %}
+                                        {{ object.fecha_aprobacion }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                    </span> 
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        
+                        <div class="col-md-6 bordear pull-right" style="padding-top: 17px;">
+                            <span>Del perfil del proyecto</span>
+                            <br>
+                            <div class="row no-padding-left" style="padding-top: 6px;">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de inicio:</label><br>
+                                    <span>{{ object.fecha_inicio }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de fin:</label><br>
+                                    <span>
+                                    {% if object.fecha_terminacion %}
+                                        {{ object.fecha_terminacion }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Presupuesto aprobado:</label><br>
+                                    <span>{{ object.costo }}</span> 
+                                </div>
+                            </div>    
+                            <br>
+                            <span>Información de interés</span>
+                            <br>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Costo de no calidad:</label><br>
+                                    <span>{{ costo_no_calidad }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Costo real:</label><br>
+                                    <span>{{ costo_real }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Días de atraso:</label><br>
+                                    <span>{{ dias_atraso }}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-12" style="display: inline-block">
+                                    <label>Observaciones:</label><br>
+                                    <span>
+                                    {% if object.observacion %}
+                                        {{ object.observacion }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                </div>
+                            </div>                         
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_consecutivo' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+        $( document ).ready(function() {
+            colorEstado();
+        });
+
+        function colorEstado(){
+            const x = document.getElementById('estado').innerHTML;
+            const rojo = ['atrasado', 'cancelado'];
+            const naranja = ['solicitado', 'reiniciado', 'interrumpido'];
+            const verde = ['aprobado', 'en fecha', 'terminado', 'adelantado'];
+            if (verde.includes(x)){
+                document.getElementById('estado').style.backgroundColor = "#4fcd4f";
+            }
+            if (naranja.includes(x)){
+                document.getElementById('estado').style.backgroundColor = "rgb(235 156 58)";
+            }
+            if (rojo.includes(x)){
+                console.log('ok');
+                document.getElementById('estado').style.backgroundColor = "#f95858";
+            }
+        }
+
+</script>
+{% endblock %}
