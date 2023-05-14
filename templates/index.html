@@ -1,0 +1,1377 @@
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% load i18n %}
+{% load notifications_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SISGDDO | v.2.0</title>
+    <link rel="shortcut icon" href="{% static '/assets/dist/img/images.png' %}" type="image/x-icon">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static 'assets/dist/css/ionicons.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2-bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/moment-2.25.3/moment-with-locales.js' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/moment/locale/es.js' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/daterangepicker/daterangepicker.css' %}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/toastr/toastr.min.css' %}">
+    <!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/jqvmap/jqvmap.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css' %}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/summernote/summernote-bs4.css' %}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-fixedheader/css/fixedHeader.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatable-file-export/buttons.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/mis_estilos/mi-estilo.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'assets/plugins/datatables/jquery.dataTables.min.css' %}"> {% endcomment %}
+        
+    {% block miestilo %}
+        {# aqui va el estilo CSS de cada pagina en particular #}
+    {% endblock %}
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-blue navbar-dark navbar-primary">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#" style="color: white"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{% url 'inicio' %}" class="nav-link" style="color: white">Inicio</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{% url 'profile' request.user.pk %}" class="nav-link" style="color: white">Perfil</a>
+            </li>
+        {% if not user.is_staff or user.is_superuser %}
+            {% if perms.SISGDDO.change_cambiarlogotipo %}
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="{% url 'cambiar_logo' %}" class="nav-link" style="color: white">Actualizar Logo</a>
+            </li>
+            {% endif %}
+        {% endif %}
+        {% if not user.is_staff or user.is_superuser %}
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" style="color: white">Entrar Datos</a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    {% if perms.SISGDDO.view_aspecto_medir_indicadoreficacia %}
+                    <span class="dropdown-item dropdown-header" id="asp_med_eficacia">
+                        {% comment %} <a href="{% url 'listar_aspeficacia' %}">Aspectos Medir Eficacia</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_indicador_eficacia %}
+                    <span class="dropdown-item dropdown-header" id="ind_eficacia">
+                        {% comment %} <a href="{% url 'listar_indeficacia' %}">Indicadores Eficacia</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_cliente_externo %}
+                    <span class="dropdown-item dropdown-header" id="cliente_ext">
+                        {% comment %} <a href="{% url 'listar_clienteext' %}">Clientes Externos</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_formacion_personal %}
+                    <span class="dropdown-item dropdown-header" id="formacion">
+                        {% comment %} <a href="{% url 'listar_formacionpersonal' %}">Formación del Personal</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_valoracion_encuesta %}
+                    <span class="dropdown-item dropdown-header" id="valoracionencuesta">
+                        {% comment %} <a href="{% url 'visualizarformencuesta' %}">Encuesta</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_trabajador %}
+                    <span class="dropdown-item dropdown-header" id="trabajadores">
+                        <a href="{% url 'listar_trabajadores' %}">Trabajadores</a>
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_plan_medidas %}
+                    <span class="dropdown-item dropdown-header" id="acc_prev">
+                        <a href="{% url 'listar_planmedidas' %}">Plan de Medidas</a>
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_acciones_prevenntivas %}
+                    <span class="dropdown-item dropdown-header" id="acc_prev">
+                        {% comment %} <a href="{% url 'listar_accpreventivas' %}">Acciones Preventivas</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                    {% if perms.SISGDDO.view_acciones_correptivas %}
+                    <span class="dropdown-item dropdown-header" id="acc_correptivas">
+                        {% comment %} <a href="{% url 'listar_acccorreptivas' %}">Acciones Correctivas</a> {% endcomment %}
+                    </span>
+                    {% endif %}
+                </div>
+            </li>
+            {% endif %}
+            {% if not user.is_staff or user.is_superuser %}
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" style="color: white">Reportes</a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_cert' %}" target="_blank">Certificaciones jefe de proyectos</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_reclam' %}" target="_blank">Reclamaciones de los clientes externos</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_inc' %}" target="_blank">Incidencias de los clientes internos</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_cap' %}" target="_blank">Capacitaciones</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_proyecto_aprobado' %}" target="_blank">Proyectos Aprobados</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_proyecto_atrasado' %}" target="_blank">Proyectos Atrasados</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'reporte_proyecto_term' %}" target="_blank">Proyectos Terminados</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_conforme' %}" target="_blank">Proyectos Conformes</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_no_conforme' %}" target="_blank">Proyectos No Conformes</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_format' %}" target="_blank">Proyectos por Formatos</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_estados' %}" target="_blank">Proyectos por Estados</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_dictamen' %}" target="_blank">Dictámenes Técnicos</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_eficacia' %}" target="_blank">Eficacia</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_reserva' %}" target="_blank">Trabajadores Reservas de Cuadros</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_cuadro' %}" target="_blank">Trabajadores Cuadros de la Empresa</a> {% endcomment %}
+                    </span>
+                    
+                </div>
+            </li>
+            {% endif %}
+        </ul>
+
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            <!-- Messages Dropdown Menu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-toggle="dropdown" href="#" style="color: white">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-danger navbar-badge" id="notify_count">{% if count %}
+                        {{ count }}{% endif %}</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <span class="dropdown-item dropdown-header" id="notify_header">
+                        {% blocktrans %}Usted tiene{% endblocktrans %}
+                        {{ count }}
+                        {% blocktrans %}notificación(es){% endblocktrans %}
+                    </span>
+                    <div id="notify_list">
+                        {% for noti in notification %}
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="alert-{{ noti.level }} dropdown-item" name="{{ noti.id }}"
+                               onclick="Notify_less_front({{ noti.id }})">
+                                <p><i class="fas fa-check mr-2" ></i> {{ noti.verb }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" id="eliminar_noty_all" class="dropdown-item dropdown-footer">
+                        {% blocktrans %}Eliminar todas las notificaciones{% endblocktrans %}
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}" title="Salir" style="color: white">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-light-red elevation-4">
+        <!-- Brand Logo -->
+
+        <a href="{% url 'inicio' %}" class="brand-link navbar-primary">
+            <img src="{% static 'assets/dist/img/images.png' %}" alt="Citmatel Logo"
+                 class="brand-image img-circle elevation-2">
+            <span class="brand-text font-weight-light" style="color: white">SISGDDO</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    {% if userPhoto %}
+                        <img src="/media/{{ userPhoto }}" class="img-circle elevation-2" alt="User Image">
+                    {% else %}
+                        <img src="{% static 'users/userDefault4.png' %}" class="img-circle elevation-2" alt="User Image"
+                             title="Sube tu foto">
+                    {% endif %}
+                </div>
+                <div class="info">
+                    <a href="{% url 'profile' request.user.pk %}"
+                       class="d-block">{{ request.user.first_name }} {{ request.user.last_name }}</a>
+                </div>
+            </div>
+
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="true">
+                    <!-- Add icons to the links using the .nav-icon class
+                         with font-awesome or any other icon font library -->
+                    {% if not user.is_staff or user.is_superuser %}
+                    <li class="nav-header" style="color: blue">Gestión</li>
+
+
+                    <li class="nav-item has-treeview  {% block menu_gestion %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_gestion_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-user-secret"></i>
+                            <p>
+                                Procesos
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item has-treeview {% block menu_p00 %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_p00_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-book-reader"></i>
+                            <p>
+                                Integración
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        {% if perms.SISGDDO.view_incidencias %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_visualizarincidencias' %}"
+                                   class="nav-link {% block visincidencia %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Visualizar Incidencias</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_atencion_cliente_externo %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_ateclientext' %}"
+                                   class="nav-link {% block quejas %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Atención cliente</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_auditoria_externa and perms.SISGDDO.view_auditoria_interna %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item has-treeview {% block menu_acciones %}{% endblock %}">
+                                <a href=""
+                                   class="nav-link {% block acciones %}{% endblock %}">
+                                    <i class="nav-icon far fa-circle  "></i>
+                                    <p>Acciones de Control
+                                    <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+                            <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url "listar_auditoriaint" %}"
+                                   class="nav-link {% block auditoria_interna %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Auditoría Interna</p>
+                                </a>
+                            </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url "listar_auditoriaext" %}"
+                                   class="nav-link {% block auditoria_externa %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Auditoría Externa</p>
+                                </a>
+                            </li>
+                            </ul>
+                            </li>
+                            </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_eficacia %}
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                                <a href="{% url 'listar_eficacia' %}"
+                                   class="nav-link {% block eficacia %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Eficacia</p>
+                                </a>
+                            </li>
+                            </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_valoracion_encuesta %}
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                                {% comment %} <a href="{% url "listar_valencuesta" %}"
+                                   class="nav-link {% block valoracion_encuesta %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Valorar Encuestas</p>
+                                </a> {% endcomment %}
+                        </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_tipo_de_licencias %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_licencias' %}"
+                                   class="nav-link {% block licencias %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Licencias</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item has-treeview {% block menu_p01 %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_p01_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-book-reader"></i>
+                            <p>
+                                Innovación
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        {% if perms.SISGDDO.view_sosi %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_sosi' %}"
+                                   class="nav-link {% block sosi %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>SOSI</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_cenda %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_cenda' %}"
+                                   class="nav-link {% block cenda %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>CENDA</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_proyecto %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_proyectos' %}"
+                                   class="nav-link {% block proyectos %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Proyectos</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
+
+                    <li class="nav-item has-treeview {% block menu_p03 %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_p03_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-book-reader"></i>
+                            <p>
+                                Desarrollo
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        {% if perms.SISGDDO.view_entradas_proyecto %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% comment %} <a href="{% url 'listar_entradasproyectos' %}"
+                                   class="nav-link {% block entradas %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Entradas Proyectos</p>
+                                </a> {% endcomment %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_historico_entradas_proyectos %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% comment %} <a href="{% url 'listar_histentproy' %}"
+                                   class="nav-link {% block historicoentradas %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Histórico Entradas</p>
+                                </a> {% endcomment %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_dictamen_tecnico %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% comment %} <a href="{% url 'listar_dictamenes' %}"
+                                   class="nav-link {% block dictamen %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Dictamen Proyectos</p>
+                                </a> {% endcomment %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_historico_dictamen_tecnico %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% comment %} <a href="{% url 'listar_historicodictamen' %}"
+                                   class="nav-link {% block historicodictamen %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p> Histórico Dictamen</p>
+                                </a> {% endcomment %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% comment %} {% if perms.SISGDDO.view_proyecto %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estadoproy' %}"
+                                   class="nav-link {% block estados %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados Proyectos</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %} {% endcomment %}
+                    </li>
+
+                    <li class="nav-item has-treeview {% block menu_p14 %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_p14_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-book-reader"></i>
+                            <p>
+                                Información
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        {% if perms.SISGDDO.view_incidencias %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_incidencias' %}"
+                                   class="nav-link {% block incidencias %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Incidencias</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_trabajador %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_reservas' %}"
+                                   class="nav-link {% block reserva %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Reserva de cuadros</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_trabajador %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_cuadros' %}"
+                                   class="nav-link {% block cuadro %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cuadros</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_formacion_personal %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                {% comment %} <a href="{% url 'listar_formación' %}"
+                                   class="nav-link {% block formación %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Formación Personal</p>
+                                </a> {% endcomment %}
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.SISGDDO.view_acuerdos_consejillo %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_acuerdos' %}"
+                                   class="nav-link {% block acuerdos %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Acuerdos Consejo</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                    </li>
+                    </ul>
+                    </li>
+                    {% endif %}
+                    {% if not user.is_staff or user.is_superuser %}
+                    <li class="nav-header" style="color: blue">Nomencladores</li>
+                    <li class="nav-item has-treeview {% block menu_nomencladores %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_nomencladores_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-user-secret"></i>
+                            <p >
+                                Nomencladores
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            {% if perms.SISGDDO.view_area %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Áreas</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_linea_tematica %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_linea_tematica' %}" class="nav-link {% block linea_tematica %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Líneas temáticas</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_estado_acuerdo %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estado_acuerdo' %}" class="nav-link {% block estado_acuerdo %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados de acuerdo</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_consecutivo %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_consecutivo' %}" class="nav-link {% block consecutivo %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Consecutivos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_estado_proyecto %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estado_proyecto' %}" class="nav-link {% block estado_proyecto %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados de proyecto</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_tipo_proyecto %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_tipo_proyecto' %}" class="nav-link {% block tipo_proyecto %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tipos de proyecto</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_fuente_financiamiento %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_fuente_financiamiento' %}" class="nav-link {% block fuente_financiamiento %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Fuentes de financiamiento</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_formato %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_formato' %}" class="nav-link {% block formato %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Formatos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_estado_entrada %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estado_entrada' %}" class="nav-link {% block estado_entrada %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados entradas-proyecto</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_entidad %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_entidad' %}" class="nav-link {% block entidad %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Entidades</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_estado_indicador_objetivos %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estado_indicador' %}" class="nav-link {% block estado_indicador %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados de indicador</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_rol_trabajador_consecutivo %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_rol_trabajador_consecutivo' %}" class="nav-link {% block rol_trabajador_consecutivo %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Roles trabajador-consecutivo</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_rol_trabajador_proyecto %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_rol_trabajador_proyecto' %}" class="nav-link {% block rol_trabajador_proyecto %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Roles trabajador-proyecto</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% comment %} {% if perms.SISGDDO.view_proceso %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_procesos' %}" class="nav-link {% block proceso %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Procesos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_curso %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_curso' %}" class="nav-link {% block curso %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Cursos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            {% if perms.SISGDDO.view_metodosprueba %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_metodospruebas' %}" class="nav-link {% block met_prueba %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Métodos de Pruebas</p>
+                                </a>
+                            </li>
+                            {% endif %} 
+                            {% if perms.SISGDDO.view_estado_no_conformidad %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estadonoconformidad' %}" class="nav-link {% block est_no_conf %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estados No Conformidad</p>
+                                </a> 
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_estado_entradas_proyecto %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_estadoentproy' %}" class="nav-link {% block est_entradas_proy %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Estado Entradas Proy.</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_clasificacionincidencias %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_clasificacioninc' %}" class="nav-link {% block clasif_incidencias %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Clasificación</p>
+                                </a>
+                            </li>
+                            {% endif %} {% endcomment %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {% if user.is_staff %}
+                    <li class="nav-header" style="color: blue">Seguridad</li>
+                    <li class="nav-item has-treeview {% block menu_seguridad %}{% endblock %}">
+                        <a href="#" class="nav-link {% block menu_seguridad_active %}{% endblock %}">
+                            <i class="nav-icon fa fa-user-secret"></i>
+                            <p>
+                                Seguridad
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'user_list' %}" class="nav-link {% block usuarios %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Usuarios</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'group_list' %}" class="nav-link {% block grupo %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Roles</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'history_list_300' %}"
+                                   class="nav-link {% block historial %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Trazas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'db_save' %}"
+                                   class="nav-link {% block salvabd %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Salva y Restaura BD</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
+        </div>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        {% block wrapper %}
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item" ><a href="{% url 'inicio' %}">Inicio</a></li>
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+        {% endblock %}
+        <!-- Main content -->
+        {% block content %}
+
+
+        {% endblock %}
+
+        <!-- /.content -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+        <!--Agrego el contenido con jquery desde las vistas-->
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <form class="form-modal" role="form" action="{% block action %}{% endblock %}" method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_descripcion">{% block nombrecampo %}Descripción:{% endblock %}</label>
+                    <input type="text" class="form-control descripcion-field" id="id_descripcion" placeholder="Teclee el nombre"
+                           maxlength="255" name="descripcion" {% block value1 %}{% endblock %}>
+                </div>
+                {% block abbr1 %}
+                <div class="form-group">
+                    <label for="id_abreviatura">{% block nombrecampo2 %}Abreviatura:{% endblock %}</label>
+                    <input type="text" class="form-control" id="id_abreviatura" placeholder="Teclee la abreviatura"
+                           maxlength="255" name="abreviatura"  value="{{ id }}" {% block value3 %}{% endblock %}>
+                </div>
+                {% endblock %}
+                <button type="submit" class="btn btn-primary"> Guardar </button>
+
+            </form>
+
+      </div>
+      </div>
+      </div>
+      </div>
+
+<div class="modal fade" id="idmodal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">
+        <!--Agrego el contenido con jquery desde las vistas-->
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+            <form class="form-modal" role="form" action="{% block action1 %}{% endblock %}" method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_descripcion">{% block nombrecampo3 %}Nombre:{% endblock %}</label>
+                    <input type="text" class="form-control descripcion-field" id="id_descripcion" placeholder="Teclee el nombre"
+                           maxlength="255" name="descripcion" {% block value2 %}{% endblock %}>
+                </div>
+                {% block activo %}
+                <div class="form-group">
+                <label for="id_activo">{% block nombrecampo1 %}Activo:{% endblock %}</label>
+                <input type="checkbox" class="form-control" id="id_activo" placeholder="" name="activo">
+                </div>
+                {% endblock %}
+                <input type="hidden" value="{% block redirect %}{% endblock %}" name="redirect">
+                <button type="submit" class="btn btn-primary"> Guardar </button>
+
+            </form>
+
+      </div>
+      </div>
+      </div>
+      </div>
+
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <strong>Copyright &copy; {% now 'Y' %} <a href="http://www.citmatel.cu/">CITMATEL</a>-CUJAE.</strong>
+        Todos los Derechos Reservados.
+        <div class="float-right d-none d-sm-inline-block">
+            Versión 2.0
+        </div>
+    </footer>
+
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+
+</div>
+    <!-- Gráficos -->
+<script src="{% static 'assets/plugins/highcharts-8.1.2/highcharts.js' %}"></script>
+<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/exporting.js' %}"></script>
+<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/export-data.js' %}"></script>
+<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/accessibility.js' %}"></script>
+<!-- jQuery -->
+<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{% static 'assets/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+
+<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+<!-- Toastr -->
+<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+<!-- ChartJS -->
+<script src="{% static 'assets/plugins/chart.js/Chart.min.js' %}"></script>
+<!-- Sparkline -->
+<script src="{% static 'assets/plugins/sparklines/sparkline.js' %}"></script>
+<!-- JQVMap -->
+<script src="{% static 'assets/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+<!-- jQuery Knob Chart -->
+<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+<!-- daterangepicker -->
+<script src="{% static 'assets/plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'assets/plugins/daterangepicker/daterangepicker.js' %}"></script>
+
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+<!-- Summernote -->
+<script src="{% static 'assets/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<!-- overlayScrollbars -->
+<script src="{% static 'assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'assets/dist/js/adminlte.js' %}"></script>
+
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="{% static 'assets/dist/js/pages/dashboard.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'assets/dist/js/demo.js' %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000
+        });
+        {% if messages %}
+            {% for message in messages %}
+                Toast.fire({
+                    type: '{{ message.tags }}',
+                    title: '{{ message }}',
+                });
+            {% endfor %}
+        {% endif %}
+    })
+</script>
+<script>
+    function Notify_less_front(id_noty) {
+        id_noty = parseInt(id_noty);
+        $.ajax({
+            url: '{% url "notificacion_read" 1 %}',
+            data: {'id': id_noty},
+            type: 'get',
+            success: function (data) {
+                var count = parseInt($('#notify_count').html()) - 1;
+                if (count == 0) {
+                    $('#notify_count').html("");
+                }
+                else {
+                    $('#notify_count').html(count);
+                }
+
+                $('#notify_header').html("{% trans 'Usted tiene' %}" +
+                    " " + count + " " +
+                    "{% trans 'notificacione(s)' %}")
+                $('#notify_list').html(data);
+            }
+
+        })
+    }
+
+    $('#eliminar_noty_all').on("click", function () {
+        $.ajax({
+            url: '{% url "mark_all_read" %}',
+            success: function () {
+                $('#notify_count').html("");
+                $('#notify_list').html("");
+                $('#notify_header').html("{% blocktrans %}Usted tiene 0 notificaciones{% endblocktrans %}");
+            }
+        });
+    });
+
+    $('#eliminar_pedidos_all').on("click", function () {
+        $.ajax({
+            url: '{% url "mark_offer_all_read" %}',
+            success: function () {
+                $('#sell_count').html("");
+                $('#sell_list').html("");
+            }
+        });
+    });
+
+</script>
+<script>
+    $(function () {
+            cant_hijos= $('#example1 thead tr:eq(0) th').length;
+
+            var table = $("#example1").DataTable({
+                "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+                orderCellsTop: false,
+                fixedHeader: true,
+                "aoColumnDefs":[{
+                   "bSortable":false,
+                   "aTargets": [cant_hijos-1],
+                   /*"width": 200,
+                   "targets": 0*/
+                }],
+                //fixedColumns: true,
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 a 0 de 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                "search": {
+                    "caseInsensitive": true
+                },
+        });
+
+    $('#example1 tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+
+    $('#example1 thead tr').clone(true).appendTo( '#example1 thead' );
+
+    //table.columns.adjust().draw();
+
+    $('#example1 thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text(); //es el nombre de la columna
+        $(this).unbind('click');
+        $(this).removeAttr('aria-label aria-sort');
+        $(this).removeClass('sorting_asc sorting_desc sorting');
+        
+        if (!title.includes("Número")){
+            $(this).html( '<input type="text" placeholder="Buscar..." class="form-control"/>' );
+            $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        });        
+        }
+        else {
+            $(this).html('');
+        }
+
+        if (title.includes("Activo")){
+            sele = '<select class="custom-select form-select form-select-sm">'
+            sele += '<option value="" selected>Todos</option>'
+            sele += '<option value="true">Activados</option>'
+            sele += '<option value="False">Desactivados</option>'
+            sele += '</select>'
+            $(this).html( sele );
+            $( 'select', this ).on( 'change', function () {
+                if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+                }
+            });
+        }
+    });
+});
+
+</script>
+<script>
+    {#$('select').prepend('<option value=""><option>');#}
+    {#$('option[value=""]').text('Seleccione una opción');#}
+    $("#id_accoun").select2();
+
+</script>
+<script>
+
+    $('.select2').select2({
+        theme: "bootstrap4",
+        language: "es",
+        maximumInputLength: 10,
+        minimumInputLength: 1,
+    });
+    
+    $('.select2[multiple=""]').select2({
+        theme: "bootstrap4",
+        language: "es",
+        placeholder: "Teclee una o varias opciones",
+        maximumInputLength: 10,
+        minimumInputLength: 1,
+    });
+    {#$('select[name="trabajador"]').select2({#}
+    {#    theme: "Bootstrap4",#}
+    {#    language: "es",#}
+    {#    ajax:{#}
+    {#        delay:250,#}
+    {#        type: 'POST',#}
+    {#        allowClear: true,#}
+    {#        url: window.location.pathname,#}
+    {#        data: function (params) {#}
+    {#            var queryParameter={#}
+    {#                tern:params.term,#}
+    {#                action: 'autocomplete'#}
+    {#            }#}
+{##}
+{#                return queryParameter;#}
+{#            },#}
+{#            processResults: function (data) {#}
+{#                return {#}
+{#                    results: data#}
+{#                };#}
+{#            },#}
+{#        },#}
+{#        placeholder:'Ingrese el trabajador',#}
+{#        minimumInputLength: 1,#}
+{#    });#}
+</script>
+
+{% block script %}{% endblock %}
+
+<script>
+    $(function () {
+        // Summernote
+        $("#id_desc").summernote();
+
+
+    })
+</script>
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-fixedheader/js/fixedHeader.bootstrap4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+<!-- Plugin Tildes -->
+<script src="{% static 'assets/plugins/datatables-accent/accent-neutralise.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/jszip.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/pdfmake.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/vfs_fonts.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/buttons.html5.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/buttons.print.min.js' %}"></script>
+
+
+<script>
+let temp = $("#btn1").clone();
+$("#btn1").click(function(){
+    $("#btn1").after(temp);
+});
+
+$(document).ready(function(){
+    var table = $('#example').DataTable({
+       orderCellsTop: true,
+       fixedHeader: true,
+    });
+
+    //Creamos una fila en el head de la tabla y lo clonamos para cada columna
+    $('#example thead tr').clone(true).appendTo( '#example thead' );
+
+    $('#example thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text(); //es el nombre de la columna
+        $(this).html( '<input type="text" placeholder="Search...'+title+'" />' );
+
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+});
+</script>
+<script type="application/javascript">
+        Highcharts.chart('container', {
+            lang: {
+                downloadCSV:"Descargar CSV",
+                downloadXLS:"Descargar XLC",
+                downloadPDF:"Descargar PDF",
+                downloadJPEG:"Descargar JPG",
+                downloadSVG:"Descargar SVG",
+                downloadPNG:"Descargar PNG",
+                viewFullscreen:"Ver en pantalla completa",
+                viewData:"Ver los datos",
+                printChart:"imprimir gráfico"
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{ title }}'
+            },
+            subtitle: {
+                text: 'Reporte de columnas'
+            },
+            xAxis: {
+                categories: [
+                    'Enero',
+                    'Febrero',
+                    'Marzo',
+                    'Abril',
+                    'Mayo',
+                    'Junio',
+                    'Julio',
+                    'Agosto',
+                    'Septiembre',
+                    'Octubre',
+                    'Noviembre',
+                    'Diciembre'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Cantidades '
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Porcentaje de cantidad',
+                showInLegend: false,
+                colorByPoint: true,
+                data: {{ datos_grafico_barra|safe }}
+            }]
+        });
+
+</script>
+<script type="application/javascript">
+Highcharts.chart('container-pie', {
+    lang: {
+                downloadCSV:"Descargar CSV",
+                downloadXLS:"Descargar XLC",
+                downloadPDF:"Descargar PDF",
+                downloadJPEG:"Descargar JPG",
+                downloadSVG:"Descargar SVG",
+                downloadPNG:"Descargar PNG",
+                viewFullscreen:"Ver en pantalla completa",
+                viewData:"Ver los datos",
+                printChart:"imprimir gráfico"
+    },
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Trabajadores activos e inactivos'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+        name: 'trabajadores',
+        colorByPoint: true,
+        data: [{
+            name: 'activos',
+            y: {{ datos_grafico_pastelpart1|safe }},
+            sliced: true,
+            selected: true
+        }, {
+            name: 'inactivos',
+            y: {{ datos_grafico_pastelpart2|safe }}
+        }]
+    }]
+});
+</script>
+<script type="application/javascript">
+Highcharts.chart('container-line', {
+    lang: {
+                downloadCSV:"Descargar CSV",
+                downloadXLS:"Descargar XLC",
+                downloadPDF:"Descargar PDF",
+                downloadJPEG:"Descargar JPG",
+                downloadSVG:"Descargar SVG",
+                downloadPNG:"Descargar PNG",
+                viewFullscreen:"Ver en pantalla completa",
+                viewData:"Ver los datos",
+                printChart:"imprimir gráfico"
+    },
+    chart: {
+        type: 'spline'
+    },
+    title: {
+        text: ''
+    },
+    subtitle: {
+        text: ''
+    },
+    xAxis: {
+        categories: ['Enero', 'Febrero', 'Marzo', 'April', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+    },
+    yAxis: {
+        title: {
+            text: ''
+        },
+        labels: {
+            formatter: function () {
+                return this.value + '°';
+            }
+        }
+    },
+    tooltip: {
+        crosshairs: true,
+        shared: true
+    },
+    plotOptions: {
+        spline: {
+            marker: {
+                radius: 4,
+                lineColor: '#666666',
+                lineWidth: 1
+            }
+        }
+    },
+    series: [{
+        name: 'Proyecto',
+        marker: {
+            symbol: 'square'
+        },
+        data: {{ datos_grafico_linea }},
+        data: [{
+            y: 3.9,
+            marker: {
+                symbol: 'url(https://www.highcharts.com/samples/graphics/snow.png)'
+            }
+        }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    }]
+});
+</script>
+</body>
+</html>

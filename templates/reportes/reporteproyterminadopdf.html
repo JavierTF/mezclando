@@ -1,0 +1,133 @@
+{% load staticfiles %}
+<!-- Tempusdominus Bbootstrap 4 -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{% static 'assets/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
+{% block miestilo %}
+<style>
+    .img-invoice1 {
+        width: 50px;
+        margin-left: 770px;
+    }
+    .img-invoice {
+        width: 100px;
+
+    }
+
+    .head {
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 2px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+
+    .text-center{
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="/media/logo/logocitmatel.jpg" class="img-invoice" >
+                    <img src="/media/logo/logoSIG.jpg" class="img-invoice1">
+                    <h1 class="m-0 text-dark text-center">{{ title }}</h1>
+
+                </div><!-- /.col -->
+                <h3 class="mr-5 text-dark">Mes: {{ mes }} </h3>
+                <h3 class="text-dark">Año: {{ ano }} </h3>
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+
+
+
+
+    <section class="content">
+        <div class="row">
+            <div class="col-lg-12">
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered ">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Área
+                                </th>
+                                <th>
+                                    Jefe de Proyecto
+                                </th>
+                                <th>
+                                    Nombre del proyecto
+                                </th>
+                                <th>
+                                    Número del proyecto
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for proyecto in datos %}
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.area }}
+                                        </td>
+                                        <td>
+                                            {% for t in proyecto.jefe_proyecto.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+
+                                        </td>
+                                        <td>
+                                            {{ proyecto.nombre_proyecto }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.id }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.estado }}
+                                        </td>
+
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        <!-- /.row -->
+    </section>
+

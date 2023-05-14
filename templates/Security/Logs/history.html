@@ -1,0 +1,128 @@
+{% extends 'index.html' %}
+{% load tagspropias %}
+{% block menu_seguridad %}
+menu-open
+{% endblock %}
+{% block menu_seguridad_active %}
+active
+{% endblock %}
+{% block historial %}
+active
+{% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Historial.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Historial</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Historial de las acciones realizadas en la aplicación</h3>
+
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover table-responsive">
+                            <thead>
+                            <tr>
+                                <th>
+                                    No.
+                                </th>
+                                <th>
+                                    Fecha
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Usuario
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                                <th>
+                                    IP
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for h in history %}
+                                <tr>
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+                                    <td>
+                                        {{ h.action_time|No_Defi }}
+                                    </td>
+                                    <td>
+                                        {{ h.user.first_name }} {{ h.user.last_name }}
+                                    </td>
+                                    <td>
+                                        {{ h.user }}
+                                    </td>
+                                    <td>
+                                        {% if h.action_flag == 0%}
+                                            Accedió al listado de {{ h.content_type }}
+                                        {% elif h.action_flag == 1 %}
+                                            Agregó un/a {{ h.content_type }}
+                                        {% elif h.action_flag == 2 %}
+                                            Modificó un/a {{ h.content_type }}
+                                        {% elif h.action_flag == 3 %}
+                                            Elimino un/a {{ h.content_type }}
+                                        {% elif h.action_flag == 4 %}
+                                            Inició sesión
+                                        {% elif h.action_flag == 5 %}
+                                            Cerró la sesión
+                                        {% elif h.action_flag == 6 %}
+                                            Activó el usuario {{ h.object_repr }}
+                                        {% elif h.action_flag == 7 %}
+                                            Desactivar el usuario {{ h.object_repr }}
+                                        {% elif h.action_flag == 8 %}
+                                            Reactivar el usuario {{ h.object_repr }}
+                                        {% elif h.action_flag == 9 %}
+                                           ERROR de login(4 intentos)! <strong>{{ h.object_repr }}</strong>
+                                        
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ h.change_message }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

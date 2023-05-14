@@ -1,0 +1,80 @@
+{% extends 'entradadatos/trabajadores.html' %}
+{% load staticfiles %}
+{% load tagspropias %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Trabajadores.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_trabajadores' %}">Listado de Dictamenes Técnicos</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle del Trabajador</h3>
+                    </div>
+                    <!-- /.card-header -->
+                     <div class="card-body">
+                     <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Nombre:</label> {{ object.nombre_trabajador }}
+                            <br>
+                            <label class="control-label">Primer Apellido:</label> {{ object.primer_apellido }}
+                            <br>
+                            <label class="control-label">Segundo Apellido:</label> {{ object.segundo_apellido }}
+                            <br>
+                            <label class="control-label">Carnet de Identidad:</label> {{ object.ci|No_Defi}}
+                            <br>
+                            <label class="control-label">Cargo:</label> {{ object.cargo }}
+                            <br>
+                            <label class="control-label">Formación:</label> {{ object.formacion|No_Defi }}
+                            <br>
+                            <label class="control-label">Activo:</label> {{ object.activo|No_Defi|Si_No }}
+                            <br>
+                            <label class="control-label">Es Reserva:</label> {{ object.es_reserva|No_Defi|Si_No  }}
+                            <br>
+                            <label class="control-label">Foto de la Reserva:</label> {{ object.fotoreserva.url|No_Defi }}
+                            <br>
+                            <label class="control-label">Planilla de la Reserva:</label> {{ object.planillareserva|No_Defi }}
+                            <br>
+                            <label class="control-label">Es Cuadro:</label> {{ object.es_cuadro|No_Defi|Si_No }}
+                            <br>
+                            <label class="control-label">Foto del Cuadro:</label> {{ object.fotocuadro.url|No_Defi }}
+                            <br>
+                            <label class="control-label">Planilla del Cuadro:</label> {{ object.planillacuadro|No_Defi }}
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_trabajadores' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

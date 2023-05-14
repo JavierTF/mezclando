@@ -1,0 +1,75 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% load tagspropias %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Licencias.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_licencias' %}">Listado de licencias</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario de Licencias</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <div class="modal-body">
+                            <label class="control-label">Nombre de la licencia:</label> {{ object.nombre_lic }}
+                            <br>
+                            <label class="control-label">Número de la Licencia:</label> {{ object.no_licencia }}
+                            <br>
+                            <label class="control-label">Actividad:</label> {{ object.actividad }}
+                            <br>
+                            <label class="control-label">Entidad Emite:</label> {{ object.entidad_emite }}
+                            <br>
+                            <label class="control-label">Fecha de Otorgamiento:</label> {{ object.fecha_otorg }}
+                            <br>
+                            <label class="control-label">Fecha de Vencimiento:</label> {{ object.fecha_venc }}
+                            <br>
+                            <label class="control-label">Responsable:</label> {{ object.trabajador_responsable }}
+                            <br>
+                            <label class="control-label">Observaciones:</label> {{ object.observacion|No_Defi }}
+                            <br>
+                            <label class="control-label">Proceso:</label> {{ object.proceso }}
+
+                    </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_licencias' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

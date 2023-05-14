@@ -1,0 +1,110 @@
+{% extends 'index.html' %}
+{% block visincidencia %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Incidencias de los Clientes Internos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Incidencias</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Incidencias</h3>
+
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover ">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Fecha de Recibido
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    Proceso
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for incidencia in incidencias %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ incidencia.fecha_recibido }}
+                                        </td>
+                                        <td>
+                                            {{ incidencia.estado }}
+                                        </td>
+
+                                        <td>
+                                            {{ incidencia.proceso }}
+                                        </td>
+
+
+
+                                    <td>
+                                    <span class="input-group-sm">
+                                    {% if perms.SISGDDO.view_incidencias %}
+                                    <a href="{% url 'detalle_incidencia' incidencia.pk %}"
+                                         class="btn btn-sm btn-primary" title="detalles">
+                                    <i class="fa fa-eye"></i>
+                                    </a>
+                                    {% endif %}
+
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

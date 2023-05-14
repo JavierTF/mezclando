@@ -1,0 +1,81 @@
+{% extends 'P03/Estados_proyectos.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Entradas de Proyectos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_entradasproyectos' %}">Listado de Proyectos</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalles de la Entrada</h3>
+                    </div>
+                    <!-- /.card-header -->
+                     <div class="card-body">
+                     <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Número de entrada:</label> {{ object.id }}
+                            <br>
+                            <label class="control-label">Proyecto:</label> {{ object.proyecto }}
+                            <br>
+                            <label class="control-label">Lenguaje de Programación:</label> {{ object.lenguaje_prog }}
+                            <br>
+
+                            <label class="control-label">Sistema Operativo:</label> {{ object.sistema_operativo }}
+                            <br>
+
+                            <label class="control-label">Formatos:</label> {% for t in object.formatos.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+                            <br>
+                            <label class="control-label">Trabajador de calidad interna:</label> {{ object.trabajador_calidad_interna }}
+                            <br>
+                            <label class="control-label">Documentación:</label> {{ object.documentacion }}
+                            <br>
+
+                            <label class="control-label">Dirección del sitio:</label> {{ object.direccion_sitio }}
+                            <br>
+
+                            <label class="control-label">Observaciones:</label> {{ object.observaciones }}
+                            <br>
+                            <label class="control-label">Jefe de UEB o Grupo:</label> {{ object.jefe_UEB_grupo }}
+                            <br>
+                            <label class="control-label">Estado de la entrada:</label> {{ object.estado_entradas_proyecto }}
+
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                            <div class="form-actions fluid">
+                             <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_entradasproyectos' %}" type="button" class="btn btn-danger">Atrás</a>
+                             </div>
+                            </div>
+                        {% endblock %}
+                     </div>
+                     </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

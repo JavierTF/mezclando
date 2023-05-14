@@ -1,0 +1,108 @@
+{% extends 'index.html' %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">No Conformidades.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">No Conformidades</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Escoja la No Conformidad</h3>
+
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Fecha Recibido
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    Fecha Cierre
+                                </th>
+                                 <th>
+                                    Proceso
+                                </th>
+                                <th>
+                                    Responsable
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for no_conformidad in no_conformidades %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ no_conformidad.fecha_recibido }}
+                                        </td>
+                                        <td>
+                                            {{ no_conformidad.estado }}
+                                        </td>
+                                        <td>
+                                            {{ no_conformidad.fecha_cierre }}
+                                        </td>
+                                        <td>
+                                            {{ no_conformidad.proceso }}
+                                        </td>
+                                        <td>
+                                            {{ no_conformidad.trabajador }}
+
+                                        </td>
+                                        <td>
+                                        <span class="input-group-sm">
+                                        <a href="{% url 'agregar_incidencia' no_conformidad.pk %}"
+                                         class="btn btn-sm btn-primary">
+                                         <i class="fa fa-edit"></i>
+                                        </a>
+                                        </span>
+                                        </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

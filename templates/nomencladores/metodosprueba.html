@@ -1,0 +1,98 @@
+{% extends 'index.html' %}
+{% block met_prueba %}
+    active
+{% endblock %}
+{% block menu_nomencladores %} active menu-open {% endblock %}
+{% block menu_nomencladores_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Métodos de Prueba.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Métodos.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Métodos de Prueba </h3>
+                        {% if perms.SISGDDO.add_metodosprueba %}
+                        <a href="{% url 'agregar_metodosprueba' %}" class="btn btn-primary fa-pull-right" title="nuevo">
+                            <span class="fa fa-plus"> Nuevo Método</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover ">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Métodos
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for metodo in listmetprueb %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ metodo.metodo }}
+                                        </td>
+
+
+                                    <td>
+                                    <span class="input-group-sm">
+                                    {% if perms.SISGDDO.change_metodosprueba %}
+                                    <a href="{% url 'modificar_metodosprueba' metodo.pk %}"
+                                        class="btn btn-sm btn-primary" title="modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

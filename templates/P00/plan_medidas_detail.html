@@ -1,0 +1,64 @@
+{% extends 'P00/plan_medidas.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Plan de Medida</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_planmedidas' %}">Listado de Plan de Medidas</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle del Plan de Medidas</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Actividad:</label> {{ object.actividad }}
+                            <br>
+                            <label class="control-label">Título del Documento:</label> {{ object.titulo_doc }}
+                            <br>
+                            <label class="control-label">Fecha:</label> {{ object.fecha }}
+                            <br>
+                            <label class="control-label">Proceso:</label> {{ object.proceso }}
+                            <br>
+                            <label class="control-label">Acciones:</label> {% for t in object.acciones.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_planmedidas' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

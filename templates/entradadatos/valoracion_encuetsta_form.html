@@ -1,0 +1,1383 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% block miestilo %}
+<script type="text/javascript" src="{% static 'assets/dist/js/jspdf.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'assets/dist/js/html2canvas.js' %}"></script>
+<style>
+#ajax_pdf{
+    cursor: pointer;
+}
+</style>
+
+{% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Encuestas.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Encuesta.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario de valoración de encuestas</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal form-model form-general" name="form-model" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-body">
+                            <div class="form-row">
+                                 {% for campo in forms %}
+                                            {% if  forloop.counter <= 2 %}
+                                                <div class="form-group col-md-6">
+                                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                                    {{ campo }}
+                                                    <small class="text-red">{{ campo.errors }}</small>
+                                                </div>
+                                            {% else %}
+                                                {% if forloop.counter > 2 and forloop.counter <= 4 %}
+                                                    <div class="form-group col-md-6">
+                                                        <label class="control-label">{{ campo.label_tag }}</label>
+                                                        {{ campo }}
+                                                        <small class="text-red">{{ campo.errors }}</small>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                 {% endfor %}
+                            </div>
+                        </div>
+            <div id="exportPDF">
+                         <h6><i class="fa fa-chevron-circle-right menu1 juliet" aria-hidden="true"></i>  Mostrar Indicadores de Servicios</h6>
+                         <div class="servicios" style="display: none;">
+                             <table id="example1" class="table-bordered" align="center">
+                                   <div class="juliet1">
+                                    <ul><h6>  Indicadores de Servicios</h6>
+                                    <ol>
+
+                                        <li>Correo Electrónico (COE)</li>
+                                      <li>Acceso a Internet (AI)</li>
+                                      <li>Mantenimiento y reparación de computadoras (MRC)</li>
+                                      <li>Servicio postventa de Rodas XXI (PR)</li>
+                                      <li>Instalación de redes de computadoras (IRC)</li>
+                                      <li>Registro de dominios (RD)</li>
+                                      <li>Capacitación y entrenamientos (CE)</li>
+                                      <li>Otro (O)</li>
+
+                                    </ol>
+                                    </ul>
+                                    </div>
+
+                             <tr>
+                                <th></th><th>Enc1</th><th>Enc2</th><th>Enc3</th><th>Enc4</th><th>Enc5</th><th>Enc6</th><th>Enc7</th><th>Enc8</th><th>Enc9</th><th>Enc10</th><th>Enc11</th><th>Enc12</th><th>Enc13</th><th>Enc14</th><th>Enc15</th>
+                            </tr>
+                            <tr>
+                                <th> COE</th>
+                                <td><input class="COE1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="COE15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                </tr>
+                            <tr>
+                                <th> AI</th>
+                                <td><input class="AI1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="AI15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> MRC</th>
+                                <td><input class="MRC1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="MRC15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> PR</th>
+                                <td><input class="PR1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="PR15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> IRC</th>
+                                <td><input class="IRC1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IRC15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> RD</th>
+                                <td><input class="RD1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RD15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                                <tr>
+                                <th> CE</th>
+                                <td><input class="CE1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CE15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> O</th>
+                                <td><input class="O1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="O15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            </table>
+                            <a class="btn btn-outline-primary calcular" onclick="llenarTServicios()">Calcular</a>
+                            <div class="juliet2">
+                             <table  id="example1" class="table-bordered" align="center">
+
+                                    <tr>
+                                        <th colspan="8">
+                                          <h6>Totales de Respuestas </h6>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>ISA</th>
+                                    </tr>
+                                    <tr>
+                                        <td> COE </td>
+                                        <td class="COE1"> </td>
+                                        <td class="COE2"> </td>
+                                        <td class="COE3"> </td>
+                                        <td class="COE4"> </td>
+                                        <td class="COE5"> </td>
+                                        <td class="ISACOE"> </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>AI</td>
+                                        <td class="AI1"></td>
+                                        <td class="AI2"></td>
+                                        <td class="AI3"></td>
+                                        <td class="AI4"></td>
+                                        <td class="AI5"></td>
+                                        <td class="ISAAI"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>MRC</td>
+                                        <td class="MRC1"></td>
+                                        <td class="MRC2"></td>
+                                        <td class="MRC3"></td>
+                                        <td class="MRC4"></td>
+                                        <td class="MRC5"></td>
+                                        <td class="ISAMRC"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>PR</td>
+                                        <td class="PR1"></td>
+                                        <td class="PR2"></td>
+                                        <td class="PR3"></td>
+                                        <td class="PR4"></td>
+                                        <td class="PR5"></td>
+                                        <td class="ISAPR"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>IRC</td>
+                                        <td class="IRC1"></td>
+                                        <td class="IRC2"></td>
+                                        <td class="IRC3"></td>
+                                        <td class="IRC4"></td>
+                                        <td class="IRC5"></td>
+                                        <td class="ISAIRC"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>RD</td>
+                                        <td class="RD1"></td>
+                                        <td class="RD2"></td>
+                                        <td class="RD3"></td>
+                                        <td class="RD4"></td>
+                                        <td class="RD5"></td>
+                                        <td class="ISARD"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>CE</td>
+                                        <td class="CE1"></td>
+                                        <td class="CE2"></td>
+                                        <td class="CE3"></td>
+                                        <td class="CE4"></td>
+                                        <td class="CE5"></td>
+                                        <td class="ISACE"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>O</td>
+                                        <td class="O1"></td>
+                                        <td class="O2"></td>
+                                        <td class="O3"></td>
+                                        <td class="O4"></td>
+                                        <td class="O5"></td>
+                                        <td class="ISAO"></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" align="right"><b>ISG: </b><span class="isgservicios"></span></td>
+                                    </tr>
+                             </table>
+                            </div>
+                    </div>
+                    <hr>
+                    <h6><i class="fa fa-chevron-circle-right menu2 juliet3" aria-hidden="true"></i>  Mostrar Indicadores de Relaciones con clientes</h6>
+                    <div class="rclientes" style="display: none;">
+                            <table id="example1" class="table-bordered" align="center">
+                                    <div class="juliet4">
+                                    <ul><h6>Indicadores de Relaciones con Clientes</h6>
+                                    <ol>
+
+                                      <li>Respuesta adecuada a sus inquietudes (RAI)</li>
+                                      <li>Facilidad de acceder a la persona adecuada (FAP)</li>
+                                      <li>Actitud de colaboracion por la persona que atiende (ACP)</li>
+                                      <li>Tiempo de respuesta (TR)</li>
+                                      <li>Relaciones con el cliente (RC)</li>
+                                    </ol>
+                                    </ul>
+                                    </div>
+                             <tr>
+                                <th>
+
+                                </th>
+                                <th>
+                                 Enc1
+                                </th>
+                                <th>
+                                 Enc2
+                                </th>
+                                <th>
+                                 Enc3
+                                </th>
+                                <th>
+                                 Enc4
+                                </th>
+                                <th>
+                                 Enc5
+                                </th>
+                                <th>
+                                 Enc6
+                                </th>
+                                <th>
+                                 Enc7
+                                </th>
+                                <th>
+                                 Enc8
+                                </th>
+                                <th>
+                                 Enc9
+                                </th>
+                                <th>
+                                 Enc10
+                                </th>
+                                <th>
+                                 Enc11
+                                </th>
+                                <th>
+                                 Enc12
+                                </th>
+                                <th>
+                                 Enc13
+                                </th>
+                                <th>
+                                 Enc14
+                                </th>
+                                <th>
+                                 Enc15
+                                </th>
+                            </tr>
+                            <tr>
+                                <th> RAI</th>
+                                <td><input class="RAI1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RAI15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                </tr>
+                            <tr>
+                                <th> FAP</th>
+                                <td><input class="FAP1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FAP15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> ACP</th>
+                                <td><input class="ACP1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="ACP15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> TR</th>
+                                <td><input class="TR1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="TR15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> RC</th>
+                                <td><input class="RC1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="RC15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            </table>
+                            <a class="btn btn-outline-primary calcular" onclick="llenarTRClientes()">Calcular</a>
+                            <div class="juliet5">
+                             <table  id="example1" class="table-bordered" align="center">
+
+                                    <tr>
+                                        <th colspan="7">
+                                          <h6>Totales de Respuestas </h6>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>ISA</th>
+                                    </tr>
+                                    <tr>
+                                        <td>RAI </td>
+                                        <td class="RAI1"> </td>
+                                        <td class="RAI2"> </td>
+                                        <td class="RAI3"> </td>
+                                        <td class="RAI4"> </td>
+                                        <td class="RAI5"> </td>
+                                        <td class="ISARAI"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>FAP</td>
+                                        <td class="FAP1"></td>
+                                        <td class="FAP2"></td>
+                                        <td class="FAP3"></td>
+                                        <td class="FAP4"></td>
+                                        <td class="FAP5"></td>
+                                        <td class="ISAFAP"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ACP</td>
+                                        <td class="ACP1"></td>
+                                        <td class="ACP2"></td>
+                                        <td class="ACP3"></td>
+                                        <td class="ACP4"></td>
+                                        <td class="ACP5"></td>
+                                        <td class="ISAACP"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FAP</td>
+                                        <td class="FAP1"></td>
+                                        <td class="FAP2"></td>
+                                        <td class="FAP3"></td>
+                                        <td class="FAP4"></td>
+                                        <td class="FAP5"></td>
+                                        <td class="ISAFAP"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TR</td>
+                                        <td class="TR1"></td>
+                                        <td class="TR2"></td>
+                                        <td class="TR3"></td>
+                                        <td class="TR4"></td>
+                                        <td class="TR5"></td>
+                                        <td class="ISATR"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>RC</td>
+                                        <td class="RC1"></td>
+                                        <td class="RC2"></td>
+                                        <td class="RC3"></td>
+                                        <td class="RC4"></td>
+                                        <td class="RC5"></td>
+                                        <td class="ISARC"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" align="right"><b>ISG: </b><span class="isgrclientes"></span></td>
+                                    </tr>
+                             </table>
+                            </div>
+                    </div>
+                    <hr>
+                    <h6><i class="fa fa-chevron-circle-right menu3 juliet6" aria-hidden="true"></i>  Mostrar Indicadores de Cumplimientos</h6>
+                    <div class="cumplimientos" style="display: none;">
+                             <table id="example1" class="table-bordered" align="center">
+                                    <div class="juliet7">
+                                    <ul><h6>Indicadores de Cumplimientos</h6>
+                                    <ol>
+
+                                      <li>Información sobre las afectaciones del servicio (IAS)</li>
+                                      <li>Cumplimiento del servicio realizado (CSR)</li>
+                                      <li>Disposición del personal para la solución de los problemas que se le presentan (DPSP)</li>
+                                      <li>Facilidad de comunicación con el responsable de brindar el servicio (FCR)</li>
+                                      <li>Capacidad, eficiencia y agilidad para la resolución de problemas y quejas (CEA)</li>
+                                      <li>Cumplimientos de  CITMATEL comparado con otras empresas (CC)</li>
+                                    </ol>
+                                    </ul>
+                                    </div>
+                              <tr>
+                                <th>
+
+                                </th>
+                                <th>
+                                 Enc1
+                                </th>
+                                <th>
+                                 Enc2
+                                </th>
+                                <th>
+                                 Enc3
+                                </th>
+                                <th>
+                                 Enc4
+                                </th>
+                                <th>
+                                 Enc5
+                                </th>
+                                <th>
+                                 Enc6
+                                </th>
+                                <th>
+                                 Enc7
+                                </th>
+                                <th>
+                                 Enc8
+                                </th>
+                                <th>
+                                 Enc9
+                                </th>
+                                <th>
+                                 Enc10
+                                </th>
+                                <th>
+                                 Enc11
+                                </th>
+                                <th>
+                                 Enc12
+                                </th>
+                                <th>
+                                 Enc13
+                                </th>
+                                <th>
+                                 Enc14
+                                </th>
+                                <th>
+                                 Enc15
+                                </th>
+                              </tr>
+                              <tr>
+                                <th> IAS</th>
+                                <td><input class="IAS1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="IAS15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                </tr>
+                              <tr>
+                                <th> CSR</th>
+                                <td><input class="CSR1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CSR15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                              </tr>
+                              <tr>
+                                <th> DPSP</th>
+                                <td><input class="DPSP1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="DPSP15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                              </tr>
+                              <tr>
+                                <th> FCR</th>
+                                <td><input class="FCR1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="FCR15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                              </tr>
+                              <tr>
+                                <th> CEA</th>
+                                <td><input class="CEA1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CEA15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                              </tr>
+                              <tr>
+                                <th> CC</th>
+                                <td><input class="CC1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CC15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                              </tr>
+                            </table>
+                            <a class="btn btn-outline-primary calcular" onclick="llenarTICumplimiento()">Calcular</a>
+                            <div class="juliet8">
+                             <table  id="example1" class="table-bordered" align="center">
+
+                                    <tr>
+                                        <th colspan="7">
+                                          <h6>Totales de Respuestas </h6>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>ISA</th>
+                                    </tr>
+                                    <tr>
+                                        <td> IAS </td>
+                                        <td class="IAS1"> </td>
+                                        <td class="IAS2"> </td>
+                                        <td class="IAS3"> </td>
+                                        <td class="IAS4"> </td>
+                                        <td class="IAS5"> </td>
+                                        <td class="ISAIAS"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td> CSR </td>
+                                        <td class="CSR1"> </td>
+                                        <td class="CSR2"> </td>
+                                        <td class="CSR3"> </td>
+                                        <td class="CSR4"> </td>
+                                        <td class="CSR5"> </td>
+                                        <td class="ISACSR"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td> DPSP </td>
+                                        <td class="DPSP1"> </td>
+                                        <td class="DPSP2"> </td>
+                                        <td class="DPSP3"> </td>
+                                        <td class="DPSP4"> </td>
+                                        <td class="DPSP5"> </td>
+                                        <td class="ISADPSP"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td> FCR </td>
+                                        <td class="FCR1"> </td>
+                                        <td class="FCR2"> </td>
+                                        <td class="FCR3"> </td>
+                                        <td class="FCR4"> </td>
+                                        <td class="FCR5"> </td>
+                                        <td class="ISAFCR"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CEA</td>
+                                        <td class="CEA1"></td>
+                                        <td class="CEA2"></td>
+                                        <td class="CEA3"></td>
+                                        <td class="CEA4"></td>
+                                        <td class="CEA5"></td>
+                                        <td class="ISACEA"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>CC</td>
+                                        <td class="CC1"></td>
+                                        <td class="CC2"></td>
+                                        <td class="CC3"></td>
+                                        <td class="CC4"></td>
+                                        <td class="CC5"></td>
+                                        <td class="ISACC"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" align="right"><b>ISG: </b><span class="isgicumplimiento"></span></td>
+                                    </tr>
+                             </table>
+                            </div>
+                    </div>
+                    <hr>
+                    <h6><i class="fa fa-chevron-circle-right menu4 juliet9" aria-hidden="true"></i>  Mostrar Indicadores de Credibilidad</h6>
+                    <div class="credibilidad" style="display: none;">
+                            <table id="example1" class="table-bordered" align="center">
+                                    <div class="juliet10">
+                                    <ul><h6>Indicadores de Credibilidad</h6>
+                                    <ol>
+                                      <li>Confianza en los servicios que brinda la empresa (CS)</li>
+                                      <li>Confianza en la capacidad del personal de la empresa (CCP)</li>
+                                      <li>Credibilidad de CITMATEL comparado con otras empresas (CCOE)</li>
+                                    </ol>
+                                    </ul>
+                                    </div>
+                             <tr>
+                                <th>
+
+                                </th>
+                                <th>
+                                 Enc1
+                                </th>
+                                <th>
+                                 Enc2
+                                </th>
+                                <th>
+                                 Enc3
+                                </th>
+                                <th>
+                                 Enc4
+                                </th>
+                                <th>
+                                 Enc5
+                                </th>
+                                <th>
+                                 Enc6
+                                </th>
+                                <th>
+                                 Enc7
+                                </th>
+                                <th>
+                                 Enc8
+                                </th>
+                                <th>
+                                 Enc9
+                                </th>
+                                <th>
+                                 Enc10
+                                </th>
+                                <th>
+                                 Enc11
+                                </th>
+                                <th>
+                                 Enc12
+                                </th>
+                                <th>
+                                 Enc13
+                                </th>
+                                <th>
+                                 Enc14
+                                </th>
+                                <th>
+                                 Enc15
+                                </th>
+                            </tr>
+                            <tr>
+                                <th> CS</th>
+                                <td><input class="CS1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CS15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                </tr>
+                            <tr>
+                                <th> CCP</th>
+                                <td><input class="CCP1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCP15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            <tr>
+                                <th> CCOE</th>
+                                <td><input class="CCOE1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="CCOE15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            </table>
+                            <a class="btn btn-outline-primary calcular" onclick="llenarTCredibilidad()">Calcular</a>
+                            <div class="juliet11">
+                             <table   id="example1" class="table-bordered" align="center">
+
+                                    <tr>
+                                        <th colspan="7">
+                                          <h6>Totales de Respuestas </h6>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>ISA</th>
+                                    </tr>
+                                    <tr>
+                                        <td> CS</td>
+                                        <td class="CS1"> </td>
+                                        <td class="CS2"> </td>
+                                        <td class="CS3"> </td>
+                                        <td class="CS4"> </td>
+                                        <td class="CS5"> </td>
+                                        <td class="ISACS"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>CCP</td>
+                                        <td class="CCP1"></td>
+                                        <td class="CCP2"></td>
+                                        <td class="CCP3"></td>
+                                        <td class="CCP4"></td>
+                                        <td class="CCP5"></td>
+                                        <td class="ISACCP"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>CCOE</td>
+                                        <td class="CCOE1"></td>
+                                        <td class="CCOE2"></td>
+                                        <td class="CCOE3"></td>
+                                        <td class="CCOE4"></td>
+                                        <td class="CCOE5"></td>
+                                        <td class="ISACCOE"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" align="right"><b>ISG: </b><span class="isgcredibilidad"></span></td>
+                                    </tr>
+                             </table>
+                            </div>
+                    </div>
+                    <hr>
+                    <h6><i class="fa fa-chevron-circle-right menu5 juliet12" aria-hidden="true"></i>  Mostrar Indicadores de Satisfacción General</h6>
+                    <div class="sgeneral" style="display: none;">
+                            <table id="example1" class="table-bordered " align="center">
+                                    <div class="juliet13">
+                                    <ul><h6>Satisfacción general</h6>
+                                    <ol>
+                                      <li>Nivel de satisfacción con nuestra empresa (NS)</li>
+                                      <li>Esfuerzo o mejora durante el último año por parte de  nuestra empresa por aumentar su satisfacción como cliente (E)</li>
+                                    </ol>
+                                    </ul>
+                                    </div>
+                             <tr>
+                                <th>
+
+                                </th>
+                                <th>
+                                 Enc1
+                                </th>
+                                <th>
+                                 Enc2
+                                </th>
+                                <th>
+                                 Enc3
+                                </th>
+                                <th>
+                                 Enc4
+                                </th>
+                                <th>
+                                 Enc5
+                                </th>
+                                <th>
+                                 Enc6
+                                </th>
+                                <th>
+                                 Enc7
+                                </th>
+                                <th>
+                                 Enc8
+                                </th>
+                                <th>
+                                 Enc9
+                                </th>
+                                <th>
+                                 Enc10
+                                </th>
+                                <th>
+                                 Enc11
+                                </th>
+                                <th>
+                                 Enc12
+                                </th>
+                                <th>
+                                 Enc13
+                                </th>
+                                <th>
+                                 Enc14
+                                </th>
+                                <th>
+                                 Enc15
+                                </th>
+                            </tr>
+                            <tr>
+                                <th> NS</th>
+                                <td><input class="NS1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="NS15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                </tr>
+                            <tr>
+                                <th> E</th>
+                                <td><input class="E1" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E2" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E3" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E4" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E5" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E6" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E7" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E8" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E9" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E10" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E11" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E12" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E13" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E14" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                                <td><input class="E15" max="5" min="1" type="number" style="height:30px; width: 30px"></td>
+                            </tr>
+                            </table>
+                            <a class="btn btn-outline-primary calcular" onclick="llenarTSGeneral()">Calcular</a>
+                            <div class="juliet14">
+                             <table  id="example1" class="table-bordered" align="center">
+
+                                    <tr>
+                                        <th colspan="7">
+                                          <h6>Totales de Respuestas </h6>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                        <th>ISA</th>
+
+                                    </tr>
+                                    <tr>
+                                        <td> NS </td>
+                                        <td class="NS1"> </td>
+                                        <td class="NS2"> </td>
+                                        <td class="NS3"> </td>
+                                        <td class="NS4"> </td>
+                                        <td class="NS5"> </td>
+                                        <td class="ISANS"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>E</td>
+                                        <td class="E1"></td>
+                                        <td class="E2"></td>
+                                        <td class="E3"></td>
+                                        <td class="E4"></td>
+                                        <td class="E5"></td>
+                                        <td class="ISAE"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7" align="right"><b>ISG: </b><span class="isgsgeneral"></span></td>
+                                    </tr>
+                             </table>
+                            </div>
+                    </div>
+            </div>
+                    <br>
+                    <h6><i class="fa fa-chevron-circle-right menu6" aria-hidden="true"></i>  Mostrar Resultados Finales</h6>
+                    <div class="calculototal" style="display: none;">
+                    <div class="row">
+                    <div class="col">
+                        <a class="btn btn-outline-primary calcular" onclick="ISGtotal()">Calcular ISG Total</a>
+                        <label><span class="isgtotal"></span></label>
+
+                    </div>
+                    </div>
+                    </div>
+                    <br>
+                    <a class="link-report" type="submit" href="#" onclick="CargarPDF();">Cargar PDF</a>
+
+                    <br>
+
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <br>
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{% url 'listar_valencuesta' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+
+        function contar(indicador) {
+            var c1 = 0, c2 = 0, c3 = 0, c4 = 0, c5 = 0;
+            for (var i = 1; i <= 15; i++) {
+                if ($('.' + indicador + i).val() == 1) {
+                    c1++;
+                } else if ($('.'+ indicador + i).val() == 2) {
+                    c2++;
+                } else if ($('.' + indicador + i).val() == 3) {
+                    c3++;
+                } else if ($('.' + indicador + i).val() == 4) {
+                    c4++;
+                } else if ($('.' + indicador + i).val() == 5) {
+                    c5++;
+                }
+
+            }
+            $('.' + indicador + '1').text(c1);
+            $('.' + indicador + '2').text(c2);
+            $('.' + indicador + '3').text(c3);
+            $('.' + indicador + '4').text(c4);
+            $('.' + indicador + '5').text(c5);
+            isa = (c1+c2*2+c3*3+c4*4+c5*5)/(c1+c2+c3+c4+c5);
+            if (isa >= 0){
+                $('.ISA'+indicador).text(isa);
+            }
+            else{
+              $('.ISA'+indicador).text(0);
+              isa = 0;
+            }
+            return isa;
+        }
+        function llenarTServicios() {
+            var ISACOE = contar('COE');
+            var ISAAI = contar('AI');
+            var ISAMRC = contar('MRC');
+            var ISAPR = contar('PR');
+            var ISAIRC = contar('IRC');
+            var ISARD = contar('RD');
+            var ISACE = contar('CE');
+            var ISAO = contar('O');
+
+            $('.isgservicios').text((ISACOE + ISAAI + ISAMRC + ISAPR + ISAIRC + ISARD + ISACE + ISAO /8).toString().substring(0,4));
+            return (ISACOE + ISAAI + ISAMRC + ISAPR + ISAIRC + ISARD + ISACE + ISAO)/8;
+        }
+        function llenarTRClientes()
+        {
+            var ISARAI = contar('RAI');
+            var ISAFAP = contar('FAP');
+            var ISAACP = contar('ACP');
+            var ISATR = contar('TR');
+            var ISARC = contar('RC');
+
+            $('.isgrclientes').text(((ISARAI + ISAFAP + ISAACP + ISATR + ISARC) /5 ).toString().substring(0,4));
+            return (ISARAI + ISAFAP + ISAACP + ISATR + ISARC)/5;
+        }
+        function llenarTICumplimiento()
+        {
+            var ISAIAS = contar('IAS');
+            var ISACSR = contar('CSR');
+            var ISADPSP = contar('DPSP');
+            var ISAFCR = contar('FCR');
+            var ISACEA = contar('CEA');
+            var ISACC = contar('CC');
+
+            $('.isgicumplimiento').text(((ISAIAS + ISACSR + ISADPSP + ISAFCR + ISACEA + ISACC)/ 6 ).toString().substring(0,4));
+            return (ISAIAS + ISACSR + ISADPSP + ISAFCR + ISACEA + ISACC) /6 ;
+        }
+        function llenarTCredibilidad()
+        {
+            var ISACS = contar('CS');
+            var ISACCP = contar('CCP');
+            var ISACCOE = contar('CCOE');
+
+            $('.isgcredibilidad').text(((ISACS + ISACCP + ISACCOE) / 3).toString().substring(0,4));
+            return (ISACS + ISACCP + ISACCOE) / 3 ;
+        }
+        function llenarTSGeneral()
+        {
+            var ISANS = contar('NS');
+            var ISAE = contar('E');
+
+            $('.isgsgeneral').text(((ISANS + ISAE)/2 ).toString().substring(0,4));
+            return (ISANS + ISAE)/2 ;
+        }
+       function ISGtotal() {
+            var ISGServicios = llenarTServicios();
+            var ISGRClientes = llenarTRClientes();
+            var ISGICumplimiento = llenarTICumplimiento();
+            var ISGCredibilidad = llenarTCredibilidad();
+            var ISGSGeneral = llenarTSGeneral();
+
+            $('.isgtotal').text(((ISGServicios + ISGRClientes +ISGICumplimiento + ISGCredibilidad + ISGSGeneral)/5 ).toString().substring(0,4));
+            //return (ISGServicios + ISGRClientes + ISGICumplimiento + ISGCredibilidad + ISGSGeneral)/5 ;
+       }
+    $('input[type="number"]').keypress(function (event){
+        if (!(event.charCode >= 49 && event.charCode <= 53)){
+            event.preventDefault();
+        }
+    } );
+    $('.menu1').click(function () {
+        if ($('.servicios').css('display') == 'none'){
+            $('.servicios').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.servicios').css('display','inline');
+
+        }else{
+            $('.servicios').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu2').click(function () {
+        if ($('.rclientes').css('display') == 'none'){
+            $('.rclientes').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.rclientes').css('display','inline');
+
+        }else{
+            $('.rclientes').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu3').click(function () {
+        if ($('.cumplimientos').css('display') == 'none'){
+            $('.cumplimientos').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.cumplimientos').css('display','inline');
+
+        }else{
+            $('.cumplimientos').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu4').click(function () {
+        if ($('.credibilidad').css('display') == 'none'){
+            $('.credibilidad').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.credibilidad').css('display','inline');
+
+        }else{
+            $('.credibilidad').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu5').click(function () {
+        if ($('.sgeneral').css('display') == 'none'){
+            $('.sgeneral').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.sgeneral').css('display','inline');
+
+        }else{
+            $('.sgeneral').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu6').click(function () {
+        if ($('.calculototal').css('display') == 'none'){
+            $('.calculototal').slideDown(300);
+            $('.fa-chevron-circle-right').removeClass('fa-chevron-circle-right').addClass('fa-chevron-circle-down');
+            $('.calculototal').css('display','inline');
+
+        }else{
+            $('.calculototal').slideUp(300);
+            $('.fa-chevron-circle-down').removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-right');
+        }
+    });
+    $('.menu1,.menu2,.menu3,.menu4,.menu5,.menu6').css('cursor','pointer');
+    </script>
+    <style type="text/css">
+    .calcular
+    {
+        cursor: pointer;
+    }
+    </style>
+<form class="export-pdf" name="form-pdf" action="{% url 'visualizarformencuesta' %}" method="POST">
+{% csrf_token %}
+    <input class="template" type="text" name="template" value="">
+    <input class="asd" type="hidden" name="action" value="export_PDF">
+</form>
+
+    <script>
+    $('label[for="id_ISG_total"]').hide();
+//    $('.form-general').on('submit', function (event){
+    //event.preventDefault();
+    function CargarPDF() {
+        $('input[name="ISG_total"]').attr('value', $('span.isgtotal').text());
+        var cargar_PDF = "<h3 style='text-align:center'>Valoraciones de Encuestas</h3>"+$('.juliet').html() + $('.juliet1').html() + $('.juliet2').html() + $('.juliet3').html() + $('.juliet4').html() + $('.juliet5').html() + $('.juliet6').html() + $('.juliet7').html() + $('.juliet8').html() + $('.juliet9').html() + $('.juliet10').html() + $('.juliet11').html() + $('.juliet12').html() + $('.juliet13').html() + $('.juliet14').html();
+        $('input[class="template"]').attr('value', cargar_PDF);
+
+        $.ajax({
+            url: '/ajax/exportpdf',
+            type: 'POST',
+            dataType: 'html',
+            data: {
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val(),
+                'template': $('.template').val()
+            },
+
+            success: function (data) {
+                alert('PDF generado con éxito');
+            }
+        });
+//});
+    }
+    </script>
+
+
+{% endblock %}

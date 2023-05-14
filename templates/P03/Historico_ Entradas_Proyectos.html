@@ -1,0 +1,127 @@
+{% extends 'index.html' %}
+{% block historicoentradas %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p03 %} active menu-open{% endblock %}
+{% block menu_p03_active %} active {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Histórico de Entradas de los Proyectos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Histórico</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Histórico de Entradas de Proyectos</h3>
+                        {% if perms.SISGDDO.add_historico_entradas_proyectos %}
+                        <a href="{% url 'agregar_histentproy' %}" title="nuevo histórico" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Histórico</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    No. Entrada
+                                </th>
+                                <th>
+                                    Entregado por
+                                </th>
+
+                                <th>
+                                    Recibido por
+                                </th>
+
+                                <th>
+                                    Fecha y Hora
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for proyecto in listhistentproy %}
+                                {% if request.proyecto.id != proyecto.pk %}
+                                 <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.entradas_proyectos }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.entregado_por }}
+                                        </td>
+
+                                        <td>
+                                            {{ proyecto.recibida_por }}
+                                        </td>
+
+                                        <td>
+                                            {{ proyecto.fecha }}
+                                        </td>
+
+                                        <td>
+                                        <span class="input-group-sm">
+                                        {% if perms.SISGDDO.change_historico_entradas_proyectos %}
+                                        <a href="{% url 'modificar_histentproy' proyecto.pk %}"
+                                         class="btn btn-sm btn-primary" title="modificar">
+                                         <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if perms.SISGDDO.view_historico_entradas_proyectos %}
+                                        <a href="{% url 'detalle_histentproy' proyecto.pk %}"
+                                         class="btn btn-sm btn-primary" title="detalles">
+                                         <i class="fa fa-eye"></i>
+                                        </a>
+                                        {% endif %}
+                                        </span>
+                                        </td>
+                                 </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

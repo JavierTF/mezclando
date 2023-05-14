@@ -1,0 +1,107 @@
+{% extends 'index.html' %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Formación del Personal.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+
+                            <li class="breadcrumb-item active">Formación</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Formación del Personal</h3>
+                        {% if perms.SISGDDO.add_formacion_personal %}
+                        <a href="{% url 'agregar_formacionpersonal' %}" title="nuevo formación" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Nuevo formación</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+
+                                <th>
+                                    Título
+                                </th>
+                                <th>
+                                    Capacitación que necesita
+                                </th>
+                                <th>
+                                    Capacitación adquirida
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for formaciontrab in listarformacion %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+
+
+                                        <td>
+                                            {{ formaciontrab.titulo }}
+                                        </td>
+                                        <td>
+                                            {{ formaciontrab.capacitacion_necesita }}
+                                        </td>
+                                        <td>
+                                            {% for t in formaciontrab.capacitacion_adquirida.all %} {{t}} {% if not forloop.last %},{% else %}.{% endif %}<br>
+                                            {% endfor %}
+                                        </td>
+
+                                        <td>
+                                        <span class="input-group-sm">
+                                        {% if perms.SISGDDO.change_formacion_personal %}
+                                        <a href="{% url 'modificar_formacionpersonal' formaciontrab.pk %}"
+                                         class="btn btn-sm btn-primary" title="modificar">
+                                         <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        </span>
+                                        </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

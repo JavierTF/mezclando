@@ -1,0 +1,129 @@
+{% extends 'entradadatos/trabajadores.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Nomenclador de Trabajadores.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Nomenclador</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario de Trabajador</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-body">
+                        <div class="form-row">
+                            {% for campo in form %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                            {{ campo }}
+                                    <small class="text-red">{{ campo.errors }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                        {% block error %}
+                        {% endblock %}{% block correcto %}
+                        {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{% url 'listar_trabajadores' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form><!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+        </div>    <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+<script>
+$('#id_nombre_trabajador,#id_primer_apellido,#id_segundo_apellido,#id_cargo').keypress(function( event )
+{
+
+    return validate_only_text($(this), event);
+
+});
+$('#id_ci').keypress(function( event )
+{
+
+    return validate_only_number($(this), event);
+
+});
+$('#id_planillareserva,#id_planillacuadro').change(function(){
+            var file_name =$(this).val().split('.');
+            var ext = file_name[file_name.length - 1];
+            if(ext != "docx" && ext != "DOCX" )
+            {
+                    $(this).val("");
+                    $(this).addClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "Este campo solo admite foto";
+                    return false;
+            }
+            else
+                {
+                    $(this).removeClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "";
+                    return true;
+                }
+
+
+        });
+$('#id_fotocuadro,#id_fotoreserva').change(function(){
+            var file_name =$(this).val().split('.');
+            var ext = file_name[file_name.length - 1];
+            if(ext != "jpg" && ext != "JPG" && ext != "jpeg" && ext != "JPEG" && ext != "png" && ext != "PNG")
+            {
+                    $(this).val("");
+                    $(this).addClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "Este campo solo admite foto";
+                    return false;
+            }
+            else
+                {
+                    $(this).removeClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "";
+                    return true;
+                }
+        });
+
+$('.form-horizontal').submit(function (event) {
+            if ($('.is-invalid').length>0){
+                event.preventDefault();
+                return false;
+            }
+            else{
+                return true;
+            }
+        });
+
+</script>
+{% endblock %}

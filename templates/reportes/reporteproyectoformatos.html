@@ -1,0 +1,154 @@
+{% extends 'index.html' %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Proyectos por Formatos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Reportes</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <section class="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+
+                 <form class="pdf" action="" method="GET">
+                     <div class="row">
+                     <div class="col-md-2">
+                     <!-- /.card-header -->
+                     <select name="mes" class="custom-select">
+                       <option value="1">Enero</option>
+                       <option value="2">Febrero</option>
+                       <option value="3">Marzo</option>
+                       <option value="4">Abril</option>
+                       <option value="5">Mayo</option>
+                       <option value="6">Junio</option>
+                       <option value="7">Julio</option>
+                       <option value="8">Agosto</option>
+                       <option value="9">Septiembre</option>
+                       <option value="10">Octubre</option>
+                       <option value="11">Noviembre</option>
+                       <option value="12">Diciembre</option>
+                     </select>
+                     </div>
+                     <div class="col-md-2">
+                     <select name="ano" class="custom-select">
+                       <option value=2020>2020</option>
+                       <option value=2021>2021</option>
+                       <option value=2022>2022</option>
+                       <option value=2023>2023</option>
+                       <option value=2024>2024</option>
+                       <option value=2025>2025</option>
+                       <option value=2026>2026</option>
+                       <option value=2027>2027</option>
+                       <option value=2028>2028</option>
+                       <option value=2029>2029</option>
+                       <option value=2030>2030</option>
+                     </select>
+                     </div>
+                     <div class="col-md-2">
+                         <button type="submit" class="btn btn-primary">Filtrar</button>
+
+                     </div>
+                   </div>
+                 </form>
+                   <a title="exportar pdf" onclick="exportar()" class="btn btn-primary fa-pull-right exportajax" style="cursor:pointer">
+                            <span class="fa fa-file-pdf"> PDF</span>
+                        </a>
+                        <div class="form-exportar-pdf"></div>
+
+                 </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered ">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Área
+                                </th>
+                                <th>
+                                    Jefe de Proyecto
+                                </th>
+                                <th>
+                                    Nombre del proyecto
+                                </th>
+                                <th>
+                                    Formatos
+                                </th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for proyecto in datos %}
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.area }}
+                                        </td>
+                                        <td>
+                                            {% for t in proyecto.jefe_proyecto.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+                                        </td>
+                                        <td>
+                                            {{ proyecto.nombre_proyecto }}
+                                        </td>
+                                        <td>
+                                            {% for t in proyecto.sosi.formatos.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+                                        </td>
+
+{##}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $('.custom-select option[value="{{ mes }}"]').prop('selected',true);
+        $('.custom-select option[value="{{ ano }}"]').prop('selected',true);
+    });
+    function exportar(){
+        $('.form-exportar-pdf').html($('form.pdf').clone(true).attr({'action':'/exportar_pdf/proyform','class':'formulario-hidden','style':'display:none'}));
+        $('.form-exportar-pdf select[name="mes"]').val($('form.pdf select[name="mes"]').val());
+        $('.form-exportar-pdf select[name="ano"]').val($('form.pdf select[name="ano"]').val());
+        $('.formulario-hidden').submit();
+
+
+    }
+
+    </script>
+{% endblock %}

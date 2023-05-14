@@ -1,0 +1,78 @@
+{% extends 'P00/auditoria_interna.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Auditoría interna.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_auditoriaint' %}">Listado de Quejas</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle de la Queja</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Título del Informe:</label> {{ object.titulo_inf }}
+                            <br>
+                            <label class="control-label">Fecha de Auditoría:</label> {{ object.fecha_aud }}
+                            <br>
+                            <label class="control-label">Período de Comprueba:</label> {{ object.periodo_comprueba }}
+                            <br>
+                            <label class="control-label">Asunto:</label> {{ object.asunto }}
+                            <br>
+                            <label class="control-label">Objetivos:</label> {{ object.objetivos }}
+                            <br>
+                            <label class="control-label">Documentos de Referencia:</label> {{ object.documentos_referencia }}
+                            <br>
+                            <label class="control-label">Muestra:</label> {{ object.muestra }}
+                            <br>
+                            <label class="control-label">Métodos de Prueba:</label> {% for t in object.metodos_prueba.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+                            <br>
+                            <label class="control-label">Conclusiones:</label> {{ object.conclusiones }}
+                            <br>
+                            <label class="control-label">Trabajadores:</label> {% for t in object.trabajadores.all %} {{ t|capfirst}} {% if not forloop.last %},{% else %}.{% endif %}{% endfor %}
+                            <br>
+                            <label class="control-label">Área:</label> {{ object.area }}
+                            <br>
+                            <label class="control-label">Plan de Medidas:</label> {{ object.plan_medidas }}
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_auditoriaint' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

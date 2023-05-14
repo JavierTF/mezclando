@@ -1,0 +1,79 @@
+{% extends 'P14/reserva_cuadro.html' %}
+{% load staticfiles %}
+{% load tagspropias %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Reserva de Cuadro.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_reservas' %}">Listado de Reserva de Cuadro</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle de la Reserva de Cuadro</h3>
+                    </div>
+                    <!-- /.card-header -->
+                  <div class="card-body">
+                  <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        {% csrf_token %}
+
+                        <div class="modal-body">
+                            <label class="control-label">Nombre del Trabajador:</label> {{ reserva.nombre_trabajador }}
+                            <br>
+                            <label class="control-label">Primer Apellido:</label> {{ reserva.primer_apellido }}
+                            <br>
+                            <label class="control-label">Segundo Apellido:</label> {{ reserva.segundo_apellido }}
+                            <br>
+                            <label class="control-label">Carnet de Identidad:</label> {{ reserva.ci|No_Defi }}
+                            <br>
+                            <label class="control-label">Cargo:</label> {{ reserva.cargo }}
+                            <br>
+                            <label class="control-label">Fecha de Inicio:</label> {{ reserva.fecha_inicio_reserva|No_Defi }}
+                            <br>
+                            <label class="control-label">Fecha de Terminación:</label> {{ reserva.fecha_terminacion_reserva|No_Defi }}
+                            <br>
+                            <label class="control-label">Formación:</label> {{ reserva.formacion|No_Defi }}
+                            <br>
+
+                            <label class="control-label">Foto:</label> {{ reserva.foto.url|No_Defi }}
+                            <br>
+                            <label class="control-label">Planilla:</label> {{ reserva.planilla.url|No_Defi }}
+                        </div>
+
+
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_reservas' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                  </div>
+                  </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'nomencladores/linea_tematica/linea_tematica_form.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header alert-danger">
+                        <h3 class="card-title">Advertencia!</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <div class="alert">
+
+                    <h4>
+                        ¿Está seguro que desea eliminar la información de la línea temática <strong>{{ object.nombre |capfirst }}</strong>?
+                        La información no podrá restaurarse.
+                    </h4>
+                    <h5>Quizás desee desactivar esta Línea temática. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
+                        <a href="{% url 'listar_linea_tematica' %}" style="color: #007bff">Ir a desactivar línea temática</a> 
+                    </h5>
+                    &nbsp;
+                    <form action="" method="post">{% csrf_token %}
+                        <p class="text-center">
+                            <button type="submit" class="btn btn-danger">
+                                Borrar
+                            </button>
+                            <a class="btn btn-primary" href="{% url 'listar_linea_tematica' %}">
+                                Cancelar
+                            </a>
+                        </p>
+                    </form>
+                </div>
+                    <!-- END FORM-->
+                </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+
+

@@ -1,0 +1,93 @@
+{% extends 'P03/Estados_proyectos.html' %}
+{% load staticfiles %}
+{% load tagspropias %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Proyectos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyectos' %}">Listado de Proyectos</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalles del Proyecto</h3>
+                    </div>
+                    <!-- /.card-header -->
+                     <div class="card-body">
+                     <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Número del Proyecto:</label> {{ object.id }}
+                            <br>
+                            <label class="control-label">Nombre del Proyecto:</label> {{ object.nombre_proyecto }}
+                            <br>
+                            <label class="control-label">Número del Contrato:</label> {{ object.no_contrato }}
+                            <br>
+                            <label class="control-label">Cantidad de Formatos:</label> {{ object.cantidad_format }}
+                            <br>
+                            <label class="control-label">Documentación:</label> {{ object.documentacion|Si_No }}
+                            <br>
+                            <label class="control-label">Direción del Sitio:</label> {{ object.direccion_sitio }}
+                            <br>
+                            <label class="control-label">Observaciones:</label> {{ object.observaciones }}
+                            <br>
+                            <label class="control-label">Estado:</label> {{ object.estado }}
+                            <br>
+                            <label class="control-label">Nombre del Producto:</label> {{ object.nombre_producto }}
+                            <br>
+                            <label class="control-label">Cantidad de Productos:</label> {{ object.cant_prod }}
+                            <br>
+                            <label class="control-label">Resolusión del Proyecto:</label> {{ object.resolusion_proyecto }}
+                            <br>
+                            <label class="control-label">SOSI:</label> {{ object.sosi }}
+                            <br>
+                            <label class="control-label">CENDA:</label> {{ object.cenda }}
+                            <br>
+                            <label class="control-label">Idioma:</label> {{ object.idioma }}
+                            <br>
+                            <label class="control-label">Formatos:</label> {{ object.formatos }}
+                            <br>
+                            <label class="control-label">Área:</label> {{ object.area }}
+                            <br>
+                            <label class="control-label">Lenguaje de Programación:</label> {{ object.lenguaje_prog }}
+                            <br>
+                            <label class="control-label">Sistema Operativo:</label> {{ object.sistema_operativo }}
+                            <br>
+                            <label class="control-label">Trabajador:</label> {{ object.trabajador }}
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                            <div class="form-actions fluid">
+                             <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_estadoproy' %}" type="button" class="btn btn-danger">Atrás</a>
+                             </div>
+                            </div>
+                        {% endblock %}
+                     </div>
+                     </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

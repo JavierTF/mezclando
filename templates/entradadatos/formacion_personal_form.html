@@ -1,0 +1,80 @@
+{% extends 'entradadatos/formacion_personal.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Nomenclador de Formación Personal.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Nomenclador</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario de Formación</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-body">
+                         <div class="form-row">
+                            {% for campo in form %}
+                                <div class="form-group col-md-6">
+                                    <label class="col-md-6 control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{% url 'listar_formacionpersonal' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                            <br>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+$('#id_capacitacion_necesita,#id_titulo').keypress(function( event )
+{
+
+    return validate_only_text($(this), event);
+
+});
+</script>
+{% endblock %}

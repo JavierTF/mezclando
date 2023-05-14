@@ -1,0 +1,119 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+{% load tagspropias %}
+{% block licencias %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Licencias.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Licencia</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Licencias</h3>
+
+                        {% if perms.SISGDDO.add_tipo_de_licencias %}
+                        <a href="{% url 'agregar_licencia' %}" title="nuevo licencia" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus" > Licencia</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Nombre de la Licencia
+                                </th>
+                                <th>
+                                    No. de la Licencia
+                                </th>
+                                <th>
+                                    Fecha de Vencimiento
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for licencia in listlicencia %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ licencia.nombre_lic }}
+                                        </td>
+                                        <td>
+                                            {{ licencia.no_licencia }}
+                                        </td>
+                                        <td>
+                                            {{ licencia.fecha_venc }}
+                                        </td>
+
+                                    <td>
+                                    <span class="input-group-sm" title="modificar">
+                                    {% if perms.SISGDDO.change_tipo_de_licencias %}
+                                    <a href="{% url 'modificar_licencia' licencia.pk %}"
+                                        class="btn btn-sm btn-primary" title="modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perms.SISGDDO.view_tipo_de_licencias %}
+                                     <a href="{% url 'detalle_licencia' licencia.pk %}"
+                                         class="btn btn-sm btn-primary" title="detalles">
+                                         <i class="fa fa-eye"></i>
+                                     </a>
+                                     {% endif %}
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

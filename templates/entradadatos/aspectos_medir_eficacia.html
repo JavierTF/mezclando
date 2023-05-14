@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Aspectos a medir eficacia.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Aspecto.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Aspectos </h3>
+                        {% if perms.SISGDDO.add_aspecto_medir_indicadoreficacia %}
+                        <a href="{% url 'agregar_aspeficacia' %}" title="nuevo aspecto" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Nueva Aspecto</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Aspecto
+                                </th>
+                                <th>
+                                    Indicador
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for aspecto in listaspmedirefic %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ aspecto.nombre_asp }}
+                                        </td>
+
+                                        <td>
+                                            {{ aspecto.indicadores }}
+                                        </td>
+
+
+                                    <td>
+                                    <span class="input-group-sm">
+                                    {% if perms.SISGDDO.change_aspecto_medir_indicadoreficacia %}
+                                    <a href="{% url 'modificar_aspeficacia' aspecto.pk %}"
+                                        class="btn btn-sm btn-primary" title="modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+{#                                    <a href="{% url 'eliminar_aspeficacia' aspecto.pk %}"#}
+{#                                        class="btn btn-sm btn-danger" title="desactivar">#}
+{#                                    <i class="fa fa-trash"></i>#}
+{#                                    </a>#}
+
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'P00/atencion_clientes_externos.html' %}
+{% load staticfiles %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Atención del Cliente Externo.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_ateclientext' %}">Listado de Quejas</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Detalle de la Queja</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="modal-body">
+                            <label class="control-label">Fecha de Recibido:</label> {{ object.fecha_recibido }}
+                            <br>
+                            <label class="control-label">Estado:</label> {{ object.estado }}
+                            <br>
+                            <label class="control-label">Fecha de Cierre:</label> {{ object.fecha_cierre }}
+                            <br>
+                            <label class="control-label">Observación:</label> {{ object.observacion }}
+                            <br>
+                            <label class="control-label">Trabajador:</label> {{ object.trabajador }}
+                            <br>
+                            <label class="control-label">Proceso:</label> {{ object.proceso }}
+                            <br>
+                            <label class="control-label">Vía Recepción:</label> {{ object.via_recep }}
+                            <br>
+                            <label class="control-label">Cliente:</label> {{ object.cliente }}
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_ateclientext' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'index.html' %}
+{% block acuerdos %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p14 %} active menu-open{% endblock %}
+{% block menu_p14_active_active %} active {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Acuerdos del Consejo de Dirección.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Acuerdos</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Acuerdos</h3>
+                        {% if perms.SISGDDO.add_acuerdos_consejillo %}
+                        <a href="{% url 'adicionar_acuerdos' %}" title="nuevo acuerdo" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Acuerdos</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+
+                                <th>
+                                    No. de Acuerdo
+                                </th>
+                                <th>
+                                    Fecha Tomada
+                                </th>
+
+                                <th>
+                                    Estado
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for acuerdo in acuerdos %}
+                                {% if request.acuerdo.id != acuerdo.pk %}
+                                 <tr>
+
+                                        <td>
+                                            {{ acuerdo.id }}
+                                        </td>
+                                        <td>
+                                            {{ acuerdo.fecha_tomada }}
+                                        </td>
+
+                                        <td>
+                                            {{ acuerdo.estado_acuerd }}
+                                        </td>
+                                        <td>
+
+                                        <span class="input-group-sm">
+                                        {% if perms.SISGDDO.change_acuerdos_consejillo %}
+                                        <a href="{% url 'modificar_acuerdos' acuerdo.pk %}"
+                                         class="btn btn-sm btn-primary" title="modificar">
+                                         <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if perms.SISGDDO.view_acuerdos_consejillo %}
+                                        <a href="{% url 'detalle_acuerdo' acuerdo.pk %}"
+                                         class="btn btn-sm btn-primary" title="detalles">
+                                         <i class="fa fa-eye"></i>
+                                        </a>
+                                        {% endif %}
+                                        </span>
+                                        </td>
+                                 </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

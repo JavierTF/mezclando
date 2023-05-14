@@ -1,0 +1,197 @@
+{% extends 'Security/users.html' %}
+{% load staticfiles %}
+
+{% block miestilo %}
+    <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario usuario</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                      <input name="id" type="hidden" value="{{ object.id }}">
+                        <div class="form-body">
+                        <div class="form-row">
+                            {% for campo in form %}
+                                {% if  forloop.counter <= 2 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 2 and forloop.counter <= 4 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 4 and forloop.counter <= 6 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 6 and forloop.counter <= 8 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% if forloop.counter > 8 and forloop.counter <= 10 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary mb-3">Guardar</button>
+                                <a href="{% url 'user_list' %}" type="button" class="btn btn-danger mb-3">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+
+                    </form>
+                    <!-- END FORM-->
+                </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function () {
+        $("#id_groups").addClass("form-control")
+    })
+    </script>
+<script>
+        $("#id_first_name").blur(function () {
+            if (this.value.length == 0) {
+                $("#id_first_name").addClass("error")
+                $("#id_first_name").attr('placeholder', 'Este campo es requerido');
+
+            }
+            else {
+                if (/^\s+$/.test(this.value)) {
+                    $("#id_first_name").addClass("error")
+                    $("#id_first_name").val("")
+                    $("#id_first_name").attr('placeholder', 'No espacios vacios');
+                }
+                else {
+                    if (!/^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/.test(this.value)) {
+                        $("#id_first_name").addClass("error")
+                        $("#id_first_name").val("")
+                        $("#id_first_name").attr('placeholder', 'El nombre empieza con mayúscula y no tiene números');
+                    }
+                    else {
+                        $("#id_first_name").removeClass("error")
+                    }
+                }
+
+            }
+        });
+        $("#id_last_name").blur(function () {
+            if (this.value.length == 0) {
+                $("#id_last_name").addClass("error")
+                $("#id_last_name").attr('placeholder', 'Este campo es requerido');
+
+            }
+            else {
+                if (/^\s+$/.test(this.value)) {
+                    $("#id_last_name").addClass("error")
+                    $("#id_last_name").val("")
+                    $("#id_last_name").attr('placeholder', 'No espacios vacios');
+                }
+                else {
+                    if (!/^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/.test(this.value)) {
+                        $("#id_last_name").addClass("error")
+                        $("#id_last_name").val("")
+                        $("#id_last_name").attr('placeholder', 'Los apellidos empieza con mayúscula y no tiene números');
+                    }
+                    else {
+                        $("#id_last_name").removeClass("error")
+                    }
+                }
+
+            }
+        });
+
+        $('#id_image').change(function(){
+            var file_name =$(this).val().split('.');
+            var ext = file_name[file_name.length - 1];
+            if(ext != "jpg" && ext != "JPG" && ext != "jpeg" && ext != "JPEG" && ext != "png" && ext != "PNG")
+            {
+                    $(this).val("");
+                    $(this).addClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "Este campo solo admite foto";
+                    return false;
+            }
+            else
+                {
+                    $(this).removeClass('is-invalid');
+                    this[0].nextElementSibling.textContent = "";
+                    return true;
+                }
+
+
+        });
+        $('.form-horizontal').submit(function (event) {
+            if ($('.is-invalid').length>0){
+                event.preventDefault();
+                return false;
+            }
+            else{
+                return true;
+            }
+        });
+    </script>
+
+{% endblock %}
+
+

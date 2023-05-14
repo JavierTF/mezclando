@@ -1,0 +1,109 @@
+{% extends 'index.html' %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Plan de Medidas.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Plan</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Planes de Medidas</h3>
+                        {% if perms.SISGDDO.add_plan_medidas %}
+                        <a href="{% url 'agregar_planmedidas' %}" title="nuevo plan" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus" > Plan</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Actividad
+                                </th>
+                                <th>
+                                    Título del Documento
+                                </th>
+                                <th>
+                                    Fecha
+                                </th>
+
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for plan in listplan %}
+
+                                <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ plan.actividad }}
+                                        </td>
+                                        <td>
+                                            {{ plan.titulo_doc }}
+                                        </td>
+                                        <td>
+                                            {{ plan.fecha }}
+                                        </td>
+
+                                    <td>
+                                    <span class="input-group-sm" title="modificar">
+                                    {% if perms.SISGDDO.change_plan_medidas %}
+                                    <a href="{% url 'modificar_planmedidas' plan.pk %}"
+                                        class="btn btn-sm btn-primary" title="modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perms.SISGDDO.view_plan_medidas %}
+                                     <a href="{% url 'detalles_planmedidas' plan.pk %}"
+                                         class="btn btn-sm btn-primary" title="detalles">
+                                         <i class="fa fa-eye"></i>
+                                     </a>
+                                    {% endif %}
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
