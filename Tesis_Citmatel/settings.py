@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
 
 # Application definition
 
@@ -94,7 +96,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -108,6 +109,17 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'sisgepo',
+#         'USER': 'root',
+#         'PASSWORD': 'mariadb',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -180,7 +192,7 @@ STATICFILES_DIRS = [
 # Fotos de las reservas de cuadro
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 LOGIN_REDIRECT_URL = reverse_lazy('inicio')
 LOGOUT_REDIRECT_URL = reverse_lazy('ce_login')
@@ -200,4 +212,5 @@ if DEBUG:
     EMAIL_PORT = 1026
     DEFAULT_FROM_EMAIL = 'comercial@yourproject.cu'
 
+import locale
 locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))

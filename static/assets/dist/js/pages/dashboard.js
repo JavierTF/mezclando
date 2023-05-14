@@ -7,7 +7,7 @@
 
 $(function () {
 
-  'use strict';
+  'use strict'
 
   // Make the dashboard widgets sortable Using jquery UI
   $('.connectedSortable').sortable({
@@ -16,8 +16,8 @@ $(function () {
     handle              : '.card-header, .nav-tabs',
     forcePlaceholderSize: true,
     zIndex              : 999999
-  });
-  $('.connectedSortable .card-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move');
+  })
+  $('.connectedSortable .card-header, .connectedSortable .nav-tabs-custom').css('cursor', 'move')
 
   // jQuery UI sortable for the todo list
   $('.todo-list').sortable({
@@ -25,10 +25,10 @@ $(function () {
     handle              : '.handle',
     forcePlaceholderSize: true,
     zIndex              : 999999
-  });
+  })
 
   // bootstrap WYSIHTML5 - text editor
-  $('.textarea').summernote();
+  $('.textarea').summernote()
 
   $('.daterange').daterangepicker({
     ranges   : {
@@ -42,11 +42,11 @@ $(function () {
     startDate: moment().subtract(29, 'days'),
     endDate  : moment()
   }, function (start, end) {
-    window.alert('You chose: ' + start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  });
+    window.alert('You chose: ' + start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+  })
 
   /* jQueryKnob */
-  $('.knob').knob();
+  $('.knob').knob()
 
   // jvectormap data
   var visitorsData = {
@@ -61,7 +61,7 @@ $(function () {
     'IN': 800, //India
     'GB': 320, //Great Britain
     'RU': 3000 //Russia
-  };
+  }
   // World map by jvectormap
   $('#world-map').vectorMap({
     map              : 'usa_en',
@@ -84,9 +84,9 @@ $(function () {
     },
     onRegionLabelShow: function (e, el, code) {
       if (typeof visitorsData[code] != 'undefined')
-        el.html(el.html() + ': ' + visitorsData[code] + ' new visitors');
+        el.html(el.html() + ': ' + visitorsData[code] + ' new visitors')
     }
-  });
+  })
 
   // Sparkline charts
   var sparkline1 = new Sparkline($("#sparkline-1")[0], {width: 80, height: 50, lineColor: '#92c1dc', endColor: '#ebf4f9'});
@@ -101,12 +101,12 @@ $(function () {
   $('#calendar').datetimepicker({
     format: 'L',
     inline: true
-  });
+  })
 
   // SLIMSCROLL FOR CHAT WIDGET
   $('#chat-box').overlayScrollbars({
     height: '250px'
-  });
+  })
 
   /* Chart.js Charts */
   // Sales chart
@@ -139,7 +139,7 @@ $(function () {
         data                : [65, 59, 80, 81, 56, 55, 40]
       },
     ]
-  };
+  }
 
   var salesChartOptions = {
     maintainAspectRatio : false,
@@ -159,7 +159,7 @@ $(function () {
         }
       }]
     }
-  };
+  }
 
   // This will get the first returned node in the jQuery collection.
   var salesChart = new Chart(salesChartCanvas, { 
@@ -167,7 +167,7 @@ $(function () {
       data: salesChartData, 
       options: salesChartOptions
     }
-  );
+  )
 
   // Donut Chart
   var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d')
@@ -183,14 +183,14 @@ $(function () {
         backgroundColor : ['#f56954', '#00a65a', '#f39c12'],
       }
     ]
-  };
+  }
   var pieOptions = {
     legend: {
       display: false
     },
     maintainAspectRatio : false,
     responsive : true,
-  };
+  }
   //Create pie or douhnut chart
   // You can switch between pie and douhnut using the method below.
   var pieChart = new Chart(pieChartCanvas, {
@@ -220,7 +220,7 @@ $(function () {
         data                : [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
       }
     ]
-  };
+  }
 
   var salesGraphChartOptions = {
     maintainAspectRatio : false,
@@ -251,7 +251,7 @@ $(function () {
         }
       }]
     }
-  };
+  }
 
   // This will get the first returned node in the jQuery collection.
   var salesGraphChart = new Chart(salesGraphChartCanvas, { 
@@ -259,6 +259,6 @@ $(function () {
       data: salesGraphChartData, 
       options: salesGraphChartOptions
     }
-  );
+  )
 
-});
+})

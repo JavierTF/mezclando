@@ -60,7 +60,7 @@
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Informe de apertura:</label><br>
                                     {% if object.informe_apertura %}
-                                        <a href="{{ object.informe_apertura.url }}" target="_blank">Descargar</a>
+                                        <a href="/media/{{ object.informe_apertura }}" target="_blank">Descargar</a>
                                     {% else %}
                                         <span>-----</span>
                                     {% endif %}
@@ -68,7 +68,7 @@
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Informe de cierre:</label><br>
                                     {% if object.informe_cierre %}
-                                        <a href="{{ object.informe_cierre.url }}" download>Descargar</a>
+                                        <a href="/media/{{ object.informe_cierre }}" target="_blank">Descargar</a>
                                     {% else %}
                                         <span>-----</span>
                                     {% endif %}
@@ -101,7 +101,12 @@
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Fecha de terminación:</label><br>
-                                    <span>{{ object.fecha_cierre }}</span> 
+                                    <span>
+                                    {% if object.fecha_cierre %}
+                                        {{ object.fecha_cierre }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Fecha de extensión:</label><br>

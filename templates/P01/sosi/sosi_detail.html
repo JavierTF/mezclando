@@ -1,0 +1,280 @@
+{% extends 'P01/sosi/sosi.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar SOSI.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_sosi' %}">SOSI</a></li>
+                            <li class="breadcrumb-item active">Modificar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.btn-primary-transparent{
+    color: #007bff;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/* Codigo para el boton On/Off */
+.checkbox-activate
+{
+    display:none;
+}
+
+.switch {
+    width: 42px;
+    height: 22px;
+    background: #E5E5E5;
+    z-index: 0;
+    margin-right: 5px;
+    padding: 0;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 16px; /*IE 11*/
+    -moz-border-radius: 16px; /*Mozilla*/
+    -webkit-border-radius: 16px;/*Chrome and Safari*/
+    }
+
+.switch:before
+{
+    width: 42px;
+    height: 22px;
+background: #E5E5E5;
+z-index: 0;
+margin: 0;
+padding: 0;
+appearance: none;
+border: none;
+cursor: pointer;
+position: relative;
+border-radius:16px; /*IE 11*/
+-moz-border-radius:16px; /*Mozilla*/
+-webkit-border-radius:16px; /*Chrome and Safari*/
+}
+
+.switch:after
+{
+content: ' ';
+height: 19px;
+width: 19px;
+border-radius: 28px;
+z-index: 2;
+background: #FFFFFF;
+position: absolute;
+-webkit-transition-duration: 300ms;
+transition-duration: 300ms;
+top: 1px;
+left: 1px;
+-webkit-box-shadow: 0 2px 5px #999999;
+box-shadow: 0 2px 5px #999999;
+}
+.switchOn , .switchOn:before
+{
+background: #007bff !important;
+}
+.switchOn:after
+{
+left: 24px !important;
+}
+</style>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <a href="/media/{{ objeto.archivo }}" target="_top">Descargar</a>
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form id="c" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'modificar_sosi' objeto.id %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                                <div>
+                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" {% if objeto.activo %}
+                                    checked
+                                    {% endif %}
+                                    >
+                                    <small class="text-red"></small>
+                                </div>
+                                
+                            </div>  
+
+                            <div class="form-group col-md-7">
+                                <label class="control-label"><label for="id_consecutivo">Consecutivo*:</label></label>
+                                <div>
+                                    <label class="control-label">{{ objeto.consecutivo }}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_numero_salva">Número de salva*:</label></label>
+                                <div>
+                                    <input type="text" maxlength="10" name="numero_salva" value="{{ objeto.numero_salva }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_numero_salva" placeholder="Introduzca número de salva">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha">Fecha*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha" value="{{ objeto.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha" placeholder="Introduzca fecha">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_anno">Año:</label></label>
+                                <div>
+                                    <input type="number" maxlength="4" name="anno" value="{% if objeto.anno %}{{ objeto.anno }}{% else %}{% now "Y" %}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_anno" placeholder="Introduzca año">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            
+                        </div>   
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_especialista">Especialista*:</label></label>
+                                <div>
+                                    <select name="especialista" class=" form-control texto select2" autocomplete="on" required id="id_especialista">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}"
+                                                {% if option.id == objeto.especialista.id %} selected {% endif %}>
+                                                {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_autor">Autor:</label></label>
+                                <div>
+                                    <input type="text" maxlength="50" name="autor" value="{% if objeto.anno %}{{ objeto.autor }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_autor" placeholder="Introduzca autor">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_ubicacion_salva">Ubicación:</label></label>
+                                <div>
+                                    <input type="text" maxlength="10" name="ubicacion_salva" value="{% if objeto.ubicacion_salva %}{{ objeto.ubicacion_salva }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_ubicacion_salva" placeholder="Introduzca ubicación de la salva">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                            
+                        </div>   
+                        <div class="row">
+                            <div class="form-group col-md-8">
+                                <label class="control-label"><label for="id_observaciones">Observaciones:</label></label>
+                                <div>
+                                    <input type="text" maxlength="150" name="observaciones" value="{% if objeto.observaciones %}{{ objeto.observaciones }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_observaciones" placeholder="Introduzca observaciones">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_archivo">Archivo*:</label></label>
+                                <div>
+                                    <input type="file" name="archivo" required id="id_archivo" value="/media/{{ objeto.archivo }}" accept="image/*">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                           
+                        </div>    
+                    {% block error %}
+                    {% endblock %}
+                    {% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_sosi' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+
+//VALIDACION CAMPOS VACIOS
+    
+    var d2 = new Date(Date.now());
+    d2 = d2.toISOString();
+    var d3 = d2.substr(0, 10);
+
+    $('#id_fecha').val(d3);
+
+    $('#id_numero').bind('focusout',function(){
+        validate_campos_vacios($(this));
+    });
+
+    $('#id_fecha').on('change', function(e){
+        validar_comparar_fechas(document.getElementById('id_fecha'), '', 'menor_igual');
+    });
+
+    $('#id_anno').keypress(function( event )
+    {
+        //CAMPOS VACIOS
+        return validate_only_number($(this), event);
+    });
+
+    $('#id_autor').keypress(function( event )
+    {
+        //CAMPOS VACIOS
+        return validate_only_text($(this), event);
+    });
+
+    $('#id_especialista').on('change', function(e){
+        validate_select($('#id_especialista'), e);
+    });
+
+    $('#id_fecha').prop("disabled", true);    
+    $('#id_activo').prop("disabled", true);    
+    $('#id_numero_salva').prop("disabled", true);    
+    $('#id_anno').prop("disabled", true);    
+    $('#id_especialista').prop("disabled", true);    
+    $('#id_autor').prop("disabled", true);    
+    $('#id_ubicacion_salva').prop("disabled", true);   
+    $('#id_observaciones').prop("disabled", true);   
+    {% comment %} $('#id_archivo').prop("disabled", true);    {% endcomment %}
+    
+//VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
+
+</script>
+{% endblock %}
