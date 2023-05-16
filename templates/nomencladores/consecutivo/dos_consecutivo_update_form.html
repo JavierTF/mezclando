@@ -1,0 +1,178 @@
+{% extends 'nomencladores/consecutivo/consecutivo.html' %}
+{% load static %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar Consecutivo</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_consecutivo' %}">Consecutivo</a></li>
+                            <li class="breadcrumb-item active">Modificar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Rol de trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-body">
+                            {% comment %} {% for campo in form %}
+                            <table>
+                                {{ form.as_table }}
+                            </table>
+                            {% endfor %} {% endcomment %}
+                            {% for campo in form %}
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-4">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary">Modificar</button>
+                                <a href="{% url 'listar_consecutivo' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+
+        $('#id_codigo').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_fecha_entrada').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+        $('#id_nombre_proyecto').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+        
+        $('#id_costo').bind('focusout', function(){
+            validate_campos_vacios($(this));
+        });
+        
+        //VALIDACION SOLO NUMEROS
+        $('#id_costo').keypress(function( event )
+        {
+            //CAMPOS VACIOS
+            return validate_only_number($(this), event);
+        });
+        
+        $('#id_tipo_codigo').change(function(event){
+            validate_select($('#id_tipo_codigo'), event);
+        });
+
+        $('#id_tipo').change(function(event){
+            validate_select($('#id_tipo'), event);
+        });
+        
+        $('#id_area').on('change', function(e){
+            validate_select($('#id_area'), e);
+        });
+        
+        $('#id_jefe_proyecto').on('change', function(e){
+            validate_select($('#id_jefe_proyecto'), e);
+        });
+        
+        $('#id_fuente_financiamiento').on('change', function(e){
+            validate_select($('#id_fuente_financiamiento'), e);
+        });
+        
+        $('#id_estado').on('change', function(e){
+            validate_select($('#id_estado'), e);
+        });
+        
+        $('#id_no').prop("disabled", true);
+        
+        $('#id_formato').on('change', function(event){
+            validar_comparar_valores_contables($('#id_formato'), 6, 'menor_igual');
+        });
+        
+        $('#id_fecha_entrada').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_entrada'), '', 'menor_igual');
+            validar_comparar_fechas($('#id_fecha_entrada'), $('#id_fecha_terminacion'), 'menor');
+            validar_comparar_fechas($('#id_fecha_entrada'), $('#id_fecha_extension'), 'menor');
+        });
+        
+        $('#id_fecha_aprobacion').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_aprobacion'), '', 'menor_igual');
+        });
+        
+        $('#id_fecha_inicio').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_inicio'), '', 'menor_igual');
+            validar_comparar_fechas($('#id_fecha_entrada'), $('#id_fecha_cierre'), 'menor');
+        });
+        
+        $('#id_fecha_interrupcion').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_interrupcion'), '', 'menor_igual');
+        });
+        
+        $('#id_fecha_terminacion').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_terminacion'), $('#id_fecha_entrada'), 'mayor_igual');
+        });
+        
+        $('#id_fecha_extension').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_extension'), $('#id_fecha_entrada'), 'mayor_igual');
+        });
+        
+        $('#id_fecha_cierre').on('change', function(e){
+            validar_comparar_fechas($('#id_fecha_cierre'), $('#id_fecha_inicio'), 'mayor_igual');
+        });
+        
+        $('#id_informe_apertura').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
+        });
+        
+        $('#id_informe_cierre').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
+        });
+
+</script>
+{% endblock %}

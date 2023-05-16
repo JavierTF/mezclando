@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h3 style="color: black; font-weight: bold">EFICACIA DE LOS PROCESOS</h3>
+                    </td>
+                    <td class="text-right">
+                        <p>{% now "d-m-Y" %}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="col-12">
+                <div class="col-4"><span class="text-bold">Proceso: {{ model.process }}</span></div>
+                <div class="col-4"><span class="text-bold"> Año: {{ model.year }}</span></div>
+                <div class="col-4"><span class="text-bold">Evaluación total: {{ model.total_evaluation|floatformat:1 }}</span></div>
+                <div class="col-4"><span class="text-bold"> Proceso Eficaz: {{ model.is_effective|yesno|upper }}</span></div>
+            </div>
+            <div class="kt-separator"></div>
+            <div class="col-12">
+                <div class="border-dark {% if not model.semesters.all|filter:"semester:1" %}bg-gradient-gray{% endif %}">
+                    <h4>Semestre I{% if not model.semesters.all|filter:"semester:1" %}<span class="no-data">: NO EVALUADO</span>{% endif %}</h4>
+                    {% for semester in model.semesters.all|filter:"semester:1" %}
+                        <p>Responsable: <span class="no-data"><a href="{% url 'effectiveness:update_effectiveness' model.id semester.semester %}"><i class="fa fa-edit"></i></a></span></p>
+                        <p>{{ semester.evaluator.get_full_name }}</p>
+                        <p>Cargo:</p>
+                        <p>{{ semester.evaluator.position.name }}</p>
+                        <p>Evaluación de los Indicadores</p>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Indicador</th>
+                                    <th>Calificación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for indicator in semester.indicators.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ indicator.measurer.indicator.name }}</td>
+                                    <td>{{ indicator.measurer.qualification }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <p class="text-bold">Evaluación: {{ semester.total_evaluation|floatformat:1 }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="kt-separator"></div>
+            <div class="col-12">
+                <div class="border-dark {% if not model.semesters.all|filter:"semester:2" %}bg-gradient-gray{% endif %}">
+                    <h4>Semestre II{% if not model.semesters.all|filter:"semester:2" %}<span class="no-data">: NO EVALUADO</span>{% endif %}</h4>
+                    {% for semester in model.semesters.all|filter:"semester:2" %}
+                        <p>Responsable: <span class="no-data"><a href="{% url 'effectiveness:update_effectiveness' model.id semester.semester %}"><i class="fa fa-edit"></i></a></span></p>
+                        <p>{{ semester.evaluator.get_full_name }}</p>
+                        <p>Cargo:</p>
+                        <p>{{ semester.evaluator.position.name }}</p>
+                        <p>Evaluación de los Indicadores</p>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Indicador</th>
+                                    <th>Calificación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for indicator in semester.indicators.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ indicator.measurer.indicator.name }}</td>
+                                    <td>{{ indicator.measurer.qualification }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <p class="text-bold">Evaluación: {{ semester.total_evaluation|floatformat:1 }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    <p>Elaborado por: {{ owner.get_full_name }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+{% extends 'index.html' %}
+{% load static i18n %}
+{% block countries %}
+    active
+{% endblock %}
+{% block menu_nomencladores %} active menu-open {% endblock %}
+{% block menu_nomencladores_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Adicionar País.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Países.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+label.required::after {
+    content: ' *';
+    color: red;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="portlet-body form">
+                            <form id="form_create_country" class="form-horizontal" method="post" action="{% url 'base:create_country' %}">
+                                {% csrf_token %}
+                                <div class="row form-body">
+                                    {% for field in form %}
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ field.label_tag }}</label>
+                                                <div class="input-content">
+                                                    {{ field }}
+                                                    <small class="text-red">{{ field.errors }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%  endfor %}
+                                </div>
+                                <div class="form-actions fluid">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
+                                        <a href="{% url 'base:countries' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'base/js/countries/create.js' %}" type="text/javascript"></script>
+{% endblock %}

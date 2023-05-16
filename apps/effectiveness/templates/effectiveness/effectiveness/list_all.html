@@ -1,0 +1,69 @@
+{% load static i18n %}
+<div class="card-body">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="{{ processes|length|add:3 }}" class="text-center p-0">Indicadores de Eficacia del Sistema Integrado de Gestión:
+                {% with first=years|first last=years|last %}
+                    {{ first.year }} - {{ last.year }}
+                {% endwith %}
+            </th>
+        </tr>
+        <tr><th colspan="{{ processes|length|add:3 }}" class="text-center p-0">Sistema Integrado de Gestión</th></tr>
+        <tr>
+            <th colspan="2">
+                Años / Semestres
+            </th>
+            {% for process in processes %}
+            <th>{{ process.abbreviation }}</th>
+            {% endfor %}
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for year in years %}
+        <tr>
+            <td rowspan="2" class="text-center text-bold p-0" style="vertical-align: inherit;">{{ year.year }}</td>
+            <td class="text-center text-bold py-1">I</td>
+            {% for process in processes %}
+            <td class="text-center py-1">
+                {% with filter_args="year:"|add:year.year %}
+                    {% for model in process.effectiveness.all|filter:filter_args %}
+                        {% for semester in model.semesters.all|filter:"semester:1" %}
+                            {{ semester.total_evaluation|floatformat:1|default_if_none:"-" }}
+                        {% endfor %}
+                    {% endfor %}
+                {% endwith %}
+            </td>
+            {% endfor %}
+            <td class="text-center text-bold py-1">
+                {{ year.semesters|first|floatformat:1 }}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center text-bold py-1">II</td>
+            {% for process in processes %}
+            <td class="text-center py-1">
+                {% with filter_args="year:"|add:year.year %}
+                    {% for model in process.effectiveness.all|filter:filter_args %}
+                        {% for semester in model.semesters.all|filter:"semester:2" %}
+                            {{ semester.total_evaluation|floatformat:1|default_if_none:"-" }}
+                        {% endfor %}
+                    {% endfor %}
+                {% endwith %}
+            </td>
+            {% endfor %}
+            <td class="text-center text-bold py-1">
+                {{ year.semesters|last|floatformat:1 }}
+            </td>
+        </tr>
+        <tr>
+            <th class="text-right py-1" colspan="{{ processes|length|add:2 }}">TOTAL </th>
+            <th class="text-center py-1">{{ year.total_evaluation|floatformat:1 }}</th>
+        </tr>
+        {% endfor %}
+        <tr><th colspan="{{ processes|length|add:3 }}" class="text-center p-0">SISTEMA EFICAZ IST >/= 4</th></tr>
+        </tbody>
+    </table>
+    <p>Leyenda: IST: Índice de Satisfacción Total</p>
+</div>

@@ -41,16 +41,6 @@ def just_login(request):
     response.delete_cookie('user_photo')
     return response
 
-def validar(request):
-    print('RRR', request.user.username)
-    print('RRR', request.user.password)
-    # user = request.POST['username']
-    # passw = request.POST['password']
-
-    # access = authenticate(username=user, password=passw)
-    response = {}
-    response['object'] = request.user
-    return JsonResponse(response)
 
 def loguear(request):
     # dir_ip = request.META['REMOTE_ADDR']
@@ -69,20 +59,19 @@ def loguear(request):
         if access is not None:
             if access.is_active:
                 login(request, access)
-                userApp = models.UserApp.objects.get(pk=request.user.pk)
                 register_logs(request, User, "", "", 4)
                 messages.success(request, "Usted se ha autenticado con éxito")
                 if 'redireccion_url' in request.POST:
-                    redireccion_url= request.POST['redireccion_url']
+                    redireccion_url = request.POST['redireccion_url']
                 else:
-                    redireccion_url= '/'
+                    redireccion_url = '/'
                 response = HttpResponseRedirect(redireccion_url)
                 response.set_cookie("user", request.user.username)
 
                 userApp = models.UserApp.objects.filter(pk=request.user.pk)
                 if userApp:
                     userApp.first()
-                    if hasattr(userApp, 'image'):
+                    if userApp.image:
                         response.set_cookie("user_photo", userApp.image)
                 else:
                     response.set_cookie("user_photo", "static/users/userDefault4.png")
@@ -91,15 +80,13 @@ def loguear(request):
                 messages.error(request, "Usuario inactivo")
         else:
             if passw == "" or user == "":
-                messages.error(request, "El usuario o la contraseña están vacíos")
+                messages.error(request, "El usuario o la contraseña estan vacíos")
             else:
                 messages.error(request, "Nombre de usuario y/o contraseña inválidos")
-
     if request.COOKIES.get("user"):
         username = request.COOKIES.get("user")
         userPhoto = request.COOKIES.get("user_photo")
         return render(request, "Authentication/lockpages.html", {"username": username, "user_photo": userPhoto, "redireccion_url": redireccion_url})
-        
     return render(request, 'Authentication/login.html',{"redireccion_url": redireccion_url})
 
 
