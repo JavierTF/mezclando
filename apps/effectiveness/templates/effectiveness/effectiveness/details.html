@@ -1,0 +1,203 @@
+{% extends 'index.html' %}
+{% load static i18n %}
+{% block effectiveness %}
+    active
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Eficacia de los procesos.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Integración</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Eficacia de los procesos.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.border-dark {
+    padding: 15px;
+    height: auto;
+    border: 2px solid black;
+}
+.no-data {
+    float: right;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-header">
+                    <div class="row col-md-12">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4"><span class="text-bold">Proceso</span> <p>{{ model.process }}</p></div>
+                                    <div class="col-md-2"><span class="text-bold">Año</span> <p>{{ model.year }}</p></div>
+                                    <div class="col-md-3"><span class="text-bold">Evaluación total</span> <p>{{ model.total_evaluation|floatformat:1 }}</p></div>
+                                    <div class="col-md-3"><span class="text-bold">Proceso Eficaz</span> <p>{{ model.is_effective|yesno|upper }}</p></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4"><a href="{% url 'effectiveness:export_details_effectiveness' model.id %}" style="float: right">Exportar evaluación <i class="fa fa-file-export"></i></a></div>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row col-md-12">
+                            <div class="col-md-6">
+                                <div class="border-dark {% if not model.semesters.all|filter:"semester:1" %}bg-gradient-gray{% endif %}">
+                                    {% for semester in model.semesters.all|filter:"semester:1" %}
+                                        <h4>Semestre I <span class="no-data">{% if not model.semesters.all|filter:"semester:2" %}<a href="{% url 'effectiveness:clone_semester' model.id semester.semester %}" class="btn btn-small text-muted" title="Clonar semestre"><i class="fa fa-copy"></i></a>{% endif %} <a href="{% url 'effectiveness:update_effectiveness' model.id semester.semester %}" class="btn btn-small text-muted" title="Editar el semestre"><i class="fa fa-edit"></i></a> <a href="#" model-url="{% url 'effectiveness:delete_semester' model.id semester.id %}" class="delete_semester btn btn-small text-muted" title="Eliminar el semestre"><i class="fa fa-trash"></i></a></span></h4>
+                                        <p>Responsable:</p>
+                                        <p>{{ semester.evaluator.get_full_name }}</p>
+                                        <p>Cargo:</p>
+                                        <p>{{ semester.evaluator.position.name }}</p>
+                                        <p>Evaluación de los Indicadores</p>
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Indicador</th>
+                                                    <th>Calificación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for indicator in semester.indicators.all %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ indicator.measurer.indicator.name }}</td>
+                                                    <td>{{ indicator.measurer.qualification }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <p class="text-bold">Evaluación: {{ semester.total_evaluation|floatformat:1 }}</p>
+                                    {% empty %}
+                                        <h4>Semestre I: <span class="text-white-50">NO EVALUADO</span> <span class="no-data"><a href="{% url 'effectiveness:create_semester' model.id 1 %}" class="btn btn-small text-white-50"><i class="fa fa-edit"></i></a></span></h4>
+                                        <p class="text-white-50">Responsable:</p>
+                                        <p class="text-white-50"></p>
+                                        <p class="text-white-50">Cargo:</p>
+                                        <p></p>
+                                        <p class="text-white-50">Evaluación de los Indicadores</p>
+                                        <table class="table table-bordered table-striped text-white-50">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Indicador</th>
+                                                    <th>Calificación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p class="text-white-50">Evaluación:</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="border-dark {% if not model.semesters.all|filter:"semester:2" %}bg-gradient-gray{% endif %}">
+                                    {% for semester in model.semesters.all|filter:"semester:2" %}
+                                        <h4>Semestre II <span class="no-data"><a href="{% url 'effectiveness:update_effectiveness' model.id semester.semester %}" class="btn btn-small text-muted" title="Editar el semestre"><i class="fa fa-edit"></i></a> <a href="#" model-url="{% url 'effectiveness:delete_semester' model.id semester.id %}" class="delete_semester btn btn-small  text-muted" title="Eliminar el semestre"><i class="fa fa-trash"></i></a></span></h4>
+                                        <p>Responsable:</p>
+                                        <p>{{ semester.evaluator.get_full_name }}</p>
+                                        <p>Cargo:</p>
+                                        <p>{{ semester.evaluator.position.name }}</p>
+                                        <p>Evaluación de los Indicadores</p>
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Indicador</th>
+                                                    <th>Calificación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for indicator in semester.indicators.all %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ indicator.measurer.indicator.name }}</td>
+                                                    <td>{{ indicator.measurer.qualification }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <p class="text-bold">Evaluación: {{ semester.total_evaluation|floatformat:1 }}</p>
+                                    {% empty %}
+                                        <h4>Semestre II: <span class="text-white-50">NO EVALUADO</span> <span class="no-data"><a href="{% url 'effectiveness:create_semester' model.id 2 %}" class="btn btn-small text-white-50"><i class="fa fa-edit"></i></a></span></h4>
+                                        <p class="text-white-50">Responsable:</p>
+                                        <p class="text-white-50"></p>
+                                        <p class="text-white-50">Cargo:</p>
+                                        <p></p>
+                                        <p class="text-white-50">Evaluación de los Indicadores</p>
+                                        <table class="table table-bordered table-striped text-white-50">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Indicador</th>
+                                                    <th>Calificación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p class="text-white-50">Evaluación:</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row col-md-12">
+                            <a href="{% url 'effectiveness:list_effectiveness' %}" class="btn btn-sm btn-default">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'effectiveness/js/effectiveness/details.js' %}" type="text/javascript"></script>
+{% endblock %}

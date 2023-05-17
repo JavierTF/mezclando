@@ -3,8 +3,6 @@ from datetime import datetime
 from django.contrib import messages
 from django.http import request
 from django.shortcuts import render
-from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 
 class my_validates():
     list_ext = ['image/jpeg', 'image/jpg', 'image/png']
@@ -35,10 +33,3 @@ class my_validates():
 
     def validar_extensiones_archivos(obj, list_ext = []):
         pass
-
-    def existe_objeto(campo, valor, model: models.Model):      
-        try:
-            objeto = model.objects.get(campo = valor)
-        except ObjectDoesNotExist:
-            return False
-        return True

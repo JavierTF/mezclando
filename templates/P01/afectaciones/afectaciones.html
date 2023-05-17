@@ -7,6 +7,7 @@
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
 
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -102,19 +103,30 @@ left: 24px !important;
 {% endblock %}
 
 {% block content %}
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Listado de Afectaciones </h3>
-                       {%comment%}  {% if perms.SISGDDO.add_consecutivo %}{%endcomment%} 
-                        <a href="{% url 'adicionar_consecutivo' %}" class="btn btn-primary fa-pull-right">
-                            <span class="fa fa-plus"> Adicionar </span>
-                        </a>
-                       {%comment%}  {% endif %}{%endcomment%} 
-                    </div>
-                    <!-- /.card-header -->
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    
+                    <a href="{% url 'create_afectation' %}" class="btn btn-primary fa-pull-right">
+                        <span class="fa fa-plus"> Adicionar</span>
+                    </a>
+                  
+                    <form action="{% url 'base:export_procedures' %}" class="form-horizontal">
+                        <div class="row col-6">
+                            <div class="col-6">
+                                <input type="text" class="form-control" name="export_date">
+                            </div>
+                            
+                            <div class="col-5">
+                                <button type="submit" class="btn btn-outline-secondary fa-pull-left">
+                                    <span class="fa fa-file-pdf"> Exportar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-hover">
@@ -149,135 +161,74 @@ left: 24px !important;
                             </tr>
                             </thead>
                             <tbody>
-                            {% comment %} {% c = 0 %} {% endcomment %}
-                           {%comment%} {% for lt in lista %}
+                        
+                         {% for lt in lista %}
                                 <tr id="{{ lt.id }}">
                                     <td>
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ lt.codigo }}
+                                        {{ lt.numero }}
                                     </td>
                                     <td>
-                                        {{ lt.nombre_proyecto }}
+                                        {{ lt.afectacion }}
                                     </td>
                                     <td>
-                                        {% if lt.formato.all > 0 %}
-                                            {% for formato in lt.formato.all %}
-                                                {{ formato }} {% if not forloop.last %} - {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
+                                        {{ lt.fecha_entrada }} 
                                     </td>
                                     <td>
-                                        {{ lt.area }}
+                                        {{ lt.propuesto }}
                                     </td>
                                     <td>
-                                        {{ lt.tipo }}
+                                        {{ lt.responsable }}
                                     </td>
                                     <td>
-                                        {% for trab in lt.trabajador.all %}
-                                            {{ trab }}
-                                        {% endfor %}
+                                       {{ lt.mesplaneado }}
+  
                                     </td>
                                     <td>
-                                        {{ lt.fecha_entrada }}
+                                        {{ lt.observacionesactual }}
                                     </td>
                                     <td>
-                                        {% if lt.fecha_cierre %}
-                                            {{ lt.fecha_cierre }}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
+                                        {{ lt.observacionesfutura }}
                                     </td>
                                     <td>
                                         {{ lt.estado }}
-                                    </td>                                        
-                                    <td>{%endcomment%}
-                                    <span class="input-group">
-                                   {%comment%} {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                                    <label>
-                                         {%comment%}<form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate"> {%endcomment%}
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                   {%comment%} {% endif %}{%endcomment%}
-                                    {%comment%}{% if perms.SISGDDO.view_consecutivo %}{%endcomment%}
-                                     <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
-                                    <i class="fa fa-eye"></i>
-                                    </a>
-                                   {%comment%} {% endif %}
-                                    {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                                     <a {%comment%}href="{% url 'modificar_consecutivo' lt.id %}" {%endcomment%}
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
-                                    <i class="fa fa-edit"></i>
-                                    </a>
-                                    {%comment%}{% endif %}
-                                    {% if perms.SISGDDO.delete_consecutivo %}{%endcomment%}
-                                        <a {%comment%}%href="{  url 'eliminar_consecutivo' lt.pk % {%endcomment%}}" 
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
-                                        <i class="fa fa-trash"></i>
-                                        </a>
-                                    {%comment%} {% endif %} 
-                                    {% if perms.SISGDDO.add_sosi %} {%endcomment%}
-                                         <a {%comment%}%href="{% url 'adicionar_sosi' lt.id %}" {%endcomment%}
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar sosi">
-                                        <i class="fa fa-angle-double-right"></i>
-                                        </a >
-                                        <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                        class="form" title="Mes">
-                                        <Select>
-                                            <option selected="selected"> Enero </option>
-                                            <option>Febrero</option>
-                                            <option>Marzo </option>
-                                            <option>Abril </option>
-                                            <option>Mayo</option>
-                                            <option>Junio  </option>
-                                            <option>Julio</option>
-                                            <option>Agosto </option>
-                                            <option>Septiembre </option>
-                                            <option>Octubre</option>
-                                            <option> Noviembre</option>
-                                            <option>Diciemnbre
-                                    
-                                            </option>
-                                        <Select/><a/>
-
-                                        <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                        class="form" title="UEB">
-                                        <Select>
-                                            <option selected="selected"> UEB Proyectos multimedias </option>
-                                            <option selected="selected"> UEB Proyectos comercial </option>
-                                            <option selected="selected"> UEB Proyectos administracion </option>
-                                           
-                                    
-                                            </option>
-                                        <Select/><a/>
-
-
-                                       
-                                   <i class="fa fa-eye"></i>
-
-                                   <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                        class="form" title="Ano">
-                                        <Select>
-                                            <option selected="selected"> 2022 </option>
-                                            <option>2023</option>
-                                         <Select/><a/>
-
-                                        
-                                       
-                                   <i class="fa fa-eye"></i>
-                                   </a>
-                                    {%comment%} {% endif %} {%endcomment%}
-                                </span>
-                                    </td>
+                                    </td>                
+                                     <td>
+                    <span class="input-group">
+                    {% if perms.base.change_process %}
+                        <a href="{% url 'base:update_processes' model.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                        <i class="fa fa-edit"></i>
+                        </a>
+                    {% endif %}
+                    {% if perms.base.delete_process %}
+                        <a href="#" model-url="{% url 'base:delete_processes' model.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_process" title="eliminar">
+                        <i class="fa fa-trash"></i>
+                        </a>
+                    {% endif %}
+                    </span>
+                </td> 
+                <td>
+                    <span class="input-group">
+                   {%comment%} {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
+                    <label>
+                         {%comment%}<form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate"> {%endcomment%}
+                            {% csrf_token %}
+                            <span style="display: none">{{ lt.activo }}</span>
+                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                        </form>
+                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
+                    </div>
+                       
+                   </a>
+                    {%comment%} {% endif %} {%endcomment%}
+                </span>
+                    </td>
+                {% endfor %}                       
+                                   
                                 </tr>
                                 {% comment %} {% c = c + 1 %} {% endcomment %}
                             {%comment%} {% endfor %} {%endcomment%}

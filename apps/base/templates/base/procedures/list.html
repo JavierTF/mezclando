@@ -1,0 +1,53 @@
+{% load static i18n %}
+<div class="card-body">
+    <table id="example2" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Ficha de Procesos</th>
+            <th>Proceso</th>
+            <th>Responsables</th>
+            <th>Edición</th>
+            <th>Revisión</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% regroup models by process as processes  %}
+        {% for process in processes %}
+            {% for procedure in process.list %}
+                <tr>
+                    <td>{{ process.grouper.abbreviation }} {{ process.grouper.name }}</td>
+                    <td>{% if procedure.file_exists %}<a href="{{ procedure.file.url }}" target="_blank">{{ procedure }}</a> {% else %}{{ procedure }}{% endif %}</td>
+                    <td>{{ process.grouper.responsible|default_if_none:"" }}</td>
+                    <td>{{ procedure.edition }}</td>
+                    <td>{{ procedure.revision }}</td>
+                    <td>
+                        {% if perms.base.change_procedure %}
+                            <a href="{% url 'base:update_procedures' procedure.id %}"
+                               class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        {% endif %}
+                        {% if perms.base.delete_procedure %}
+                            <a href="#" model-url="{% url 'base:delete_procedures' procedure.id %}"
+                               class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_procedure" title="eliminar">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Proceso</th>
+            <th>Procedimiento</th>
+            <th>Responsable</th>
+            <th>Edición</th>
+            <th>Revisión</th>
+            <th></th>
+        </tr>
+        </tfoot>
+    </table>
+</div>

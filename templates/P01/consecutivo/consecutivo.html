@@ -108,11 +108,11 @@ left: 24px !important;
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Listado de Consecutivos </h3>
-                       {%comment%}  {% if perms.SISGDDO.add_consecutivo %}{%endcomment%} 
+                        {% if perms.SISGDDO.add_consecutivo %}
                         <a href="{% url 'adicionar_consecutivo' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar </span>
                         </a>
-                       {%comment%}  {% endif %}{%endcomment%} 
+                        {% endif %}
                     </div>
                     <!-- /.card-header -->
 
@@ -157,7 +157,7 @@ left: 24px !important;
                             </thead>
                             <tbody>
                             {% comment %} {% c = 0 %} {% endcomment %}
-                           {%comment%} {% for lt in lista %}
+                            {% for lt in lista %}
                                 <tr id="{{ lt.id }}">
                                     <td>
                                         {{ forloop.counter }}
@@ -169,13 +169,10 @@ left: 24px !important;
                                         {{ lt.nombre_proyecto }}
                                     </td>
                                     <td>
-                                        {% if lt.formato.all > 0 %}
-                                            {% for formato in lt.formato.all %}
-                                                {{ formato }} {% if not forloop.last %} - {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
+                                        {% for formato in lt.formato.all %}
+                                            {{ formato }} {% if not forloop.last %} - {% endif %}
+                                        {% endfor %}
+                                        {% comment %} {{ formatos.0 }} {% endcomment %}
                                     </td>
                                     <td>
                                         {{ lt.area }}
@@ -192,20 +189,16 @@ left: 24px !important;
                                         {{ lt.fecha_entrada }}
                                     </td>
                                     <td>
-                                        {% if lt.fecha_cierre %}
-                                            {{ lt.fecha_cierre }}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
+                                        {{ lt.fecha_cierre }}
                                     </td>
                                     <td>
                                         {{ lt.estado }}
                                     </td>                                        
-                                    <td>{%endcomment%}
+                                    <td>
                                     <span class="input-group">
-                                   {%comment%} {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
+                                    {% if perms.SISGDDO.change_consecutivo %}
                                     <label>
-                                         {%comment%}<form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate"> {%endcomment%}
+                                        <form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
                                             <span style="display: none">{{ lt.activo }}</span>
                                             <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
@@ -213,36 +206,30 @@ left: 24px !important;
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>
                                     </label>
-                                   {%comment%} {% endif %}{%endcomment%}
-                                    {%comment%}{% if perms.SISGDDO.view_consecutivo %}{%endcomment%}
-                                     {%comment%}<a href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
+                                    {% endif %}
+                                    {% if perms.SISGDDO.view_consecutivo %}
+                                    <a href="{% url 'detalle_consecutivo' lt.id %}"
                                          class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
-                                   {%comment%} {% endif %}
-                                    {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                                     {%comment%}<a href="{% url 'modificar_consecutivo' lt.id %}" {%endcomment%}
+                                    {% endif %}
+                                    {% if perms.SISGDDO.change_consecutivo %}
+                                    <a href="{% url 'modificar_consecutivo' lt.id %}"
                                         class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
-                                    {%comment%}{% endif %}
-                                    {% if perms.SISGDDO.delete_consecutivo %}{%endcomment%}
-                                        <a href="{ {%comment%}% url 'eliminar_consecutivo' lt.pk % {%endcomment%}}" 
+                                    {% endif %}
+                                    {% if perms.SISGDDO.delete_consecutivo %}
+                                        <a href="{% url 'eliminar_consecutivo' lt.pk %}"
                                             class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
-                                    {%comment%} {% endif %} 
-                                    {% if perms.SISGDDO.add_sosi %} {%endcomment%}
-                                        {%comment%} <a href="{% url 'adicionar_sosi' lt.id %}" {%endcomment%}
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar sosi">
-                                        <i class="fa fa-angle-double-right"></i>
-                                        </a>
-                                    {%comment%} {% endif %} {%endcomment%}
+                                    {% endif %} 
                                 </span>
                                     </td>
                                 </tr>
                                 {% comment %} {% c = c + 1 %} {% endcomment %}
-                            {%comment%} {% endfor %} {%endcomment%}
+                            {% endfor %}
                             </tbody>
 
                         </table>

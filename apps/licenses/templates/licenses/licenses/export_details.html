@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h3 style="color: black; font-weight: bold">LICENCIAS</h3>
+                    </td>
+                    <td class="text-right">
+                        <p>{% now "d-m-Y" %}</p>
+                    </td>
+                </tr>
+            </table>
+            <div class="row col-12">
+                <div class="col-6">
+                    <p class="col-4-"><span class="text-bold">Nombre del Documento:</span> {{ model.name }}</p>
+                    <p class="col-4-"><span class="text-bold">Código:</span> {{ model.number }}</p>
+                    <p class="col-4-"><span class="text-bold">Entidad que certifica:</span> {{ model.entity.name }}</p>
+                    <p class="col-4-"><span class="text-bold">Estado:</span> {{ model.get_status|upper }}</p>
+                    <p class="col-4-"><span class="text-bold">Proceso:</span> {{ model.process }}</p>
+                    <p class="col-4-"><span class="text-bold">Proceso asociado:</span> {{ model.associated_process.name }}</p>
+                </div>
+                <div class="col-6">
+                    <p class="col-4-"><span class="text-bold">Fecha de otorgamiento:</span> {{ model.grant_date|date:"j, M Y" }}</p>
+                    <p class="col-4-"><span class="text-bold">Fecha de vencimiento:</span> {{ model.expiration_date|date:"j, M Y" }}</p>
+                    <p class="col-4-"><span class="text-bold">Responsable:</span> {{ model.responsible.get_full_name }}</p>
+                    <p class="col-4-"><span class="text-bold">Cargo:</span> {{ model.responsible.position.name }}</p>
+                </div>
+            </div>
+            <div class="row col-12 mt-5">
+                <div class="col-6">
+                    <p class="col-4-"><span class="text-bold">Observación:</span> {{ model.observation }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    <p>Elaborado por: {{ owner.get_full_name }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

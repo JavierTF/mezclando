@@ -1,0 +1,127 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+    <style>
+        @page {
+    	    size:landscape;
+     	}
+     	.table th { font-weight: 700 !important; }
+        .table td { font-weight: 400 !important; }
+    </style>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h4 style="color: black; font-weight: bold">ANEXO 6. INDICADORES DE EFICACIA DEL SISTEMA
+                            {% with first=years|first last=years|last %}
+                                {{ first.year }} - {{ last.year }}
+                            {% endwith %}
+                        </h4>
+                    </td>
+                    <td class="text-right">
+                        <p>{% now "d-m-Y" %}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered" style="margin-top: 20px;">
+                <thead>
+                <tr>
+                    <th colspan="{{ processes|length|add:3 }}" class="text-center p-0">Indicadores de Eficacia del Sistema Integrado de Gestión:
+                        {% with first=years|first last=years|last %}
+                            {{ first.year }} - {{ last.year }}
+                        {% endwith %}
+                    </th>
+                </tr>
+                <tr><th colspan="{{ processes|length|add:3 }}" class="text-center p-0">Sistema Integrado de Gestión</th></tr>
+                <tr>
+                    <th colspan="2">
+                        Años / Semestres
+                    </th>
+                    {% for process in processes %}
+                    <th>{{ process.abbreviation }}</th>
+                    {% endfor %}
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for year in years %}
+                <tr>
+                    <td rowspan="2" class="text-center text-bold p-0" style="vertical-align: inherit;">{{ year.year }}</td>
+                    <td class="text-center text-bold py-1">I</td>
+                    {% for process in processes %}
+                    <td class="text-center py-1">
+                        {% with filter_args="year:"|add:year.year %}
+                            {% for model in process.effectiveness.all|filter:filter_args %}
+                                {% for semester in model.semesters.all|filter:"semester:1" %}
+                                    {{ semester.total_evaluation|floatformat:1|default_if_none:"-" }}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endwith %}
+                    </td>
+                    {% endfor %}
+                    <td class="text-center text-bold py-1">
+                        {{ year.semesters|first|floatformat:1 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center text-bold py-1">II</td>
+                    {% for process in processes %}
+                    <td class="text-center py-1">
+                        {% with filter_args="year:"|add:year.year %}
+                            {% for model in process.effectiveness.all|filter:filter_args %}
+                                {% for semester in model.semesters.all|filter:"semester:2" %}
+                                    {{ semester.total_evaluation|floatformat:1|default_if_none:"-" }}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endwith %}
+                    </td>
+                    {% endfor %}
+                    <td class="text-center text-bold py-1">
+                        {{ year.semesters|last|floatformat:1 }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-right py-1" colspan="{{ processes|length|add:2 }}">TOTAL</th>
+                    <th class="text-center py-1">{{ year.total_evaluation|floatformat:1 }}</th>
+                </tr>
+                {% endfor %}
+                <tr><th colspan="{{ processes|length|add:3 }}" class="text-center p-0">SISTEMA EFICAZ IST >/= 4</th></tr>
+                </tbody>
+            </table>
+            <p>Leyenda: IST: Índice de Satisfacción Total</p>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    <p>Elaborado por: {{ owner.get_full_name }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

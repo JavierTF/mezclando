@@ -1,0 +1,72 @@
+{% load static i18n %}
+<div class="card-body">
+    <table id="example2" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Proceso</th>
+            <th>Responsable</th>
+            <th>Proceso asociado</th>
+            <th>Nombre Documento</th>
+            <th>Entidad que certifica</th>
+            <th>Fecha otorgamiento</th>
+            <th>Fecha vencimiento</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% regroup models by process as processes  %}
+        {% for process in processes %}
+            {% for licence in process.list %}
+                <tr>
+                    <td>{{ process.grouper.abbreviation }} {{ process.grouper.name }}</td>
+                    <td>{{ licence.responsible.get_full_name }}</td>
+                    <td>{{ licence.associated_process.abbreviation }}</td>
+                    <td>
+                        {% if licence.file %}
+                            <a href="{{ licence.file.url }}" target="_blank">{{ licence.name }}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ licence.entity.name }}</td>
+                    <td>{{ licence.grant_date|date:"j, M Y" }}</td>
+                    <td>{{ licence.expiration_date|date:"j, M Y" }}</td>
+                    <td>{{ licence.get_status }}</td>
+                    <td>
+                        <span class="input-group">
+                        <a href="{% url 'licenses:details_licenses' licence.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="detalles">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                        {% if perms.licenses.change_license %}
+                            <a href="{% url 'licenses:update_licenses' licence.id %}"
+                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="modificar">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        {% endif %}
+                        {% if perms.licenses.delete_license %}
+                            <a href="#" model-url="{% url 'licenses:delete_licenses' licence.id %}"
+                                class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_licenses" title="eliminar">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        {% endif %}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th>Proceso</th>
+            <th>Responsable</th>
+            <th>Proceso asociado</th>
+            <th>Nombre Documento</th>
+            <th>Entidad que certifica</th>
+            <th>Fecha otorgamiento</th>
+            <th>Fecha vencimiento</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+        </tfoot>
+    </table>
+</div>

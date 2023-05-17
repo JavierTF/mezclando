@@ -1,0 +1,108 @@
+{% extends 'index.html' %}
+{% block licenses %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Licencia.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Integración</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Licencias.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+.border-dark {
+    padding: 15px;
+    height: auto;
+    border: 2px solid black;
+}
+.no-data {
+    float: right;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-header">
+                    <div class="row col-md-12">
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-2"><span class="text-bold">Registro</span> <p>{{ model.number }}</p></div>
+                                    <div class="col-md-4"><span class="text-bold">Nombre Documento</span> <p>{{ model.name }}</p></div>
+                                    <div class="col-md-4"><span class="text-bold">Entidad que certifica</span> <p>{{ model.entity.name }}</p></div>
+                                    <div class="col-md-2"><span class="text-bold">Estado</span> <p>{{ model.get_status }}</p></div>
+                                </div>
+                            </div>
+                            <div class="col-md-3"><a href="{% url 'licenses:export_details_licenses' model.id %}" style="float: right">Exportar licencia <i class="fa fa-file-export"></i></a></div>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row col-md-12 p-3">
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Fecha de otorgamiento: <span class="text-muted">{{ model.grant_date|date }}</span></h5>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Proceso: <span class="text-muted">{{ model.process.name }}</span></h5>
+                            </div>
+                        </div>
+                        <div class="row col-md-12 p-3">
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Fecha de vencimiento: <span class="text-muted">{{ model.expiration_date|date }}</span></h5>
+                            </div>
+                            <div class="col-md-6">
+                            {% if model.associated_process %}
+                                <h5 class="text-bold">Proceso asociado: <span class="text-muted">{{ model.associated_process.name }}</span></h5>
+                            {% endif %}
+                            </div>
+                        </div>
+                        <div class="row col-md-12 p-3">
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Responsable: <span class="text-muted">{{ model.responsible.get_full_name }}</span></h5>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Cargo: <span class="text-muted">{{ model.responsible.position.name }}</span></h5>
+                            </div>
+                        </div>
+                        <div class="row col-md-12 p-3">
+                            {% if model.observation %}
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Observación: <span class="text-muted">{{ model.observation }}</span></h5>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                                <h5 class="text-bold">Archivo digital: {% if model.file %}<a href="{{ model.file.url }}" target="_blank" class="text-muted">{{ model.file.name }}</a>{% else %} <span class="text-uppercase text-muted">SIN ARCHIVO</span> {% endif %}</h5>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row col-md-12">
+                            <a href="{% url 'licenses:list_licenses' %}" class="btn btn-sm btn-default">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}{% endblock %}

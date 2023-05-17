@@ -1,0 +1,82 @@
+{% load static i18n %}
+<div class="card-body">
+    <table id="example10" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th></th>
+            <th>
+                Fecha de recepción
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
+                Proceso
+            </th>
+            <th>
+                Vía de recepción
+            </th>
+            <th>
+                Motivo
+            </th>
+            <th>
+                Fecha cierre
+            </th>
+            <th>
+                Estado
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for model in models %}
+
+            <tr id="{{ model.id }}" data-child-value="{{ model.id }}">
+                <td class="details-control"></td>
+                <td>
+                    {{ model.reception_date|date:"j, M Y" }}
+                </td>
+                <td>
+                    {{ model.client }}
+                </td>
+                <td>
+                    {{ model.process.abbreviation }}
+                </td>
+                <td>
+                    {{ model.way_of_reception.name }}
+                </td>
+                <td>
+                    {{ model.reason }}
+                </td>
+                <td>
+                    {{ model.deadline|date:"j, M Y" }}
+                </td>
+                <td>
+                    {{ model.get_status }}
+                </td>
+                <td>
+                    <span class="input-group">
+                    <a href="{% url 'complaints:detail_complaint' model.id %}"
+                        class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                    <i class="fa fa-eye"></i>
+                    </a>
+                    {% if perms.complaints.change_complaint %}
+                        <a href="{% url 'complaints:update_complaint' model.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                        <i class="fa fa-edit"></i>
+                        </a>
+                    {% endif %}
+                    {% if perms.complaints.delete_complaint %}
+                        <a href="#" model-url="{% url 'complaints:delete_complaint' model.id %}"
+                            class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_complaint" title="eliminar">
+                        <i class="fa fa-trash"></i>
+                        </a>
+                    {% endif %}
+                    </span>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+</div>

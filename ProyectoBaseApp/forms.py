@@ -6,7 +6,7 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import BaseUpdateView, DeleteView
 from notifications.signals import notify
 from PIL import Image
-#from captcha.fields import CaptchaField
+from captcha.fields import CaptchaField
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib import messages
@@ -122,7 +122,7 @@ class GroupDelete(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-"""class UserForm(UserCreationForm):
+class UserForm(UserCreationForm):
     captcha = CaptchaField()
     def clean_email(self):
         list_error= utils.validate_correo(self.cleaned_data.get('email'))
@@ -155,7 +155,6 @@ class GroupDelete(DeleteView):
             "password2": widgets.PasswordInput(attrs={'class': ' form-control'}),
             "groups": widgets.SelectMultiple(attrs={'class': ' form-control'}),
         }
-        """
 
 class UserProfile(forms.ModelForm):
     class Meta:
