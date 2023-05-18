@@ -71,7 +71,7 @@ def loguear(request):
                 userApp = models.UserApp.objects.filter(pk=request.user.pk)
                 if userApp:
                     userApp.first()
-                    if userApp.image:
+                    if hasattr(userApp, 'image'):
                         response.set_cookie("user_photo", userApp.image)
                 else:
                     response.set_cookie("user_photo", "static/users/userDefault4.png")
