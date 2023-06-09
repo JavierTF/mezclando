@@ -16,7 +16,6 @@ from django.urls import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -24,11 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+!*=oq431ze#qj^%sfyjv%#o09@5g_+jjy%3^^cio#r8c-)6wz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = False if settings.DATABASES['default']['HOST'] == 'localhost' or '127.0.0.1' else True
 DEBUG = True
 
 
 ALLOWED_HOSTS = ["*"]
-
 
 
 # Application definition
@@ -53,7 +52,7 @@ INSTALLED_APPS = [
     'apps.licenses',  # Licencias
     'apps.complaints',  # Quejas
     'apps.iproperty',  # Propiedad Industrial
-    ]
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -96,12 +95,22 @@ WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'SISGDDO',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SISGDDO',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': 'sisgddo',
+        'USER': 'masqueradmin',
+        'PASSWORD': 'masqueradmin',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -173,7 +182,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 # This is the directory where Django will look for static files.
 STATICFILES_DIRS = [
