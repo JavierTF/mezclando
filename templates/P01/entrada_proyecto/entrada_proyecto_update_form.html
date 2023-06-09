@@ -170,8 +170,8 @@ left: 24px !important;
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_formato">Formato*:</label></label>
-                                <div>
-                                    <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple>
+                                <div {% if isService %} title="Los servicios no tienen formatos" {% endif %}>
+                                    <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple {% if isService %} disabled {% endif %} isservice={{ isService }}>
                                     {% for option in tformatos %}
                                         <option value="{{ option.id }}"
                                         {% if option in myformats %}
@@ -201,17 +201,35 @@ left: 24px !important;
                             </div>   
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_dictamen">Dictamen:</label></label>
+                                <div {% if form.dictamen %}style="margin-top: -18px;"{% endif %}>
+                                    {% if form.dictamen %}
+                                    <span title={{ form.dictamen.url }}>Actualmente: <a href="{{ form.dictamen.url }}" target="_blank">Ver archivo</a></span>
+                                    {% endif %}
+                                    <input type="file" name="dictamen" id="id_dictamen" accept=".pdf,.doc,.docx">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>  
+                            {% comment %} <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_dictamen">Dictamen:</label></label>
                                 <div>
                                     <input type="file" name="dictamen" id="id_dictamen" value="">
                                     <small class="text-red"></small>
                                 </div>
+                            </div> {% endcomment %}
+                        </div>      
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
                             </div>
-                        </div>       
-                        <div class="row">  
+                        </div>
+                        {% endblock %} 
+                        <div style="padding-top: 20px;">  
                             {% block content2 %}
                             <section class="content">
-                                <div class="row">
-                                    <div class="col-12">
+                                {% comment %} <div class="row"> {% endcomment %}
+                                    {% comment %} <div class="col-12"> {% endcomment %}
                                         <div class="card">
                                             {% comment %} <div class="card-header">
                                                 <h3 class="card-title">Listado de Entrada de Proyecto </h3>
@@ -270,16 +288,21 @@ left: 24px !important;
                                                                 {{ lt.entregado_por }}
                                                             </td>
                                                             <td>
-                                                                {% for formato in lt.formato.all %}
-                                                                    {{ formato }} {% if not forloop.last %} - {% endif %}
-                                                                {% endfor %}
+                                                                {% if lt.formato.all|length > 0 %}
+                                                                    {% for formato in lt.formato.all %}
+                                                                        {{ formato }} {% if not forloop.last %} - {% endif %}
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    -----
+                                                                {% endif %}
                                                             </td> 
                                                             <td>
                                                                 {{ lt.estado }}
                                                             </td>  
                                                             <td>
-                                                                {% if lt.dt %}
-                                                                    {{ lt.dt }}
+                                                                {% if lt.dictamen %}
+                                                                    <a href="/media/{{ lt.dictamen }}" target="_blank">Descargar</a>
+                                                                    {% comment %} {{ lt.dictamen }} {% endcomment %}
                                                                 {% else %}
                                                                     -----
                                                                 {% endif %}
@@ -319,11 +342,11 @@ left: 24px !important;
                                                 </table>
                                             </div>
                                             <!-- /.card-body -->
-                                        </div>
+                                        {% comment %} </div> {% endcomment %}
                                         <!-- /.card -->
 
                                         <!-- /.card -->
-                                    </div>
+                                    {% comment %} </div> {% endcomment %}
                                     <!-- /.col -->
                                 </div>
                                 <!-- /.row -->
@@ -335,14 +358,7 @@ left: 24px !important;
                     {% endblock %}
                     {% block correcto %}
                     {% endblock %}
-                        {% block botones %}
-                         <div class="form-actions fluid">
-                            <div class="col-md-offset-3 col-md-9">
-                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
-                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
-                            </div>
-                        </div>
-                        {% endblock %}
+                        
                     </form>
                     <!-- END FORM-->
                     </div><!-- /.card-body -->
@@ -369,10 +385,14 @@ left: 24px !important;
         validate_select($('#id_estado'), e);
     });
 
-    $('#id_formato').on('change', function(event){
-        validar_comparar_valores_contables($(this), 0, 'mayor');
-        validar_comparar_valores_contables($(this), 6, 'menor_igual');
-    });
+    var service = $('#id_formato').attr('isservice');
+
+    if (!service){
+        $('#id_formato').on('change', function(event){
+            validar_comparar_valores_contables($(this), 0, 'mayor');
+            validar_comparar_valores_contables($(this), 6, 'menor_igual');
+        });
+    } 
 
     $('#id_fecha_entrada').on('change', function(e){
         validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual');

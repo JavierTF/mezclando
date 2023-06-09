@@ -1,4 +1,4 @@
-{% extends 'P01/proyecto/proyecto.html' %}
+{% extends 'P01/consecutivo/consecutivo.html' %}
 {% load static %}
 
 {% block wrapper %}
@@ -13,7 +13,7 @@
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
                         {% block group_wrapper %}
                             <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyecto</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_consecutivo' %}">Consecutivo</a></li>
                             <li class="breadcrumb-item active">Eliminar </li>
                         {% endblock %}
                     </ol>
@@ -38,11 +38,11 @@
                     <div class="alert">
 
                     <h4>
-                        ¿Está seguro que desea eliminar la información del proyecto <strong>{{ object.nombre_proyecto |capfirst }}</strong>?
+                        ¿Está seguro que desea eliminar la información del consecutivo <strong>{{ object.nombre_proyecto |capfirst }}</strong>?
                         La información no podrá restaurarse.
                     </h4>
-                    <h5>Quizás desee desactivar el Proyecto. Al desactivarlo usted no lo podrá utilizar pero no quedará eliminado. Esta opción es reversible.
-                        <a href="{% url 'listar_proyecto' %}" style="color: #007bff">Ir a desactivar proyecto</a> 
+                    <h5>Quizás desee desactivar el Consecutivo. Al desactivarlo usted no lo podrá utilizar pero no quedará eliminado. Esta opción es reversible.
+                        <a href="{% url 'listar_consecutivo' %}" style="color: #007bff">Ir a desactivar consecutivo</a> 
                     </h5>
                     &nbsp;
                     <form action="" method="post">{% csrf_token %}
@@ -50,7 +50,7 @@
                             <button type="submit" class="btn btn-danger">
                                 Borrar
                             </button>
-                            <a class="btn btn-primary" href="{% url 'listar_proyecto' %}">
+                            <a class="btn btn-primary" href="{% url 'listar_consecutivo' %}">
                                 Cancelar
                             </a>
                         </p>

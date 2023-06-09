@@ -452,3 +452,14 @@ function validate_only_number_and_text_and_guion(node, event) {
     $('button[type="submit"]').prop("disabled", "true");
   }
 }
+
+function tooglePassword(el, elem_icon){
+  if (el.type == 'password'){
+      el.type = 'text';
+      //console.log('element', elem_icon.removeClass('fas fa-lock'));
+      elem_icon.removeClass('fas fa-lock').addClass('fa fa-eye');
+  } else {
+      el.type = 'password';
+      elem_icon.removeClass('fa fa-eye').addClass('fas fa-lock');
+  }
+}

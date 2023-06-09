@@ -168,11 +168,14 @@ left: 24px !important;
                                     <td>
                                         {{ lt.nombre_proyecto }}
                                     </td>
-                                    <td>
-                                        {% for formato in lt.formato.all %}
-                                            {{ formato }} {% if not forloop.last %} - {% endif %}
-                                        {% endfor %}
-                                        {% comment %} {{ formatos.0 }} {% endcomment %}
+                                    <td>                                        
+                                        {% if lt.formato.all|length > 0 %}
+                                            {% for formato in lt.formato.all %}
+                                                {{ formato }} {% if not forloop.last %} - {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.area }}
@@ -189,7 +192,11 @@ left: 24px !important;
                                         {{ lt.fecha_entrada }}
                                     </td>
                                     <td>
-                                        {{ lt.fecha_cierre }}
+                                        {% if lt.fecha_cierre %}
+                                            {{ lt.fecha_cierre }}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.estado }}
@@ -225,6 +232,13 @@ left: 24px !important;
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 
+                                    {% if perms.SISGDDO.add_sosi %}
+                                        <a href="{% url 'adicionar_sosi' lt.id %}"
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2"  {% if lt.sosi %} title="detalles sosi" {% else %} title="adicionar sosi" {% endif %}
+                                            >
+                                        <i class="fa fa-angle-double-right"></i>
+                                        </a>
+                                    {% endif %}
                                 </span>
                                     </td>
                                 </tr>

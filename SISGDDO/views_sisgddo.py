@@ -27,9 +27,10 @@ from notifications.signals import notify
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from SISGDDO import models, form
-from SISGDDO.models import cliente, consecutivo, estado_indicador_objetivos, licencia, plan_medidas,estado_entradas_proyecto, entrada_proyecto, acuerdo,linea_tematica,incidencia,propiedad_industrial,sosi,proyecto,auditoria_externa,auditoria_interna,eficacia,area,proceso,curso,formato,estado_acuerdo,estado_proyecto,indicador,trabajador, trabajador_consecutivo, trabajador_proyecto
-from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_proyecto
-from SISGDDO.models import tipo_codigo
+from SISGDDO.models import cliente, consecutivo, estado_indicador_objetivos, licencia, plan_medidas,estado_entradas_proyecto, entrada_proyecto, acuerdo,linea_tematica,incidencia,propiedad_industrial,proyecto,auditoria_externa,auditoria_interna,eficacia,area,proceso,curso,formato,estado_acuerdo,estado_proyecto,indicador,trabajador, trabajador_consecutivo, trabajador_proyecto
+from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_proyecto, objetivo, indicador_objetivos, accion_indicador_objetivo, estado_indicador_objetivos
+from SISGDDO.models import tipo_codigo, premio
+from SISGDDO.models import sosi
 from SISGDDO.models import modalidad
 from SISGDDO.models import tipo_de_obra, estado_cenda, cenda
 from django.views.generic.edit import CreateView,UpdateView,BaseUpdateView
@@ -1530,6 +1531,36 @@ class nomtipo_proyecto(LoginRequiredMixin,CreateView):
                 messages.error(request, msg[1])
             return render(self.request, self.template_name, self.contexto)
 
+class nomtipo_codigo(LoginRequiredMixin,CreateView):
+    model = tipo_codigo
+    template_name = 'nomencladores/tipo_codigo/tipo_codigo_form.html'
+    success_url = reverse_lazy("listar_tipo_codigo")
+    contexto = {
+            'form' : form.tipo_codigo_form
+        }
+
+    def get(self, request):
+        return render(request, self.template_name, self.contexto)
+
+    def get_success_url(self):
+        return reverse_lazy('listar_tipo_codigo')
+
+    def post(self, request, *args, **kwargs):
+        forms = form.tipo_codigo_form(request.POST)
+        if forms.is_valid():
+            forms.save()
+            id_tipo_codigo = tipo_codigo.objects.last()
+            register_logs(request, tipo_codigo, id_tipo_codigo.pk, str(id_tipo_codigo), 1)
+            messages.success(request, "Fuente de financiamiento creada con éxito")
+            return HttpResponseRedirect(self.success_url)
+        else:
+            if forms.errors:
+                """ Obtiene el mensaje del ValidationError y lo muestra como alerta """
+                dicc = forms.errors.values()
+                msg = str(dicc).split('\'')
+                messages.error(request, msg[1])
+            return render(self.request, self.template_name, self.contexto)
+        
 class nomfuente_financiamiento(LoginRequiredMixin,CreateView):
     model = fuente_financiamiento
     template_name = 'nomencladores/fuente_financiamiento/fuente_financiamiento_form.html'
@@ -1890,6 +1921,163 @@ def nomentrada_proyecto(request, id):
         # return HttpResponseRedirect(success_url)
 
 @login_required
+def nomsosi(request, id):
+    cons = consecutivo.objects.get(id = id)
+    try:
+        if cons.sosi != None:
+            existe_sosi = True
+    except:
+        existe_sosi = False
+
+    ttrab = trabajador.objects.filter(activo = True)
+
+    success_url = reverse_lazy('listar_sosi')
+
+    if existe_sosi == False: 
+        template_name = 'P01/sosi/sosi_form.html'
+        contexto = {
+            'consec' : cons,
+            'ttrab' : ttrab,
+            'existe' : existe_sosi
+        }
+    else:
+        template_name = 'P01/sosi/sosi_detail.html'
+        contexto = {
+            'objeto' : cons.sosi,
+            'ttrab' : ttrab,
+        }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.sosi_form(request.POST, request.FILES)
+
+        ent = sosi.objects.create(
+            numero_salva = forms['numero_salva'].value(),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
+            anno = forms['anno'].value() if forms['anno'].value() else None,
+            especialista = trabajador.objects.get(pk = forms['especialista'].value()),
+            autor = forms['autor'].value() if forms['autor'].value() else None,
+            ubicacion_salva = forms['ubicacion_salva'].value() if forms['ubicacion_salva'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            archivo = forms['archivo'].value(),
+            consecutivo = cons,
+        )
+
+        prueba(ent.id)
+
+        register_logs(request, ent, ent.pk, str(ent), 1)
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def nomindicador_objetivo(request, id = 0):
+    test = estado_indicador_objetivos.objects.filter(activo = True)
+    tobj = objetivo.objects.filter(activo = True)
+    tacc = accion_indicador_objetivo.objects.filter(activo = True)
+
+    if id != 0:
+        try:
+            obj = objetivo.objects.get(id = id)
+            contexto_obj = {
+                'obj' : obj,
+            }
+        except:
+            return HttpResponse(status = 500)
+
+    template_name = 'P01/indicador_objetivo/indicador_objetivo_form.html'
+    success_url = reverse_lazy("listar_indicador_objetivo")
+    contexto = {
+        'test' : test,
+        'tobj' : tobj,
+        'tacc' : tacc,
+    }
+
+    try:
+        contexto.update(contexto_obj)
+    except:
+        pass
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.indicador_objetivo_form(request.POST)
+
+        eo = indicador_objetivos.objects.filter(nombre = forms['nombre'].value())
+        if len(eo):
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        obj = indicador_objetivos.objects.create(
+            nombre = forms['nombre'].value(),
+            estado = estado_indicador_objetivos.objects.get(pk = forms['estado'].value()),
+            objetivo = objetivo.objects.get(pk = forms['objetivo'].value()) if forms['objetivo'].value() else None,
+            activo = forms['activo'].value()    
+        )
+
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        acciones = forms['accion'].value()
+        for f in acciones:
+            try:
+                felem = accion_indicador_objetivo.objects.get(pk = f)
+                felem.update(
+                    indicador = obj,
+                )
+            except:
+                pass
+
+        register_logs(request, obj, obj.pk, str(obj), 1)
+        messages.success(request, "Indicador de objetivo creado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def nomaccion_indicador_objetivo(request, id = 0):
+    tarea = area.objects.filter(activo = True)
+    tind = indicador_objetivos.objects.filter(activo = True)
+
+    if id != 0:
+        try:
+            ind = indicador_objetivos.objects.get(id = id)
+            contexto_obj = {
+                'ind' : ind,
+            }
+        except:
+            return HttpResponse(status = 500)
+
+    template_name = 'P01/accion_indicador_objetivo/accion_indicador_objetivo_form.html'
+    success_url = reverse_lazy("listar_accion_indicador_objetivo")
+    contexto = {
+        'tarea' : tarea,
+        'tind' : tind,
+    }
+
+    try:
+        contexto.update(contexto_obj)
+    except:
+        pass
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.accion_indicador_objetivo_form(request.POST)
+
+        ac = accion_indicador_objetivo.objects.create(
+            nombre = forms['nombre'].value(),
+            indicador = indicador_objetivos.objects.get(pk = forms['indicador'].value()),
+            area = area.objects.get(pk = forms['area'].value()),
+            activo = forms['activo'].value()    
+        )
+
+        register_logs(request, ac, ac.pk, str(ac), 1)
+        messages.success(request, "Acción de indicador de objetivo creada con éxito")
+        return HttpResponseRedirect(success_url)
+    
+@login_required
 def nomproyecto(request):
     tcod = tipo_codigo.objects.filter(activo = True)
     tproy = tipo_proyecto.objects.filter(activo = True)
@@ -2029,6 +2217,378 @@ def nomproyecto(request):
         messages.success(request, "Consecutivo y Proyecto creados con éxito")
         return HttpResponseRedirect(success_url)
 
+@login_required
+def nomobjetivo(request):
+    tind = indicador_objetivos.objects.filter(activo = True)
+
+    template_name = 'P01/objetivo/objetivo_form.html'
+    success_url = reverse_lazy("listar_objetivo")
+    contexto = {
+        'tind' : tind,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.objetivo_form(request.POST)
+
+        eo = objetivo.objects.filter(nombre = forms['nombre'].value())
+        if len(eo):
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        obj = objetivo.objects.create(
+            nombre = forms['nombre'].value(),
+            fecha_definicion = forms['fecha_definicion'].value(),                
+            activo = forms['activo'].value()    
+        )
+        
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        indicadores = forms['indicador'].value()
+        for f in indicadores:
+            try:
+                felem = indicador_objetivos.objects.get(pk = f)
+                felem.update(
+                    objetivo = obj,
+                )
+            except:
+                pass
+
+        register_logs(request, obj, obj.pk, str(obj), 1)
+
+        messages.success(request, "Objetivo creado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def nompremio(request):
+    tent = entidad.objects.filter(activo = True)
+
+    template_name = 'P01/premio/premio_form.html'
+    success_url = reverse_lazy("listar_premio")
+    contexto = {
+        'tent' : tent,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.premio_form(request.POST, request.FILES)
+        response = {}
+
+        eo = premio.objects.filter(nombre = forms['nombre'].value())
+        if len(eo):
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        premio.objects.create(
+            nombre = forms['nombre'].value(),
+            entidad = entidad.objects.get(pk = forms['entidad'].value()),
+            fecha = forms['fecha'].value(),
+            archivo = forms['archivo'].value() if forms['archivo'].value() else None,
+            activo = forms['activo'].value()    
+        )
+
+        register_logs(request, premio, premio.pk, str(premio), 1)
+        messages.success(request, "Premio creado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def nomacuerdo(request):
+    ttrab = trabajador.objects.filter(activo = True)
+    test = estado_acuerdo.objects.filter(activo = True)
+
+    template_name = 'P01/acuerdo/acuerdo_form.html'
+    success_url = reverse_lazy("listar_acuerdo")
+    contexto = {
+        'ttrab' : ttrab,
+        'test' : test,
+        'numero' : form.acuerdo_form.Meta.get_no_acuerdo(),
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.acuerdo_form(request.POST)
+
+        ac = acuerdo.objects.create(
+            numero = form.acuerdo_form.Meta.get_no_acuerdo(),
+            nombre = forms['nombre'].value(),
+            fecha = forms['fecha'].value(),
+            fecha_limite = forms['fecha_limite'].value() if forms['fecha_limite'].value() else None,
+            fecha_cumplimiento = forms['fecha_cumplimiento'].value() if forms['fecha_cumplimiento'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            estado = estado_acuerdo.objects.get(pk = forms['estado'].value()),
+            activo = forms['activo'].value()    
+        )
+
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        responsables = forms['trabajador'].value()
+        for f in responsables:
+            try:
+                felem = trabajador.objects.get(pk = f)
+                ac.trabajador.add(felem)
+            except:
+                pass
+
+        ac.save()
+
+        register_logs(request, ac, ac.pk, str(ac), 1)
+        messages.success(request, "Acuerdo creado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def premio_update(request, id):
+    objeto = premio.objects.get(id = id) 
+
+    tent = entidad.objects.filter(activo = True)
+
+    template_name = 'P01/premio/premio_update_form.html'
+    success_url = reverse_lazy("listar_premio")
+    contexto = {
+        'objeto' : objeto,
+        'tent' : tent,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.premio_form(request.POST, request.FILES)
+
+        eo = premio.objects.filter(nombre = forms['nombre'].value())
+        if len(eo) and eo[0].id != objeto.id:
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        pr = premio.objects.filter(id = id) 
+
+        pr.update(
+            nombre = forms['nombre'].value(),
+            entidad = entidad.objects.get(pk = forms['entidad'].value()),
+            fecha = forms['fecha'].value(),
+            archivo = forms['archivo'].value() if forms['archivo'].value() else None,
+            activo = forms['activo'].value()    
+        )
+
+        register_logs(request, pr, pr.pk, str(pr), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def objetivo_update(request, id):
+    objeto = objetivo.objects.get(id = id) 
+
+    tind = indicador_objetivos.objects.filter(activo = True)
+    myind = indicador_objetivos.objects.filter(activo = True, objetivo = objeto)
+
+    template_name = 'P01/objetivo/objetivo_update_form.html'
+    success_url = reverse_lazy("listar_objetivo")
+    contexto = {
+        'objeto' : objeto,
+        'tind' : tind,
+        'myind' : myind,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.objetivo_form(request.POST)
+
+        eo = objetivo.objects.filter(nombre = forms['nombre'].value())
+        if len(eo) and eo[0].id != objeto.id:
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        pr = objetivo.objects.filter(id = id) 
+
+        pr.update(
+            nombre = forms['nombre'].value(),
+            fecha_definicion = forms['fecha_definicion'].value(),
+            activo = forms['activo'].value()    
+        )
+
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        indicadores = forms['indicador'].value()
+        for f in indicadores:
+            try:
+                felem = indicador_objetivos.objects.get(pk = f)
+                felem.update(
+                    objetivo = pr,
+                )
+            except:
+                pass
+
+        register_logs(request, pr, pr.pk, str(pr), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def indicador_objetivo_update(request, id):
+    objeto = indicador_objetivos.objects.get(id = id) 
+    tobj = objetivo.objects.filter(activo = True)
+    test = estado_indicador_objetivos.objects.filter(activo = True)
+    tacc = accion_indicador_objetivo.objects.filter(activo = True)
+
+    myacc = accion_indicador_objetivo.objects.filter(indicador = objeto)    
+
+    template_name = 'P01/indicador_objetivo/indicador_objetivo_update_form.html'
+    success_url = reverse_lazy("listar_indicador_objetivo")
+    contexto = {
+        'objeto' : objeto,
+        'tobj' : tobj,
+        'test' : test,        
+        'tacc' : tacc,
+        'myacc' : myacc,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.indicador_objetivo_form(request.POST)
+
+        eo = indicador_objetivos.objects.filter(nombre = forms['nombre'].value())
+        if len(eo) and eo[0].id != objeto.id:
+            messages.error(request, "Ya existe este nombre")
+            # response['result'] = 'error'
+            # response['message'] = 'El NO. del consecutivo ya existe'
+            # return JsonResponse(response)
+
+        pr = indicador_objetivos.objects.filter(id = id) 
+
+        pr.update(
+            nombre = forms['nombre'].value(),
+            estado = estado_indicador_objetivos.objects.get(pk = forms['estado'].value()),
+            objetivo = objetivo.objects.get(pk = forms['objetivo'].value()) if forms['objetivo'].value() else None,
+            activo = forms['activo'].value()   
+        )
+
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        acciones = forms['accion'].value()
+        for f in acciones:
+            try:
+                felem = accion_indicador_objetivo.objects.get(pk = f)
+                felem.update(
+                    indicador = objeto
+                )
+            except:
+                pass
+
+        register_logs(request, pr, pr.pk, str(pr), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def accion_indicador_objetivo_update(request, id):
+    objeto = accion_indicador_objetivo.objects.get(id = id) 
+    
+    tarea = area.objects.filter(activo = True)
+    tind = indicador_objetivos.objects.filter(activo = True)    
+
+    template_name = 'P01/accion_indicador_objetivo/accion_indicador_objetivo_update_form.html'
+    success_url = reverse_lazy("listar_accion_indicador_objetivo")
+    contexto = {
+        'objeto' : objeto,
+        'tarea' : tarea,
+        'tind' : tind,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.indicador_objetivo_form(request.POST)
+
+        # nombre = forms['nombre'].value()
+        # eo = my_validates.existe_objeto('nombre', nombre, indicador_objetivo)
+        # if eo:
+        #     return HttpResponse('Ya existe este nombre', status = 400)
+
+        pr = accion_indicador_objetivo.objects.filter(id = id) 
+
+        pr.update(
+            nombre = forms['nombre'].value(),
+            objetivo = indicador_objetivos.objects.get(pk = forms['indicador'].value()),
+            area = area.objects.get(pk = forms['area'].value()),
+            activo = forms['activo'].value()   
+        )
+
+        register_logs(request, pr, pr.pk, str(pr), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def acuerdo_update(request, id):
+    objeto = acuerdo.objects.get(id = id) 
+
+    ttrab = trabajador.objects.filter(activo = True)
+    test = estado_acuerdo.objects.filter(activo = True)
+    myworkers = objeto.trabajador.all()
+
+    template_name = 'P01/acuerdo/acuerdo_update_form.html'
+    success_url = reverse_lazy("listar_acuerdo")
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+        'test' : test,
+        'myworkers' : myworkers,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.acuerdo_form(request.POST, request.FILES)
+
+        # eo = my_validates.existe_objeto('nombre', forms['nombre'].value(), acuerdo)
+        # if eo:
+        #     return HttpResponse('Ya existe este nombre', status = 400)
+
+        ac = acuerdo.objects.filter(id = id) 
+
+        ac.update(
+            nombre = forms['nombre'].value(),
+            fecha = forms['fecha'].value(),
+            fecha_limite = forms['fecha_limite'].value() if forms['fecha_limite'].value() else None,
+            fecha_cumplimiento = forms['fecha_cumplimiento'].value() if forms['fecha_cumplimiento'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            estado = estado_acuerdo.objects.get(pk = forms['estado'].value()),
+            activo = forms['activo'].value() 
+        )
+
+        """hago una lista y para cada formato guardo el elemento,
+            la intencion es luego pasarle la lista a consecutivo"""
+        objeto.trabajador.clear()
+        responsables = forms['trabajador'].value()
+        for f in responsables:
+            try:
+                felem = trabajador.objects.get(pk = f)
+                objeto.trabajador.add(felem)
+            except:
+                pass
+
+        objeto.save()
+
+        register_logs(request, objeto, objeto.pk, str(objeto), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+    
 class nomfuente_financiamiento(LoginRequiredMixin,CreateView):
     model = fuente_financiamiento
     template_name = 'nomencladores/fuente_financiamiento/fuente_financiamiento_form.html'
@@ -2222,6 +2782,133 @@ def eliminar_consecutivo(request, id):
         return redirect('listar_consecutivo')
     return render(request, template_name, contexto)
 
+@login_required()
+def eliminar_entrada_proyecto(request, id):
+    objeto = entrada_proyecto.objects.get(id = id)
+    proy = objeto.proyecto
+    template_name = 'P01/entrada_proyecto/entrada_proyecto_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Entrada de proyecto eliminada con éxito")
+        url = reverse('adicionar_entrada_proyecto', kwargs={'id': proy.id})
+        register_logs(request, objeto, objeto.id, str(objeto), 3)
+        return HttpResponseRedirect(url)
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_premio(request, id):
+    objeto = models.premio.objects.get(id = id)
+
+    template_name = 'P01/premio/premio_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Premio eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_premio')
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_acuerdo(request, id):
+    objeto = models.acuerdo.objects.get(id = id)
+
+    template_name = 'P01/acuerdo/acuerdo_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Premio eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_acuerdo')
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_objetivo(request, id):
+    objeto = models.objetivo.objects.get(id = id)
+
+    template_name = 'P01/objetivo/objetivo_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Objetivo eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_objetivo')
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_indicador_objetivo(request, id):
+    objeto = models.indicador_objetivos.objects.get(id = id)
+
+    template_name = 'P01/indicador_objetivo/indicador_objetivo_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Indicador de Objetivo eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_indicador_objetivo')
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_accion_indicador_objetivo(request, id):
+    objeto = models.accion_indicador_objetivo.objects.get(id = id)
+
+    template_name = 'P01/accion_indicador_objetivo/accion_indicador_objetivo_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Acción de Indicador de Objetivo eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_accion_indicador_objetivo')
+        
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_sosi(request, id):
+    objeto = models.sosi.objects.get(id = id)
+
+    template_name = 'P01/sosi/sosi_confirm_delete.html'
+
+    contexto = {
+        'object' : objeto
+    }
+
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "SOSI eliminado con éxito")
+        register_logs(request, objeto, objeto.pk, str(objeto), 3)
+        return redirect('listar_sosi')
+        
+    return render(request, template_name, contexto)
+
 # class estado_licencia_update(LoginRequiredMixin, UpdateView):
 #     model = estado_licencia
 #     form_class = form.estado_licencia_form
@@ -2319,6 +3006,96 @@ def detalle_consecutivo(request, id):
         'dias_atraso': dias_atraso(objeto),
         'jefe': jefe
     }
+
+@login_required()
+def detalle_premio(request, id):
+    objeto = models.premio.objects.get(id = id)
+
+    template_name = 'P01/premio/premio_detail.html'
+    contexto = {
+        'objeto' : objeto,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_indicador_objetivo(request, id):
+    objeto = models.indicador_objetivos.objects.get(id = id)
+    tobj = objetivo.objects.filter(activo = True)
+    test = estado_indicador_objetivos.objects.filter(activo = True)
+    tacc = accion_indicador_objetivo.objects.filter(activo = True)
+
+    myacc = accion_indicador_objetivo.objects.filter(indicador = objeto)
+
+    template_name = 'P01/indicador_objetivo/indicador_objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'tobj' : tobj,
+        'test' : test,
+        'tacc' : tacc,
+        'myacc' : myacc,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_accion_indicador_objetivo(request, id):
+    objeto = models.accion_indicador_objetivo.objects.get(id = id)
+
+    tarea = area.objects.filter(activo = True)
+    tind = indicador_objetivos.objects.filter(activo = True)
+
+    template_name = 'P01/accion_indicador_objetivo/accion_indicador_objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'tarea' : tarea,
+        'tind' : tind,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_acuerdo(request, id):
+    objeto = models.acuerdo.objects.get(id = id)
+
+    ttrab = trabajador.objects.filter(activo = True)
+    test = estado_acuerdo.objects.filter(activo = True)
+    myworkers = objeto.trabajador.all()
+
+    template_name = 'P01/acuerdo/acuerdo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+        'test' : test,
+        'myworkers' : myworkers,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_objetivo(request, id):
+    objeto = models.objetivo.objects.get(id = id)
+
+    tind = indicador_objetivos.objects.filter(activo = True)
+    myind = indicador_objetivos.objects.filter(activo = True, objetivo = objeto)
+
+    template_name = 'P01/objetivo/objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,        
+        'tind' : tind,
+        'myind' : myind,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
 
 @login_required()
 def eliminar_rol_trabajador_proyecto(request, id):
@@ -2492,6 +3269,20 @@ def eliminar_tipo_proyecto(request, id):
         objeto.delete()
         messages.success(request, "Tipo de proyecto eliminado con éxito")
         return redirect('listar_tipo_proyecto')
+    return render(request, template_name, contexto)
+
+@login_required()
+def eliminar_tipo_codigo(request, id):
+    objeto = models.tipo_codigo.objects.get(id = id)
+    template_name = 'nomencladores/tipo_codigo/tipo_codigo_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Tipo de codigo eliminado con éxito")
+        register_logs(request, objeto, objeto.id, str(objeto), 3)
+        return redirect('listar_tipo_codigo')
     return render(request, template_name, contexto)
 
 @login_required()
@@ -2760,6 +3551,14 @@ def listar_tipo_proyecto(request):
     return render(request, 'nomencladores/tipo_proyecto/tipo_proyecto.html', contexto)
 
 @login_required()
+def listar_tipo_codigo(request):
+    tipos = models.tipo_codigo.objects.filter()
+    contexto = {
+        'lista': tipos
+    }
+    return render(request, 'nomencladores/tipo_codigo/tipo_codigo.html', contexto)
+
+@login_required()
 def listar_fuente_financiamiento(request):
     datos = models.fuente_financiamiento.objects.filter()
     contexto = {
@@ -2812,6 +3611,21 @@ class tipo_proyecto_update(LoginRequiredMixin,UpdateView):
         messages.success(request, "Registro modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
+class tipo_codigo_update(LoginRequiredMixin,UpdateView):
+    model = tipo_codigo
+    form_class = form.tipo_codigo_form
+    template_name = 'nomencladores/tipo_codigo/tipo_codigo_update_form.html'
+    success_url = reverse_lazy('listar_tipo_codigo')
+
+    def get_success_url(self):
+        return reverse_lazy('listar_tipo_codigo')
+
+    def post(self, request, *args, **kwargs):
+        register_logs(request, tipo_codigo, self.get_object().pk, self.get_object().__str__(), 2)
+        self.object = self.get_object()
+        messages.success(request, "Registro modificado con éxito")
+        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+    
 class fuente_financiamiento_update(LoginRequiredMixin,UpdateView):
     model = fuente_financiamiento
     form_class = form.fuente_financiamiento_form
@@ -3062,12 +3876,18 @@ def entrada_proyecto_update(request, id):
     # el id es una entrada
     objeto = entrada_proyecto.objects.get(id = id)
     myformats = objeto.formato.all()
+
+    proy = objeto.proyecto
     
     lista = entrada_proyecto.objects.filter(proyecto = objeto.proyecto)
 
     tformatos = formato.objects.filter(activo = True)
     ttrab = trabajador.objects.filter(activo = True)
     test = estado_entradas_proyecto.objects.filter(activo = True)
+
+    isService = False
+    if proy.codigo[:3] == 'SER':
+        isService = True
 
     template_name = 'P01/entrada_proyecto/entrada_proyecto_update_form.html'
     success_url = reverse('adicionar_entrada_proyecto', kwargs={'id': objeto.proyecto.consecutivo.id})
@@ -3076,11 +3896,10 @@ def entrada_proyecto_update(request, id):
         'form' : objeto,
         'tformatos' : tformatos,
         'ttrab' : ttrab,
-        # 'mitrab' : objeto.entregado_por.id,
         'test' : test,
-        # 'miestado' : objeto.estado.id,
         'lista' : lista,
         'myformats' : myformats,
+        'isService': isService
     }
 
     if request.method == "GET":
@@ -3090,19 +3909,17 @@ def entrada_proyecto_update(request, id):
         forms = form.entrada_proyecto_form(request.POST, request.FILES)
 
         myformats = objeto.formato.all()
-        print(objeto.proyecto)
-        pass
 
         entrada = entrada_proyecto.objects.filter(id = id)
 
         entrada.update(
-                fecha_entrada = forms['fecha_entrada'].value(),
-                fecha_salida = forms['fecha_salida'].value(),
-                entregado_por = trabajador.objects.get(pk = forms['entregado_por'].value()),
-                dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
-                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
-                activo = forms['activo'].value()    
-            )
+            fecha_entrada = forms['fecha_entrada'].value(),
+            fecha_salida = forms['fecha_salida'].value(),
+            entregado_por = trabajador.objects.get(pk = forms['entregado_por'].value()),
+            dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
+            estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+            activo = forms['activo2'].value()    
+        )
         
         """hago una lista y para cada formato guardo el elemento,
             la intencion es luego pasarle la lista a consecutivo"""
@@ -3116,7 +3933,89 @@ def entrada_proyecto_update(request, id):
                 pass
 
         objeto.save()  
-        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+        register_logs(request, entrada, entrada.pk, str(entrada), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def sosi_update(request, id):
+    # el id es un sosi
+    objeto = sosi.objects.get(id = id)
+    
+    ttrab = trabajador.objects.filter(activo = True)
+
+    template_name = 'P01/sosi/sosi_update_form.html'
+    success_url = reverse('listar_sosi')
+
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.sosi_form(request.POST, request.FILES)
+
+        entrada = sosi.objects.filter(id = id)
+
+        entrada.update(
+            numero_salva = forms['numero_salva'].value(),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
+            anno = forms['anno'].value() if forms['anno'].value() else None,
+            especialista = trabajador.objects.get(pk = forms['especialista'].value()),
+            autor = forms['autor'].value() if forms['autor'].value() else None,
+            ubicacion_salva = forms['ubicacion_salva'].value() if forms['ubicacion_salva'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            # archivo = forms['archivo'].value()
+        )
+
+        if forms['archivo'].value():
+            objeto.archivo = forms['archivo'].value()
+        objeto.save()
+
+        register_logs(request, objeto, objeto.pk, str(objeto), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def detalle_sosi(request, id):
+    # el id es un sosi
+    objeto = sosi.objects.get(id = id)
+    
+    ttrab = trabajador.objects.filter(activo = True)
+
+    template_name = 'P01/sosi/sosi_detail.html'
+    success_url = reverse('listar_sosi')
+
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.sosi_form(request.POST, request.FILES)
+
+        entrada = sosi.objects.filter(id = id)
+
+        entrada.update(
+            numero_salva = forms['numero_salva'].value(),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
+            anno = forms['anno'].value() if forms['anno'].value() else None,
+            especialista = trabajador.objects.get(pk = forms['especialista'].value()),
+            autor = forms['autor'].value() if forms['autor'].value() else None,
+            ubicacion_salva = forms['ubicacion_salva'].value() if forms['ubicacion_salva'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            archivo = forms['archivo'].value(),
+            eliminado = forms['eliminado'].value(), 
+        )
+
+        # objeto.save()  
+        register_logs(request, entrada, entrada.pk, str(entrada), 2)
         messages.success(request, "Registro modificado con éxito")
         return HttpResponseRedirect(success_url)
 
@@ -3350,18 +4249,140 @@ def act_desactconsecutivo(request, id):
     proy.activo = True if valor == "on" else False
     col.save()
     proy.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    register_logs(request, proy, proy.id, str(proy), valor_log(proy))
     return redirect('listar_consecutivo')
 
 @login_required()
 def act_desactproyecto(request, id):
     valor = request.POST.get('activo')
-    proy = models.proyecto.objects.get(consecutivo = id)
+    proy = models.proyecto.objects.get(id = id)
     col = proy.consecutivo
     proy.activo = True if valor == "on" else False
     col.activo = True if valor == "on" else False
     proy.save()
     col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    register_logs(request, proy, proy.id, str(proy), valor_log(proy))
     return redirect('listar_proyecto')
+
+@login_required()
+def act_desactpremio(request, id):
+    valor = request.POST.get('activo')
+    col = models.premio.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_premio')
+
+@login_required()
+def act_desactacuerdo(request, id):
+    valor = request.POST.get('activo')
+    col = models.acuerdo.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_acuerdo')
+
+@login_required()
+def act_desactindicador_objetivo(request, id):
+    valor = request.POST.get('activo')
+    col = models.indicador_objetivos.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_indicador_objetivo')
+
+@login_required()
+def act_desactaccion_indicador_objetivo(request, id):
+    valor = request.POST.get('activo')
+    col = models.accion_indicador_objetivo.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_accion_indicador_objetivo')
+
+@login_required()
+def act_desactsosi(request, id):
+    valor = request.POST.get('activo')
+    col = models.sosi.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_sosi')
+
+@login_required()
+def act_desactobjetivo(request, id):
+    valor = request.POST.get('activo')
+    col = models.objetivo.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_objetivo')
 
 @login_required()
 def act_desactestado_proyecto(request, id):
@@ -3378,6 +4399,23 @@ def act_desacttipo_proyecto(request, id):
     col.activo = True if valor == "on" else False
     col.save()
     return redirect('listar_tipo_proyecto')
+
+@login_required()
+def act_desacttipo_codigo(request, id):
+    valor = request.POST.get('activo')
+    col = models.tipo_codigo.objects.get(id = id)
+    col.activo = True if valor == "on" else False
+    col.save()
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, col, col.id, str(col), valor_log(col))
+    return redirect('listar_tipo_codigo')
 
 @login_required()
 def act_desactfuente_financiamiento(request, id):
@@ -3526,6 +4564,22 @@ def listar_consecutivo(request):
     return render(request, 'P01/consecutivo/consecutivo.html', contexto)
 
 @login_required()
+def exportar_consecutivo(request, id = 0):
+    if id != 0:
+        objeto = consecutivo.object.get(id = id)
+    else:
+        objeto = None
+
+    datos = models.consecutivo.objects.all()
+
+    contexto = {
+        'lista': datos,
+        'objeto': objeto,
+    }
+
+    return render(request, 'P01/consecutivo/exportar_consecutivo.html', contexto)
+
+@login_required()
 def listar_entrada_proyecto(request):
     datos = models.entradas_proyecto.objects.all()
     contexto = {
@@ -3533,6 +4587,36 @@ def listar_entrada_proyecto(request):
     }
 
     return render(request, 'P01/entrada_proyecto/entrada_proyecto.html', contexto)
+
+@login_required()
+def listar_sosi(request):
+    datos = models.sosi.objects.all()
+
+    contexto = {
+        'lista': datos,
+    }
+
+    return render(request, 'P01/sosi/sosi.html', contexto)
+
+@login_required()
+def listar_indicador_objetivo(request):
+    datos = models.indicador_objetivos.objects.all()
+
+    contexto = {
+        'lista': datos,
+    }
+
+    return render(request, 'P01/indicador_objetivo/indicador_objetivo.html', contexto)
+
+@login_required()
+def listar_accion_indicador_objetivo(request):
+    datos = accion_indicador_objetivo.objects.all()
+
+    contexto = {
+        'lista': datos,
+    }
+
+    return render(request, 'P01/accion_indicador_objetivo/accion_indicador_objetivo.html', contexto)
 
 @login_required()
 def listar_proyecto(request):
@@ -3543,108 +4627,57 @@ def listar_proyecto(request):
 
     return render(request, 'P01/proyecto/proyecto.html', contexto)
 
-# class nomestado_no_conformidad(LoginRequiredMixin,CreateView):
-#     model = estado_no_conformidad
-#     form_class = form.estadonoconformidadForm
-#     template_name = 'nomencladores/estadonoconformidad_form.html'
-#     success_url = reverse_lazy("listar_estadonoconformidad")
+@login_required()
+def listar_objetivo(request):
+    datos = models.objetivo.objects.all()
 
-#     def get_success_url(self):
-#         return reverse_lazy('listar_estadonoconformidad')
+    for d in datos:
+        hoy = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), "%Y-%m-%d")
+        anno_obj = datetime.strptime(d.fecha_definicion.strftime('%Y-%m-%d'), "%Y-%m-%d")
+        # se deberá poner que el objetivo esté disponible, es mejor ponerle un estado creo
+        if hoy.year > anno_obj.year:
+            print('Incumplido')
 
-#     def post(self, request, *args, **kwargs):
-#         forms = form.estadonoconformidadForm(request.POST)
-#         if forms.is_valid():
-#             forms.save()
-#             id_estconf = estado_no_conformidad.objects.last()
-#             register_logs(request, estado_no_conformidad, id_estconf.pk, id_estconf.__str__(), 1)
-#             messages.success(request, "Registro creado con éxito")
-#             return HttpResponseRedirect(self.success_url)
-#         else:
-#             messages.error(request, "Existen errores en el formulario")
-#             return render(request,self.template_name)
+    contexto = {
+        'lista': datos,
+    }
 
-# @login_required()
-# def estadonoconformidad_create(request):
+    return render(request, 'P01/objetivo/objetivo.html', contexto)
 
-#     if request.POST:
-#         forms = form.estadonoconformidadForm(request.POST)
-#         if forms.is_valid():
-#             forms.save()
-#             id_estado = estado_no_conformidad.objects.last()
-#             register_logs(request, estado_no_conformidad, id_estado.pk, id_estado.__str__(), 1)
-#             messages.success(request, "Registro creado con éxito")
-#             return HttpResponse('/agregar/atencioncliente/')
-#         else:
-#             messages.error(request, "Error en el formulario")
+@login_required()
+def listar_premio(request):
+    datos = models.premio.objects.all()
+    contexto = {
+        'lista': datos,
+    }
 
+    return render(request, 'P01/premio/premio.html', contexto)
 
-# @login_required()
-# def listar_estadonoconformidad(request):
-#     listestnoconf= models.estado_no_conformidad.objects.all()
-#     contexto = {
-#         'listestnoconf': listestnoconf
-#     }
-#     return render(request, 'nomencladores/estadonoconformidad.html', contexto)
+def prueba(id):
+    sosi = models.sosi.objects.get(id = id)
 
-# class estadonoconformUpdate(LoginRequiredMixin,UpdateView):
-#     model = estado_no_conformidad
-#     form_class = form.estadonoconformidadForm
-#     template_name = 'nomencladores/estadonoconformidad_update_form.html'
+    media_root = '/'.join(['consecutivos', f'/{sosi.consecutivo.codigo}/', 'SOSI/']) 
+    path = os.path.join(settings.MEDIA_ROOT + 'consecutivos/' + f'{sosi.consecutivo.codigo}/SOSI/')
+    isExist = os.path.exists(path)
 
-#     def get_success_url(self):
-#         return reverse_lazy('listar_estadonoconformidad')
+    if not isExist:
+        os.makedirs(path)
 
-#     def post(self, request, *args, **kwargs):
-#         register_logs(request, estado_no_conformidad, self.get_object().pk, self.get_object().__str__(), 2)
-#         self.object = self.get_object()
-#         messages.success(request, "Registro creado con éxito")
-#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+    initial_path = sosi.archivo.path
+    name = sosi.archivo.name
+    cname = name.split('/')
+    new_path = settings.MEDIA_ROOT + media_root + cname[-1]
+    shutil.copy(initial_path, new_path)
+    sosi.save()
 
-#//--Entrada de Datos
-# class nomaspmedirefic(LoginRequiredMixin,CreateView):
-#     model = aspecto_Medir_IndicadorEficacia
-#     form_class = form.aspectosindicadoreficaciaForm
-#     template_name = 'entradadatos/aspectos_medir_eficacia_form.html'
-#     success_url = reverse_lazy('listar_aspeficacia')
+@login_required()
+def listar_acuerdo(request):
+    datos = models.acuerdo.objects.all()
+    contexto = {
+        'lista': datos,
+    }
 
-#     def get_success_url(self):
-#         return reverse_lazy('listar_aspeficacia')
-
-#     def post(self, request, *args, **kwargs):
-#         forms = form.aspectosindicadoreficaciaForm(request.POST)
-#         if forms.is_valid():
-#             forms.save()
-#             id_asp = aspecto_Medir_IndicadorEficacia.objects.last()
-#             register_logs(request, aspecto_Medir_IndicadorEficacia, id_asp.pk, id_asp.__str__(), 1)
-#             messages.success(request, "Registro creado con éxito")
-#             return HttpResponseRedirect(self.success_url)
-#         else:
-#             messages.error(request, "Existen errores en el formulario")
-#             return render(request,self.template_name)
-
-# @login_required()
-# def listar_aspmedirefic(request):
-#     listaspmedirefic = models.aspecto_Medir_IndicadorEficacia.objects.all()
-#     contexto = {
-#         'listaspmedirefic': listaspmedirefic
-#     }
-#     return render(request, 'entradadatos/aspectos_medir_eficacia.html', contexto)
-
-# class aspmedireficUpdate(LoginRequiredMixin,UpdateView):
-#     model = aspecto_Medir_IndicadorEficacia
-#     form_class = form.aspectosindicadoreficaciaForm
-#     template_name = 'entradadatos/aspectos_medir_eficacia_update_form.html'
-#     success_url = reverse_lazy("listar_aspeficacia")
-
-#     def get_success_url(self):
-#         return reverse_lazy('listar_aspeficacia')
-
-#     def post(self, request, *args, **kwargs):
-#         register_logs(request, aspecto_Medir_IndicadorEficacia, self.get_object().pk, self.get_object().__str__(), 2)
-#         self.object = self.get_object()
-#         messages.success(request, "Registro modificado con éxito")
-#         return super(BaseUpdateView, self).post(request, *args, **kwargs)
+    return render(request, 'P01/acuerdo/acuerdo.html', contexto)
 
 
 @login_required()
@@ -3654,6 +4687,7 @@ def listar_afectacion(request):
         'lista': datos,
     }
     return render(request, 'P01/afectaciones/afectaciones.html', contexto)
+
 def create_afectation(request):
     form = AfectationModelForm()
 

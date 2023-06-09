@@ -1,4 +1,6 @@
 {% extends 'index.html' %}
+{% load static %}
+
 {% block menu_seguridad %}
     menu-open
 {% endblock %}
@@ -8,21 +10,33 @@
 {% block usuarios %}
     active
 {% endblock %}
+
+{% block miestilo %}
+    <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+    {% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
+                {% block title_page %}
                 <div class="col-sm-6">
                     <h1 class="m-0 text-dark">Usuarios.</h1>
                 </div><!-- /.col -->
+                {% endblock %}
+                {% block breadcumb %}
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Usuarios</li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
+                            <li class="breadcrumb-item active">Listar </li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
+                {% endblock %}                
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
@@ -36,7 +50,7 @@
                     <div class="card-header">
                         <h3 class="card-title">Listado de usuarios</h3>
                         <a href="{% url 'user_create' %}" class="btn btn-primary fa-pull-right" title="Nuevo usuario">
-                            <span class="fa fa-plus"> Usuario</span>
+                            <span class="fa fa-plus"> Adicionar</span>
                         </a>
                     </div>
                     <!-- /.card-header -->
@@ -55,11 +69,11 @@
                                     Nombre y Apellidos
                                 </th>
                                 <th>
-                                    Última Entrada
+                                    Última autenticación
                                 </th>
 
                                 <th>
-                                    Activo?
+                                    ¿Activo?
                                 </th>
                                 <th>
                                     Acciones
@@ -89,27 +103,32 @@
 
                                         <td>
                                             {% if u.0.is_active %}
-                                                Si
+                                                Sí
                                             {% else %}
                                                 No
                                             {% endif %}
                                         </td>
                                         <td>
                                 {% if request.user.is_staff %}
+                                {% comment %} <label>
+                                    <form action="{% url 'user_activate' u.pk %}" method="POST" class="form-activate">
+                                        {% csrf_token %}
+                                        <span style="display: none">{{ u.0.is_active }}</span>
+                                        <input type="checkbox" name="activo" {% if u.0.is_active %} checked {% endif %} class="checkbox-activate"/>
+                                    </form>
+                                    <div class="switch {% if u.0.is_active %} switchOn {% endif %}">
+                                    </div>
+                                </label> {% endcomment %}
                                 <span class="input-group-sm" >
                                 <a href="{% url 'user_update' u.0.pk %}"
-                                   class="btn btn-sm btn-primary" title="modificar usuario">
+                                   class="btn btn-sm btn-primary" title="Modificar usuario">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                {% endif %}
-                                {% if request.user.is_staff %}
-                                    <a href="{% url 'password_updateadmin' u.0.pk %}"
-                                   class="btn btn-sm btn-warning" title="Cambiar contraseña">
-                                    <i class="fa fa-recycle"></i>
+                                <a href="{% url 'user_detail' u.0.pk %}"
+                                   class="btn btn-sm btn-warning" title="Ver detalles">
+                                    <i class="fa fa-eye"></i>
                                 </a>
-                                {% endif %}
-                                {% if request.user.is_staff %}
-                                    <a href="{% url 'user_delete' u.0.pk %}"
+                                <a href="{% url 'user_delete' u.0.pk %}"
                                    class="btn btn-sm btn-danger" title="Eliminar contraseña">
                                     <i class="fa fa-trash"></i>
                                 </a>

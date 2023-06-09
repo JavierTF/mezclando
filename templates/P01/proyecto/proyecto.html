@@ -108,7 +108,7 @@ left: 24px !important;
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Listado de Proyectos </h3>
-                        {% if perms.SISGDDO.add_consecutivo %}
+                        {% if perms.SISGDDO.add_proyecto %}
                         <a href="{% url 'adicionar_proyecto' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar </span>
                         </a>
@@ -139,7 +139,7 @@ left: 24px !important;
                                     Tipo de proyecto
                                 </th>
                                 <th>
-                                    Equipo del proyecto
+                                    Equipo de proyecto
                                 </th>
                                 <th>
                                     Fecha de entrada
@@ -168,11 +168,14 @@ left: 24px !important;
                                     <td>
                                         {{ lt.nombre_proyecto }}
                                     </td>
-                                    <td>
-                                        {% for formato in lt.formato.all %}
-                                            {{ formato }} {% if not forloop.last %} - {% endif %}
-                                        {% endfor %}
-                                        {% comment %} {{ formatos.0 }} {% endcomment %}
+                                    <td>                                        
+                                        {% if lt.formato.all|length > 0 %}
+                                            {% for formato in lt.formato.all %}
+                                                {{ formato }} {% if not forloop.last %} - {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.area }}
@@ -181,15 +184,24 @@ left: 24px !important;
                                         {{ lt.tipo }}
                                     </td>
                                     <td>
-                                        {% for trab in lt.trabajador.all %}
-                                            {{ trab }} {% if not forloop.last %} - {% endif %}
-                                        {% endfor %}
+                                        {% if lt.trabajador.all|length > 0 %}
+                                            {% for trab in lt.trabajador.all %}
+                                                {% cycle '<strong>JP:</strong>' '<strong>DIS:</strong>' '<strong>EC:</strong>' %}
+                                                {{ trab }} {% if not forloop.last %} - {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.fecha_entrada }}
                                     </td>
                                     <td>
-                                        {{ lt.fecha_cierre }}
+                                        {% if lt.fecha_cierre %}
+                                            {{ lt.fecha_cierre }}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.estado }}
@@ -198,7 +210,7 @@ left: 24px !important;
                                     <span class="input-group">
                                     {% if perms.SISGDDO.change_proyecto %}
                                     <label>
-                                        <form action="{% url 'act_desactconsecutivo' lt.consecutivo.id %}" method="POST" class="form-activate">
+                                        <form action="{% url 'act_desactproyecto' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
                                             <span style="display: none">{{ lt.activo }}</span>
                                             <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
@@ -208,32 +220,33 @@ left: 24px !important;
                                     </label>
                                     {% endif %}
                                     {% if perms.SISGDDO.view_proyecto %}
-                                    <a href="{% url 'detalle_proyecto' lt.consecutivo.id %}"
+                                    <a href="{% url 'detalle_proyecto' lt.id %}"
                                          class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
                                     {% if perms.SISGDDO.change_proyecto %}
-                                    <a href="{% url 'modificar_proyecto' lt.consecutivo.id %}"
+                                    <a href="{% url 'modificar_proyecto' lt.id %}"
                                         class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
                                     {% if perms.SISGDDO.delete_proyecto %}
-                                        <a href="{% url 'eliminar_proyecto' lt.consecutivo.id %}"
+                                        <a href="{% url 'eliminar_proyecto' lt.pk %}"
                                             class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 
-                                    {% if perms.SISGDDO.add_entrada_proyecto %}
-                                        <a href="{% url 'adicionar_entrada_proyecto' lt.consecutivo.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                    {% if perms.SISGDDO.add_sosi %}
+                                        <a href="{% url 'adicionar_entrada_proyecto' lt.id %}"
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar entrada">
                                         <i class="fa fa-angle-double-right"></i>
                                         </a>
-                                    {% endif %} 
+                                    {% endif %}
                                 </span>
                                     </td>
                                 </tr>
+                                {% comment %} {% c = c + 1 %} {% endcomment %}
                             {% endfor %}
                             </tbody>
 

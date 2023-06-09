@@ -17,7 +17,9 @@ from tempus_dominus.widgets import DatePicker,TimePicker,DateTimePicker
 from datetime import datetime
 
 #form #nomenclador #Javier
-from SISGDDO.models import area, estado_indicador_objetivos, fuente_financiamiento, rol_trabajador_proyecto, tipo_proyecto
+from SISGDDO.models import area, estado_indicador_objetivos, fuente_financiamiento, rol_trabajador_proyecto, tipo_proyecto, objetivo, indicador_objetivos
+from SISGDDO.models import consecutivo, tipo_codigo, accion_indicador_objetivo
+from SISGDDO.models import sosi
 from SISGDDO.models import consecutivo, tipo_codigo
 #form #nomenclador #Erik
 from SISGDDO.models import estado_incidencia
@@ -125,6 +127,19 @@ class tipo_proyecto_form(ModelForm):
             "nombre": widgets.TextInput(attrs = {'class': ' form-control'}),
         }
 
+#moduloJavier
+class tipo_codigo_form(ModelForm):
+    nombre = forms.CharField(label = 'Nombre*', max_length = 55, required = True, widget = widgets.TextInput(
+        attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+
+    class Meta:
+        model = tipo_codigo
+        fields = "__all__"
+        widgets = {
+            "id": widgets.NumberInput(attrs = {'class': ' form-control','min':1,'max':100000}),
+            "nombre": widgets.TextInput(attrs = {'class': ' form-control'}),
+        }
+        
 #moduloJavier
 class fuente_financiamiento_form(ModelForm):
     nombre = forms.CharField(label = 'Nombre*', max_length = 55, required = True, widget = widgets.TextInput(
@@ -358,6 +373,95 @@ class consecutivo_form(ModelForm):
                     'placeholder': f'Ej. Código correspondiente {get_codigo()}'}),
         }
 
+#parece que lo que est'a luego del init no tiene que pasarse en Meta
+#moduloJavier
+class premio_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(premio_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+        self.fields['fecha'].widget.format = ('%Y-%m-%d')
+
+    fecha = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
+    nombre = forms.CharField(label = 'Nombre*', max_length = 150, required = True, widget = widgets.Textarea(
+            attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+    entidad = forms.ModelChoiceField(queryset = entidad.objects.filter(activo = True), required = True, label = 'Entidad*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    archivo = forms.FileField(label = 'Archivo*', required = True)    
+    activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
+            widget = widgets.CheckboxInput(attrs = {'class': ' form-control checkbox'}))    
+    
+    class Meta:
+        model = premio
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+        }
+
+#moduloJavier
+class acuerdo_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(acuerdo_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+        self.fields['fecha'].widget.format = ('%Y-%m-%d')
+        self.fields['fecha_limite'].widget.format = ('%Y-%m-%d')
+        self.fields['fecha_cumplimiento'].widget.format = ('%Y-%m-%d')
+
+    nombre = forms.CharField(label = 'Nombre*', max_length = 150, required = True, widget = widgets.Textarea(
+                attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+    fecha = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
+    fecha_limite = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = False, label = 'Fecha límite', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
+    fecha_cumplimiento = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = False, label = 'Fecha de cumplimiento', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
+    trabajador = forms.ModelMultipleChoiceField(queryset = trabajador.objects.filter(activo = True), required = True, label = 'Responsable(s)*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    observaciones = forms.CharField(required = False, label = 'Observaciones', max_length = 250, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca la observación'}))
+    estado = forms.ModelChoiceField(queryset = estado_acuerdo.objects.filter(activo = True), required = True, label = 'Estado*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
+            widget = widgets.CheckboxInput(attrs = {'class': ' form-control checkbox'})) 
+    
+    class Meta:
+        def get_no_acuerdo():
+            try:
+                ultimo = acuerdo.objects.last()
+                if ultimo is None:
+                    no_consecutivo = 1
+                else:
+                    try:
+                        int(ultimo.numero)
+                    except:
+                        return Exception("Error: No se ha podido obtener el último acuerdo.")
+                    no_consecutivo = int(ultimo.__getattribute__('numero')) + 1
+                return no_consecutivo
+            except:
+                return HttpResponse("Error en el servidor", status = 500)
+
+        model = acuerdo
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+                "no": widgets.NumberInput(attrs={'class': ' form-control', 'min':1, 'max':100000, 
+                    'value' : get_no_acuerdo()}),
+        }
+
+#moduloJavier
+class objetivo_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(objetivo_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+        self.fields['fecha_definicion'].widget.format = ('%Y-%m-%d')
+
+    nombre = forms.CharField(label = 'Nombre*', max_length = 150, required = True, widget = widgets.Textarea(
+                attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+    fecha_definicion = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha de definición*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True}))
+    indicador = forms.ModelMultipleChoiceField(queryset = indicador_objetivos.objects.filter(activo = True), required = False, label = 'Indicadores*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'})) 
+    activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
+            widget = widgets.CheckboxInput(attrs = {'class': ' form-control checkbox'})) 
+    
+    class Meta:
+
+        model = premio
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+        }
+
 #moduloJavier
 class entrada_proyecto_form(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -369,7 +473,7 @@ class entrada_proyecto_form(ModelForm):
     fecha_entrada = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha de entrada*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
     fecha_salida = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha de salida*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
     entregado_por = forms.ModelChoiceField(queryset = trabajador.objects.filter(activo = True), required = True, label = 'Entregado por*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
-    formato = forms.ModelMultipleChoiceField(queryset = formato.objects.filter(activo = True), required = True, label = 'Formato*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    formato = forms.ModelMultipleChoiceField(queryset = formato.objects.filter(activo = True), required = False, label = 'Formato*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
     proyecto = forms.ModelChoiceField(queryset = consecutivo.objects.filter(activo = True), required = True, label = 'Proyecto*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
     dictamen = forms.FileField(label = 'Dictamen técnico', required = False)
     estado = forms.ModelChoiceField(queryset = estado_proyecto.objects.filter(activo = True), required = True, label = 'Estado*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
@@ -378,6 +482,72 @@ class entrada_proyecto_form(ModelForm):
         
     class Meta:
         model = entrada_proyecto
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+        }
+
+#moduloJavier
+class sosi_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(sosi_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+        self.fields['fecha'].widget.format = ('%Y-%m-%d')
+
+    numero_salva = forms.CharField(label = 'Número de salva*', max_length = 10, required = True, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el número de salva'}))
+    fecha = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha de entrada*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
+    anno = forms.CharField(label = 'Año', max_length = 4, required = False, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el año'}))
+    especialista = forms.ModelChoiceField(queryset = trabajador.objects.filter(activo = True), required = True, label = 'Entregado por*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    autor = forms.CharField(label = 'Autor', max_length = 50, required = False, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el autor'}))
+    ubicacion_salva = forms.CharField(label = 'Ubicación de la salva', max_length = 10, required = False, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca la ubicación de la salva'}))
+    observaciones = forms.CharField(label = 'Observaciones*', max_length = 150, required = False, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca las observaciones'}))
+    archivo = forms.FileField(label = 'Archivo', required = True)
+        
+    class Meta:
+        model = sosi
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+        }
+
+#moduloJavier
+class indicador_objetivo_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(indicador_objetivo_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+
+    nombre = forms.CharField(label = 'Nombre*', max_length = 150, required = True, widget = widgets.Textarea(
+                attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+    # evaluacion = forms.FloatField(required = True, label = 'Evaluación*', widget = widgets.TextInput(attrs = {'class': 'form-control texto', 'placeholder': 'Introduzca la evaluación'}))
+    objetivo = forms.ModelChoiceField(queryset = objetivo.objects.filter(activo = True), required = True, label = 'Objetivo*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    estado = forms.ModelChoiceField(queryset = estado_indicador_objetivos.objects.filter(activo = True), required = True, label = 'Estado*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    accion = forms.ModelMultipleChoiceField(queryset = accion_indicador_objetivo.objects.filter(activo = True), required = False, label = 'Acción*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
+            widget = widgets.CheckboxInput(attrs = {'class': ' form-control checkbox'}))
+        
+    class Meta:
+        model = indicador_objetivos
+        fields = "__all__"
+        widgets = {
+                "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
+        }
+
+#moduloJavier
+class accion_indicador_objetivo_form(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(accion_indicador_objetivo_form, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+
+    nombre = forms.CharField(label = 'Nombre*', max_length = 150, required = True, widget = widgets.Textarea(
+                attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca el nombre'}))
+    # evaluacion = forms.FloatField(required = True, label = 'Evaluación*', widget = widgets.TextInput(attrs = {'class': 'form-control texto', 'placeholder': 'Introduzca la evaluación'}))
+    indicador = forms.ModelChoiceField(queryset = indicador_objetivos.objects.filter(activo = True), required = True, label = 'Indicador de objetivo*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    area = forms.ModelChoiceField(queryset = area.objects.filter(activo = True), required = True, label = 'Área*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
+            widget = widgets.CheckboxInput(attrs = {'class': ' form-control checkbox'}))
+        
+    class Meta:
+        model = accion_indicador_objetivo
         fields = "__all__"
         widgets = {
                 "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
