@@ -6,12 +6,16 @@
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
 <script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
 
+{% block page_title %}
+    <title>SISGEPO | Adicionar Proyecto</title>
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Adicionar Proyecto.</h1>
+                        <h1 id="accion_objeto" class="m-0 text-dark">Adicionar Consecutivo/Proyecto.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -40,7 +44,7 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form id="formAddProyecto" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_proyecto' %}">
+                    <form id="formAddProyecto" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_proyecto' %}" formsuccess="{% url 'listar_proyecto' %}">
                         {% csrf_token %}
                         <div class="row">
                             <div class="form-group col-md-1">
@@ -57,7 +61,37 @@
                                     <input type="number" name="no" class=" form-control" min="1" max="100000" value={{ no }} maxlength="10" required id="id_no">
                                     <small class="text-red"></small>
                                 </div>
-                            </div>                                                 
+                            </div>   
+                            {% if vistaProy %}
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_especialista_calidad">Especialista de calidad*:</label></label>
+                                    <div>
+                                        <select name="especialista_calidad" class=" form-control texto select2" autocomplete="on" required id="id_especialista_calidad">
+                                            <option value="">Escriba y seleccione...</option>                                        
+                                            {% for option in ttrab %}
+                                                <option value="{{ option.id }}">
+                                                    {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                </option>
+                                            {% endfor %}     
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_disennador">Diseñador*:</label></label>
+                                        <div>
+                                            <select name="disennador" class="form-control texto select2" autocomplete="on" required id="id_disennador">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in ttrab %}
+                                                    <option value="{{ option.id }}">
+                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                    </option>
+                                                {% endfor %}     
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                            </div>   
+                            {% endif %}                                            
                         </div>
                         <div class="row">
                             <div class="form-group col-md-4">
@@ -183,9 +217,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre*:</label></label>
+                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre:</label></label>
                                         <div>
-                                            <input type="date" name="fecha_cierre" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_cierre">
+                                            <input type="date" name="fecha_cierre" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_cierre">
                                             <small class="text-red"></small>
                                         </div>
                                     </div>
@@ -203,7 +237,7 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_costo">Costo (CUP)*:</label></label>
                                 <div>
-                                    <input type="text" name="costo" class="form-control texto" placeholder="Introduzca el costo" required id="id_costo" value="">
+                                    <input type="text" name="costo" minlength="4" maxlength="7" class="form-control texto" placeholder="Introduzca el costo" required id="id_costo" value="">
                                     <small class="text-red"></small>
                                 </div>
                             </div>
@@ -211,7 +245,7 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_informe_apertura">Informe apertura:</label></label>
                                 <div>
-                                    <input type="file" name="informe_apertura" id="id_informe_apertura" value="">
+                                    <input type="file" name="informe_apertura" id="id_informe_apertura" value="" accept=".pdf,.doc,.docx">
                                     <small class="text-red"></small>
                                 </div>
                             </div>   
@@ -219,7 +253,7 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_informe_cierre">Informe cierre:</label></label>
                                 <div>
-                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="">
+                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="" accept=".pdf,.doc,.docx">
                                     <small class="text-red"></small>
                                 </div>
                             </div>                   
@@ -267,9 +301,9 @@
                             <div class="col-md-4">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label class="control-label"><label for="id_costo">Aprobación del Consejo:</label></label>
+                                        <label class="control-label"><label for="id_aprobacion_consejo">Aprobación del Consejo:</label></label>
                                         <div>
-                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" id="id_aprobacion_consejo" value="">
+                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" maxlength="25" id="id_aprobacion_consejo" value="">
                                             <small class="text-red"></small>
                                         </div>
                                     </div>
@@ -321,6 +355,17 @@
 {% block script %}
 
     <script type="application/javascript">
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-right',
+            iconColor: 'red',
+            customClass: {
+              popup: 'colored-toast'
+            },
+            showConfirmButton: true,
+            timer: 4000,
+            timerProgressBar: false
+          })        
 
 //VALIDACION CAMPOS VACIOS
         $('#id_codigo').bind('focusout',function(){
@@ -343,15 +388,27 @@
         });
 
         function setCodigo(){
-            siglasServ = $('#id_tipo_codigo option:selected').text().trim().substr(0,3).toUpperCase();
             numerosCod = $('#id_codigo').val().substr(3);
-            document.getElementById('id_codigo').value = siglasServ + numerosCod;
+            siglasServ = $('#id_tipo_codigo option:selected').text().trim().substr(0,3).toUpperCase();
+            if ($('#id_tipo_codigo').val() != ''){
+                document.getElementById('id_codigo').value = siglasServ + numerosCod;
+            } else {
+                document.getElementById('id_codigo').value = '';
+            }
         }
+
+        $('#id_especialista_calidad').change(function(event){
+            validate_select($('#id_especialista_calidad'), event);
+        });
+
+        $('#id_disennador').change(function(event){
+            validate_select($('#id_disennador'), event);
+        });
 
         $('#id_tipo_codigo').change(function(event){
             validate_select($('#id_tipo_codigo'), event);
             setCodigo();
-        });              
+        }); 
 
         $('#id_tipo').change(function(event){
             validate_select($('#id_tipo'), event);
@@ -374,57 +431,104 @@
         });
 
         $('#id_formato').on('change', function(event){
+            if ($('#id_codigo').val().substr(0, 2) == 'DES'){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+            }            
             validar_comparar_valores_contables($(this), 6, 'menor_igual');
         });
 
         $('#id_fecha_entrada').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual');
-            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_terminacion'), 'menor');
-            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_extension'), 'menor');
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_terminacion'), 'menor', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_extension'), 'menor', $('#id_fecha_entrada'));
         });
 
         $('#id_fecha_aprobacion').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_aprobacion'), '', 'menor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobacion'), '', 'menor_igual', $('#id_fecha_aprobacion'));
         });
 
         $('#id_fecha_inicio').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual');
-            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor');
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual', $('#id_fecha_inicio'));
+            if ($('#id_fecha_cierre').val() !== undefined){
+                validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor', $('#id_fecha_cierre'));
+            }            
         });
 
         $('#id_fecha_interrupcion').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_interrupcion'), '', 'menor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_interrupcion'), '', 'menor_igual', $('#id_fecha_interrupcion'));
         });
 
         $('#id_fecha_terminacion').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_terminacion'));
         });
 
         $('#id_fecha_extension').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_extension'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_extension'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_extension'));
         });
 
         $('#id_fecha_cierre').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual');
+            validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual', $('#id_fecha_cierre'));
         });
 
-        $('#id_informe_apertura').on('change', function(){
+        {% comment %} $('#id_informe_apertura').on('change', function(){
             validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);            
         });
 
         $('#id_informe_cierre').on('change', function(){
             validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
-        });
+        }); {% endcomment %}
 
         $('#id_no').prop("disabled", true);
 
-        /*$('#formAddProyecto').on('submit', function (e) {
-            e.preventDefault();
-            let f1 = validar_existencia_ambos(document.getElementById('id_aprobacion_consejo'), document.getElementById('id_fecha_aprobacion'));
-            let f2 = validar_existencia_ambos(document.getElementById('id_causa_interrupcion'), document.getElementById('id_fecha_interrupcion'));
+        $('#formAddProyecto').on('submit', function (e) {
+            e.preventDefault();    
+            
+            if ($('#id_codigo').val().substr(0, 3) == 'SER'){
+                if ($('#id_formato').val().length > 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Los servicios no hacen aplicaciones ni llevan formatos',
+                    });
+                    $('#id_formato').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            } 
+            
+            if ($('#id_codigo').val().substr(0, 3) != 'SER'){
+                if ($('#id_formato').val().length == 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Por favor, seleccione de uno a seis formatos',
+                    });
+                    $('#id_formato').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }
 
-            var href = $(this).attr('formaction');
-            var data = $(this).serializeArray();
+            /*if ($('#id_informe_apertura').val().length > 0){
+                if ($('#id_fecha_inicio').val().length = 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'El campo informe de apertura está cargado. Llene la fecha de inicio',
+                    });
+                    $('#id_informe_apertura').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }*/
+            
+            if ($('#id_informe_cierre').val().length > 0){
+                if ($('#id_fecha_cierre').val().length = 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'El campo informe de cierre está cargado. Llene la fecha de cierre',
+                    });
+                    $('#id_fecha_cierre').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }
+            
+            let f1 = validar_existencia_ambos(document.getElementById('id_aprobacion_consejo'), document.getElementById('id_fecha_aprobacion'));
+            let f2 = validar_existencia_ambos(document.getElementById('id_causa_interrupcion'), document.getElementById('id_fecha_interrupcion'));            
 
             if (typeof f1 !== 'undefined'){
                 if (!f1){
@@ -438,15 +542,60 @@
                 }
             }
 
+            var href = $(this).attr('formaction');
+            var listarProyecto = $(this).attr('formsuccess');
+            var data = $(this).serializeArray();
+
             if ($('.is-invalid').length > 0){
                 return false;
             }
             else{
-                console.log("valido");
-                $.post( href, data);
-                return true;
+                $('button[type="submit"]').prop("disabled", true);
+
+                var form = document.getElementById("formAddProyecto");
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+                form_data.append("informe_apertura", document.getElementById('id_informe_apertura').files[0]);
+                form_data.append("informe_cierre", document.getElementById('id_informe_cierre').files[0]);
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+
+                $.ajax({
+                    url: $(this).attr("formaction"),
+                    type: $(this).attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data, status)
+                    {
+                        window.location.replace(listarProyecto);
+                    },
+                    error: function (xhr, desc, err)
+                    {
+                        if (response.result == 'error'){
+                            Toast.fire({
+                                type: 'error',
+                                title: response.message,
+                            });
+                        }      
+                        $('button[type="submit"]').prop("disabled", false);      
+                    },
+                    always: function (response){
+                        if (response.result == 'error'){
+                            Toast.fire({
+                                type: 'error',
+                                title: response.message,
+                            });
+                        }
+                        if (response.result == 'success'){
+                            window.location.replace(listarProyecto);
+                        }
+                        $('button[type="submit"]').prop("disabled", false);
+                    }
+                });
             }
-        });*/
+        });
 
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
 

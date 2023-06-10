@@ -1,0 +1,217 @@
+{% extends 'Security/users.html' %}
+{% load static %}
+
+{% block miestilo %}
+    <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+{% endblock %}
+
+{% block breadcumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+        {% block group_wrapper %}
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
+            <li class="breadcrumb-item active">Modificar </li>
+        {% endblock %}
+    </ol>
+</div><!-- /.col -->
+{% endblock %}
+
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Formulario usuario</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'user_update' object.id %}" formsuccess="{% url 'user_list' %}">
+                        {% csrf_token %}
+                      <input name="id" type="hidden" value="{{ object.id }}">
+                        <div class="form-body">
+                        <div class="form-row">
+                            {% for campo in form %}
+                                {% if  forloop.counter <= 2 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 2 and forloop.counter <= 4 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 4 and forloop.counter <= 6 %}
+                                <div class="form-group col-md-6">
+                                    <label class=" control-label">{{ campo.label_tag }}</label>
+
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+
+                                </div>
+                                {% else %}
+                                {% if forloop.counter > 6 and forloop.counter <= 8 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% if forloop.counter > 8 and forloop.counter <= 10 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% if forloop.counter > 10 and forloop.counter <= 12 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% endif %}
+
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary mb-3">Guardar</button>
+                                <a href="{% url 'user_list' %}" type="button" class="btn btn-danger mb-3">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+
+                    </form>
+                    <!-- END FORM-->
+                </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#id_password1').attr('placeholder', 'Introduzca contraseña');
+            $('#id_password2').attr('placeholder', 'Introduzca contraseña nuevamente');
+            $('#id_username').attr('placeholder', 'Introduzca nombre de usuario');
+            $('#id_email').attr('placeholder', 'Introduzca e-mail de CITMATEL');
+            $('#id_first_name').attr('placeholder', 'Introduzca nombre');
+            $('#id_last_name').attr('placeholder', 'Introduzca apellidos');
+        })
+
+    const r = /^([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+)(\s+([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+))*$/;
+    const d = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.\\/])[A-Za-z\d$@$!%*?&.\\/]{8,15}$/;
+
+    if ($('#id_email').val()){
+        $('#id_email').bind('blur', function(){
+            validate_email($('#id_email'), 'citmatel.inf.cu');
+        });        
+    }
+    
+    if ($('#id_first_name').val()){
+        const text = "Por favor, inserte nombre válido";
+        validate_regex(r, $('#id_first_name'), text);
+    }
+
+    if ($('#id_last_name').val()){
+        const text = "Por favor, inserte nombre válido";
+        validate_regex(r, $('#id_last_name'), text);
+    }
+
+    $('#id_password1').bind('blur', function(){
+        const text = "Por favor, inserte contraseña válida";
+        validate_regex(d, $('#id_password1'), text);
+    });
+    
+    $('#id_password2').bind('blur', function(){
+        console.log('BLUR');
+        const text = "Por favor, inserte contraseña válida";
+        validate_regex(d, $('#id_password2'), text);
+    });
+
+    $('.form-horizontal').submit(function (event) {
+        event.preventDefault();     
+
+        let f1 = validar_existencia_ambos(document.getElementById('id_password1'), document.getElementById('id_password2'));  
+        
+        console.log('F1', f1);
+        
+        var href = $(this).attr('formaction');
+        var success = $(this).attr('formsuccess'); 
+        var data = $(this).serializeArray();
+
+        if (typeof f1 !== 'undefined'){
+            if (!f1){
+                console.log('f1 false');
+                return false;
+            } else {
+                var x = validate_campos_iguales($('#id_password1'), $('#id_password2'), "contraseña");                
+                
+                if (x){
+                    $.post( href, data).always(function(response){
+                        if (response.result == 'error'){
+                            console.log('error');
+                        } else {
+                            window.location.replace(success);
+                        }
+                    })
+                } else {
+                    $('button[type="submit"]').removeAttr("disabled");
+                    return false;
+                }
+            }
+        } else {
+            $.post( href, data).always(function(response){
+                if (response.result == 'error'){
+                    console.log('error');
+                } else {
+                    window.location.replace(success);
+                }
+            })
+        }        
+
+               
+    });
+    </script>
+{% endblock %}
+
+

@@ -1,3 +1,15 @@
+/*const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-right',
+  iconColor: 'red',
+  customClass: {
+    popup: 'colored-toast'
+  },
+  showConfirmButton: true,
+  timer: 4000,
+  timerProgressBar: false
+})*/
+
 // Para llenar los campos del modal a la hora de editar
 function toModal(pdesc, pabbr) {
   $("#id_descripcion").prop("value", pdesc);
@@ -52,14 +64,80 @@ function Foco() {
 function validate_campos_vacios(node) {
   if (node.val() == "") {
     node.removeClass("is-valid").addClass("is-invalid");
-    $(".invalid-feedback").text("Por favor, no deje el campo vacío.").show();
+    node[0].nextElementSibling.textContent = "Por favor, no deje el campo vacío";
+    $(".invalid-feedback").text("Por favor, no deje el campo vacío").show();
     $('button[type="submit"]').prop("disabled", "true");
     return false;
   } else {
     node.removeClass("is-invalid").addClass("is-valid");
+    node[0].nextElementSibling.textContent = null;
     $('button[type="submit"]').removeAttr("disabled");
   }
 }
+
+function validate_campos_iguales(node1, node2, nombre1, nombre2='') {
+  if (node1.val() !== node2.val()) {
+    node1.removeClass("is-valid").addClass("is-invalid");
+    node1[0].nextElementSibling.textContent = "Los campos " + nombre1 + nombre2 + " son diferentes";
+    node2.removeClass("is-valid").addClass("is-invalid");
+    node2[0].nextElementSibling.textContent = "Los campos " + nombre1 + " son diferentes";
+    // $(".invalid-feedback").text("Por favor, no deje el campo vacío").show();
+    $('button[type="submit"]').prop("disabled", "true");
+    return false;
+  } else {
+    node1.removeClass("is-invalid").addClass("is-valid");
+    node1[0].nextElementSibling.textContent = null;
+    node2.removeClass("is-invalid").addClass("is-valid");
+    node2[0].nextElementSibling.textContent = null;
+    $('button[type="submit"]').removeAttr("disabled");
+    return true;
+  }
+}
+
+function validate_regex(myregex, node, text) {
+  const v = node.val();
+  const regex = new RegExp(myregex);
+  if (!regex.test(v)) {
+    node.removeClass("is-valid").addClass("is-invalid");
+    node[0].nextElementSibling.textContent = text;
+    $('button[type="submit"]').prop("disabled", "true");
+    return false;
+  } else {
+    node.removeClass("is-invalid").addClass("is-valid");
+    node[0].nextElementSibling.textContent = null;
+    $('button[type="submit"]').removeAttr("disabled");
+  }
+}
+
+function validate_email(node, dominio) {  
+  const v = node.val();  
+  if (v.search("@") === -1){
+    node.removeClass("is-valid").addClass("is-invalid");
+    node[0].nextElementSibling.textContent = "Inserte dirección de correo válida";
+    $('button[type="submit"]').prop("disabled", "true");
+    return false;
+  } else {
+    const arr = v.split("@");
+    if (arr[0] === ""){
+      node.removeClass("is-valid").addClass("is-invalid");
+      node[0].nextElementSibling.textContent = "Inserte nombre de correo";
+      $('button[type="submit"]').prop("disabled", "true");
+      return false;
+    } else {
+      if (arr[1] !== dominio){
+        node.removeClass("is-valid").addClass("is-invalid");
+        node[0].nextElementSibling.textContent = 'El dominio debe ser "@' + dominio + '"';
+        $('button[type="submit"]').prop("disabled", "true");
+        return false;
+      } else {
+        node.removeClass("is-invalid").addClass("is-valid");
+        node[0].nextElementSibling.textContent = null;
+        $('button[type="submit"]').removeAttr("disabled");
+      }
+    }
+  }    
+}
+
 function validate_only_text(node, event) {
   if (
     (event.charCode >= 65 && event.charCode <= 90) ||
@@ -119,13 +197,12 @@ function validate_only_number_and_text(node, event) {
 function validate_select(node, event) {
   if (node.val()) {
     node.removeClass("is-invalid").addClass("is-valid");
-    // node[0].nextElementSibling.textContent = "";
+    node[0].nextElementSibling.nextElementSibling.textContent = "";    
     $('button[type="submit"]').removeAttr("disabled");
   } else {
     event.preventDefault();
     node.removeClass("is-valid").addClass("is-invalid");
-    alert("Seleccione un valor en " + node[0]["name"]);
-    // node[0].nextElementSibling.textContent = "Seleccione un valor";
+    node[0].nextElementSibling.nextElementSibling.textContent = "Por favor, no deje el campo vacío";
     $('button[type="submit"]').prop("disabled", "true");
   }
 }
@@ -137,13 +214,15 @@ function validate_cantidad_elementos(node, event) {
   } else {
     event.preventDefault();
     node.removeClass("is-valid").addClass("is-invalid");
-    alert("No puede haber más de 6 elementos en " + node[0]["name"]);
+    Toast.fire({
+      type: 'error',
+      title: "No puede haber más de 6 elementos en " + node[0]["name"],
+    });
     $('button[type="submit"]').prop("disabled", "true");
   }
 }
 
 function validate_only_number(node, event) {
-  // alert('validar numeros')
   if (event.charCode >= 48 && event.charCode <= 57) {
     // 13-> 'Enter' 32-> ' '
     node.removeClass("is-invalid").addClass("is-valid");
@@ -157,15 +236,15 @@ function validate_only_number(node, event) {
   }
 }
 
-function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", dia = "hoy") {
-  var d1 = new Date(v1.value.replace(/-/g, ","));
-  d1 = d1.toISOString();
+function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy") {  
+  var d = new Date(v1.value.replace(/-/g, ","));
+  d1 = d.toLocaleString('en-CA').slice(0, 10);
   if (!v2.value) {
-    var d2 = new Date(Date.now());
-    d2 = d2.toISOString();
+    var d3 = new Date(Date.now());
+    d2 = d3.toLocaleString('en-CA').slice(0, 10);
   } else {
-    v2 = new Date(v2.value.replace(/-/g, ","));
-    var d2 = v2.toISOString();
+    d2 = new Date(v2.value.replace(/-/g, ","));
+    var d2 = d2.toLocaleString('en-CA').slice(0, 10);
   }
 
   switch (tipo) {
@@ -174,14 +253,15 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", dia = "hoy") {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          alert(v1.name + " debe ser mayor o igual que " + dia);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + dia;
         } else {
-          alert(v1.name + " debe ser mayor o igual que " + v2.name);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
+        node[0].nextElementSibling.textContent = "";
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -190,14 +270,15 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", dia = "hoy") {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          alert(v1.name + " debe ser menor o igual que " + dia);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + dia;
         } else {
-          alert(v1.name + " debe ser menor o igual que " + v2.name);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
+        node[0].nextElementSibling.textContent = "";
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -206,15 +287,16 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", dia = "hoy") {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          alert(v1.name + " debe ser mayor que " + dia);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + dia;
         } else {
-          alert(v1.name + " debe ser mayor que " + v2.name);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
         return flag;
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
+        node[0].nextElementSibling.textContent = "";
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -223,14 +305,15 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", dia = "hoy") {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          alert(v1.name + " debe ser menor que " + dia);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + dia;
         } else {
-          alert(v1.name + " debe ser menor que " + v2.name);
+          node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
+        node[0].nextElementSibling.textContent = "";
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -245,9 +328,15 @@ function validar_comparar_valores(v1, v2, tipo) {
       if (v1 < v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -259,9 +348,15 @@ function validar_comparar_valores(v1, v2, tipo) {
       if (v1 > v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -273,9 +368,15 @@ function validar_comparar_valores(v1, v2, tipo) {
       if (v1 <= v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -287,9 +388,15 @@ function validar_comparar_valores(v1, v2, tipo) {
       if (v1 >= v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -298,7 +405,7 @@ function validar_comparar_valores(v1, v2, tipo) {
       }
       break;
     default:
-      console.log("default");
+      break;
   }
 }
 
@@ -307,7 +414,11 @@ function validar_existencia_ambos(v1, v2) {
   if (!v1.value && v2.value) {
     v1.classList.remove("is-valid");
     v1.classList.add("is-invalid");
-    alert("Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor");
+    Toast.fire({
+      type: 'error',
+      title: "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor",
+    });
+    v1.nextElementSibling.textContent = "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor";
     // $('button[type="submit"]').prop("disabled", "true");
     flag = false;
   }
@@ -315,7 +426,11 @@ function validar_existencia_ambos(v1, v2) {
   if (v1.value && !v2.value) {
     v2.classList.remove("is-valid");
     v2.classList.add("is-invalid");
-    alert("Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor");
+    Toast.fire({
+      type: 'error',
+      title: "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor",
+    });
+    v2.nextElementSibling.textContent = "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor";
     // $('button[type="submit"]').prop("disabled", "true");
     flag = false;
   }
@@ -325,6 +440,19 @@ function validar_existencia_ambos(v1, v2) {
     v1.classList.add("is-valid");
     v2.classList.remove("is-invalid");
     v2.classList.add("is-valid");
+    v1.nextElementSibling.textContent = "";
+    v2.nextElementSibling.textContent = "";
+    // $('button[type="submit"]').removeAttr("disabled");
+    flag = true;
+  }
+
+  if (!v1.value && !v2.value) {
+    v1.classList.remove("is-invalid");
+    v1.classList.add("is-valid");
+    v2.classList.remove("is-invalid");
+    v2.classList.add("is-valid");
+    v1.nextElementSibling.textContent = "";
+    v2.nextElementSibling.textContent = "";
     // $('button[type="submit"]').removeAttr("disabled");
     flag = true;
   }
@@ -338,9 +466,15 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
       if (v1.val().length < v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -352,9 +486,15 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
       if (v1.val().length > v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser menor o igual que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser menor o igual que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser menor o igual que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser menor o igual que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -366,25 +506,35 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
       if (v1.val().length <= v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser mayor que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser mayor que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser mayor que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
-        console.log("invalido");
       } else {
         v1.removeClass("is-invalid").addClass("is-valid");
         $('button[type="submit"]').removeAttr("disabled");
-        console.log("valido");
       }
       break;
     case "menor":
       if (v1.val().length >= v2) {
         v1.removeClass("is-valid").addClass("is-invalid");
         if (typeof v2 === "object") {
-          alert(v1[0]["name"] + " debe ser menor que " + v2[0]["name"]);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser menor que " + v2[0]["name"],
+          });
         } else {
-          alert(v1[0]["name"] + " debe ser menor que " + v2);
+          Toast.fire({
+            type: 'error',
+            title: v1[0]["name"] + " debe ser menor que " + v2,
+          });
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -393,11 +543,11 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
       }
       break;
     default:
-      console.log("default");
+      break;
   }
 }
 
-function validar_archivos(selector, extensions) {
+/*function validar_archivos(selector, extensions) {
   let filePath = selector.val();
   // Seperar nombre de archivo por . y obtener último elemento (extensión)
   let extension = filePath.split(".").pop().toLowerCase();
@@ -405,22 +555,23 @@ function validar_archivos(selector, extensions) {
   // Verificar que la extensión es permitida
   if (filePath) {
     if (!extensions.includes(extension)) {
-      selector.removeClass("is-valid").addClass("is-invalid");
-      $('button[type="submit"]').prop("disabled", "true");
+      //selector.removeClass("is-valid").addClass("is-invalid");
+      //$('button[type="submit"]').prop("disabled", "true");
       alert(
         "Por favor, suba archivos con una extensión válida: " +
           extensions.join(", ")
       );
-      document.getElementById("id_informe_apertura").value = "";
+      selector.val('');
     } else {
-      selector.removeClass("is-invalid").addClass("is-valid");
-      $('button[type="submit"]').removeAttr("disabled");
+      //selector.removeClass("is-invalid").addClass("is-valid");
+      //$('button[type="submit"]').prop("disabled", "false");
     }
   } else {
-    selector.removeClass("is-invalid").addClass("is-valid");
-    $('button[type="submit"]').removeAttr("disabled");
+    //selector.removeClass("is-invalid").addClass("is-valid");
+    //$('button[type="submit"]').prop("disabled", "false");
   }
-}
+  $('button[type="submit"]').prop("disabled", false);
+}*/
 
 function validate_only_number_and_text_and_guion(node, event) {
   if (
@@ -450,5 +601,16 @@ function validate_only_number_and_text_and_guion(node, event) {
       "Este campo solo acepta letras y números";
 
     $('button[type="submit"]').prop("disabled", "true");
+  }
+}
+
+function tooglePassword(el, elem_icon){
+  if (el.type == 'password'){
+      el.type = 'text';
+      //console.log('element', elem_icon.removeClass('fas fa-lock'));
+      elem_icon.removeClass('fas fa-lock').addClass('fa fa-eye');
+  } else {
+      el.type = 'password';
+      elem_icon.removeClass('fa fa-eye').addClass('fas fa-lock');
   }
 }

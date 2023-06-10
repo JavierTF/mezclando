@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>SISGEPO | Error {{ error_code }}</title>
+  <style>
+    .main-error-page {
+      min-height: 600px;
+      margin: 0px auto;
+      width: auto;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .error-title {
+      max-width: 800px; 
+      font-family: Trebuchet MS;
+      font-size: 38px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      color: #4b4b62;
+      margin-bottom: 16px;
+    }
+    
+    .error-subtitle {
+      max-width: 568px; 
+      font-family: Trebuchet MS;
+      {% comment %} font-size: 16px; {% endcomment %}
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.31;
+      letter-spacing: normal;
+      text-align: center;
+      color: #4b4b62;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body style="background: #ffd2d2 !important;">
+<!-- partial:index.partial.html -->
+  <div class="main-error-page">
+    <div style="text-align: center;">
+      <img src="{% static 'assets/dist/img/oops_1280x1280.png' %}" alt="ERROR" style="height: 320px; width: 320px; float:inline-start;">
+    </div>
+
+    <h1 class="error-title" style="text-align: center;">
+      {% if error_code %}Error {{ error_code }}{% endif %} {% if error_code != 403 %}<br>Parece que hubo un problema. <br>:({% else %}<br>Acción no permitida. {% endif %}
+    </h1>
+    <h3 class="error-subtitle" style="text-align: center;">
+      Mientras tanto, usted puede <a href="{% url 'inicio' %}">Volver al inicio</a>.
+      <br>Contacte con el administrador del sitio
+    </h3>
+  </div>
+</body>
+</html>

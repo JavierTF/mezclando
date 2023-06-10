@@ -1,5 +1,9 @@
 {% extends 'P01/consecutivo/consecutivo.html' %}
 {% load static %}
+{% block page_title %}
+    <title>SISGEPO | Detalle de Consecutivo</title>
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -60,7 +64,7 @@
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Informe de apertura:</label><br>
                                     {% if object.informe_apertura %}
-                                        <a href="{{ object.informe_apertura.url }}" target="_blank">Descargar</a>
+                                        <a href="/media/{{ object.informe_apertura }}" target="_blank">Descargar</a>
                                     {% else %}
                                         <span>-----</span>
                                     {% endif %}
@@ -68,7 +72,7 @@
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Informe de cierre:</label><br>
                                     {% if object.informe_cierre %}
-                                        <a href="{{ object.informe_cierre.url }}" download>Descargar</a>
+                                        <a href="/media/{{ object.informe_cierre }}" target="_blank">Descargar</a>
                                     {% else %}
                                         <span>-----</span>
                                     {% endif %}
@@ -83,9 +87,13 @@
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Formatos:</label><br>
                                     <span>
-                                        {% for formato in object.formato.all %}
-                                            {{ formato }} {% if not forloop.last %} - {% endif %}
-                                        {% endfor %}
+                                        {% if object.formato.all|length > 0 %}
+                                            {% for formato in object.formato.all %}
+                                                {{ formato }} {% if not forloop.last %} - {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            -----
+                                        {% endif %}
                                     </span> 
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
@@ -101,7 +109,12 @@
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Fecha de terminación:</label><br>
-                                    <span>{{ object.fecha_cierre }}</span> 
+                                    <span>
+                                    {% if object.fecha_cierre %}
+                                        {{ object.fecha_cierre }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Fecha de extensión:</label><br>
@@ -178,21 +191,23 @@
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Presupuesto aprobado:</label><br>
-                                    <span>{{ object.costo }}</span> 
+                                    <span>$ {{ object.costo }}</span> 
                                 </div>
                             </div>    
-                            <br>
+                            {% comment %} <br> {% endcomment %}
+                            <hr>
+                            {% comment %} <br> {% endcomment %}
                             <span>Información de interés</span>
                             <br>
                             <br>
                             <div class="row no-padding-left">
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Costo de no calidad:</label><br>
-                                    <span>{{ costo_no_calidad }}</span> 
+                                    <span>$ {{ costo_no_calidad }}</span> 
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Costo real:</label><br>
-                                    <span>{{ costo_real }}</span> 
+                                    <span>$ {{ costo_real }}</span> 
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Días de atraso:</label><br>
@@ -241,13 +256,13 @@
             const rojo = ['atrasado', 'cancelado'];
             const naranja = ['solicitado', 'reiniciado', 'interrumpido'];
             const verde = ['aprobado', 'en fecha', 'terminado', 'adelantado'];
-            if (verde.includes(x)){
+            if (verde.includes(x.toLowerCase())){
                 document.getElementById('estado').style.backgroundColor = "#4fcd4f";
             }
-            if (naranja.includes(x)){
+            if (naranja.includes(x.toLowerCase())){
                 document.getElementById('estado').style.backgroundColor = "rgb(235 156 58)";
             }
-            if (rojo.includes(x)){
+            if (rojo.includes(x.toLowerCase())){
                 console.log('ok');
                 document.getElementById('estado').style.backgroundColor = "#f95858";
             }

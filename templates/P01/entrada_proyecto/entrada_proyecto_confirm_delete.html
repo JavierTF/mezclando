@@ -1,6 +1,8 @@
 {% extends 'P01/proyecto/proyecto.html' %}
 {% load static %}
-
+{% block page_title %}
+    <title>SISGEPO | Eliminar Entrada de Proyecto</title>
+{% endblock %}
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -38,7 +40,7 @@
                     <div class="alert">
 
                     <h4>
-                        ¿Está seguro que desea eliminar la información de la entrada de proyecto <strong>{{ objeto.fecha_entrada }}</strong>?
+                        ¿Está seguro que desea eliminar la información de la entrada de proyecto <strong>{{ object.fecha_entrada }} del {{ object.proyecto.nombre_proyecto }}</strong>?
                         La información no podrá restaurarse.
                     </h4>
                     <h5>Quizás desee desactivar la Entrada. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
