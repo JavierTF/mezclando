@@ -160,7 +160,7 @@ urlpatterns = [
 
      #CRUD afectaciones #hermes
     path('listar/afectacion', views_sisgddo.listar_afectacion, name = "listar_afectacion"),
-    path('crear/afectacion/', create_afectation, name='create_afectation'),
+    path('crear/afectacion/', views_sisgddo.create_afectation, name='create_afectation'),
 
 
     #CRUD planes de trabajo #hermes

@@ -567,15 +567,4 @@ def import_db(request, file):
 
     return redirect(reverse_lazy('base:export_db'))
 
-def create_afectation(request):
-    form = AfectationModelForm()
 
-    if request.method == 'POST':
-        form = AfectationModelForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            logs(request, Afectaciones, instance, 1)
-            return JsonResponse({'results': {'url': reverse_lazy('base:P01')}})
-
-    return render(request, 'base/P01/createAfectation.html', {'form': form})

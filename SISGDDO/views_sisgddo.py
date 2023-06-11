@@ -241,7 +241,7 @@ class CambiarLogotipo(LoginRequiredMixin,CreateView):
 #Vista del P14
 @login_required()
 def listar_incidencias(request):
-    listincidencias = models.incidencias.objects.all()
+    listincidencias = models.incidencia.objects.all()
 
     contexto = {
         'incidencias': listincidencias
@@ -789,7 +789,7 @@ def listar_area(request):
 #Vistas del P00
 @login_required()
 def listar_visualizarincidencias(request):
-    listincidencias = models.incidencias.objects.all()
+    listincidencias = models.incidencia.objects.all()
 
     contexto = {
         'incidencias': listincidencias
@@ -3661,11 +3661,22 @@ def create_afectation(request):
         form = AfectationModelForm(request.POST)
 
         if form.is_valid():
-            instance = form.save()
-            logs(request, Afectaciones, instance, 1)
+            
+            afectacion=Afectaciones()
+            afectacion.numero=form.cleaned_data['numero']
+            afectacion.fecha_recepcion=form.cleaned_data['fecha_recepcion']
+            afectacion.propuesto=form.cleaned_data['propuesto']
+            afectacion.responsable=form.cleaned_data['responsable']
+            afectacion.mesplaneado=form.cleaned_data['mesplaneado']
+            afectacion.observacionesactual=form.cleaned_data['observacionesactual']
+            afectacion.observacionesfutura=form.cleaned_data['observacionesfutura']
+            afectacion.estado=form.cleaned_data['estado']
+            afectacion.save()
+            
+            logs(request, Afectaciones, afectacion, 1)
             return JsonResponse({'results': {'url': reverse_lazy('base:P01')}})
 
-    return render(request, 'base/P01/createAfectation.html', {'form': form})
+    return render(request, 'P01/afectaciones/createAfectation.html', {'form': form})
 
 
 

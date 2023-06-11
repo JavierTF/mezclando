@@ -1,5 +1,4 @@
 from django.urls import path
-from apps.base.views import create_afectation
 from apps.base.views import CountryView, create_country, update_country, delete_country, \
         EntityView, create_entity,update_entity, delete_entity, \
         create_logoentity, \
@@ -51,5 +50,5 @@ urlpatterns = [
         path('db/', export_db, name='export_db'),
         path('db/<str:file>/', import_db, name='import_db'),
 
-        path('crear/afectacion/', create_afectation, name='create_afectation'),
+        
 ]

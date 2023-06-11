@@ -4,6 +4,7 @@ from django.db import models
 from datetime import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 from SISGDDO.storage import OverwriteStorage
+from apps.base.models import Process
 
 class permisos_personalizados(models.Model):
     class Meta:
@@ -42,17 +43,29 @@ class proceso(models.Model):
         return str(self.nombre)
 
 # moduloHermes
-class PlanesdeTrabajo(models.Model):
+
+class TareasPlan(models.Model):
+        
         numero=models.PositiveIntegerField(primary_key=True,verbose_name='No.*')
         descripcion=models.CharField(max_length=80,verbose_name='Descripcion*')
-        fecha=models.DateTimeField(blank=True,verbose_name='Fecha de Reunion*')
+        día=models.PositiveIntegerField(verbose_name='Día de reunion*')
         hora=models.TimeField(blank=True,verbose_name='Hora Programada*')
         lugar=models.CharField(max_length=80,verbose_name='Lugar Previsto*')
-       ## preside=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
-       ##                     null = True)
-       ## participantes=models.ManyToManyField(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
-       ##                            related_name = 'participantes', verbose_name = "Trabajadores que Paticipan*",
-       ##                            null = True)
+        preside=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
+                           null = True)
+        participantes=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
+                                   related_name = 'participantes', verbose_name = "Trabajadores que Paticipan*",
+                                   null = True)
+        def __str__(self):
+            return str(self.numero)
+        
+class PlanesdeTrabajo(models.Model):
+        numero=models.PositiveIntegerField(primary_key=True,verbose_name='No.*')
+        nivelorganizacional=models.CharField(max_length=80,null=True,verbose_name='Nivel*')
+        mes=models.CharField(max_length=80,null=True,verbose_name='Mes del Plan*'),
+        tareas=models.ForeignKey(TareasPlan, on_delete = models.SET('Tarea eliminada de la Base de datos'),
+                                   related_name = 'tareas', verbose_name = "Tareas del plan*",
+                                   null = True)
         def __str__(self):
             return str(self.numero)
                                 
@@ -63,7 +76,7 @@ class Afectaciones(models.Model):
         afectacion=models.CharField(max_length=80,verbose_name='Afectacion reportada*')
         propuesto=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
                                    related_name = 'propuesto', verbose_name = "Promotor de Afeccion*",
-                                   null = True)
+                                   null = True)#Cambiar por departamentos o areas
         responsable=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
                                    related_name = 'responsable', verbose_name = "Responsable de Afeccion*",
                                    null = True)
@@ -72,6 +85,27 @@ class Afectaciones(models.Model):
         observacionesactual=models.CharField(max_length=250,verbose_name='Observaciones*')
         observacionesfutura=models.CharField(max_length=250,verbose_name='Observaciones*')
         estado=models.CharField(max_length=50,verbose_name='Estado*')
+        estado_choices = [
+    ("cerrada", "Cerrada"),
+    ("iniciada", "Iniciada"),
+    ("en proceso", "En Proceso"),
+        ]
+        mes_choices = [
+    ("enero", "Enero"),
+    ("febrero", "Febrero"),
+    ("marzo", "Marzo"),
+    ("abril", "Abril"),
+    ("mayo", "Mayo"),
+    ("junio", "Junio"),
+     ("julio", "Julio"),
+    ("agosto", "Agosto"),
+    ("septiembre", "Septiembre"),
+    ("octubre", "Octubre"),
+    ("noviembre", "Noviembre"),
+    ("diciembre", "Diciembre"), 
+]
+      
+       
         def __str__(self):
             texto= "{0}({1})"
             return texto.format(self.numero,self.solucion)
@@ -92,16 +126,15 @@ class incidencia(models.Model):
     fecha_recepcion = models.DateField(verbose_name = 'Fecha de recepcion de la incidencia*')
     fecha_cierre = models.DateField(verbose_name = 'Fecha de cierre de la incidencia', null = True, blank = True)
     descripcion = models.CharField(max_length = 250, verbose_name = 'Descripción de la incidencia*')
-    trabajador = models.ForeignKey(trabajador,null = True, verbose_name='Trabajador que reporta la incidencia*',
+    reporta = models.ForeignKey(trabajador, null = True, verbose_name='Trabajador que reporta la incidencia*', related_name='reporta',
                                  on_delete=models.SET('Trabajador eliminado'))
-
-    ##proceso = models.ForeignKey(proceso, on_delete = models.SET('Proceso eliminado'), verbose_name = 'Proceso que da respuesta a la incidencia', 
-    ##        null = True, blank = True)
-    ##trabajador = models.ManyToManyField(trabajador, verbose_name = 'Trabajador o ejecutante*', through = 'trabajador_incidencia')
-    ##ejecutante = models.ForeignKey(trabajador, verbose_name='Trabajador que responde a la incidencia',
-    ##                            on_delete=models.SET('Trabajador eliminado'), db_column = 'ejecutante_id')
+    
+    proceso = models.ForeignKey(Process, on_delete = models.SET('Proceso eliminado'), verbose_name = 'Proceso que da respuesta a la incidencia', 
+            null = True, blank = True)
+    ejecutante = models.ForeignKey(trabajador, verbose_name='Trabajador que responde a la incidencia', related_name='ejecutante',null = True,
+                                on_delete=models.SET('Trabajador eliminado'), db_column = 'ejecutante_id')
     respuesta = models.TextField(max_length = 250, verbose_name = 'Respuesta dada a la incidencia', null = True, blank = True)
-    ##estado = models.ForeignKey(estado_incidencia, on_delete = models.SET('Estado eliminado'), verbose_name = 'Estado de la incidencia')
+    estado = models.CharField(max_length = 250, null=True, verbose_name = 'Estado de la incidencia*')
     activo = models.BooleanField(default = True, verbose_name = "Activo")
     
     def __str__(self):

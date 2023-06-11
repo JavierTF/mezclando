@@ -3,6 +3,7 @@ from email.policy import default
 from django.views.generic.edit import CreateView, DeleteView, UpdateView, BaseUpdateView
 from django.urls import reverse_lazy
 from SISGDDO.models import Afectaciones
+from SISGDDO.models import trabajador
 from SISGDDO import models
 from django.forms import widgets
 from django import forms
@@ -52,21 +53,28 @@ class area_form(ModelForm):
 #moduloHermes
 
 class AfectationModelForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AfectationModelForm, self).__init__(*args, **kwargs)
+        # Setting the format of the date field to the format that the datepicker uses.
+        self.fields['fecha_recepcion'].widget.format = ('%Y-%m-%d')
     required_css_class = 'required'
-
+    
+    numero= forms.IntegerField(required=True,label="Numero"),
+    fecha_recepcion= forms.DateField(label="Fecha R"),
+    propuesto= forms.ModelChoiceField(label="Promotor de Afectación",queryset=trabajador.objects.all()) ,
+    responsable= forms.ModelChoiceField(label="Responsable de Afectación",queryset=trabajador.objects.all()) ,
+    mesplaneado= forms.ChoiceField(label="Mes Planeado Resolverse",choices=Afectaciones.mes_choices,initial='Enero'),
+    fechacierre= forms.DateField(label="FechaC",widget=DateInput(attrs={'type': 'date', 'class': 'hidden','append': 'fa fa-calendar', 'icon_toggle': True})),
+    observacionesactual= forms.CharField(label="ObserA",max_length=250),
+    observacionesfutura= forms.CharField(label="ObserB",max_length=250),
+    estado= forms.ChoiceField(label="Estado",choices=Afectaciones.estado_choices,initial='Inicidada'),
+    
     class Meta:
         model = Afectaciones
-        fields = ['numero', 'fecha_recepcion', 'propuesto', 'responsable', 'mesplaneado', 'fechacierre','observacionesactual','observacionesfutura','estado' ]
+        fields = "__all__"
         widgets = {
-            'numero': forms.NumberInput(attrs={"class": "form-control", "placeholder": "Numero"}),
-            'fecha_recepcion': forms.DateInput(attrs={"class": "form-control", "placeholder": "Fecha de Recepción"}),
-            'propuesto': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
-            'responsable': forms.Select(attrs={"class": "form-control select3", "prompt": ""}),
-            'mesplaneado': forms.DateInput(attrs={"class": "form-control", "placeholder": "Mes Planificado"}),
-            'fechacierre': forms.DateInput(attrs={"class": "form-control", "placeholder": "Fecha Cierre"}),
-            'observacionesactual': forms.TextInput(attrs={"class": "form-control", "placeholder": "Observacion Actual"}),
-            'observacionesfutura': forms.TextInput(attrs={"class": "form-control", "placeholder": "Observacion Futura"}),
-            'estado': forms.Select(attrs={"class": "form-control select4", "prompt":"Estado"}),
+        'numero': widgets.NumberInput(attrs = {'class': ' form-control','min':1,'max':100000,'placeholder': 'Introduzca el año'}),
+        'fecha_recepcion': widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})   
         }
 
 #moduloJavier
