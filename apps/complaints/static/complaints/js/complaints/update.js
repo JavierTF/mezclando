@@ -238,9 +238,13 @@ const UpdateComplaint = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La Queja se ha modificado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
+                    Swal.fire({
+                        title: 'La Queja se ha modificado satisfactoriamente!', text: '',
+                        type: 'success', timer: 2000,
+                        buttons: false,
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    }).then((result) => {
                         setTimeout(function() {
                             $(location).attr('href', data.results.url);
                         }, 1250);

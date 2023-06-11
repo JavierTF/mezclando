@@ -40,17 +40,6 @@ class LogoEntity(models.Model):
         ordering = ('-date', )
 
 
-class Client(models.Model):
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name = 'Client'
-        verbose_name_plural = 'Clients'
-
-    def __str__(self):
-        return self.name
-
-
 class Position(models.Model):
     name = models.CharField(max_length=150)
     active = models.BooleanField(default=True)

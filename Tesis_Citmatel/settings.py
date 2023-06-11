@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SISGDDO',
+        'NAME': 'sisgddo',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',

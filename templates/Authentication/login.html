@@ -21,7 +21,7 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet">
 </head>
-<body class="hold-transition login-page" style="background:beige">
+<body class="hold-transition login-page" style="background:#87CEFA">
 <div class="login-box">
 
     <!-- /.login-logo -->
@@ -31,7 +31,7 @@
                 <img src="{% static 'assets/dist/img/logo sisgepov2.png' %}" alt="SISGEPO" width="250px">
             </div>
             {% block content %}
-                <p class="login-box-msg">Entre para iniciar su sesión</p>
+                <p class="login-box-msg"><Strong>Entre para iniciar su sesión</Strong></p>
 
                 <form method="post">
                     {% csrf_token %}
