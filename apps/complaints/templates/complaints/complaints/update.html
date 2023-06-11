@@ -1,0 +1,140 @@
+{% extends 'index.html' %}
+{% load static i18n %}
+{% block complaint %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar Queja.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Integración</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Quejas.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+label.required::after {
+    content: ' *';
+    color: red;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="portlet-body form">
+                            <form id="form_update_complaint" class="form-horizontal" method="post" action="{% url 'complaints:update_complaint' instance.id %}">
+                                {% csrf_token %}
+                                <div class="row form-body">
+                                    {% for field in form %}
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ field.label_tag }}</label>
+                                                <div class="input-content">
+                                                    {{ field }}
+                                                    <small class="text-red">{{ field.errors }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%  endfor %}
+                                </div>
+                                <hr>
+                                <h2>Seguimiento</h2>
+                                <div class="row">
+                                    <table id="myTable" class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Fecha</th>
+                                            <th>Acción</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table-action">
+                                            {% for action in instance.actions.all %}
+                                                <tr>
+                                                    <td>
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td>
+                                                        {{ action.date|date:"Y-m-d" }}
+                                                    </td>
+                                                    <td>
+                                                        {{ action.action }}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-default" onclick="UpdateComplaint.editAction('{{ action.date|date:"Y-m-d" }}', '{{ action.action }}')"><i class="fa fa-edit"></i></a>
+                                                        <a class="btn btn-sm btn-default" onclick="UpdateComplaint.removeAction('{{ action.action }}')"><i class="fa fa-trash"></i></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <small id="text_error_actions" class="text-red"></small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="required col-md-4 control-label">Fecha</label>
+                                            <div class="input-content">
+                                                {{ form_action.date }}
+                                                <small class="text-red">{{ form_action.date.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="required col-md-4 control-label">Acción</label>
+                                            <div class="input-content">
+                                                {{ form_action.action }}
+                                                <small class="text-red">{{ form_action.action.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <button id="add_action" type="button" class="btn btn-info btn-sm">{% trans 'Add' %}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions fluid">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
+                                        <a href="{% url 'complaints:list_complaints' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        const complaint_id = '{{ instance.id }}';
+        const get_list_actions_path = '{% url "complaints:get_actions" %}';
+    </script>
+    <script src="{% static 'complaints/js/complaints/update.js' %}" type="text/javascript"></script>
+{% endblock %}

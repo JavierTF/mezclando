@@ -10,8 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import locale
-from django.utils.translation import gettext_lazy as _
 import os
 from django.urls import reverse_lazy
 
@@ -31,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 
 # Application definition
@@ -48,7 +45,6 @@ INSTALLED_APPS = [
     'notifications',
     'captcha',
     'tempus_dominus',
-    
     'nested_admin',
 
     # NEW APPS ABEL
@@ -57,7 +53,7 @@ INSTALLED_APPS = [
     'apps.licenses',  # Licencias
     'apps.complaints',  # Quejas
     'apps.iproperty',  # Propiedad Industrial
-]
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,7 +71,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
+            os.path.join(BASE_DIR,'templates')
         ],
         # 'DIRS': [
         #     os.path.join(BASE_DIR,'react/build')
@@ -88,7 +84,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'ProyectoBaseApp.my_context_processor.notifications',
-                'ProyectoBaseApp.my_context_processor.user_app',
+                # 'ProyectoBaseApp.my_context_processor.user_app',
             ],
         },
     },
@@ -96,20 +92,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'SISGDDO',
+        'NAME': 'sisgddo',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -152,6 +148,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
+from django.utils.translation import gettext_lazy as _
 LANGUAGES = (
     ('es', _('Español')),
     ('en', _('Inglés')),
@@ -176,7 +173,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles/')
 
 # This is the directory where Django will look for static files.
 STATICFILES_DIRS = [
@@ -189,14 +186,14 @@ STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, 'react/static'),
 # ]
 
-# Fotos de las reservas de cuadro
+#Fotos de las reservas de cuadro
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 LOGIN_REDIRECT_URL = reverse_lazy('inicio')
 LOGOUT_REDIRECT_URL = reverse_lazy('ce_login')
-SESSION_COOKIE_AGE = 7200  # 60min
+SESSION_COOKIE_AGE = 7200 #60min
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
 
@@ -212,5 +209,8 @@ if DEBUG:
     EMAIL_PORT = 1026
     DEFAULT_FROM_EMAIL = 'comercial@yourproject.cu'
 
-import locale
-locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
+# import locale
+# locale.setlocale(locale.LC_ALL, ('es_ES', 'UTF-8'))
+
+
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']

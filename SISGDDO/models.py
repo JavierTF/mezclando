@@ -1,5 +1,5 @@
 """Cargando modelos"""
-from subprocess import REALTIME_PRIORITY_CLASS
+# from subprocess import REALTIME_PRIORITY_CLASS
 from django.db import models
 from datetime import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -30,6 +30,17 @@ class trabajador(models.Model):
 
     def __unicode__(self):
         return str(self.nombre + ' ' + self.primer_apellido + ' ' + self.segundo_apellido)
+
+# moduloJavier
+class proceso(models.Model):
+    nombre = models.CharField(max_length = 60, verbose_name = 'Nombre del proceso*', unique = True, null = True)
+    abreviatura = models.CharField(max_length = 3, verbose_name = 'Abreviatura*')
+    responsable = models.ManyToManyField(trabajador, verbose_name = 'Responsable*')
+    activo = models.BooleanField(default = True, verbose_name = "Activo*")
+
+    def __str__(self):
+        return str(self.nombre)
+
 # moduloHermes
 class PlanesdeTrabajo(models.Model):
         numero=models.PositiveIntegerField(primary_key=True,verbose_name='No.*')
@@ -50,9 +61,12 @@ class Afectaciones(models.Model):
         numero=models.PositiveIntegerField(primary_key=True,verbose_name='No.*')
         fecha_recepcion=models.DateTimeField(blank=True,verbose_name='Fecha de Entrada*')
         afectacion=models.CharField(max_length=80,verbose_name='Afectacion reportada*')
-        ##responsable=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
-        ##                            related_name = 'responsable', verbose_name = "Responsable de Afeccion*",
-        ##                            null = True)
+        propuesto=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
+                                   related_name = 'propuesto', verbose_name = "Promotor de Afeccion*",
+                                   null = True)
+        responsable=models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado de la Base de datos'),
+                                   related_name = 'responsable', verbose_name = "Responsable de Afeccion*",
+                                   null = True)
         mesplaneado=models.DateField(blank=True,verbose_name='Mes Planeado Resolverse*')
         fechacierre=models.DateTimeField(blank=True,verbose_name='Fecha de cierre*')
         observacionesactual=models.CharField(max_length=250,verbose_name='Observaciones*')
@@ -78,7 +92,7 @@ class incidencia(models.Model):
     fecha_recepcion = models.DateField(verbose_name = 'Fecha de recepcion de la incidencia*')
     fecha_cierre = models.DateField(verbose_name = 'Fecha de cierre de la incidencia', null = True, blank = True)
     descripcion = models.CharField(max_length = 250, verbose_name = 'Descripción de la incidencia*')
-    trabajador = models.ForeignKey(trabajador, verbose_name='Trabajador que reporta la incidencia*',
+    trabajador = models.ForeignKey(trabajador,null = True, verbose_name='Trabajador que reporta la incidencia*',
                                  on_delete=models.SET('Trabajador eliminado'))
 
     ##proceso = models.ForeignKey(proceso, on_delete = models.SET('Proceso eliminado'), verbose_name = 'Proceso que da respuesta a la incidencia', 
@@ -95,19 +109,6 @@ class incidencia(models.Model):
 
     def __str__(self):
         return str(self.titulo)
-# moduloAbel
-class proceso(models.Model):
-    nombre = models.CharField(max_length = 60, verbose_name = 'Nombre del proceso*', unique = True, null = True)
-    abreviatura = models.CharField(max_length = 3, verbose_name = 'Abreviatura*')
-    responsable = models.ManyToManyField(trabajador, verbose_name = 'Responsable*')
-    activo = models.BooleanField(default = True, verbose_name = "Activo*")
-
-    def __str__(self):
-        return str(self.nombre)
-
-
-
-
 # moduloAbel
 class indicador(models.Model):
     nombre = models.CharField(max_length = 80, verbose_name = "Nombre del indicador*", unique = True)
@@ -128,7 +129,7 @@ class aspecto_medir_eficacia_indicador(models.Model):
     def __str__(self):
         return str(self.nombre)
 
-# moduloAbel
+# moduloJavier
 class procedimiento(models.Model):
     codigo = models.CharField(max_length = 10, verbose_name = 'Código del procedimiento*', unique = True, null = True)
     nombre = models.CharField(max_length = 60, verbose_name = 'Nombre del procedimiento*')
@@ -222,6 +223,22 @@ class cliente(models.Model):
     def __str__(self):
         return str(self.nombre)
 
+#Nomenclador CENDA tipo de obra Dayana#######################
+class tipo_de_obra (models.Model):
+    nombre = models.CharField(max_length = 25, verbose_name = 'nombre*', unique = True)
+    activo = models.BooleanField(default = True, verbose_name = "activo")
+
+    def __str__(self):
+        return str(self.nombre)
+
+class estado_cenda (models.Model):
+    nombre = models.CharField(max_length = 25, verbose_name = 'nombre*', unique = True)
+    activo = models.BooleanField(default = True, verbose_name = "activo")
+
+    def __str__(self):
+        return str(self.nombre)
+######################################################
+
 #moduloAbel
 class accion(models.Model):
     tratamiento = models.CharField(max_length=60,verbose_name='Tratamiento*')
@@ -256,18 +273,22 @@ class estado_acuerdo(models.Model):
 # moduloJavier
 class acuerdo(models.Model):
     numero = models.CharField(max_length = 6, verbose_name = "Número de acuerdo*", unique = True, null = True)
+    numero = models.CharField(max_length = 6, verbose_name = "Número de acuerdo*", unique = True, null = True)
     nombre = models.CharField(max_length = 25, verbose_name = 'Nombre del acuerdo*', null = True)
-    fecha = models.DateField(verbose_name = 'fecha*')
-    fecha_limite = models.DateField(verbose_name = 'fecha límite para cumplir', null = True, blank = False)
-    fecha_cumplimiento = models.DateField(verbose_name = 'fecha de cumplimiento', null = True, blank = False)
-    trabajador = models.ManyToManyField(trabajador, verbose_name = 'responsable*')
-    observaciones = models.TextField(verbose_name = 'observaciones', null = True, blank = False)
-    estado = models.ForeignKey(estado_acuerdo, on_delete = models.SET('Estado eliminado'), 
-                                verbose_name = 'estado de acuerdo*')
-    activo = models.BooleanField(default = True, verbose_name = "activo*")
+    fecha = models.DateField(verbose_name = 'Fecha de tomado el acuerdo*', 
+                            help_text = 'Día/Mes/Año ejemplo 01/01/2020')
+    fecha_limite = models.DateField(verbose_name = 'Fecha límite para cumplir', 
+                            help_text = 'Día/Mes/Año ejemplo 01/01/2020')
+    fecha_cumplimiento = models.DateField(verbose_name = 'Fecha de cumplido el acuerdo', 
+                            help_text = 'Día/Mes/Año ejemplo 01/01/2020')
+    responsable = models.ManyToManyField(trabajador, verbose_name = 'Responsable*')
+    observaciones = models.TextField(verbose_name = 'Observaciones sobre el acuerdo*', null = True)
+    estado_acuerdo = models.ForeignKey(estado_acuerdo, on_delete = models.SET('Estado eliminado'), 
+                                verbose_name = 'Estado de acuerdo*')
+    activo = models.BooleanField(default = True, verbose_name = "Activo*")
 
     def __str__(self):
-        return str(self.numero) + str(self.nombre)
+        return str(self.numero + self.nombre)
 
 # Nomenclador para Incidencias Erik
 class estado_incidencia(models.Model):
@@ -276,7 +297,6 @@ class estado_incidencia(models.Model):
 
     def __str__(self):
         return str(self.estado)
-
 
 
 #esta tabla es el rol del trabajador en el proyecto
@@ -312,6 +332,7 @@ class tipo_codigo(models.Model):
     def __str__(self):
         return str(self.nombre)
 
+
 # moduloJavier
 class fuente_financiamiento(models.Model):
     nombre = models.CharField(max_length = 80, verbose_name = 'nombre*', unique = True)
@@ -340,6 +361,7 @@ class consecutivo(models.Model):
 
     no = models.CharField(max_length = 10, verbose_name = "número*", unique = True, null = True)
     tipo_codigo = models.ForeignKey(tipo_codigo, on_delete = models.SET('Tipo de código eliminado de la Base de datos'), verbose_name = 'tipo de código*', null = True)
+    
     codigo = models.CharField(max_length = 10, verbose_name = 'código*', unique = True, null = True)
     fecha_entrada = models.DateField(default = datetime.now, verbose_name = "fecha de entrada*")
     nombre_proyecto = models.CharField(max_length = 250, verbose_name = 'nombre*', unique = True, null = True)
@@ -356,7 +378,7 @@ class consecutivo(models.Model):
     causa_interrupcion = models.CharField(max_length = 250, verbose_name = 'causa de la interrupción', null = True, blank = True)
     fecha_terminacion = models.DateField(verbose_name = "fecha de fin", null = True, blank = True)
     fecha_extension = models.DateField(verbose_name = "fecha de extensión", null = True, blank = True)
-    fecha_cierre = models.DateField(verbose_name = "fecha de cierre", null = True, blank = True)
+    fecha_cierre = models.DateField(verbose_name = "fecha de cierre*", null = True)
     costo = models.IntegerField(default = 0, validators=[MinValueValidator(1000), MaxValueValidator(9999999)],
                             verbose_name = 'costo*')
     observacion = models.CharField(max_length = 250, verbose_name = 'observacion', null = True, blank = True)
@@ -369,31 +391,30 @@ class consecutivo(models.Model):
     activo = models.BooleanField(default = True, verbose_name = "activo*")
 
     def __str__(self):
-        return str(self.codigo) + ' ' + str(self.nombre_proyecto)
+        return str(self.codigo + ' ' + self.nombre_proyecto)
 
     def __unicode__(self):
-        return str(self.codigo) + ' ' + str(self.nombre_proyecto)
+        return str(self.codigo + ' ' + self.nombre_proyecto)  
 
-#modulo Javier
-class sosi(models.Model):
-    numero_salva = models.CharField(max_length = 10, verbose_name = "número*")
-    fecha = models.DateField(default = datetime.now().strftime('%Y-%m-%d'), verbose_name = 'fecha de entrega*')
-    anno = models.CharField(max_length=4, verbose_name = 'año', null = True, blank = True)
-    especialista = models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado'), verbose_name = 'trabajador que entrega*')
-    autor = models.CharField(max_length = 50, verbose_name = 'autor', null = True, blank = True)
-    ubicacion_salva = models.CharField(max_length = 10, verbose_name = 'ubicación', null = True, blank = True)
-    observaciones = models.CharField(max_length = 150, verbose_name = 'observaciones', null = True, blank = True)
-    archivo = models.FileField(upload_to = 'sosi/', verbose_name = 'archivo', null = True)
-    consecutivo = models.OneToOneField(consecutivo, verbose_name = 'consecutivo*',
-                        on_delete = models.SET('Consecutivo eliminado de la BD'), null = True, related_name = 'sosi', unique = True)
-    activo = models.BooleanField(default = True, verbose_name = "activo*")
+# Modulo SOSI Erik
+class sosi(consecutivo):
+    # valorar herencia
+    numero_salva = models.CharField(max_length = 10, verbose_name = "Número de salva*")
+    fecha = models.DateField(default = datetime.now, verbose_name = 'Fecha de entrega*')
+    #agregar esto
+    anno = models.CharField(max_length=4, verbose_name = 'Año al que corresponde la salva', null = True)
+    especialista = models.ForeignKey(trabajador, on_delete = models.SET('Trabajador eliminado'), verbose_name = 'Trabajador que entrega*')
+    #agregar esto
+    autor = models.CharField(max_length = 50, verbose_name = 'Autor del proyecto', null = True, blank = True)
+    ubicacion_salva = models.CharField(max_length = 10, verbose_name = 'Ubicación de la salva',
+                                    null = True, blank = True)
+    observaciones = models.CharField(max_length = 150, verbose_name = 'Observaciones',
+                                    null = True, blank = True)
+    # campo para subir archivos 
+    #eliminado = models.BooleanField(default = True, verbose_name = "Activo")
 
     def __str__(self):
-        return str(self.numero_salva) + ' ' + str(self.consecutivo.nombre_proyecto)
-
-    def display_text_file(self):
-        fp = open(self.archivo.path)
-        return fp.read().replace('\n', '<br>')
+        return super().codigo + self.numero_salva
 
 class proyecto(models.Model):
     def ruta(self):
@@ -432,7 +453,7 @@ class proyecto(models.Model):
     linea_tematica = models.ForeignKey(linea_tematica, verbose_name = 'línea temática',
                         on_delete = models.SET('Línea temática eliminada de la BD'), null = True, blank = True)
     consecutivo = models.OneToOneField(consecutivo, verbose_name = 'consecutivo*',
-                        on_delete = models.CASCADE, null = True, related_name = 'proyecto', unique = True)
+                        on_delete = models.CASCADE, null = True, related_name = 'proyecto')
     estado = models.ForeignKey(estado_proyecto, on_delete = models.SET('Estado eliminado de la BD'), verbose_name = 'estado*')
     activo = models.BooleanField(default = True, verbose_name = "activo*")
 
@@ -657,10 +678,10 @@ class queja(models.Model):
 
 # moduloJavier
 class premio(models.Model):
-    nombre = models.CharField(max_length = 150, verbose_name = "nombre*", unique = True, null = True)
-    entidad = models.ForeignKey(entidad, on_delete = models.SET('CITMATEL'), verbose_name = 'entidad*')
-    fecha = models.DateTimeField(default = datetime.now, verbose_name = "fecha*")
-    archivo = models.FileField(upload_to = 'premios/', verbose_name = 'planilla de la Reserva',
+    nombre = models.CharField(max_length = 150, verbose_name = "Nombre del premio*", unique = True, null = True)
+    entidad = models.ForeignKey(entidad, on_delete = models.SET('CITMATEL'), verbose_name = 'Entidad*')
+    fecha = models.DateTimeField(default = datetime.now, verbose_name = "Fecha*")
+    archivo = models.FileField(upload_to = 'premios/', verbose_name = 'Planilla de la Reserva',
                             null = True, blank = True)
     activo = models.BooleanField(default = True, verbose_name = "Activo*")
 
@@ -669,12 +690,19 @@ class premio(models.Model):
    
 #moduloJavier
 class objetivo(models.Model):
-    nombre = models.CharField(max_length = 150, verbose_name = 'nombre*', unique = True, null = True)
-    fecha_definicion = models.DateField(verbose_name = 'fecha de definición*')    
-    activo = models.BooleanField(default = True, verbose_name = "activo*")
+    nombre = models.CharField(max_length = 150, verbose_name = 'Nombre de objetivo*', unique = True, null = True)
+    fecha_definicion = models.DateField(verbose_name = 'Fecha en que se definió el objetivo*')
+    area = models.ForeignKey(area, on_delete = models.SET('Área eliminada de la BD'),
+                            verbose_name = 'Área*')
+    activo = models.BooleanField(default = True, verbose_name = "Activo*")
 
     def __str__(self):
         return str(self.nombre)
+
+    # def save(self, *args, **kwargs):
+    #     if self.fecha_definicion.strftime('%Y') > datetime.now().strftime('%Y'):
+    #         raise objetivo.ValidationError("El año en que se traza el objetivo no puede ser mayor que el año actual")
+    #     super(objetivo, self).save(*args, **kwargs)
     
 #moduloJavier
 class estado_indicador_objetivos(models.Model):
@@ -686,22 +714,25 @@ class estado_indicador_objetivos(models.Model):
 
 #moduloJavier
 class indicador_objetivos(models.Model):
-    nombre = models.CharField(max_length = 150, verbose_name = "nombre*", null = True, unique = True)
-    # evaluacion = models.FloatField(verbose_name = 'evaluación*')
-    objetivo = models.ForeignKey(objetivo, on_delete = models.CASCADE, verbose_name = 'objetivo*', 
-                                related_name = 'objetivos', null = True, blank = True)
-    estado = models.ForeignKey(estado_indicador_objetivos, on_delete = models.SET('Estado eliminado'), verbose_name = 'estado*', null = True)
-    activo = models.BooleanField(default = True, verbose_name = "activo*")
+    nombre = models.CharField(max_length = 80, verbose_name = "Nombre del indicador*", null = True)
+    evaluacion = models.FloatField(verbose_name = 'Evaluación del indicador*')
+    objetivo = models.ForeignKey(objetivo, on_delete = models.CASCADE, verbose_name = 'Objetivo*', 
+                                related_name = 'objetivos', null = True)
+    estado = models.ForeignKey(estado_indicador_objetivos, on_delete = models.SET('Estado eliminado'), verbose_name = 'Estado*', 
+                                null = True)
+    activo = models.BooleanField(default = True, verbose_name = "Activo*")
         
     def __str__(self):
         return str(self.nombre)
 
 #moduloJavier
-class accion_indicador_objetivo(models.Model):
-    nombre = models.CharField(max_length = 80, verbose_name = "nombre*", unique = True)
-    # evaluacion = models.FloatField(verbose_name = 'evaluación*')
-    indicador = models.ForeignKey(indicador_objetivos, on_delete = models.SET('Indicador eliminado de la BD'), verbose_name = 'indicador*', null = True, related_name = 'accion')
-    area = models.ForeignKey(area, on_delete = models.SET('Área eliminada de la BD'), verbose_name = 'área*', null = True)
+class accion_indicador_objetivos(models.Model):
+    nombre = models.CharField(max_length = 80, verbose_name = "Nombre de la acción*", unique = True)
+    evaluacion = models.FloatField(verbose_name = 'Evaluación de la acción*')
+    indicador_objetivos = models.ForeignKey(indicador_objetivos, on_delete = models.SET('Indicador eliminado de la BD'),
+                                    verbose_name = 'Indicador al que pertenece*', null = True)
+    area = models.ForeignKey(area, on_delete = models.SET('Area eliminado de la BD'),
+                                    verbose_name = 'Area a la que pertenece*', null = True)
     activo = models.BooleanField(default = True, verbose_name = "Activo*")
     
     def __str__(self):
@@ -808,10 +839,34 @@ class notificacion(models.Model):
 
     def __str__(self):
         return str(self.titulo)
+#modulo cenda Dayana
+class autor(models.Model):
+    nombre = models.CharField(max_length = 100, verbose_name = 'nombre y apellidos del autor*',null = True)
+    ci = models.CharField(max_length = 11, verbose_name = 'carnet de identidad*')
+    pasaporte = models.CharField(max_length = 15, verbose_name = 'pasaporte')
+    domicilio_legal = models.CharField(max_length = 250, verbose_name = 'domicilio legal*')
+    nacionalidad= models.ForeignKey(pais, verbose_name = 'nacionalidad*',on_delete = models.CASCADE, null = True)#foreing key de nom pais
+    correo= models.EmailField( verbose_name = 'correo electrónico',null = True, blank = True )
+    telefono = models.CharField(max_length = 10, verbose_name = 'teléfono',null = True, blank = True)
+class cenda(consecutivo):
+    fecha_solicitud = models.DateField(verbose_name = "fecha de solicitud*",null = True)
+    fecha_registro = models.DateField(verbose_name = 'fecha de registro*', null = True)
+    titulo = models.CharField(max_length = 150, verbose_name = 'título*', null = True)
+    tipo_de_obra =  models.ForeignKey(tipo_de_obra, on_delete = models.CASCADE, 
+                                        verbose_name = 'tipo de obra*', null = True)
+    codigo_registro = models.CharField(max_length=25, verbose_name = 'No Registro', null = True,blank = True)
+    #soporte_presentado =  models.ForeignKey(soporte_presentado , on_delete = models.CASCADE,    
+    #                                        verbose_name = 'presentado en Soporte*', null = True)
+    # obra_creada =  models.ForeignKey(obra_creada , on_delete = models.CASCADE, 
+    #                                     verbose_name = 'obra creada*', null = True)
+    # solicitante =models.ForeignKey(trabajador , on_delete = models.CASCADE, 
+    #                                     verbose_name = 'solicitante *', null = True)
+    autor = models.ForeignKey(autor, on_delete = models.CASCADE,verbose_name = 'datos del autor*', null = True ) 
+
 
 class CambiarLogotipo(models.Model):
     fecha_cambio = models.DateField(default=datetime.now().strftime('%Y-%m-%d'),verbose_name="Fecha de Cambio del Logotipo")
     logo = models.ImageField(upload_to='logo/', storage=OverwriteStorage(),verbose_name='Logo*')
 
     def __str__(self):
-        return 'logo'+ self.fecha_cambio.__str__()
+        return str(self.fecha_cambio.__str__())

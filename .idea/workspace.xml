@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="90102148-c577-4aa1-87d1-f3805bd7f368" name="Default Changelist" comment="1. ajustando el sitio para montar en el server de Citmatel" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="useSoftWraps" value="true" />
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+    <option name="SIGN_OFF_COMMIT" value="true" />
+  </component>
+  <component name="InvalidFacetManager">
+    <ignored-facets>
+      <facet id="Tesis_Citmatel/invalid/Django" />
+    </ignored-facets>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="1YzairjmU9PoBuju2Z6zSmhgAzy" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/purplex/Projects/Python/3.10/SISGPO/apps/effectiveness/templates/effectiveness/effectiveness&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/effectiveness/templates/effectiveness/effectiveness" />
+      <recent name="$PROJECT_DIR$/apps/base/templates/base/db" />
+      <recent name="$PROJECT_DIR$/apps/complaints/static/complaints/js/complaints" />
+      <recent name="$PROJECT_DIR$/apps/complaints/templates/complaints/complaints" />
+      <recent name="$PROJECT_DIR$/apps/base/templates/base/logo_entity" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\Projecto_Tesis\Tesis_Citmatel\Tesis_Citmatel" />
+      <recent name="F:\Projecto_Tesis\Tesis_Citmatel\media" />
+      <recent name="F:\Projecto_Tesis\Tesis_Citmatel\media\foto" />
+      <recent name="F:\Projecto_Tesis\Tesis_Citmatel\static" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="manage" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Tesis_Citmatel" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/Apps/tesis-abel/bin/python3" />
+      <option name="SDK_NAME" value="Python 3.9 (tesis-abel)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage.py" />
+      <option name="PARAMETERS" value="runserver" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="90102148-c577-4aa1-87d1-f3805bd7f368" name="Default Changelist" comment="" />
+      <created>1583948009392</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583948009392</updated>
+      <workItem from="1583948020902" duration="4145000" />
+      <workItem from="1583953698157" duration="2806000" />
+      <workItem from="1584016105372" duration="14913000" />
+      <workItem from="1584373805572" duration="19136000" />
+      <workItem from="1584448023690" duration="5423000" />
+      <workItem from="1584463141098" duration="101000" />
+      <workItem from="1584465161535" duration="1961000" />
+      <workItem from="1584474138150" duration="1879000" />
+      <workItem from="1584539803608" duration="4151000" />
+      <workItem from="1584546264165" duration="6307000" />
+      <workItem from="1584559187842" duration="1307000" />
+      <workItem from="1584560826657" duration="84000" />
+      <workItem from="1584560913154" duration="136000" />
+      <workItem from="1584561845709" duration="199000" />
+      <workItem from="1584639475726" duration="774000" />
+      <workItem from="1584640772414" duration="227000" />
+      <workItem from="1584641137695" duration="315000" />
+      <workItem from="1584641464224" duration="122000" />
+      <workItem from="1584641774132" duration="250000" />
+      <workItem from="1584643544540" duration="788000" />
+      <workItem from="1584649068929" duration="195000" />
+      <workItem from="1584662445594" duration="11220000" />
+      <workItem from="1584712610225" duration="15218000" />
+      <workItem from="1584839959912" duration="8228000" />
+      <workItem from="1584996994095" duration="4203000" />
+      <workItem from="1585056608156" duration="11804000" />
+      <workItem from="1585334318957" duration="11050000" />
+      <workItem from="1585354630334" duration="4257000" />
+      <workItem from="1585495706799" duration="15861000" />
+      <workItem from="1585578161014" duration="5423000" />
+      <workItem from="1585595063476" duration="2931000" />
+      <workItem from="1585663169683" duration="14501000" />
+      <workItem from="1585694032589" duration="6413000" />
+      <workItem from="1585781644587" duration="7370000" />
+      <workItem from="1585925960914" duration="21237000" />
+      <workItem from="1586379360162" duration="11594000" />
+      <workItem from="1586439172949" duration="10063000" />
+      <workItem from="1586875798879" duration="83000" />
+      <workItem from="1586876602275" duration="15350000" />
+      <workItem from="1586972901263" duration="593000" />
+      <workItem from="1587168870902" duration="837000" />
+      <workItem from="1587170148851" duration="4031000" />
+      <workItem from="1587229666993" duration="3339000" />
+      <workItem from="1587488924499" duration="12840000" />
+      <workItem from="1587584153663" duration="2377000" />
+      <workItem from="1587588326721" duration="612000" />
+      <workItem from="1587756480281" duration="6103000" />
+      <workItem from="1589642957465" duration="7048000" />
+      <workItem from="1589906542040" duration="2283000" />
+      <workItem from="1590855752090" duration="8148000" />
+      <workItem from="1590879433284" duration="616000" />
+      <workItem from="1591057318572" duration="1795000" />
+      <workItem from="1591125651834" duration="5102000" />
+      <workItem from="1591193827281" duration="939000" />
+      <workItem from="1591284404463" duration="8709000" />
+      <workItem from="1591372929394" duration="7063000" />
+      <workItem from="1591462473348" duration="1362000" />
+      <workItem from="1591713582830" duration="8010000" />
+      <workItem from="1591730569072" duration="4173000" />
+      <workItem from="1591900695982" duration="280000" />
+      <workItem from="1592081580230" duration="2111000" />
+      <workItem from="1592332012699" duration="3532000" />
+      <workItem from="1592609867053" duration="1912000" />
+      <workItem from="1592681810497" duration="4307000" />
+      <workItem from="1592926041749" duration="6662000" />
+      <workItem from="1593117140476" duration="5511000" />
+      <workItem from="1593816447822" duration="2897000" />
+      <workItem from="1593820562356" duration="1290000" />
+      <workItem from="1593881228266" duration="4393000" />
+      <workItem from="1593965552320" duration="5798000" />
+      <workItem from="1593997834366" duration="1215000" />
+      <workItem from="1594072490872" duration="5100000" />
+      <workItem from="1594148840054" duration="4540000" />
+      <workItem from="1594236220246" duration="882000" />
+      <workItem from="1594307941178" duration="1598000" />
+      <workItem from="1594317917157" duration="4057000" />
+      <workItem from="1594391597208" duration="4485000" />
+      <workItem from="1594750063192" duration="3009000" />
+      <workItem from="1594837307968" duration="2168000" />
+      <workItem from="1594904666872" duration="5231000" />
+      <workItem from="1595022374221" duration="12484000" />
+      <workItem from="1595528108701" duration="1277000" />
+      <workItem from="1595529503950" duration="1054000" />
+      <workItem from="1595863403510" duration="2751000" />
+      <workItem from="1596030011309" duration="3596000" />
+      <workItem from="1596044011654" duration="3544000" />
+      <workItem from="1598473664047" duration="1721000" />
+      <workItem from="1599071440998" duration="1071000" />
+      <workItem from="1599676584954" duration="8279000" />
+      <workItem from="1599685655828" duration="5985000" />
+      <workItem from="1600115991654" duration="5828000" />
+      <workItem from="1600195929821" duration="9331000" />
+      <workItem from="1600213995219" duration="3529000" />
+      <workItem from="1600288312733" duration="5033000" />
+      <workItem from="1600369177532" duration="6141000" />
+      <workItem from="1600802647981" duration="4791000" />
+      <workItem from="1600889508510" duration="10606000" />
+      <workItem from="1600983981076" duration="10947000" />
+      <workItem from="1601063415137" duration="1885000" />
+      <workItem from="1601496717017" duration="4744000" />
+      <workItem from="1601585375783" duration="4509000" />
+      <workItem from="1601604668690" duration="594000" />
+      <workItem from="1601668386289" duration="9940000" />
+      <workItem from="1601686432446" duration="3631000" />
+      <workItem from="1602084951884" duration="16137000" />
+      <workItem from="1602265729101" duration="5938000" />
+      <workItem from="1602691981272" duration="17839000" />
+      <workItem from="1602866317980" duration="19464000" />
+      <workItem from="1603292620630" duration="14845000" />
+      <workItem from="1603824198433" duration="2623000" />
+      <workItem from="1604068654967" duration="2833000" />
+      <workItem from="1604327208933" duration="2048000" />
+      <workItem from="1604448907714" duration="2205000" />
+      <workItem from="1604505179986" duration="12075000" />
+      <workItem from="1604667292731" duration="2629000" />
+      <workItem from="1604670872201" duration="6562000" />
+      <workItem from="1604967972117" duration="4655000" />
+      <workItem from="1605018098533" duration="3473000" />
+      <workItem from="1605110499407" duration="8140000" />
+      <workItem from="1605278550853" duration="8909000" />
+      <workItem from="1605537997222" duration="20689000" />
+      <workItem from="1605639261525" duration="3462000" />
+      <workItem from="1605642854966" duration="6552000" />
+      <workItem from="1605710507433" duration="18790000" />
+      <workItem from="1605798336069" duration="25592000" />
+      <workItem from="1605881090643" duration="22374000" />
+      <workItem from="1605989024921" duration="6496000" />
+      <workItem from="1606051088231" duration="23371000" />
+      <workItem from="1606143470286" duration="35841000" />
+      <workItem from="1606231156003" duration="32439000" />
+      <workItem from="1606317946259" duration="22226000" />
+      <workItem from="1606353161009" duration="10391000" />
+      <workItem from="1606402613627" duration="33867000" />
+      <workItem from="1606481873272" duration="16761000" />
+      <workItem from="1606502342278" duration="1048000" />
+      <workItem from="1606507313833" duration="4927000" />
+      <workItem from="1606851628810" duration="1237000" />
+      <workItem from="1606919761328" duration="23373000" />
+      <workItem from="1607109496021" duration="1750000" />
+      <workItem from="1607616137157" duration="10636000" />
+      <workItem from="1608133310323" duration="21915000" />
+      <workItem from="1608231480335" duration="1417000" />
+      <workItem from="1608233948557" duration="563000" />
+      <workItem from="1608329178869" duration="128000" />
+      <workItem from="1608329329588" duration="843000" />
+      <workItem from="1608412134517" duration="7281000" />
+      <workItem from="1608425603214" duration="1382000" />
+      <workItem from="1608736534358" duration="8195000" />
+      <workItem from="1609189795671" duration="11578000" />
+      <workItem from="1609689866058" duration="11329000" />
+      <workItem from="1609774429323" duration="17834000" />
+      <workItem from="1609958256892" duration="8276000" />
+      <workItem from="1609967231840" duration="244000" />
+      <workItem from="1610407722692" duration="8267000" />
+      <workItem from="1610496829657" duration="4079000" />
+      <workItem from="1610818399419" duration="1913000" />
+      <workItem from="1610909493658" duration="3787000" />
+      <workItem from="1610915672892" duration="860000" />
+      <workItem from="1610917443017" duration="8972000" />
+      <workItem from="1610987053528" duration="11613000" />
+      <workItem from="1611093321835" duration="5508000" />
+      <workItem from="1611150627069" duration="11456000" />
+      <workItem from="1611322098523" duration="18211000" />
+      <workItem from="1611430814395" duration="17654000" />
+      <workItem from="1611607036561" duration="10184000" />
+      <workItem from="1611677661978" duration="2875000" />
+      <workItem from="1611774380822" duration="8159000" />
+      <workItem from="1611861991150" duration="3993000" />
+      <workItem from="1612467180306" duration="621000" />
+      <workItem from="1612623453437" duration="9999000" />
+      <workItem from="1612812252070" duration="952000" />
+      <workItem from="1612968882660" duration="705000" />
+      <workItem from="1612984457265" duration="1317000" />
+      <workItem from="1613071981466" duration="2836000" />
+      <workItem from="1613144730873" duration="7250000" />
+      <workItem from="1613576425845" duration="603000" />
+      <workItem from="1613850188645" duration="13862000" />
+      <workItem from="1615044572923" duration="11992000" />
+      <workItem from="1615911723417" duration="16140000" />
+      <workItem from="1616075041382" duration="2313000" />
+      <workItem from="1616081195164" duration="7541000" />
+      <workItem from="1616252374881" duration="4337000" />
+      <workItem from="1616256744197" duration="10565000" />
+      <workItem from="1616271470894" duration="1951000" />
+      <workItem from="1616767948498" duration="11213000" />
+      <workItem from="1616856000202" duration="18140000" />
+      <workItem from="1617140240138" duration="571000" />
+      <workItem from="1617301104264" duration="8064000" />
+      <workItem from="1617372101544" duration="1682000" />
+      <workItem from="1617373834445" duration="18697000" />
+      <workItem from="1617460126116" duration="9580000" />
+      <workItem from="1617982037119" duration="992000" />
+      <workItem from="1619275441361" duration="12444000" />
+      <workItem from="1619296833819" duration="928000" />
+      <workItem from="1619794388377" duration="22865000" />
+      <workItem from="1619883166934" duration="12129000" />
+      <workItem from="1619969973345" duration="9073000" />
+      <workItem from="1619993363117" duration="6527000" />
+      <workItem from="1620054387526" duration="1516000" />
+      <workItem from="1620055923578" duration="5072000" />
+      <workItem from="1620080310085" duration="1655000" />
+      <workItem from="1620082087379" duration="2152000" />
+      <workItem from="1620140942895" duration="2448000" />
+      <workItem from="1620316162615" duration="354000" />
+      <workItem from="1620398929755" duration="7738000" />
+      <workItem from="1620487967000" duration="13527000" />
+      <workItem from="1620652160569" duration="4044000" />
+      <workItem from="1620744594052" duration="9781000" />
+      <workItem from="1621089645567" duration="2562000" />
+      <workItem from="1621092497761" duration="489000" />
+      <workItem from="1621093258726" duration="15079000" />
+      <workItem from="1621259428574" duration="10831000" />
+      <workItem from="1621348232244" duration="9783000" />
+      <workItem from="1621454693112" duration="1381000" />
+      <workItem from="1621524915325" duration="8526000" />
+      <workItem from="1621708907451" duration="14621000" />
+      <workItem from="1621780903399" duration="5536000" />
+      <workItem from="1621954155926" duration="17913000" />
+      <workItem from="1622040616556" duration="13905000" />
+      <workItem from="1622137080162" duration="996000" />
+      <workItem from="1622299829887" duration="16966000" />
+      <workItem from="1622559369122" duration="10072000" />
+      <workItem from="1622736595588" duration="12009000" />
+      <workItem from="1622903884961" duration="15303000" />
+      <workItem from="1623031292955" duration="2183000" />
+      <workItem from="1623083530785" duration="1650000" />
+      <workItem from="1623109632544" duration="4558000" />
+      <workItem from="1623163998217" duration="3035000" />
+      <workItem from="1623179524515" duration="21140000" />
+      <workItem from="1623263869711" duration="10753000" />
+      <workItem from="1623337508926" duration="9442000" />
+      <workItem from="1623434236657" duration="702000" />
+      <workItem from="1623459031855" duration="689000" />
+      <workItem from="1623521512042" duration="5036000" />
+      <workItem from="1623616542705" duration="3126000" />
+      <workItem from="1623682101930" duration="4728000" />
+      <workItem from="1623693723939" duration="3228000" />
+      <workItem from="1623792955783" duration="9178000" />
+      <workItem from="1623867592193" duration="4071000" />
+      <workItem from="1623958492968" duration="7893000" />
+      <workItem from="1623968972589" duration="447000" />
+      <workItem from="1623969763780" duration="1577000" />
+      <workItem from="1623977234029" duration="4034000" />
+      <workItem from="1624106391847" duration="2637000" />
+      <workItem from="1624126730348" duration="21896000" />
+      <workItem from="1624279614242" duration="13462000" />
+      <workItem from="1624308074925" duration="13989000" />
+      <workItem from="1624387554612" duration="1056000" />
+      <workItem from="1624399618495" duration="3073000" />
+      <workItem from="1624410332923" duration="4120000" />
+      <workItem from="1624458171166" duration="13739000" />
+      <workItem from="1624478176954" duration="13599000" />
+      <workItem from="1624496700266" duration="3818000" />
+      <workItem from="1624554992238" duration="26982000" />
+      <workItem from="1624630782104" duration="35712000" />
+      <workItem from="1624710354711" duration="4295000" />
+      <workItem from="1624717121637" duration="6538000" />
+      <workItem from="1624733888950" duration="1614000" />
+      <workItem from="1671314113999" duration="25578000" />
+      <workItem from="1671467886588" duration="9340000" />
+      <workItem from="1671490905668" duration="20042000" />
+      <workItem from="1671529599667" duration="21912000" />
+      <workItem from="1671659274776" duration="220000" />
+      <workItem from="1673825588744" duration="20751000" />
+      <workItem from="1673936640642" duration="26000" />
+      <workItem from="1673940741794" duration="65000" />
+      <workItem from="1673940956458" duration="7550000" />
+      <workItem from="1675459989702" duration="813000" />
+      <workItem from="1675460891048" duration="290000" />
+      <workItem from="1675463785359" duration="210000" />
+      <workItem from="1675766562248" duration="4256000" />
+      <workItem from="1675787666878" duration="43095000" />
+    </task>
+    <task id="LOCAL-00194" summary="termine de probar las entradas de datos ok">
+      <created>1624632538578</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
+      <option name="project" value="LOCAL" />
+      <updated>1624632538579</updated>
+    </task>
+    <task id="LOCAL-00195" summary="termine de probar los reportes ok">
+      <created>1624676819077</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
+      <option name="project" value="LOCAL" />
+      <updated>1624676819077</updated>
+    </task>
+    <task id="LOCAL-00196" summary="revisión de la ortografía y cambios en formacionpersonal">
+      <created>1624714636425</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
+      <option name="project" value="LOCAL" />
+      <updated>1624714636426</updated>
+    </task>
+    <task id="LOCAL-00197" summary="cambios en los charcode de letras yu numeros y guion">
+      <created>1624720185902</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
+      <option name="project" value="LOCAL" />
+      <updated>1624720185904</updated>
+    </task>
+    <task id="LOCAL-00198" summary="Uniendo los modulos de Abel con el sitio actualizado">
+      <created>1671539902671</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1671539902672</updated>
+    </task>
+    <task id="LOCAL-00199" summary="Realizando los reportes a PDF del modulo de quejas">
+      <created>1671544815115</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
+      <option name="project" value="LOCAL" />
+      <updated>1671544815115</updated>
+    </task>
+    <task id="LOCAL-00200" summary="Volviendo a retomar el desarrrollo ... organizando las tareas y sacando mas observaciones para dejar el sitio listo">
+      <created>1673826473147</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
+      <option name="project" value="LOCAL" />
+      <updated>1673826473148</updated>
+    </task>
+    <task id="LOCAL-00201" summary="Colocandole un target _blank al campo file de los procedimientos">
+      <created>1673893495090</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
+      <option name="project" value="LOCAL" />
+      <updated>1673893495090</updated>
+    </task>
+    <task id="LOCAL-00202" summary="Solucionando errores de consola en el navegador">
+      <created>1673894603021</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
+      <option name="project" value="LOCAL" />
+      <updated>1673894603021</updated>
+    </task>
+    <task id="LOCAL-00203" summary="Cambiando el campo responsable al proceso y quitandolo de los procedimientos">
+      <created>1673895465117</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1673895465118</updated>
+    </task>
+    <task id="LOCAL-00204" summary="Creando funcion de clonar semestre para una eficacia">
+      <created>1673906074216</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1673906074216</updated>
+    </task>
+    <task id="LOCAL-00205" summary="Modificando el header de los pdf para que se muestren las dos imagenes de la empresa">
+      <created>1673957981084</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
+      <option name="project" value="LOCAL" />
+      <updated>1673957981084</updated>
+    </task>
+    <task id="LOCAL-00206" summary="Agregando el campo categoria cient al modelo de empleado (trabajador)">
+      <created>1673964776506</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
+      <option name="project" value="LOCAL" />
+      <updated>1673964776506</updated>
+    </task>
+    <task id="LOCAL-00207" summary="Agregando toda la info antes de corregir los bugs señalados por la profe en enero 2023">
+      <created>1675788105408</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
+      <option name="project" value="LOCAL" />
+      <updated>1675788105409</updated>
+    </task>
+    <task id="LOCAL-00208" summary="Solucionando las observaciones de la reunion con la profe en enero 2023 .. pnediente algnuas que existen dudas">
+      <created>1675799701590</created>
+      <option name="number" value="00208" />
+      <option name="presentableId" value="LOCAL-00208" />
+      <option name="project" value="LOCAL" />
+      <updated>1675799701590</updated>
+    </task>
+    <task id="LOCAL-00209" summary="Solucionando las observaciones pendiente de los select2 que cargan por ajax">
+      <created>1675804864645</created>
+      <option name="number" value="00209" />
+      <option name="presentableId" value="LOCAL-00209" />
+      <option name="project" value="LOCAL" />
+      <updated>1675804864645</updated>
+    </task>
+    <task id="LOCAL-00210" summary="Modificando el modelo de quejas .. quitando el nomenclador de clientes y colocando en se lugar un charfield">
+      <created>1675813056306</created>
+      <option name="number" value="00210" />
+      <option name="presentableId" value="LOCAL-00210" />
+      <option name="project" value="LOCAL" />
+      <updated>1675813056307</updated>
+    </task>
+    <task id="LOCAL-00211" summary="Modificando el modelo de eficacia .. quitando el campo evaluator y dejando el responsable de la evaluacion por el proceso">
+      <created>1675867218778</created>
+      <option name="number" value="00211" />
+      <option name="presentableId" value="LOCAL-00211" />
+      <option name="project" value="LOCAL" />
+      <updated>1675867218779</updated>
+    </task>
+    <task id="LOCAL-00212" summary="Creando un nuevo modelo en la app base para almecenar los cambios de los logos de la empresa">
+      <created>1675870358129</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
+      <option name="project" value="LOCAL" />
+      <updated>1675870358129</updated>
+    </task>
+    <task id="LOCAL-00213" summary="Integrando los logos en los PDF">
+      <created>1675874247544</created>
+      <option name="number" value="00213" />
+      <option name="presentableId" value="LOCAL-00213" />
+      <option name="project" value="LOCAL" />
+      <updated>1675874247544</updated>
+    </task>
+    <task id="LOCAL-00214" summary="Creando la primera grafica para el proceso de eficacia">
+      <created>1675884988558</created>
+      <option name="number" value="00214" />
+      <option name="presentableId" value="LOCAL-00214" />
+      <option name="project" value="LOCAL" />
+      <updated>1675884988558</updated>
+    </task>
+    <task id="LOCAL-00215" summary="Corrigiendo algunos errores en el codigo de efecacia, en el pdf de la lista maestra y cambiando el tipo de grafica a dos barras por año">
+      <created>1677711738830</created>
+      <option name="number" value="00215" />
+      <option name="presentableId" value="LOCAL-00215" />
+      <option name="project" value="LOCAL" />
+      <updated>1677711738831</updated>
+    </task>
+    <task id="LOCAL-00216" summary="En el adicionar de Clasificación de productos y servicios arreglar validaciones porque no acepta las tíldes">
+      <created>1679410402565</created>
+      <option name="number" value="00216" />
+      <option name="presentableId" value="LOCAL-00216" />
+      <option name="project" value="LOCAL" />
+      <updated>1679410402565</updated>
+    </task>
+    <task id="LOCAL-00217" summary="[*] En el nomenclador de Elementos figurativos Cuando le das adicionar te manda a otro&#10;&#9;[*] El enunciado es lo que está mal porque el contenido que es elemento figurativo si es asi y se guarda bien">
+      <created>1679410635570</created>
+      <option name="number" value="00217" />
+      <option name="presentableId" value="LOCAL-00217" />
+      <option name="project" value="LOCAL" />
+      <updated>1679410635570</updated>
+    </task>
+    <task id="LOCAL-00218" summary="En la vista de detalles de quejas diferenciar el enunciado del contenido con letras en negritas">
+      <created>1679412174435</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
+      <option name="project" value="LOCAL" />
+      <updated>1679412174436</updated>
+    </task>
+    <task id="LOCAL-00219" summary="[] En el listado de Quejas entre queja y queja los seguimientos&#10;&#9;[*] Donde dice fecha por Fecha de recepción">
+      <created>1679413199618</created>
+      <option name="number" value="00219" />
+      <option name="presentableId" value="LOCAL-00219" />
+      <option name="project" value="LOCAL" />
+      <updated>1679413199618</updated>
+    </task>
+    <task id="LOCAL-00220" summary="[*] En el PDF de la Lista Maestra - Cambiar la palabra ALCENCE por ALCANCE">
+      <created>1679413292857</created>
+      <option name="number" value="00220" />
+      <option name="presentableId" value="LOCAL-00220" />
+      <option name="project" value="LOCAL" />
+      <updated>1679413292858</updated>
+    </task>
+    <task id="LOCAL-00221" summary="[*] En los listar de eficacia y Lista maestra quitar el campo numero">
+      <created>1679413693820</created>
+      <option name="number" value="00221" />
+      <option name="presentableId" value="LOCAL-00221" />
+      <option name="project" value="LOCAL" />
+      <updated>1679413693821</updated>
+    </task>
+    <task id="LOCAL-00222" summary="[*] Y en la parte que dice Procesos cambiar por Ficha de Procesos">
+      <created>1679415248410</created>
+      <option name="number" value="00222" />
+      <option name="presentableId" value="LOCAL-00222" />
+      <option name="project" value="LOCAL" />
+      <updated>1679415248410</updated>
+    </task>
+    <task id="LOCAL-00223" summary="En el listado de Quejas entre queja y queja los seguimientos">
+      <created>1679418953726</created>
+      <option name="number" value="00223" />
+      <option name="presentableId" value="LOCAL-00223" />
+      <option name="project" value="LOCAL" />
+      <updated>1679418953726</updated>
+    </task>
+    <task id="LOCAL-00224" summary="[*] En la lista maestra  hay que cambiar el orden de como sale el código">
+      <created>1679421070456</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
+      <option name="project" value="LOCAL" />
+      <updated>1679421070456</updated>
+    </task>
+    <task id="LOCAL-00225" summary="[*] Corregir que el P00 no se repita sino que salga una sola vez por cada Proceso y se entienda que los que van a continuación son del mismo proceso">
+      <created>1679424484459</created>
+      <option name="number" value="00225" />
+      <option name="presentableId" value="LOCAL-00225" />
+      <option name="project" value="LOCAL" />
+      <updated>1679424484459</updated>
+    </task>
+    <task id="LOCAL-00226" summary="[*] En el header de los PDF ajustar el logo de la izquierda&#10;[*] La fecha de la vista de impresión PDF debe poderse ingresar de forma manual por si el documento debe ser corregido no aparezca la fecha actual sino la escogida&#10;&#9;[*] La fecha en los documentos de vista de impresión y en la parte superior derecha como en esta imagen">
+      <created>1679483366418</created>
+      <option name="number" value="00226" />
+      <option name="presentableId" value="LOCAL-00226" />
+      <option name="project" value="LOCAL" />
+      <updated>1679483366418</updated>
+    </task>
+    <task id="LOCAL-00227" summary="[*] cambios en la revision">
+      <created>1680932627091</created>
+      <option name="number" value="00227" />
+      <option name="presentableId" value="LOCAL-00227" />
+      <option name="project" value="LOCAL" />
+      <updated>1680932627092</updated>
+    </task>
+    <task id="LOCAL-00228" summary="[*] Ajustando funcion loguear, sin refactorizar codigo, solo para quitar el error">
+      <created>1680932957928</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
+      <option name="project" value="LOCAL" />
+      <updated>1680932957928</updated>
+    </task>
+    <task id="LOCAL-00229" summary="1. Cambiar el enunciado Lista Maestra del Sistema por “ Lista Maestra de Sistema Integrado de Gestión”&#10;2. Donde dice P00 poner el Nombre del proceso al lado&#10;4. Poner Lista Maestra del Sistema Integrado de Gestión (quitar ¨De Citmatel¨)&#10;6. La dirección del centro que solo salga una vez al final de cada exportar.&#10;13. Agregar en las vistas de apps, la funcionalidad de guardar en los logs&#10;15. Arreglar el loguin del sitio">
+      <created>1680938913144</created>
+      <option name="number" value="00229" />
+      <option name="presentableId" value="LOCAL-00229" />
+      <option name="project" value="LOCAL" />
+      <updated>1680938913145</updated>
+    </task>
+    <task id="LOCAL-00230" summary="7. En el módulo Quejas Hacer un reporte semanal con las quejas EN PROCESO (los estados de la queja son En proceso, Cerrada, No procede)">
+      <created>1680945310231</created>
+      <option name="number" value="00230" />
+      <option name="presentableId" value="LOCAL-00230" />
+      <option name="project" value="LOCAL" />
+      <updated>1680945310231</updated>
+    </task>
+    <task id="LOCAL-00231" summary="Agregando el campo de fecha para el exportar de procesos que es el mismo de la lista maestra">
+      <created>1680946378057</created>
+      <option name="number" value="00231" />
+      <option name="presentableId" value="LOCAL-00231" />
+      <option name="project" value="LOCAL" />
+      <updated>1680946378057</updated>
+    </task>
+    <task id="LOCAL-00232" summary="Agregando la funcion de exportar e importar la bd">
+      <created>1680954870678</created>
+      <option name="number" value="00232" />
+      <option name="presentableId" value="LOCAL-00232" />
+      <option name="project" value="LOCAL" />
+      <updated>1680954870679</updated>
+    </task>
+    <task id="LOCAL-00233" summary="5. Cambiar el formato del exportar de la lista maestra y hacerlo similar al listar de la misma Lista Maestra (Se cambió el formato del listar, pero no del exportar)">
+      <created>1680955599021</created>
+      <option name="number" value="00233" />
+      <option name="presentableId" value="LOCAL-00233" />
+      <option name="project" value="LOCAL" />
+      <updated>1680955599021</updated>
+    </task>
+    <task id="LOCAL-00234" summary="9. Hacer validación para cuando el documento guardado ya no existe solo revisé los de la Lista Maestra que explotaba cuando el documento salvado no está en la dirección antes guardada.">
+      <created>1680956160935</created>
+      <option name="number" value="00234" />
+      <option name="presentableId" value="LOCAL-00234" />
+      <option name="project" value="LOCAL" />
+      <updated>1680956160935</updated>
+    </task>
+    <task id="LOCAL-00235" summary="3. Revisar la imagen de la derecha de los exportar">
+      <created>1680956493167</created>
+      <option name="number" value="00235" />
+      <option name="presentableId" value="LOCAL-00235" />
+      <option name="project" value="LOCAL" />
+      <updated>1680956493167</updated>
+    </task>
+    <task id="LOCAL-00236" summary="3. Reajuste de la entrega">
+      <created>1681744024246</created>
+      <option name="number" value="00236" />
+      <option name="presentableId" value="LOCAL-00236" />
+      <option name="project" value="LOCAL" />
+      <updated>1681744024246</updated>
+    </task>
+    <task id="LOCAL-00237" summary="3. Tabla grande">
+      <created>1681771161837</created>
+      <option name="number" value="00237" />
+      <option name="presentableId" value="LOCAL-00237" />
+      <option name="project" value="LOCAL" />
+      <updated>1681771161838</updated>
+    </task>
+    <task id="LOCAL-00238" summary="3. Lista la grafica de la profesora">
+      <created>1682019657413</created>
+      <option name="number" value="00238" />
+      <option name="presentableId" value="LOCAL-00238" />
+      <option name="project" value="LOCAL" />
+      <updated>1682019657414</updated>
+    </task>
+    <task id="LOCAL-00239" summary="3. Cambiando el comando de import">
+      <created>1682021653320</created>
+      <option name="number" value="00239" />
+      <option name="presentableId" value="LOCAL-00239" />
+      <option name="project" value="LOCAL" />
+      <updated>1682021653320</updated>
+    </task>
+    <task id="LOCAL-00240" summary="3. Agregando el link de la tabla de eficacia a los reportes">
+      <created>1682025926995</created>
+      <option name="number" value="00240" />
+      <option name="presentableId" value="LOCAL-00240" />
+      <option name="project" value="LOCAL" />
+      <updated>1682025926995</updated>
+    </task>
+    <task id="LOCAL-00241" summary="3. Agregando el makemigrations de cambiarlogotipo">
+      <created>1682026557548</created>
+      <option name="number" value="00241" />
+      <option name="presentableId" value="LOCAL-00241" />
+      <option name="project" value="LOCAL" />
+      <updated>1682026557548</updated>
+    </task>
+    <task id="LOCAL-00242" summary="1. ajustando el sitio para montar en el server de Citmatel">
+      <created>1683668214716</created>
+      <option name="number" value="00242" />
+      <option name="presentableId" value="LOCAL-00242" />
+      <option name="project" value="LOCAL" />
+      <updated>1683668214716</updated>
+    </task>
+    <option name="localTasksCounter" value="243" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UpdateCopyrightCheckinHandler">
+    <option name="UPDATE_COPYRIGHT" value="true" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="En la vista de detalles de quejas diferenciar el enunciado del contenido con letras en negritas" />
+    <MESSAGE value="[] En el listado de Quejas entre queja y queja los seguimientos&#10;&#9;[*] Donde dice fecha por Fecha de recepción" />
+    <MESSAGE value="[*] En el PDF de la Lista Maestra - Cambiar la palabra ALCENCE por ALCANCE" />
+    <MESSAGE value="[*] En los listar de eficacia y Lista maestra quitar el campo numero" />
+    <MESSAGE value="[*] Y en la parte que dice Procesos cambiar por Ficha de Procesos" />
+    <MESSAGE value="En el listado de Quejas entre queja y queja los seguimientos" />
+    <MESSAGE value="[*] En la lista maestra  hay que cambiar el orden de como sale el código" />
+    <MESSAGE value="[*] Corregir que el P00 no se repita sino que salga una sola vez por cada Proceso y se entienda que los que van a continuación son del mismo proceso" />
+    <MESSAGE value="[*] En el header de los PDF ajustar el logo de la izquierda&#10;[*] La fecha de la vista de impresión PDF debe poderse ingresar de forma manual por si el documento debe ser corregido no aparezca la fecha actual sino la escogida&#10;&#9;[*] La fecha en los documentos de vista de impresión y en la parte superior derecha como en esta imagen" />
+    <MESSAGE value="[*] cambios en la revision" />
+    <MESSAGE value="[*] Ajustando funcion loguear, sin refactorizar codigo, solo para quitar el error" />
+    <MESSAGE value="1. Cambiar el enunciado Lista Maestra del Sistema por “ Lista Maestra de Sistema Integrado de Gestión”&#10;2. Donde dice P00 poner el Nombre del proceso al lado&#10;4. Poner Lista Maestra del Sistema Integrado de Gestión (quitar ¨De Citmatel¨)&#10;6. La dirección del centro que solo salga una vez al final de cada exportar.&#10;13. Agregar en las vistas de apps, la funcionalidad de guardar en los logs&#10;15. Arreglar el loguin del sitio" />
+    <MESSAGE value="7. En el módulo Quejas Hacer un reporte semanal con las quejas EN PROCESO (los estados de la queja son En proceso, Cerrada, No procede)" />
+    <MESSAGE value="Agregando el campo de fecha para el exportar de procesos que es el mismo de la lista maestra" />
+    <MESSAGE value="Agregando la funcion de exportar e importar la bd" />
+    <MESSAGE value="5. Cambiar el formato del exportar de la lista maestra y hacerlo similar al listar de la misma Lista Maestra (Se cambió el formato del listar, pero no del exportar)" />
+    <MESSAGE value="9. Hacer validación para cuando el documento guardado ya no existe solo revisé los de la Lista Maestra que explotaba cuando el documento salvado no está en la dirección antes guardada." />
+    <MESSAGE value="3. Revisar la imagen de la derecha de los exportar" />
+    <MESSAGE value="3. Reajuste de la entrega" />
+    <MESSAGE value="3. Tabla grande" />
+    <MESSAGE value="3. Lista la grafica de la profesora" />
+    <MESSAGE value="3. Cambiando el comando de import" />
+    <MESSAGE value="3. Agregando el link de la tabla de eficacia a los reportes" />
+    <MESSAGE value="3. Agregando el makemigrations de cambiarlogotipo" />
+    <MESSAGE value="1. ajustando el sitio para montar en el server de Citmatel" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. ajustando el sitio para montar en el server de Citmatel" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ControllerNotificaciones.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="Python.DjangoServer">
+        <watch expression="html" />
+        <watch expression="args" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>

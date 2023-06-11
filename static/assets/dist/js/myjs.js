@@ -329,15 +329,6 @@ function validar_existencia_ambos(v1, v2) {
     flag = true;
   }
 
-  if (!v1.value && !v2.value) {
-    v1.classList.remove("is-invalid");
-    v1.classList.add("is-valid");
-    v2.classList.remove("is-invalid");
-    v2.classList.add("is-valid");
-    // $('button[type="submit"]').removeAttr("disabled");
-    flag = true;
-  }
-
   return flag;
 }
 
@@ -380,9 +371,11 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
           alert(v1[0]["name"] + " debe ser mayor que " + v2);
         }
         $('button[type="submit"]').prop("disabled", "true");
+        console.log("invalido");
       } else {
         v1.removeClass("is-invalid").addClass("is-valid");
         $('button[type="submit"]').removeAttr("disabled");
+        console.log("valido");
       }
       break;
     case "menor":
@@ -404,7 +397,7 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
   }
 }
 
-/*function validar_archivos(selector, extensions) {
+function validar_archivos(selector, extensions) {
   let filePath = selector.val();
   // Seperar nombre de archivo por . y obtener último elemento (extensión)
   let extension = filePath.split(".").pop().toLowerCase();
@@ -412,23 +405,22 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
   // Verificar que la extensión es permitida
   if (filePath) {
     if (!extensions.includes(extension)) {
-      //selector.removeClass("is-valid").addClass("is-invalid");
-      //$('button[type="submit"]').prop("disabled", "true");
+      selector.removeClass("is-valid").addClass("is-invalid");
+      $('button[type="submit"]').prop("disabled", "true");
       alert(
         "Por favor, suba archivos con una extensión válida: " +
           extensions.join(", ")
       );
-      selector.val('');
+      document.getElementById("id_informe_apertura").value = "";
     } else {
-      //selector.removeClass("is-invalid").addClass("is-valid");
-      //$('button[type="submit"]').prop("disabled", "false");
+      selector.removeClass("is-invalid").addClass("is-valid");
+      $('button[type="submit"]').removeAttr("disabled");
     }
   } else {
-    //selector.removeClass("is-invalid").addClass("is-valid");
-    //$('button[type="submit"]').prop("disabled", "false");
+    selector.removeClass("is-invalid").addClass("is-valid");
+    $('button[type="submit"]').removeAttr("disabled");
   }
-  $('button[type="submit"]').prop("disabled", false);
-}*/
+}
 
 function validate_only_number_and_text_and_guion(node, event) {
   if (

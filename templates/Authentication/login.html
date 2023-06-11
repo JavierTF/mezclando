@@ -6,10 +6,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SISGDDO | Entrar</title>
+    <title>SISGEPO | Entrar</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{% static 'assets/dist/img/Citmatel_logo.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'assets/dist/img/logo sisgepov2.png' %}" type="image/x-icon">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome-free/css/all.min.css' %}">
     <!-- Ionicons -->
@@ -21,17 +21,17 @@
     <!-- Google Font: Source Sans Pro -->
     <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet">
 </head>
-<body class="hold-transition login-page" style="background:beige">
+<body class="hold-transition login-page" style="background:#87CEFA">
 <div class="login-box">
 
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
             <div class="login-logo">
-                <img src="{% static 'assets/dist/img/Citmatel_logo.png' %}" alt="SISGDDO" width="250px">
+                <img src="{% static 'assets/dist/img/logo sisgepov2.png' %}" alt="SISGEPO" width="250px">
             </div>
             {% block content %}
-                <p class="login-box-msg">Entre para iniciar su sesión</p>
+                <p class="login-box-msg"><Strong>Entre para iniciar su sesión</Strong></p>
 
                 <form method="post">
                     {% csrf_token %}

@@ -1,0 +1,120 @@
+{% extends 'index.html' %}
+{% load static i18n %}
+{% block complaint %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Queja #{{ instance.number }}</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Integración</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Quejas.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+label.required::after {
+    content: ' *';
+    color: red;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-header">
+                    <div class="row col-md-12">
+                            <div class="col-md-9">
+                            </div>
+                            <div class="col-md-3"><a href="{% url 'complaints:export_details_complaints' instance.id %}" style="float: right">Exportar queja <i class="fa fa-file-export"></i></a></div>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="portlet-body">
+                            <div class="row col-md-12">
+                                <div class="col-md-6">
+                                    <div class="row col-md-12">
+                                        <div class="col-md-6"><strong>Fecha de recepción:</strong> <p>{{ instance.reception_date|date:"j, M Y" }}</p></div>
+                                        <div class="col-md-6"><strong>Cliente:</strong> <p>{{ instance.client }}</p></div>
+                                    </div>
+                                    <div class="row col-md-12">
+                                        <div class="col-md-6"><strong>Fecha de cierre:</strong> <p>{{ instance.deadline|date:"j, M Y" }}</p></div>
+                                        <div class="col-md-6"><strong>Proceso:</strong> <p>{{ instance.process.name }}</p></div>
+                                    </div>
+                                    <div class="row col-md-12">
+                                        <div class="col-md-12">
+                                            <strong>Vía de recepción:</strong> <p>{{ instance.way_of_reception.name }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row col-md-12">
+                                        <div class="col-md-12">
+                                            <strong>Motivo:</strong> <p>{{ instance.reason }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row col-md-12">
+                                        <div class="col-md-12">
+                                            <strong>Estado:</strong> <p>{{ instance.get_status }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h2>Seguimiento</h2>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Fecha</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for action in instance.actions.all %}
+                                                <tr>
+                                                    <td>
+                                                        {{ forloop.counter }}
+                                                    </td>
+                                                    <td>
+                                                        {{ action.date|date:"Y-m-d" }}
+                                                    </td>
+                                                    <td>
+                                                        {{ action.action }}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row col-md-12">
+                            <a href="{% url 'complaints:list_complaints' %}" class="btn btn-sm btn-default">Regresar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'complaints/js/complaints/create.js' %}" type="text/javascript"></script>
+{% endblock %}

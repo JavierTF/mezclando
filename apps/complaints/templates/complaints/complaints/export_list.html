@@ -1,0 +1,84 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+    <style>
+        @page {
+    	    size:landscape;
+     	}
+    </style>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h3 style="color: black; font-weight: bold">QUEJAS</h3>
+                    </td>
+                    <td class="text-right">
+                        <p>{% now "d-m-Y" %}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Proceso</th>
+                    <th>Vía de recepción</th>
+                    <th>Motivo</th>
+                    <th>Fecha cierre</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for model in models %}
+                    <tr id="{{ model.id }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ model.reception_date|date:"j, M Y" }}</td>
+                        <td>{{ model.client.name }}</td>
+                        <td>{{ model.process.abbreviation }}</td>
+                        <td>{{ model.way_of_reception.name }}</td>
+                        <td>{{ model.reason }}</td>
+                        <td>{{ model.deadline|date:"j, M Y" }}</td>
+                        <td>{{ model.get_status }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    <p>Elaborado por: {{ owner.get_full_name }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
