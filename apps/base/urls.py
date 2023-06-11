@@ -3,7 +3,6 @@ from apps.base.views import create_afectation
 from apps.base.views import CountryView, create_country, update_country, delete_country, \
         EntityView, create_entity,update_entity, delete_entity, \
         create_logoentity, \
-        ClientView, create_client, update_client, delete_client, \
         PositionView, create_position, update_position, delete_position, \
         EmployeeView, create_employee, update_employee, delete_employee, \
         ProcessView, create_processes, update_processes, delete_processes, \
@@ -21,11 +20,6 @@ urlpatterns = [
         path('eliminar/entidad/<int:entity_id>/', delete_entity, name='delete_entity'),
 
         path('crear/logo/', create_logoentity, name='create_logoentity'),
-
-        path('listar/clientes/', ClientView, name='clients'),
-        path('crear/cliente/', create_client, name='create_client'),
-        path('modificar/cliente/<int:client_id>/', update_client, name='update_client'),
-        path('eliminar/cliente/<int:client_id>/', delete_client, name='delete_client'),
 
         path('listar/cargos/', PositionView, name='positions'),
         path('crear/cargo/', create_position, name='create_position'),

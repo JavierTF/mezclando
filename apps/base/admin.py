@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.base.models import Country, Entity, LogoEntity, Client, Position, Employee, InfoEmployee, Process, Procedure
+from apps.base.models import Country, Entity, LogoEntity, Position, Employee, InfoEmployee, Process, Procedure
 
 
 @admin.register(Country)
@@ -15,11 +15,6 @@ class EntityAdmin(admin.ModelAdmin):
 @admin.register(LogoEntity)
 class LogoEntityAdmin(admin.ModelAdmin):
     list_display = ('date', 'logo1', 'logo2', )
-
-
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('name', )
 
 
 @admin.register(Position)

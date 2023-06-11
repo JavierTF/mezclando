@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from apps.base.models import Client, Process
+from apps.base.models import Process
 from apps.complaints.validators import DateInFutureValidator, validate_char
 from apps.complaints.utils import set_complaints_number
 
