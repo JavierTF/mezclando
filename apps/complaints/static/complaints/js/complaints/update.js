@@ -271,24 +271,12 @@ const UpdateComplaint = function () {
                 processData: false,
                 success: function (data) {
                     Swal.fire({
-<<<<<<< HEAD
                         title: 'La Queja se ha modificado satisfactoriamente!',
                         type: 'success',
                         timer: 2000,
                         showConfirmButton: false
                     }).then((result) => {
                         $(location).attr('href', data.results.url);
-=======
-                        title: 'La Queja se ha modificado satisfactoriamente!', text: '',
-                        type: 'success', timer: 2000,
-                        buttons: false,
-                        showCancelButton: false,
-                        showConfirmButton: false
-                    }).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
->>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
                     });
                 }
             });

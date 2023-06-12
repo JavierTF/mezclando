@@ -412,11 +412,7 @@
                         {% endif %}
                     </li>
                         
-<<<<<<< HEAD
                     {% if perms.SISGDDO.view_premio %}
-=======
-                     {% comment %}{% if perms.SISGDDO.view_premio %}
->>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
                     <li class="nav-item has-treeview {% block menu_p03 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p03_active %}{% endblock %}">
                             <i class="nav-icon fa fa-book-reader"></i>
@@ -439,11 +435,7 @@
                         {% if perms.SISGDDO.view_historico_entradas_proyectos %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-<<<<<<< HEAD
                                 {% comment %} <a href="{% url 'listar_histentproy' %}"
-=======
-                                <a href="{% url 'listar_histentproy' %}"
->>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
                                    class="nav-link {% block historicoentradas %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Histórico Entradas</p>
@@ -483,15 +475,9 @@
                                 </a>
                             </li>
                         </ul>
-<<<<<<< HEAD
                         {% endif %} {% endcomment %}
                     </li>
                     {% endif %}
-=======
-                        {% endif %} 
-                    </li>
-                    {% endif %}{% endcomment %}
->>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
 
                     <li class="nav-item has-treeview {% block menu_p01 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p01_active %}{% endblock %}">
@@ -589,7 +575,6 @@
                         {% if perms.SISGDDO.view_acuerdo %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-<<<<<<< HEAD
                                 <a href="{% url 'listar_acuerdo' %}"
                                    class="nav-link {% block acuerdo %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
@@ -627,20 +612,14 @@
                                    class="nav-link {% block objetivo %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Objetivos</p>
-=======
-                                <a href="{% url 'listar_acuerdos' %}"
-                                   class="nav-link {% block acuerdo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Acuerdos</p>
->>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
                                 </a>
                             </li>
                         </ul>
                         {% endif %}
                     </li>
-                
+                    </ul>
                     </li>
-                    
+                    {% endif %}
                     {% if not user.is_staff or user.is_superuser %}
                     <li class="nav-header" style="color: blue"></li>
                     <li class="nav-item has-treeview {% block menu_nomencladores %}{% endblock %}">
