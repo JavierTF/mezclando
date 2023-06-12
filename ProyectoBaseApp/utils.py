@@ -399,22 +399,25 @@ def list_address_db():
     lines = fich.readlines()
     fich.close()
     res = []
-    if lines.__len__()>0:
+    if lines.__len__() > 0:
         for line in lines:
             fich = line.split("/")[2]
             date = fich.split("_")[0]
             Year = date[0:4]
-            Mounth = date[4:6]
+            Month = date[4:6]
             Day = date[6:8]
-            res.append([fich,Year,Mounth,Day])
+            res.append([fich,Year,Month,Day])
     return res
 
 def save_address_dbs(address):
+    print('---address', address)
     fich = open("static/db/dblist.mytxt")
     lines = fich.readlines()
+    print('---lines', lines)
     fich.close()
     address = address + "\n"
     if address not in lines:
+        print('---llegue')        
         if lines.__len__() == 0:
             lines.append(address)
         if lines.__len__() == 2:

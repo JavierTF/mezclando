@@ -1,8 +1,24 @@
 {% extends 'Security/users.html' %}
+{% comment %} {% extends 'index.html' %} {% endcomment %}
 {% load static %}
 
 {% block miestilo %}
     <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2-bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block breadcumb %}
+<div class="col-sm-6">
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+        {% block group_wrapper %}
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
+            <li class="breadcrumb-item active">Adicionar </li>
+        {% endblock %}
+    </ol>
+</div><!-- /.col -->
 {% endblock %}
 
 {% block content %}
@@ -18,7 +34,7 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'user_create' %}" formsuccess="{% url 'user_list' %}">
                         {% csrf_token %}
                       <input name="id" type="hidden" value="{{ object.id }}">
                         <div class="form-body">
@@ -67,6 +83,15 @@
                                         <small class="text-red">{{ campo.errors }}</small>
                                     </div>
                                 </div>
+                                {% if forloop.counter > 10 and forloop.counter <= 12 %}
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">{{ campo.label_tag }}</label>
+                                    <div class="col-md-12">
+                                            {{ campo }}
+                                        <small class="text-red">{{ campo.errors }}</small>
+                                    </div>
+                                </div>
+                                {% endif %}
                                 {% endif %}
 
                                 {% endif %}
@@ -105,93 +130,81 @@
     </section>
 {% endblock %}
 {% block script %}
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}"></script>
     <script>
     $(document).ready(function () {
-        $("#id_groups").addClass("form-control")
+        $('#id_password1').attr('placeholder', 'Introduzca contraseña');
+        $('#id_password2').attr('placeholder', 'Introduzca contraseña nuevamente');
+        $('#id_username').attr('placeholder', 'Introduzca nombre de usuario');
+        $('#id_email').attr('placeholder', 'Introduzca e-mail de CITMATEL');
+        $('#id_first_name').attr('placeholder', 'Introduzca nombre');
+        $('#id_last_name').attr('placeholder', 'Introduzca apellidos');
+        /*$('#id_username').text('Nombre de usuario*');
+        $('#id_email').text('Correo electrónico de CITMATEL*');
+        $('#id_first_name').text('Nombre*');
+        $('#id_last_name').text('Apellidos*');*/
+        //$('label[for=id_password1]').text('Contraseña*');
+        //$('label[for=id_password2]').text('Contraseña (confirmación)*');
     })
+
+    const r = /^([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+)(\s+([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+))*$/;
+    const d = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.\\/])[A-Za-z\d$@$!%*?&.\\/]{8,15}$/;
+
+    $('#id_username').bind('blur', function(){
+        validate_campos_vacios($(this));
+    });
+
+    $('#id_email').bind('blur', function(){
+        validate_campos_vacios($(this));
+        validate_email($('#id_email'), 'citmatel.inf.cu');
+    });
+
+    $('#id_first_name').bind('blur', function(){
+        validate_campos_vacios($(this));        
+        const text = "Por favor, inserte nombre válido";
+        validate_regex(r, $('#id_first_name'), text);
+    });
+
+    $('#id_last_name').bind('blur', function(){
+        validate_campos_vacios($(this));
+        const text = "Por favor, inserte apellido válido";
+        validate_regex(r, $('#id_last_name'), text);
+    });
+
+    $('#id_password1').bind('blur', function(){
+        //validate_campos_vacios($(this));
+        const text = "Por favor, inserte contraseña válida";
+        validate_regex(d, $('#id_password1'), text);
+    });
+    
+    $('#id_password2').bind('blur', function(){
+        //validate_campos_vacios($(this));
+        const text = "Por favor, inserte contraseña válida";
+        validate_regex(d, $('#id_password2'), text);
+    });   
+
+    $('.form-horizontal').submit(function (event) {
+        event.preventDefault();     
+        
+        var x = validate_campos_iguales($('#id_password1'), $('#id_password2'), "contraseña");
+        console.log(x);   
+
+        var href = $(this).attr('formaction');
+        var success = $(this).attr('formsuccess'); 
+        var data = $(this).serializeArray();
+
+        if (x){
+            $.post( href, data).always(function(response){
+                if (response.result == 'error'){
+                    console.log('error');
+                } else {
+                    window.location.replace(success);
+                }
+            })
+        }        
+    });
     </script>
-<script>
-        $("#id_first_name").blur(function () {
-            if (this.value.length == 0) {
-                $("#id_first_name").addClass("error")
-                $("#id_first_name").attr('placeholder', 'Este campo es requerido');
-
-            }
-            else {
-                if (/^\s+$/.test(this.value)) {
-                    $("#id_first_name").addClass("error")
-                    $("#id_first_name").val("")
-                    $("#id_first_name").attr('placeholder', 'No espacios vacios');
-                }
-                else {
-                    if (!/^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/.test(this.value)) {
-                        $("#id_first_name").addClass("error")
-                        $("#id_first_name").val("")
-                        $("#id_first_name").attr('placeholder', 'El nombre empieza con mayúscula y no tiene números');
-                    }
-                    else {
-                        $("#id_first_name").removeClass("error")
-                    }
-                }
-
-            }
-        });
-        $("#id_last_name").blur(function () {
-            if (this.value.length == 0) {
-                $("#id_last_name").addClass("error")
-                $("#id_last_name").attr('placeholder', 'Este campo es requerido');
-
-            }
-            else {
-                if (/^\s+$/.test(this.value)) {
-                    $("#id_last_name").addClass("error")
-                    $("#id_last_name").val("")
-                    $("#id_last_name").attr('placeholder', 'No espacios vacios');
-                }
-                else {
-                    if (!/^([A-ZÁÉÍÓÚ]{1}[a-zñáéíóú]+[\s]*)+$/.test(this.value)) {
-                        $("#id_last_name").addClass("error")
-                        $("#id_last_name").val("")
-                        $("#id_last_name").attr('placeholder', 'Los apellidos empieza con mayúscula y no tiene números');
-                    }
-                    else {
-                        $("#id_last_name").removeClass("error")
-                    }
-                }
-
-            }
-        });
-
-        $('#id_image').change(function(){
-            var file_name =$(this).val().split('.');
-            var ext = file_name[file_name.length - 1];
-            if(ext != "jpg" && ext != "JPG" && ext != "jpeg" && ext != "JPEG" && ext != "png" && ext != "PNG")
-            {
-                    $(this).val("");
-                    $(this).addClass('is-invalid');
-                    this[0].nextElementSibling.textContent = "Este campo solo admite foto";
-                    return false;
-            }
-            else
-                {
-                    $(this).removeClass('is-invalid');
-                    this[0].nextElementSibling.textContent = "";
-                    return true;
-                }
-
-
-        });
-        $('.form-horizontal').submit(function (event) {
-            if ($('.is-invalid').length>0){
-                event.preventDefault();
-                return false;
-            }
-            else{
-                return true;
-            }
-        });
-    </script>
-
 {% endblock %}
 
 

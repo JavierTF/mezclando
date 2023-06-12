@@ -1,11 +1,15 @@
 {% extends 'Security/groups.html' %}
 {% load static %}
+{% block miestilo %}
+    <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/select2-4.0.13/css/select2-bootstrap4.min.css' %}">
+{% endblock %}
 
 
 {% block group_wrapper %}
     <li class="breadcrumb-item"><a href="{% url 'group_list' %}">Grupos</a></li>
     <li class="breadcrumb-item active">Formulario</li>
-
 {% endblock %}
 
 
@@ -64,4 +68,7 @@
     </section>
 {% endblock %}
 
-
+{% block script %}
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}"></script>
+{% endblock %}
