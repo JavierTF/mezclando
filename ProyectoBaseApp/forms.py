@@ -6,7 +6,7 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import BaseUpdateView, DeleteView
 from notifications.signals import notify
 from PIL import Image
-from captcha.fields import CaptchaField
+from captcha.fields import ReCaptchaField
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib import messages
