@@ -543,3 +543,20 @@ def import_db(request, file):
     messages.success(request, "Éxito importando la base de datos")
 
     return redirect(reverse_lazy('base:export_db'))
+<<<<<<< HEAD
+=======
+
+
+def create_afectation(request):
+    form = AfectationModelForm()
+
+    if request.method == 'POST':
+        form = AfectationModelForm(request.POST)
+
+        if form.is_valid():
+            instance = form.save()
+            logs(request, Afectaciones, instance, 1)
+            return JsonResponse({'results': {'url': reverse_lazy('base:P01')}})
+
+    return render(request, 'base/P01/createAfectation.html', {'form': form})
+>>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a

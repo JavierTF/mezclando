@@ -109,8 +109,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'sisgddo',
+<<<<<<< HEAD
         'USER': 'masqueradmin',
         'PASSWORD': 'masqueradmin',
+=======
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+>>>>>>> 5250b8d5032a807797446c4b4c0df5039b83434a
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
