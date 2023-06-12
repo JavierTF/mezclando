@@ -43,8 +43,16 @@ from SISGDDO.views_sisgddo import nomestado_indicador, estado_indicador_update
 from SISGDDO.views_sisgddo import nomrol_trabajador_proyecto, rol_trabajador_proyecto_update
 from SISGDDO.views_sisgddo import CambiarLogotipo
 
+# modulodayana
+from SISGDDO.views_sisgddo import nomtipodeobra, tipo_de_obra_update
+from SISGDDO.views_sisgddo import nomestado_cenda, estado_cenda_update
+
 # importando path logotipo
 from SISGDDO.views_sisgddo import CambiarLogotipo
+
+# modulodayana
+from SISGDDO.views_sisgddo import nomtipodeobra, tipo_de_obra_update
+from SISGDDO.views_sisgddo import nomestado_cenda, estado_cenda_update
 
 # importando path logotipo
 from SISGDDO.views_sisgddo import CambiarLogotipo
@@ -149,13 +157,7 @@ urlpatterns = [
     path('activar/consecutivo/<int:id>/', views_sisgddo.act_desactconsecutivo, name="act_desactconsecutivo"),
     path('eliminar/consecutivo/<int:id>/', views_sisgddo.eliminar_consecutivo, name="eliminar_consecutivo"),
     path('detalle/consecutivo/<int:id>/', views_sisgddo.detalle_consecutivo, name= "detalle_consecutivo"),
-##########################################################################################
-#CRUD nomenclador tipo de obra Dayana
-    path('listar/tipo-de-obra', views_sisgddo.listar_tipo_de_obra, name = "listar_tipo_de_obra"),
-    path('agregar/tipo-de-obra', nomtipodeobra.as_view(), name = "agregar_tipo_de_obra"),
-    path('modificar/tipo-de-obra/<int:pk>', tipo_de_obra_update.as_view(), name="modificar_tipo_de_obra"),
-    path('activar/tipo-de-obra/<int:id>/', views_sisgddo.act_desacttipodeobra, name="act_desacttipodeobra"),
-    path('eliminar/tipo_de_obra/<int:id>/', views_sisgddo.eliminar_tipo_de_obra, name="eliminar_tipo_de_obra"),
+    path('exportar/consecutivo/<int:id>/', views_sisgddo.exportar_consecutivo, name= "exportar_consecutivo"),
 
      #CRUD afectaciones #hermes
     path('listar/afectacion', views_sisgddo.listar_afectacion, name = "listar_afectacion"),
@@ -380,18 +382,19 @@ urlpatterns = [
     path('administration/db/restore/<str:name>)',
          views.db_restore, name="db_restore"),
 
-#     # Gestion Integrada
-#     path('listar/licencias', views_sisgddo.listar_licenciasxtrabajador, name="listar_licencias"),
-#     path('adicionar/licencias/', views_sisgddo.Licencias_create,
-#          name="agregar_licencia"),
-#     path('modificar/licencia/<int:pk>',
-#          views_sisgddo.LicenciaUpdate.as_view(), name="modificar_licencia"),
-#     path('detalle/licencia/<int:pk>/',
-#          views_sisgddo.LicenciasDetailView.as_view(), name="detalle_licencia"),
-#     path('listar/vizincidencias', views_sisgddo.listar_visualizarincidencias,
-#          name="listar_visualizarincidencias"),
-#     path('listar/atencioncliente/', views_sisgddo.listar_atencioncliente,
-#          name="listar_ateclientext"),
+    # Gestion Integrada
+    path('listar/licencias', views_sisgddo.listar_licenciasxtrabajador,
+         name="listar_licencias"),
+    path('adicionar/licencias/', views_sisgddo.Licencias_create,
+         name="agregar_licencia"),
+    path('modificar/licencia/<int:pk>',
+         views_sisgddo.LicenciaUpdate.as_view(), name="modificar_licencia"),
+    path('detalle/licencia/<int:pk>/',
+         views_sisgddo.LicenciasDetailView.as_view(), name="detalle_licencia"),
+    path('listar/vizincidencias', views_sisgddo.listar_visualizarincidencias,
+         name="listar_visualizarincidencias"),
+    path('listar/atencioncliente/', views_sisgddo.listar_atencioncliente,
+         name="listar_ateclientext"),
     # path('adicionar/atencioncliente/',views_sisgddo.atencioncliente_create, name="agregar_atencioncliente"),
     # path('modificar/atencioncliente/<int:pk>', atencionclienteUpdate.as_view(), name="modificar_atencioncliente"),
     # path('detalle/atencliente/<int:pk>/', views_sisgddo.AtencionClienteExternoDetailView.as_view(), name= "detalle_atencioncliente"),
@@ -413,22 +416,23 @@ urlpatterns = [
          views_sisgddo.auditoria_externa_create, name="agregar_auditoriaext"),
     path('modificar/auditoriaexterna/<int:pk>',
          auditoria_externaUpdate.as_view(), name="modificar_auditoriaext"),
-#     path('listar/eficacia/ajax', views_sisgddo.eficaciaajax, name="eficacia-ajax"),
-#     path('listar/eficacia/', views_sisgddo.listar_eficacia_procesos,
-#          name="listar_eficacia"),
-#     path('adicionar/eficacia/', views_sisgddo.eficacia_procesos_create,
-#          name="agregar_eficacia"),
-#     path('detalles/eficacia/<int:pk>', views_sisgddo.EficaciaDetailView.as_view(), name="detalles_eficacia"),
+    path('listar/eficacia/ajax', views_sisgddo.eficaciaajax, name="eficacia-ajax"),
+    path('listar/eficacia/', views_sisgddo.listar_eficacia_procesos,
+         name="listar_eficacia"),
+    path('adicionar/eficacia/', views_sisgddo.eficacia_procesos_create,
+         name="agregar_eficacia"),
+    path('detalles/eficacia/<int:pk>',
+         views_sisgddo.EficaciaDetailView.as_view(), name="detalles_eficacia"),
 
     #     #Gestion Innovación
-#     path('listar/sosi', views_sisgddo.listar_sosi, name="listar_sosi"),
-#     path('adicionar/sosi/', views_sisgddo.sosi_create, name="agregar_sosi"),
-#     path('modificar/sosi/<int:pk>', sosiUpdate.as_view(), name="modificar_sosi"),
-#     path('detalle/sosi/<int:pk>/',
-#          views_sisgddo.sosiDetailView.as_view(), name="detalle_sosi"),
-#     path('listar/cenda', views_sisgddo.listar_cenda, name="listar_cenda"),
-#     path('adicionar/cenda/', views_sisgddo.cenda_create, name="agregar_cenda"),
-#     path('modificar/cenda/<int:pk>', cendaUpdate.as_view(), name="modificar_cenda"),
+    path('listar/sosi', views_sisgddo.listar_sosi, name="listar_sosi"),
+    path('adicionar/sosi/', views_sisgddo.sosi_create, name="agregar_sosi"),
+    path('modificar/sosi/<int:pk>', sosiUpdate.as_view(), name="modificar_sosi"),
+    path('detalle/sosi/<int:pk>/',
+         views_sisgddo.sosiDetailView.as_view(), name="detalle_sosi"),
+    path('listar/cenda', views_sisgddo.listar_cenda, name="listar_cenda"),
+    path('adicionar/cenda/', views_sisgddo.cenda_create, name="agregar_cenda"),
+    path('modificar/cenda/<int:pk>', cendaUpdate.as_view(), name="modificar_cenda"),
     # path('detalle/proyecto/<int:pk>', ProyectoDetailView.as_view(), name= "detalle_proyecto"),
 
     #     #Gestión Desarrollo
@@ -442,7 +446,8 @@ urlpatterns = [
          name="listar_no_conformidad"),
     path('detalle/incidencia/<int:pk>/',
          IncidenciasDetailView.as_view(), name="detalle_incidencia"),
-#     path('detalle/acuerdo/<int:pk>/', AcuerdosConsejoDetailView.as_view(), name="detalle_acuerdo"),
+    path('detalle/acuerdo/<int:pk>/',
+         AcuerdosConsejoDetailView.as_view(), name="detalle_acuerdo"),
     path('listar/reservas', views_sisgddo.listar_reservasdecuadro,
          name="listar_reservas"),
     path('detalle/reservas/<int:pk>/',
@@ -482,33 +487,42 @@ urlpatterns = [
     path('listar/procesos', views_sisgddo.listar_procesos, name="listar_procesos"),
     path('modificar/proceso/<int:pk>',
          procesoUpdate.as_view(), name="modificar_proceso"),
-#     path('adicionar/trabajador', nomtrabajador.as_view(), name="agregar_trabajador"),
-#     path('listar/trabajadores', views_sisgddo.listar_trabajadoresentrar, name="listar_trabajadores"),
-#     path('modificar/trabajador/<int:pk>', trabajadorUpdate.as_view(), name="modificar_trabajador"),
-#     path('detalles/trabajador/<int:pk>', views_sisgddo.TrabajadorDetailView.as_view(), name="detalles_trabajador"),
-#     path('trabajador_act_des/<int:id>/', views_sisgddo.act_desactTrabajador, name="act_desactConfTrabajador"),
-#     path('adicionar/clienteext', nomcliemteexterno.as_view(), name="agregar_clienteext"),
-#     path('clienteext/create', views_sisgddo.clienteext_create,
-#          name="modalclienteext"),
-#     path('listar/clienteext', views_sisgddo.listar_clienteexternos,
-#          name="listar_clienteext"),
-#     path('modificar/clienteext/<int:pk>', clienteexternoUpdate.as_view(), name="modificar_clienteext"),
+    path('adicionar/trabajador', nomtrabajador.as_view(),
+         name="agregar_trabajador"),
+    path('listar/trabajadores', views_sisgddo.listar_trabajadoresentrar,
+         name="listar_trabajadores"),
+    path('modificar/trabajador/<int:pk>',
+         trabajadorUpdate.as_view(), name="modificar_trabajador"),
+    path('detalles/trabajador/<int:pk>',
+         views_sisgddo.TrabajadorDetailView.as_view(), name="detalles_trabajador"),
+    path('trabajador_act_des/<int:id>/',
+         views_sisgddo.act_desactTrabajador, name="act_desactConfTrabajador"),
+    path('adicionar/clienteext', nomcliemteexterno.as_view(),
+         name="agregar_clienteext"),
+    path('clienteext/create', views_sisgddo.clienteext_create,
+         name="modalclienteext"),
+    path('listar/clienteext', views_sisgddo.listar_clienteexternos,
+         name="listar_clienteext"),
+    path('modificar/clienteext/<int:pk>',
+         clienteexternoUpdate.as_view(), name="modificar_clienteext"),
     # path('eliminar/clienteext/<int:pk>', form.ClienteExternoDelete.as_view(), name="eliminar_clienteext"),
-#     path('adicionar/planmedidas', views_sisgddo.plan_medida_create,
-#          name="agregar_planmedidas"),
-#     path('listar/planmedidas', views_sisgddo.listar_planmedidas,
-#          name="listar_planmedidas"),
-#     path('modificar/planmedidas/<int:pk>',
-#          views_sisgddo.planmedidasUpdate.as_view(), name="modificar_planmedidas"),
-#     path('detalles/planmedidas/<int:pk>',
-#          views_sisgddo.PlanMedidasDetailView.as_view(), name="detalles_planmedidas"),
+    path('adicionar/planmedidas', views_sisgddo.plan_medida_create,
+         name="agregar_planmedidas"),
+    path('listar/planmedidas', views_sisgddo.listar_planmedidas,
+         name="listar_planmedidas"),
+    path('modificar/planmedidas/<int:pk>',
+         views_sisgddo.planmedidasUpdate.as_view(), name="modificar_planmedidas"),
+    path('detalles/planmedidas/<int:pk>',
+         views_sisgddo.PlanMedidasDetailView.as_view(), name="detalles_planmedidas"),
     # path('adicionar/aspeficacia',nomaspmedirefic.as_view() , name= "agregar_aspeficacia"),
     # path('listar/aspeficacia', views_sisgddo.listar_aspmedirefic, name="listar_aspeficacia"),
     # path('modificar/aspeficacia/<int:pk>', aspmedireficUpdate.as_view(), name="modificar_aspeficacia"),
-#     path('adicionar/indeficacia', nomindefic.as_view(), name="agregar_indeficacia"),
-#     path('listar/indeficacia', views_sisgddo.listar_indefic,
-#          name="listar_indeficacia"),
-#     path('modificar/indeficacia/<int:pk>', indeficUpdate.as_view(), name="modificar_indeficacia"),
+    path('adicionar/indeficacia', nomindefic.as_view(),
+         name="agregar_indeficacia"),
+    path('listar/indeficacia', views_sisgddo.listar_indefic,
+         name="listar_indeficacia"),
+    path('modificar/indeficacia/<int:pk>',
+         indeficUpdate.as_view(), name="modificar_indeficacia"),
 
     # Importar CSV sosi
     path('importar/CSV/', views_sisgddo.ImportarCSV, name="importarCSV"),

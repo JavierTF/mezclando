@@ -127,7 +127,6 @@
     </section>
 {% endblock %}
 {% block script %}
-    <script src="{% static 'assets/dist/js/myjs.js' %}"></script>
     <script>
         $(document).ready(function () {
             $('#id_password1').attr('placeholder', 'Introduzca contraseña');
@@ -136,10 +135,20 @@
             $('#id_email').attr('placeholder', 'Introduzca e-mail de CITMATEL');
             $('#id_first_name').attr('placeholder', 'Introduzca nombre');
             $('#id_last_name').attr('placeholder', 'Introduzca apellidos');
+            /*$('#id_username').text('Nombre de usuario*');
+            $('#id_email').text('Correo electrónico de CITMATEL*');
+            $('#id_first_name').text('Nombre*');
+            $('#id_last_name').text('Apellidos*');*/
+            //$('label[for=id_password1]').text('Contraseña*');
+            //$('label[for=id_password2]').text('Contraseña (confirmación)*');
         })
 
     const r = /^([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+)(\s+([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+))*$/;
-    const d = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.\\/])[A-Za-z\d$@$!%*?&.\\/]{8,15}$/;
+    const d = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}$/;
+
+    /*$('#id_username').bind('blur', function(){
+        validate_campos_vacios($(this));
+    });*/
 
     if ($('#id_email').val()){
         $('#id_email').bind('blur', function(){
@@ -171,9 +180,7 @@
     $('.form-horizontal').submit(function (event) {
         event.preventDefault();     
 
-        let f1 = validar_existencia_ambos(document.getElementById('id_password1'), document.getElementById('id_password2'));  
-        
-        console.log('F1', f1);
+        let f1 = validar_existencia_ambos(document.getElementById('id_password1'), document.getElementById('id_password2'));   
         
         var href = $(this).attr('formaction');
         var success = $(this).attr('formsuccess'); 

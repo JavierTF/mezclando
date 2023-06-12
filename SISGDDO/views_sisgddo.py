@@ -20,7 +20,7 @@ from django.contrib.auth.models import Group,User
 from django.template import RequestContext
 from weasyprint import HTML
 from ProyectoBaseApp import models as modelsadmin
-# from SISGDDO.form import AfectationModelForm
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -32,7 +32,8 @@ from SISGDDO import models, form
 from SISGDDO.models import consecutivo, estado_indicador_objetivos, estado_entradas_proyecto, entrada_proyecto, acuerdo,linea_tematica,incidencia,proyecto,auditoria_externa,auditoria_interna,area,curso,formato,estado_acuerdo,estado_proyecto, trabajador_consecutivo, trabajador_proyecto
 from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_proyecto, objetivo, indicador_objetivos, accion_indicador_objetivo, estado_indicador_objetivos
 from SISGDDO.models import tipo_codigo, premio
-from SISGDDO.models import sosi
+from SISGDDO.models import sosi, Afectaciones
+from SISGDDO.form import AfectationModelForm
 # from SISGDDO.models import modalidad
 from SISGDDO.models import tipo_de_obra, estado_cenda, proceso
 from django.views.generic.edit import CreateView,UpdateView,BaseUpdateView
@@ -174,7 +175,7 @@ class DashboardGraficobarra(LoginRequiredMixin,TemplateView):
         data = 0
         year = datetime.now().year
         for m in range(1,2):
-            cantidad_trabajadores_activos= models.trabajador.objects.filter(activo=True).count()
+            cantidad_trabajadores_activos= models.Employee.objects.filter(activo=True).count()
             data = cantidad_trabajadores_activos
         return data
 
@@ -182,7 +183,7 @@ class DashboardGraficobarra(LoginRequiredMixin,TemplateView):
         data = 0
         year = datetime.now().year
         for m in range(1,2):
-            cantidad_trabajadores_inactivos= models.trabajador.objects.filter(activo=False).count()
+            cantidad_trabajadores_inactivos= models.Employee.objects.filter(activo=False).count()
             data = cantidad_trabajadores_inactivos
         return data
 
@@ -289,7 +290,7 @@ def listar_incidencias(request):
 
 @login_required()
 def listar_reservasdecuadro(request):
-    listreservas = models.trabajador.objects.filter(es_reserva=True)
+    listreservas = models.Employee.objects.filter(es_reserva=True)
     contexto = {
         'reservas': listreservas
     }
@@ -297,7 +298,7 @@ def listar_reservasdecuadro(request):
 
 @login_required()
 def det_reservasdecuadro(request,pk):
-    reserva = models.trabajador.objects.filter(pk=pk).get()
+    reserva = models.Employee.objects.filter(pk=pk).get()
     contexto = {
         'reserva': reserva
     }
@@ -305,7 +306,7 @@ def det_reservasdecuadro(request,pk):
 
 @login_required()
 def det_cuadro(request,pk):
-    cuadro = models.trabajador.objects.filter(pk=pk).get()
+    cuadro = models.Employee.objects.filter(pk=pk).get()
     contexto = {
         'cuadro': cuadro
     }
@@ -313,7 +314,7 @@ def det_cuadro(request,pk):
 
 @login_required()
 def listar_cuadro(request):
-    listcuadros = models.trabajador.objects.filter(es_cuadro=True)
+    listcuadros = models.Employee.objects.filter(es_cuadro=True)
     contexto = {
         'cuadros': listcuadros
     }
@@ -330,7 +331,7 @@ def listar_cuadro(request):
 
 # @login_required()
 # def listar_formaciontrabajador(request):
-#     listform = models.trabajador.objects.all()
+#     listform = models.Employee.objects.all()
 #     contexto = {
 #         'form': listform
 #     }
@@ -3188,6 +3189,97 @@ def detalle_consecutivo(request, id):
         'jefe': jefe
     }
 
+@login_required()
+def detalle_premio(request, id):
+    objeto = models.premio.objects.get(id = id)
+
+    template_name = 'P01/premio/premio_detail.html'
+    contexto = {
+        'objeto' : objeto,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_indicador_objetivo(request, id):
+    objeto = models.indicador_objetivos.objects.get(id = id)
+    tobj = objetivo.objects.filter(activo = True)
+    test = estado_indicador_objetivos.objects.filter(activo = True)
+    tacc = accion_indicador_objetivo.objects.filter(activo = True)
+
+    myacc = accion_indicador_objetivo.objects.filter(indicador = objeto)
+
+    template_name = 'P01/indicador_objetivo/indicador_objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'tobj' : tobj,
+        'test' : test,
+        'tacc' : tacc,
+        'myacc' : myacc,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_accion_indicador_objetivo(request, id):
+    objeto = models.accion_indicador_objetivo.objects.get(id = id)
+
+    tarea = area.objects.filter(activo = True)
+    tind = indicador_objetivos.objects.filter(activo = True)
+
+    template_name = 'P01/accion_indicador_objetivo/accion_indicador_objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'tarea' : tarea,
+        'tind' : tind,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_acuerdo(request, id):
+    objeto = models.acuerdo.objects.get(id = id)
+
+    ttrab = Employee.objects.filter(activo = True)
+    test = estado_acuerdo.objects.filter(activo = True)
+    myworkers = objeto.trabajador.all()
+
+    template_name = 'P01/acuerdo/acuerdo_detail.html'
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+        'test' : test,
+        'myworkers' : myworkers,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
+def detalle_objetivo(request, id):
+    objeto = models.objetivo.objects.get(id = id)
+
+    tind = indicador_objetivos.objects.filter(activo = True)
+    myind = indicador_objetivos.objects.filter(activo = True, objetivo = objeto)
+
+    template_name = 'P01/objetivo/objetivo_detail.html'
+    contexto = {
+        'objeto' : objeto,        
+        'tind' : tind,
+        'myind' : myind,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+
+    return render(request, template_name, contexto)
+
+@login_required()
 @login_required
 @permission_required('sisgddo.view_premio')
 @handle_exceptions
@@ -3254,7 +3346,7 @@ def detalle_acuerdo(request, id):
 
     ttrab = Employee.objects.filter(active = True)
     test = estado_acuerdo.objects.filter(activo = True)
-    myworkers = objeto.trabajador.all()
+    myworkers = objeto.Employee.all()
 
     template_name = 'P01/acuerdo/acuerdo_detail.html'
     contexto = {
@@ -3289,7 +3381,7 @@ def detalle_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_rol_trabajador_proyecto')
+@permission_required('sisgddo.delete_rol_Employee_proyecto')
 @handle_exceptions
 def eliminar_rol_trabajador_proyecto(request, id):
     objeto = models.rol_trabajador_proyecto.objects.get(id = id)
@@ -3478,6 +3570,21 @@ def eliminar_tipo_proyecto(request, id):
         return redirect('listar_tipo_proyecto')
     return render(request, template_name, contexto)
 
+@login_required()
+def eliminar_tipo_codigo(request, id):
+    objeto = models.tipo_codigo.objects.get(id = id)
+    template_name = 'nomencladores/tipo_codigo/tipo_codigo_confirm_delete.html'
+    contexto = {
+        'object' : objeto
+    }
+    if request.method == "POST":
+        objeto.delete()
+        messages.success(request, "Tipo de codigo eliminado con éxito")
+        register_logs(request, objeto, objeto.id, str(objeto), 3)
+        return redirect('listar_tipo_codigo')
+    return render(request, template_name, contexto)
+
+@login_required()
 @login_required
 @permission_required('sisgddo.delete_tipo_codigo')
 @handle_exceptions
@@ -3784,19 +3891,7 @@ def listar_tipo_proyecto(request):
     }
     return render(request, 'nomencladores/tipo_proyecto/tipo_proyecto.html', contexto)
 
-@login_required
-@permission_required('sisgddo.view_tipo_codigo')
-@handle_exceptions
-def listar_tipo_codigo(request):
-    tipos = models.tipo_codigo.objects.filter()
-    contexto = {
-        'lista': tipos
-    }
-    return render(request, 'nomencladores/tipo_codigo/tipo_codigo.html', contexto)
-
-@login_required
-@permission_required('sisgddo.view_fuente_financiamiento')
-@handle_exceptions
+@login_required()
 def listar_fuente_financiamiento(request):
     datos = models.fuente_financiamiento.objects.filter()
     contexto = {
@@ -4221,13 +4316,13 @@ def entrada_proyecto_update(request, id):
         entrada = entrada_proyecto.objects.filter(id = id)
 
         entrada.update(
-            fecha_entrada = forms['fecha_entrada'].value(),
-            fecha_salida = forms['fecha_salida'].value(),
-            entregado_por = Employee.objects.get(pk = forms['entregado_por'].value()),
-            dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
-            estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
-            activo = forms['activo2'].value()    
-        )
+                fecha_entrada = forms['fecha_entrada'].value(),
+                fecha_salida = forms['fecha_salida'].value(),
+                entregado_por = Employee.objects.get(pk = forms['entregado_por'].value()),
+                dictamen = forms['dictamen'].value() if forms['dictamen'].value() else None,
+                estado = estado_proyecto.objects.get(pk = forms['estado'].value()),
+                activo = forms['activo'].value()    
+            )
         
         """hago una lista y para cada formato guardo el elemento,
             la intencion es luego pasarle la lista a consecutivo"""
@@ -4241,6 +4336,88 @@ def entrada_proyecto_update(request, id):
                 pass
 
         objeto.save()  
+        register_logs(request, entrada, entrada.pk, str(entrada), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def sosi_update(request, id):
+    # el id es un sosi
+    objeto = sosi.objects.get(id = id)
+    
+    ttrab = Employee.objects.filter(activo = True)
+
+    template_name = 'P01/sosi/sosi_update_form.html'
+    success_url = reverse('listar_sosi')
+
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.sosi_form(request.POST, request.FILES)
+
+        entrada = sosi.objects.filter(id = id)
+
+        entrada.update(
+            numero_salva = forms['numero_salva'].value(),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
+            anno = forms['anno'].value() if forms['anno'].value() else None,
+            especialista = Employee.objects.get(pk = forms['especialista'].value()),
+            autor = forms['autor'].value() if forms['autor'].value() else None,
+            ubicacion_salva = forms['ubicacion_salva'].value() if forms['ubicacion_salva'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            # archivo = forms['archivo'].value()
+        )
+
+        if forms['archivo'].value():
+            objeto.archivo = forms['archivo'].value()
+        objeto.save()
+
+        register_logs(request, objeto, objeto.pk, str(objeto), 2)
+        messages.success(request, "Registro modificado con éxito")
+        return HttpResponseRedirect(success_url)
+
+@login_required
+def detalle_sosi(request, id):
+    # el id es un sosi
+    objeto = sosi.objects.get(id = id)
+    
+    ttrab = Employee.objects.filter(activo = True)
+
+    template_name = 'P01/sosi/sosi_detail.html'
+    success_url = reverse('listar_sosi')
+
+    contexto = {
+        'objeto' : objeto,
+        'ttrab' : ttrab,
+    }
+
+    if request.method == "GET":
+        return render(request, template_name, contexto)
+
+    if request.method == "POST":
+        forms = form.sosi_form(request.POST, request.FILES)
+
+        entrada = sosi.objects.filter(id = id)
+
+        entrada.update(
+            numero_salva = forms['numero_salva'].value(),
+            fecha = datetime.now().strftime('%Y-%m-%d'),
+            anno = forms['anno'].value() if forms['anno'].value() else None,
+            especialista = Employee.objects.get(pk = forms['especialista'].value()),
+            autor = forms['autor'].value() if forms['autor'].value() else None,
+            ubicacion_salva = forms['ubicacion_salva'].value() if forms['ubicacion_salva'].value() else None,
+            observaciones = forms['observaciones'].value() if forms['observaciones'].value() else None,
+            archivo = forms['archivo'].value(),
+            eliminado = forms['eliminado'].value(), 
+        )
+
+        # objeto.save()  
         register_logs(request, entrada, entrada.pk, str(entrada), 2)
         messages.success(request, "Registro modificado con éxito")
         return HttpResponseRedirect(success_url)
@@ -4606,123 +4783,7 @@ def act_desactproyecto(request, id):
     register_logs(request, proy, proy.id, str(proy), valor_log(proy))
     return redirect('listar_proyecto')
 
-@login_required
-@permission_required('sisgddo.change_premio')
-@handle_exceptions
-def act_desactpremio(request, id):
-    valor = request.POST.get('activo')
-    col = models.premio.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_premio')
-
-@login_required
-@permission_required('sisgddo.change_acuerdo')
-@handle_exceptions
-def act_desactacuerdo(request, id):
-    valor = request.POST.get('activo')
-    col = models.acuerdo.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_acuerdo')
-
-@login_required
-@permission_required('sisgddo.change_indicador_objetivos')
-@handle_exceptions
-def act_desactindicador_objetivo(request, id):
-    valor = request.POST.get('activo')
-    col = models.indicador_objetivos.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_indicador_objetivo')
-
-@login_required
-@permission_required('sisgddo.change_accion_indicador_objetivo')
-@handle_exceptions
-def act_desactaccion_indicador_objetivo(request, id):
-    valor = request.POST.get('activo')
-    col = models.accion_indicador_objetivo.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_accion_indicador_objetivo')
-
-@login_required
-@permission_required('sisgddo.change_sosi')
-@handle_exceptions
-def act_desactsosi(request, id):
-    valor = request.POST.get('activo')
-    col = models.sosi.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_sosi')
-
-@login_required
-@permission_required('sisgddo.change_objetivo')
-@handle_exceptions
-def act_desactobjetivo(request, id):
-    valor = request.POST.get('activo')
-    col = models.objetivo.objects.get(id = id)
-    col.activo = True if valor == "on" else False
-    col.save()
-    # def register_logs(request, model, object_id, object_unicode, action):
-    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
-    def valor_log(self):
-        if self.activo:
-            action = 6
-        else:
-            action = 7
-        return action
-    register_logs(request, col, col.id, str(col), valor_log(col))
-    return redirect('listar_objetivo')
-
-@login_required
-@permission_required('sisgddo.change_estado_proyecto')
-@handle_exceptions
+@login_required()
 def act_desactestado_proyecto(request, id):
     valor = request.POST.get('activo')
     col = models.estado_proyecto.objects.get(id = id)
@@ -4740,9 +4801,7 @@ def act_desacttipo_proyecto(request, id):
     col.save()
     return redirect('listar_tipo_proyecto')
 
-@login_required
-@permission_required('sisgddo.change_tipo_codigo')
-@handle_exceptions
+@login_required()
 def act_desacttipo_codigo(request, id):
     valor = request.POST.get('activo')
     col = models.tipo_codigo.objects.get(id = id)
@@ -4759,9 +4818,7 @@ def act_desacttipo_codigo(request, id):
     register_logs(request, col, col.id, str(col), valor_log(col))
     return redirect('listar_tipo_codigo')
 
-@login_required
-@permission_required('sisgddo.change_fuente_financiamiento')
-@handle_exceptions
+@login_required()
 def act_desactfuente_financiamiento(request, id):
     valor = request.POST.get('activo')
     col = models.fuente_financiamiento.objects.get(id = id)
@@ -4857,7 +4914,7 @@ def act_desactProc(request,id):
 # @login_required()
 # def act_desactTrabajador(request,id):
 #     valor_campo = request.POST.get('activo')
-#     trabajador = models.trabajador.objects.get(id=id)
+#     trabajador = models.Employee.objects.get(id=id)
 #     trabajador.activo = True if valor_campo == "on" else False
 #     trabajador.save()
 #     return redirect('listar_trabajadores')
@@ -4933,52 +4990,23 @@ def listar_consecutivo(request):
 
     return render(request, 'P01/consecutivo/consecutivo.html', contexto)
 
-# @login_required()
-# def exportar_consecutivo(request, id = 0):
-#     if id != 0:
-#         objeto = consecutivo.object.get(id = id)
-#     else:
-#         objeto = None
+@login_required()
+def exportar_consecutivo(request, id = 0):
+    if id != 0:
+        objeto = consecutivo.object.get(id = id)
+    else:
+        objeto = None
 
-#     datos = models.consecutivo.objects.all()
+    datos = models.consecutivo.objects.all()
 
-#     contexto = {
-#         'lista': datos,
-#         'objeto': objeto,
-#     }
+    contexto = {
+        'lista': datos,
+        'objeto': objeto,
+    }
 
-#     return render(request, 'P01/consecutivo/exportar_consecutivo.html', contexto)
+    return render(request, 'P01/consecutivo/exportar_consecutivo.html', contexto)
 
-# def render_to_pdf(template_src, context_dict = {}):
-#     template = get_template(template_src)
-#     html = template.render(context_dict)
-#     print('\n----HTML', html)
-#     # result = StringIO
-#     result = StringIO.StringIO()
-#     # pdf = pisa.pisaDocument(StringIO(html.encode("ISO-8859-1")), result)
-#     pdf = pisa.pisaDocument(StringIO.StringIO(
-#         html.encode("UTF-8")), result)
-#     print('\n---LLEGUEEEE')
-#     if not pdf.err:
-#         # return HttpResponse(result.getvalue(), content_type = 'application/pdf')
-#         return result
-#     return None
-
-# class generar_reporte(View):
-#     def get(self, request, *args, **kwargs):
-#         template_name = "reportes/tabla.html"
-#         areas = models.area.objects.all()
-#         data = {
-#             'count': areas.__len__,
-#             'proyectos': areas
-#         }
-#         print('------PDF')
-#         pdf = render_to_pdf(template_name, data)
-#         return HttpResponse(pdf, content_type = 'application/pdf')
-
-@login_required
-@permission_required('sisgddo.view_entradas_proyecto')
-@handle_exceptions
+@login_required()
 def listar_entrada_proyecto(request):
     datos = models.entradas_proyecto.objects.all()
     contexto = {
@@ -5032,7 +5060,7 @@ def listar_proyecto(request):
         'lista': datos,
     }
 
-    return render(request, 'P01/proyecto/proyecto.html', contexto)
+    return render(request, 'P01/sosi/sosi.html', contexto)
 
 @login_required
 @permission_required('sisgddo.view_objetivo')
@@ -5080,6 +5108,7 @@ def listar_premio(request):
 #     except:
 #         print('asdasd')
 
+    return render(request, 'P01/accion_indicador_objetivo/accion_indicador_objetivo.html', contexto)
 
 @csrf_protect
 @login_required
@@ -5138,6 +5167,22 @@ def exportar(request):
 @login_required
 @permission_required('sisgddo.view_acuerdo')
 @handle_exceptions
+def listar_acuerdo(request):
+    datos = models.acuerdo.objects.all()
+    contexto = {
+        'lista': datos,
+    }
+
+    return render(request, 'P01/acuerdo/acuerdo.html', contexto)
+
+    initial_path = sosi.archivo.path
+    name = sosi.archivo.name
+    cname = name.split('/')
+    new_path = settings.MEDIA_ROOT + media_root + cname[-1]
+    shutil.copy(initial_path, new_path)
+    sosi.save()
+
+@login_required()
 def listar_acuerdo(request):
     datos = models.acuerdo.objects.all()
     contexto = {
@@ -5341,7 +5386,7 @@ def listar_auditoriaexterna(request):
 #         forms = form.trabajadorForm(request.POST)
 #         if forms.is_valid():
 #             forms.save()
-#             id_trabajo = trabajador.objects.last()
+#             id_trabajo = Employee.objects.last()
 #             register_logs(request, trabajador, id_trabajo.pk, id_trabajo.__str__(), 1)
 #             messages.success(request, "Registro creado con éxito")
 #             return HttpResponseRedirect(self.success_url)
@@ -5352,7 +5397,7 @@ def listar_auditoriaexterna(request):
 
 # @login_required()
 # def listar_trabajadoresentrar(request):
-#     listtrab=models.trabajador.objects.all()
+#     listtrab=models.Employee.objects.all()
 #     contexto = {
 #         'listtrab': listtrab
 #     }
@@ -5526,7 +5571,7 @@ class clasificacionincidenciasUpdate(LoginRequiredMixin,UpdateView):
 #         if forms.is_valid():
 #             encuesta = forms.save(commit=False)
 #             # if request.user.id == 3:
-#             trabajador =models.trabajador.objects.filter(id=11).first()
+#             trabajador =models.Employee.objects.filter(id=11).first()
 #             encuesta.elaborado_por = trabajador
 #             encuesta.documento = 'valoracion_encuesta/valoracion_encuesta%s.pdf' % (date.today())
 #             encuesta.save()
@@ -5636,7 +5681,7 @@ def ReporteReserva(request):
     mes_usuario = request.GET.get('mes')
     anno_usuario = request.GET.get('ano')
     if mes_usuario and anno_usuario:
-        for i in models.trabajador.objects.filter(es_reserva=True):
+        for i in models.Employee.objects.filter(es_reserva=True):
             if int(mes_usuario) == i.fecha_inicio_reserva.month and int(anno_usuario) == i.fecha_inicio_reserva.year:
                 datos.append(i)
     return render(request, 'reportes/reportereservacuadros.html',{'datos': datos,'ano': anno_usuario ,'mes':mes_usuario})
@@ -5647,7 +5692,7 @@ def ReporteCuadros(request):
     mes_usuario = request.GET.get('mes')
     anno_usuario = request.GET.get('ano')
     if mes_usuario and anno_usuario:
-        for i in models.trabajador.objects.filter(es_cuadro=True):
+        for i in models.Employee.objects.filter(es_cuadro=True):
             if int(mes_usuario) == i.fecha_inicio_cuadro.month and int(anno_usuario) == i.fecha_inicio_cuadro.year:
                 datos.append(i)
     return render(request, 'reportes/reportecuadros.html',{'datos': datos,'ano': anno_usuario ,'mes':mes_usuario})
@@ -5964,7 +6009,7 @@ class ExportarReservas_PDF(LoginRequiredMixin,View):
         datos = []
         mes_usuario = request.GET.get('mes')
         anno_usuario = request.GET.get('ano')
-        for i in models.trabajador.objects.filter(es_reserva=True):
+        for i in models.Employee.objects.filter(es_reserva=True):
             if int(mes_usuario) == i.fecha_inicio_reserva.month and int(anno_usuario) == i.fecha_inicio_reserva.year:
                 datos.append(i)
         context = {'title': 'Listado de Reservas','datos': datos,'mes': mes_usuario,'ano':anno_usuario}
@@ -5981,7 +6026,7 @@ class ExportarCuadros_PDF(LoginRequiredMixin,View):
         datos = []
         mes_usuario = request.GET.get('mes')
         anno_usuario = request.GET.get('ano')
-        for i in models.trabajador.objects.filter(es_cuadro=True):
+        for i in models.Employee.objects.filter(es_cuadro=True):
             if int(mes_usuario) == i.fecha_inicio_cuadro.month and int(anno_usuario) == i.fecha_inicio_cuadro.year:
                 datos.append(i)
         context = {'title': 'Listado de Cuadros','datos': datos,'mes': mes_usuario,'ano':anno_usuario}

@@ -362,6 +362,7 @@ class UserUpdateAdmin(UpdateView):
         return url
 
 class UserUpdate(UpdateView):
+    print('YA LLEGUE UPDATE')
     model = models.UserApp
     form_class = UserAdminProfile
     template_name = ('auth/user_update.html')
@@ -455,25 +456,3 @@ class UserDelete(DeleteView):
         else:
             messages.error(request, "El usuario posee datos de interés para la entidad por tanto no se puede borrar")
         return HttpResponseRedirect(success_url)
-
-class UserActivate(UpdateView):
-    model = models.UserApp
-    form_class = UserAdminProfile
-    # template_name = ('auth/user_form.html')
-    success_url = reverse_lazy('user_list')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.change_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        formu = self.get_form(UserAdminProfile)
-        register_logs(request, models.UserApp, self.get_object().uui, self.get_object().__str__(), 2)
-        notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
-        self.object = self.get_object()
-        if not formu.errors:
-            messages.success(request, "Usuario modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)

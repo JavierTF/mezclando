@@ -13,8 +13,8 @@ import os
 import subprocess
 import datetime
 
-from apps.base.models import Country, Entity, LogoEntity, Client, Position, Employee, Process, Procedure
-from apps.base.forms import CountryModelForm, EntityModelForm, LogoEntityModelForm, ClientModelForm, PositionModelForm, EmployeeModelForm, InfoEmployeeModelForm, ProcessModelForm, ProcedureModelForm
+from apps.base.models import Country, Entity, LogoEntity, Position, Employee, Process, Procedure
+from apps.base.forms import CountryModelForm, EntityModelForm, LogoEntityModelForm, PositionModelForm, EmployeeModelForm, InfoEmployeeModelForm, ProcessModelForm, ProcedureModelForm
 
 
 @permission_required('base.view_country', login_url=reverse_lazy('inicio'), raise_exception=True)
@@ -148,65 +148,6 @@ def create_logoentity(request):
             return redirect(reverse_lazy('inicio'))
 
     return render(request, 'base/logo_entity/create.html', {'form': form})
-
-
-@permission_required('base.view_client', login_url=reverse_lazy('inicio'), raise_exception=True)
-def ClientView(request):
-    """
-    En esta vista se listan los paises,
-    :param request:
-    :return: Vista listar para los Paises
-    """
-    models = Client.objects.all()
-    template_models_list = 'base/clients/list.html'
-
-    return render(
-        request,
-        'base/clients/base.html',
-        {
-            'template_models_list': template_models_list,
-            'models': models,
-        }
-    )
-
-
-@permission_required('base.add_client', login_url=reverse_lazy('inicio'), raise_exception=True)
-def create_client(request):
-    form = ClientModelForm()
-
-    if request.method == 'POST':
-        form = ClientModelForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            logs(request, Client, instance, 1)
-            return JsonResponse({'results': {'url': reverse_lazy('base:clients')}})
-
-    return render(request, 'base/clients/create.html', {'form': form})
-
-
-@permission_required('base.change_client', login_url=reverse_lazy('inicio'), raise_exception=True)
-def update_client(request, client_id):
-    instance = get_object_or_404(Client, pk=client_id)
-    form = ClientModelForm(instance=instance)
-
-    if request.method == 'POST':
-        form = ClientModelForm(instance=instance, data=request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            logs(request, Client, instance, 2)
-            return JsonResponse({'results': {'url': reverse_lazy('base:clients')}})
-
-    return render(request, 'base/clients/update.html', {'instance': instance, 'form': form})
-
-
-@permission_required('base.delete_client', login_url=reverse_lazy('inicio'), raise_exception=True)
-def delete_client(request, client_id):
-    model = get_object_or_404(Client, pk=client_id)
-    logs(request, Entity, model, 3)
-    model.delete()
-    return redirect(reverse_lazy('base:clients'))
 
 
 @permission_required('base.view_position', login_url=reverse_lazy('inicio'), raise_exception=True)
@@ -343,6 +284,42 @@ def delete_employee(request, employee_id):
     model = get_object_or_404(Employee, pk=employee_id)
     logs(request, Employee, model, 3)
     model.delete()
+    return redirect(reverse_lazy('base:employees'))
+
+
+@permission_required('base.view_employee', login_url=reverse_lazy('inicio'), raise_exception=True)
+def export_employee(request):
+    if request.method == 'GET':
+        logos = get_logos()
+        logo1 = logos['logo1']
+        logo2 = logos['logo2']
+        models = Employee.objects.all()
+        html_string = render_to_string(
+            'base/employees/export_list.html',
+            {'models': models, 'owner': request.user, 'date': request.GET.get('export_date')}
+        )
+        html = HTML(string=html_string, base_url=request.build_absolute_uri())
+        uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
+        main_doc = html.render(
+            stylesheets=[CSS(settings.STATICFILES_DIRS[0] + '/base/css/pdf/styles.css'),
+                         CSS(settings.STATICFILES_DIRS[0] + '/base/css/pdf/style.bundle.pdf.css'),
+                         CSS(string=".logo-header-container {width: 50% !important;background-image: url(" + request.build_absolute_uri(
+                             logo1.url or '') + ");background-position: left top;background-repeat: no-repeat;background-size: 28rem;height: 12rem; opacity: 0.75;} .logo1-header-container {width: 50% !important;background-image: url(" + request.build_absolute_uri(
+                             logo2.url or '') + ");background-position: right top;background-repeat: no-repeat;background-size: 8rem;height: 12rem; opacity: 0.75;}"),
+                         ],
+        )
+
+        main_doc.write_pdf(
+            target=os.path.join(uri_tmp, 'Lista de Trabajadores.pdf'),
+            zoom=0.75,
+        )
+
+        fs = FileSystemStorage(uri_tmp)
+        with fs.open('Lista de Trabajadores.pdf') as pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="Lista de Trabajadores.pdf"'
+            return response
+
     return redirect(reverse_lazy('base:employees'))
 
 

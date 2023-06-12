@@ -391,6 +391,7 @@ class consecutivo(models.Model):
         :return: The path to the file.
         """
         return '/'.join(['consecutivos', f'/{self.codigo}/', filename]) 
+        return '/'.join(['consecutivos', f'/{self.codigo}/', filename]) 
 
     no = models.CharField(max_length = 10, verbose_name = "número*", unique = True, null = True)
     tipo_codigo = models.ForeignKey(tipo_codigo, on_delete = models.SET('Tipo de código eliminado de la Base de datos'), verbose_name = 'tipo de código*', null = True)
@@ -411,6 +412,7 @@ class consecutivo(models.Model):
     fecha_terminacion = models.DateField(verbose_name = "fecha de fin", null = True, blank = True)
     fecha_extension = models.DateField(verbose_name = "fecha de extensión", null = True, blank = True)
     fecha_cierre = models.DateField(verbose_name = "fecha de cierre", null = True, blank = True)
+    fecha_cierre = models.DateField(verbose_name = "fecha de cierre", null = True, blank = True)
     costo = models.IntegerField(default = 0, validators=[MinValueValidator(1000), MaxValueValidator(9999999)],
                             verbose_name = 'costo*')
     observacion = models.CharField(max_length = 250, verbose_name = 'observacion', null = True, blank = True)
@@ -424,8 +426,10 @@ class consecutivo(models.Model):
 
     def __str__(self):
         return str(self.codigo) + ' ' + str(self.nombre_proyecto)
+        return str(self.codigo) + ' ' + str(self.nombre_proyecto)
 
     def __unicode__(self):
+        return str(self.codigo) + ' ' + str(self.nombre_proyecto)
         return str(self.codigo) + ' ' + str(self.nombre_proyecto)
 
 #modulo Javier
@@ -448,6 +452,11 @@ class sosi(models.Model):
     def display_text_file(self):
         fp = open(self.archivo.path)
         return fp.read().replace('\n', '<br>')
+        return str(self.numero_salva) + ' ' + str(self.consecutivo.nombre_proyecto)
+
+    def display_text_file(self):
+        fp = open(self.archivo.path)
+        return fp.read().replace('\n', '<br>')
 
 class proyecto(models.Model):
     def ruta(self, filename):
@@ -456,6 +465,7 @@ class proyecto(models.Model):
         consecutivos/DES8098/  ---> informe.pdf
         :return: The path to the file.
         """
+        return '/'.join(['consecutivos', f'/{self.codigo}/', filename]) 
         return '/'.join(['consecutivos', f'/{self.codigo}/', filename]) 
 
     no = models.CharField(max_length = 10, verbose_name = "número*", unique = True, null = True)
@@ -479,9 +489,10 @@ class proyecto(models.Model):
     fecha_cierre = models.DateField(verbose_name = "fecha de cierre*", null = True)
     costo = models.IntegerField(default = 0, validators=[MinValueValidator(1000), MaxValueValidator(9999999)],
                             verbose_name = 'costo*')
-    observacion = models.CharField(max_length = 250, verbose_name = 'observacion', null = True, blank = True)
+    observacion = models.CharField(max_length = 250, verbose_name = 'observacion', null = True, blank = True) 
     informe_apertura = models.FileField(upload_to = ruta, verbose_name = 'informe apertura', null = True, 
                         blank = True)
+    informe_cierre = models.FileField(upload_to = ruta, verbose_name = 'informe cierre', null = True, blank = True)
     informe_cierre = models.FileField(upload_to = ruta, verbose_name = 'informe cierre', null = True, blank = True)
     linea_tematica = models.ForeignKey(linea_tematica, verbose_name = 'línea temática',
                         on_delete = models.SET('Línea temática eliminada de la BD'), null = True, blank = True)
@@ -722,6 +733,18 @@ class premio(models.Model):
     nombre = models.CharField(max_length = 150, verbose_name = "nombre*", unique = True, null = True)
     entidad = models.ForeignKey(entidad, on_delete = models.SET('CITMATEL'), verbose_name = 'entidad*')
     fecha = models.DateTimeField(default = datetime.now, verbose_name = "fecha*")
+    archivo = models.FileField(upload_to = ruta, verbose_name = 'planilla de la Reserva')
+        ##def ruta(self, filename):
+        ##"""
+        ##It returns a string that is the path to the folder where the file will be saved
+        ##consecutivos/DES8098/  ---> informe.pdf
+        ##:return: The path to the file.
+        ##"""
+        ##return '/'.join(['premios', f'/{self.nombre}/', filename]) )
+
+    nombre = models.CharField(max_length = 150, verbose_name = "nombre*", unique = True, null = True)
+    entidad = models.ForeignKey(entidad, on_delete = models.SET('CITMATEL'), verbose_name = 'entidad*')
+    fecha = models.DateTimeField(default = datetime.now, verbose_name = "fecha*")
     archivo = models.FileField(upload_to = ruta, verbose_name = 'planilla de la Reserva',
                             null = True, blank = True)
     activo = models.BooleanField(default = True, verbose_name = "Activo*")
@@ -759,6 +782,11 @@ class indicador_objetivos(models.Model):
         return str(self.nombre)
 
 #moduloJavier
+class accion_indicador_objetivo(models.Model):
+    nombre = models.CharField(max_length = 80, verbose_name = "nombre*", unique = True)
+    # evaluacion = models.FloatField(verbose_name = 'evaluación*')
+    indicador = models.ForeignKey(indicador_objetivos, on_delete = models.SET('Indicador eliminado de la BD'), verbose_name = 'indicador*', null = True, related_name = 'accion')
+    area = models.ForeignKey(area, on_delete = models.SET('Área eliminada de la BD'), verbose_name = 'área*', null = True)
 class accion_indicador_objetivo(models.Model):
     nombre = models.CharField(max_length = 80, verbose_name = "nombre*", unique = True)
     # evaluacion = models.FloatField(verbose_name = 'evaluación*')

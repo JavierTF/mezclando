@@ -121,21 +121,19 @@
                                 </label> {% endcomment %}
                                 <span class="input-group-sm" >
                                 <a href="{% url 'user_update' u.0.pk %}"
-                                   class="btn btn-sm btn-primary" title="Modificar">
+                                   class="btn btn-sm btn-primary" title="modificar usuario">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <a href="{% url 'user_detail' u.0.pk %}"
                                    class="btn btn-sm btn-warning" title="Ver detalles">
                                     <i class="fa fa-eye"></i>
                                 </a>
-                                {% if request.user.is_superuser or request.user.is_staff %}
-                                    {% if not u.0.is_superuser %}
-                                    <a href="{% url 'user_delete' u.0.pk %}"
-                                    class="btn btn-sm btn-danger" title="Eliminar">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                    {% endif %}
                                 {% endif %}
+                                {% if request.user.is_staff %}
+                                    <a href="{% url 'user_delete' u.0.pk %}"
+                                   class="btn btn-sm btn-danger" title="Eliminar contraseña">
+                                    <i class="fa fa-trash"></i>
+                                </a>
                                 {% endif %}
                                 </span>
                                         </td>

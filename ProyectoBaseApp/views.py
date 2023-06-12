@@ -281,6 +281,18 @@ def detalle_grupo(request, id):
     register_logs(request, objeto, objeto.pk, str(objeto), 0)
     return render(request, template_name, contexto)
 
+@permission_required('auth.view_group')
+def detalle_grupo(request, id):
+    objeto = Group.objects.get(id = id)
+
+    template_name = 'P01/premio/premio_detail.html'
+    contexto = {
+        'objeto' : objeto,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+    return render(request, template_name, contexto)
+
 
 # CRUD Rol
 @login_required()
@@ -362,6 +374,26 @@ def user_create(request):
     args = {}
     args['form'] = form
     return render(request, 'auth/user_form.html', args)
+
+@login_required()
+@permission_required('auth.add_user')
+def user_activate(request, id):
+    valor = request.POST.get('activo')
+    user = models.UserApp.objects.get(id = id)
+    user.is_active = True if valor == "on" else False
+    user.save()        
+
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, user, user.id, str(user), valor_log(user))
+
+    return redirect('user_list')
 
 @login_required()
 @permission_required('auth.change_user')
@@ -446,6 +478,7 @@ def history_list(request):
 @login_required
 @staff_member_required
 @handle_exceptions
+@permission_required('auth.add_user')
 def db_save(request):
     print('**** LLEGUEEE')
     list = list_address_db()

@@ -110,6 +110,7 @@ left: 24px !important;
         <div class="row">
             <div class="col-12">
                 <div class="card">
+<<<<<<< HEAD
                     <div class="row card-header">
                         <form id="formExportar" class="form-horizontal col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
                             {% if perms.SISGDDO.view_premio %}
@@ -121,6 +122,14 @@ left: 24px !important;
                             <a href="{% url 'adicionar_premio' %}" class="btn btn-primary fa-pull-right">
                                 <span class="fa fa-plus"> Adicionar </span>
                             </a>
+=======
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Premios </h3>
+                        {% if perms.SISGDDO.add_premio %}
+                        <a href="{% url 'adicionar_premio' %}" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Adicionar </span>
+                        </a>
+>>>>>>> 8d3893d750f2dd0ff63cb37051a2d170c247ca6d
                         {% endif %}
                     </div>
                     <!-- /.card-header -->
@@ -130,9 +139,12 @@ left: 24px !important;
                             <thead>
                             <tr>
                                 <th>
+<<<<<<< HEAD
                                     ID
                                 </th>
                                 <th>
+=======
+>>>>>>> 8d3893d750f2dd0ff63cb37051a2d170c247ca6d
                                     Número
                                 </th>
                                 <th>
@@ -157,9 +169,12 @@ left: 24px !important;
                             {% for lt in lista %}
                                 <tr id="{{ lt.id }}">
                                     <td>
+<<<<<<< HEAD
                                         {{ lt.id }}
                                     </td>
                                     <td>
+=======
+>>>>>>> 8d3893d750f2dd0ff63cb37051a2d170c247ca6d
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
@@ -229,6 +244,7 @@ left: 24px !important;
 <script>
       $(document).ready(function()
 {
+<<<<<<< HEAD
     var href = $('#formExportar').attr('formaction');
     
     var table = $('#example1').DataTable();
@@ -308,6 +324,8 @@ left: 24px !important;
         };
         xhr.send(jsonData);
     });
+=======
+>>>>>>> 8d3893d750f2dd0ff63cb37051a2d170c247ca6d
 
 $('.switch').click(function()
     {

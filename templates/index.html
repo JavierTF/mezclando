@@ -153,14 +153,39 @@
                         <a href="{% url 'reporte_proyecto_term' %}" target="_blank">Proyectos Terminados</a>
                     </span> {% endcomment %}
                     <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'effectiveness:tableall_effectiveness' %}" target="_blank">Indicadores de Eficacia del Sistema</a>
+                        <a href="{% url 'effectiveness:tableall_effectiveness' %}">Indicadores de Eficacia del Sistema</a>
                     </span>
                     <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'effectiveness:reports_effectiveness' %}" target="_blank">Eficacia de los procesos</a>
+                        <a href="{% url 'effectiveness:reports_effectiveness' %}">Eficacia de los procesos</a>
                     </span>
                     <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'complaints:reports_complaints' %}" target="_blank">Quejas por estados</a>
-                    </span>                    
+                        <a href="{% url 'complaints:reports_complaints' %}">Quejas por estados</a>
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_conforme' %}" target="_blank">Proyectos Conformes</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_no_conforme' %}" target="_blank">Proyectos No Conformes</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_format' %}" target="_blank">Proyectos por Formatos</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_proyecto_estados' %}" target="_blank">Proyectos por Estados</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_dictamen' %}" target="_blank">Dictámenes Técnicos</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_eficacia' %}" target="_blank">Eficacia</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_reserva' %}" target="_blank">Trabajadores Reservas de Cuadros</a> {% endcomment %}
+                    </span>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        {% comment %} <a href="{% url 'reporte_cuadro' %}" target="_blank">Trabajadores Cuadros de la Empresa</a> {% endcomment %}
+                    </span>
+                    
                 </div>
             </li>
             {% endif %}
@@ -614,14 +639,6 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.base.view_client %}
-                            <li class="nav-item">
-                                <a href="{% url 'base:clients' %}" class="nav-link {% block client %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Clientes</p>
-                                </a>
-                            </li>
-                            {% endif %}
                             {% if perms.SISGDDO.view_area %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
@@ -763,9 +780,9 @@
                             {% endif %}
                             {% if perms.iproperty.view_productclassification %}
                             <li class="nav-item">
-                                <a href="{% url 'iproperty:list_products' %}" class="nav-link {% block products %}{% endblock %}">
+                                <a href="{% url 'iproperty:list_products' %}" class="nav-link d-flex align-items-center {% block products %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Clasificación de productos y servicios</p>
+                                    <p>Clasificación de <br>productos y servicios</p>
                                 </a>
                             </li>
                             {% endif %}
@@ -779,9 +796,9 @@
                             {% endif %}
                             {% if perms.iproperty.view_figurativeelementclassification %}
                             <li class="nav-item">
-                                <a href="{% url 'iproperty:list_figurative' %}" class="nav-link {% block figurative %}{% endblock %}">
+                                <a href="{% url 'iproperty:list_figurative' %}" class="nav-link d-flex align-items-center {% block figurative %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Clasificación de elementos figurativos</p>
+                                    <p>Clasificación de <br>elementos figurativos</p>
                                 </a>
                             </li>
                             {% endif %}
@@ -790,6 +807,14 @@
                                 <a href="{% url 'iproperty:list_drawings' %}" class="nav-link {% block drawings %}{% endblock %}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Clasificación de dibujos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.iproperty.view_typelegaldocument %}
+                            <li class="nav-item">
+                                <a href="{% url 'iproperty:list_typelegaldocument' %}" class="nav-link d-flex align-items-center {% block typelegaldocuments %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tipos de documentos <br>legales</p>
                                 </a>
                             </li>
                             {% endif %}

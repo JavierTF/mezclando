@@ -613,4 +613,8 @@ function tooglePassword(el, elem_icon){
       el.type = 'password';
       elem_icon.removeClass('fa fa-eye').addClass('fas fa-lock');
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8d3893d750f2dd0ff63cb37051a2d170c247ca6d
