@@ -249,7 +249,7 @@ urlpatterns = [
     path('notifications/mark_noti_offer_all_read', login_required(views.notification_offer_all_mark_read), name="mark_offer_all_read"),
 
     # CAPTCHA
-    path('captcha/', include('captcha.urls')),
+    #path('captcha/', include('captcha.urls')),
 
     # CAMBIAR LOGO
     path('cambiar/logo', CambiarLogotipo.as_view(), name="cambiar_logo"),
