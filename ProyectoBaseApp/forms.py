@@ -146,12 +146,6 @@ class GroupDelete(DeleteView):
         return HttpResponseRedirect(success_url)
 
 class UserForm(UserCreationForm):
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.add_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     # captcha = CaptchaField()
     def clean_email(self):
         correo_current_user = self.cleaned_data['email']
@@ -262,7 +256,7 @@ class UserAdminProfile(UserCreationForm):
         self.fields['username'].required = False
         self.fields['password1'].required = False
         self.fields['password2'].required = False
-
+    
     def clean_email(self):
         correo_current_user = self.cleaned_data['email']
         if models.UserApp.objects.filter(email=correo_current_user).count() > 0:
@@ -325,13 +319,6 @@ class UserUpdateAdmin(UpdateView):
     form_class = UserProfile
     template_name = ('auth/profile.html')
     success_url = reverse_lazy('inicio')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.change_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         register_logs(request, models.UserApp, self.get_object().uui, self.get_object().__str__(), 2)
@@ -340,9 +327,6 @@ class UserUpdateAdmin(UpdateView):
         messages.success(request, "Usuario modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-    @login_required
-    @permission_required('auth.change_user')
-    @handle_exceptions
     def get_success_url(self):
         if self.success_url:
             if self.request.POST.get('x') != "":
@@ -366,13 +350,6 @@ class UserUpdate(UpdateView):
     form_class = UserAdminProfile
     template_name = ('auth/user_update.html')
     success_url = reverse_lazy('user_list')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.change_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         form = self.get_form(UserAdminProfile)  
@@ -419,13 +396,6 @@ class UserDetail(UpdateView):
     form_class = UserAdminProfile
     template_name = ('auth/user_detail.html')
     success_url = reverse_lazy('user_list')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.view_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -435,13 +405,6 @@ class UserDetail(UpdateView):
 class UserDelete(DeleteView):
     model = User
     success_url = reverse_lazy('user_list')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.delete_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -465,13 +428,6 @@ class UserActivate(UpdateView):
     form_class = UserAdminProfile
     # template_name = ('auth/user_form.html')
     success_url = reverse_lazy('user_list')
-
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.change_user'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         formu = self.get_form(UserAdminProfile)

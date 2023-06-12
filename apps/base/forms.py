@@ -1,6 +1,6 @@
 from django import forms
 from SISGDDO.models import Afectaciones
-from apps.base.models import Country, Entity, LogoEntity, Client, Position, Employee, InfoEmployee, Process, Procedure
+from apps.base.models import Country, Entity, LogoEntity, Position, Employee, InfoEmployee, Process, Procedure
 
 
 class CountryModelForm(forms.ModelForm):
@@ -32,17 +32,6 @@ class LogoEntityModelForm(forms.ModelForm):
     class Meta:
         model = LogoEntity
         fields = ['logo1', 'logo2', ]
-
-
-class ClientModelForm(forms.ModelForm):
-    required_css_class = 'required'
-
-    class Meta:
-        model = Client
-        fields = ['name', ]
-        widgets = {
-            'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
-        }
 
 
 class PositionModelForm(forms.ModelForm):
@@ -116,6 +105,7 @@ class ProcedureModelForm(forms.ModelForm):
             'edition': forms.TextInput(attrs={"class": "form-control", "placeholder": "Edición"}),
             'revision': forms.TextInput(attrs={"class": "form-control", "placeholder": "Revisión"}),
         }
+
 
 class AfectationModelForm(forms.ModelForm):
     required_css_class = 'required'

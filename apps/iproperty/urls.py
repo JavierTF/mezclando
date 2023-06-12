@@ -2,6 +2,7 @@ from django.urls import path
 from apps.iproperty.views import list_products, create_products, update_products, delete_products, \
     list_patents, create_patents, update_patents, delete_patents, \
     list_drawings, create_drawings, update_drawings, delete_drawings, \
+    list_typelegaldocument, create_typelegaldocument, update_typelegaldocument, delete_typelegaldocument, \
     list_figurative, create_figurative, update_figurative, delete_figurative, \
     list_properties, details_property, create_property, update_property, delete_property
 
@@ -30,6 +31,12 @@ urlpatterns = [
     path('crear/dibujo/', create_drawings, name='create_drawings'),
     path('modificar/dibujo/<int:drawing_id>/', update_drawings, name='update_drawings'),
     path('eliminar/dibujo/<int:drawing_id>/', delete_drawings, name='delete_drawings'),
+
+    # TypeLegalDocument
+    path('listar/tipo_documento_legal/', list_typelegaldocument, name='list_typelegaldocument'),
+    path('crear/tipo_documento_legal/', create_typelegaldocument, name='create_typelegaldocument'),
+    path('modificar/tipo_documento_legal/<int:typelegaldocument_id>/', update_typelegaldocument, name='update_typelegaldocument'),
+    path('eliminar/tipo_documento_legal/<int:typelegaldocument_id>/', delete_typelegaldocument, name='delete_typelegaldocument'),
 
     # Properties
     path('listar/propiedades/', list_properties, name='list_properties'),

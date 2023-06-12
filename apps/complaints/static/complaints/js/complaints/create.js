@@ -137,6 +137,24 @@ const CreateComplaint = function () {
             if ($('#id_date').val() == '') {
                 hiden_error_message($('#id_date'));
             }
+
+            var date = moment($('#id_date').val());
+            var recep_date = moment($('#id_reception_date').val());
+            var deadline_date = moment($('#id_deadline').val());
+
+            console.log(recep_date, date, deadline_date);
+
+            if (date <= recep_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea menor o igual a la fecha de recepción de la queja');
+            }
+
+            if (date >= deadline_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea mayor o igual a la fecha de cierre de la queja');
+            }
+
+            if (recep_date < date && date < deadline_date) {
+                hiden_error_message($('#id_date'));
+            }
         });
 
         $('#id_action').on('change', function () {
@@ -150,10 +168,26 @@ const CreateComplaint = function () {
                 show_error_message($('#id_date'), 'Este campo es requerido');
                 return;
             }
+
             if ($('#id_action').val() == ''){
                 show_error_message($('#id_action'), 'Este campo es requerido');
                 return;
             }
+
+            var _date = moment($('#id_date').val());
+            var recep_date = moment($('#id_reception_date').val());
+            var deadline_date = moment($('#id_deadline').val());
+
+            if (_date <= recep_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea menor o igual a la fecha de recepción de la queja');
+                return;
+            }
+
+            if (_date >= deadline_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea mayor o igual a la fecha de cierre de la queja');
+                return;
+            }
+
             const date = $('#id_date');
             const action = $('#id_action');
 
@@ -218,12 +252,13 @@ const CreateComplaint = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La Queja se ha registrado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'La Queja se ha registrado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

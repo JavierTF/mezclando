@@ -46,12 +46,13 @@ const CreatePositions = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'El Cargo se ha registrado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'El Cargo se ha registrado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

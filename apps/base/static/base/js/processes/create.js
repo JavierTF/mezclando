@@ -17,7 +17,11 @@ const CreateProcesses = function () {
 
         $('#id_abbreviation').on('change', function () {
             if ($('#id_abbreviation').val() != '') {
-                hiden_error_message($('#id_abbreviation'));
+                if($('#id_abbreviation').val().length > 3) {
+                    show_error_message($('#id_abbreviation'), 'Este campo tiene un máximo de 3 caractéres');
+                } else {
+                    hiden_error_message($('#id_abbreviation'));
+                }
             } else {
                 show_error_message($('#id_abbreviation'), 'Este campo es requerido');
             }
@@ -33,7 +37,11 @@ const CreateProcesses = function () {
 
         $('#id_edition').on('change', function () {
             if ($('#id_edition').val() != '') {
-                hiden_error_message($('#id_edition'));
+                if(!$('#id_edition').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_edition'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_edition'));
+                }
             } else {
                 show_error_message($('#id_edition'), 'Este campo es requerido');
             }
@@ -41,7 +49,11 @@ const CreateProcesses = function () {
 
         $('#id_revision').on('change', function () {
             if ($('#id_revision').val() != '') {
-                hiden_error_message($('#id_revision'));
+                 if(!$('#id_revision').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_revision'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_revision'));
+                }
             } else {
                 show_error_message($('#id_revision'), 'Este campo es requerido');
             }
@@ -63,6 +75,11 @@ const CreateProcesses = function () {
                 return;
             }
 
+            if($('#id_abbreviation').val().length > 3) {
+                show_error_message($('#id_abbreviation'), 'Este campo tiene un máximo de 3 caractéres');
+                return;
+            }
+
             if($('#id_responsible').val() == ''){
                 show_error_message($('#id_responsible'), 'Este campo es requerido');
                 return;
@@ -73,8 +90,18 @@ const CreateProcesses = function () {
                 return;
             }
 
+            if(!$('#id_edition').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_edition'), 'Este campo solo admite dígitos');
+                return;
+            }
+
             if($('#id_revision').val() == ''){
                 show_error_message($('#id_revision'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_revision').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_revision'), 'Este campo solo admite dígitos');
                 return;
             }
 
@@ -87,12 +114,13 @@ const CreateProcesses = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'El Proceso se ha registrado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'El Proceso se ha registrado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

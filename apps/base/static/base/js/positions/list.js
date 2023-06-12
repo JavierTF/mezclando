@@ -16,12 +16,13 @@ const ListPositions = function () {
                         url: $(this).attr('model-url'),
                         type: "GET",
                         success: function (data){
-                            Swal.fire(
-                                'El Cargo ha sido eliminada satisfactoriamente!', '', 'success'
-                            ).then((result) => {
-                                setTimeout(function() {
-                                    $(location).attr('href', '');
-                                }, 1250);
+                            Swal.fire({
+                                title: 'El Cargo ha sido eliminado satisfactoriamente!',
+                                type: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', '');
                             });
                         }
                     });

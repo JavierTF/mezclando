@@ -135,6 +135,8 @@
 {% block script %}
     <script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}"></script>
     <script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}"></script>
+    <script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+
     <script>
     $(document).ready(function () {
         $('#id_password1').attr('placeholder', 'Introduzca contraseña');
@@ -198,7 +200,7 @@
     $('#informacion').on('click', function() {
         Swal.fire({
           title: 'Requisitos para la contraseña',
-          html: '<strong>Longitud</strong>: Entre 8 y 15 caracteres.<br><strong>Letras</strong>: Al menos una letra minúscula.<br><strong>Letras</strong>: Al menos una letra mayúscula.<br><strong>Dígitos</strong>: Al menos un dígito.<br><strong>Caracteres</strong>: Al menos uno: $, @, !, %, *, ?, &, ., \\, /.',
+          html: '<strong>Longitud</strong>: Entre 8 y 15 caracteres.<br><br><strong>Al menos:</strong><br><strong>Letras</strong>: una minúscula y una mayúscula.<br><strong>Dígitos</strong>: un número.<br><strong>Caracteres especiales</strong>: $, @, !, %, *, ?, &, ., \\, /.',
           confirmButtonText: 'Aceptar',
         });
       });
@@ -207,17 +209,19 @@
         event.preventDefault();     
         
         var x = validate_campos_iguales($('#id_password1'), $('#id_password2'), "contraseña");
-        console.log(x);   
+        console.log('campos iguales', x);   
 
         var href = $(this).attr('formaction');
-        var success = $(this).attr('formsuccess'); 
+        var success = $(this).attr('formsuccess');
         var data = $(this).serializeArray();
 
         if (x){
             $.post( href, data).always(function(response){
+                console.log('llegue');
                 if (response.result == 'error'){
                     console.log('error');
                 } else {
+                    console.log('llegue2');
                     window.location.replace(success);
                 }
             })

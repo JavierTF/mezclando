@@ -55,39 +55,42 @@ label.required::after {
                                             </div>
                                         </div>
                                     {%  endfor %}
-                                    <div class="row col-md-8">
-                                        {% for field in form_measurer %}
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label class="control-label">{{ field.label_tag }}</label>
-                                                    <div class="input-content">
-                                                        {{ field }}
-                                                        <small class="text-red">{{ field.errors }}</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                        <div class="col-md-2">
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Nombre</th>
+                                            <th>Calificación</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="table-action">
+                                        </tbody>
+                                    </table>
+                                    <small id="text_error_measurers" class="text-red"></small>
+                                </div>
+                                <div class="row">
+                                    {% for field in form_measurer %}
+                                        <div class="col-md-5">
                                             <div class="form-group">
-                                                <label for=""></label>
+                                                <label class="control-label">{{ field.label_tag }}</label>
                                                 <div class="input-content">
-                                                    <button id="add_measurer" type="button" class="btn btn-info btn-sm">{% trans 'Add' %}</button>
+                                                    {{ field }}
+                                                    <small class="text-red">{{ field.errors }}</small>
                                                 </div>
                                             </div>
                                         </div>
-                                        <table class="table table-bordered table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>No.</th>
-                                                <th>Nombre</th>
-                                                <th>Calificación</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="table-action">
-                                            </tbody>
-                                        </table>
-                                        <small id="text_error_measurers" class="text-red"></small>
+                                    {% endfor %}
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for=""></label>
+                                            <div class="input-content">
+                                                <button id="add_measurer" type="button" class="btn btn-info btn-sm">{% trans 'Add' %}</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-actions fluid">

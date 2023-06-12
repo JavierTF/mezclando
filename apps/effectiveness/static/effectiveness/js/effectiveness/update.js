@@ -160,12 +160,13 @@ const UpdateEffectiveness = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'El proceso ha sido evaluado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'El proceso ha sido evaluado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

@@ -11,9 +11,9 @@ def model_upload_image(instance, filename):
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=150)
-    acronym = models.CharField(max_length=3)
-    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
+    acronym = models.CharField(max_length=3, verbose_name='Siglas')
+    active = models.BooleanField(default=True, verbose_name='Activo')
 
     class Meta:
         verbose_name = 'Country'
@@ -40,20 +40,9 @@ class LogoEntity(models.Model):
         ordering = ('-date', )
 
 
-class Client(models.Model):
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name = 'Client'
-        verbose_name_plural = 'Clients'
-
-    def __str__(self):
-        return self.name
-
-
 class Position(models.Model):
-    name = models.CharField(max_length=150)
-    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
+    active = models.BooleanField(default=True, verbose_name='Activo')
 
     def __str__(self):
         return self.name
@@ -66,10 +55,6 @@ class Employee(models.Model):
     identification = models.CharField(max_length=11, null=True, blank=True, verbose_name="Carnet de indentidad")
     position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True, verbose_name="Cargo")
     active = models.BooleanField(default=True, verbose_name="Activo")
-
-    class Meta:
-        verbose_name = "Trabajador"  # Nombre que se mostrará en las alertas y notificaciones
-        verbose_name_plural = "Trabajadores"  # Nombre en plural (opcional)
 
     def __str__(self):
         return "{}{} {}".format("%s " % self.prefix if self.prefix else "", self.first_name, self.last_name)

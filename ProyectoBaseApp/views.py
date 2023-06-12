@@ -324,17 +324,22 @@ def user_list(request):
 @permission_required('auth.add_user')
 @handle_exceptions
 def user_create(request):
-    # print('USER_CREATE')
-    if request.POST:
+    # print('\n', request.user.has_perm('auth.add_user'), '\n')
+    # print('\n', request.method == 'POST', '\n')
+
+    if request.method == 'POST':
         form = forms.UserForm(request.POST, request.FILES)
         cant_user = models.UserApp.objects.filter(first_name__iexact=request.POST.get('first_name').strip(),last_name__iexact=request.POST.get('last_name').strip()).count()
         if cant_user > 0:
             messages.error(request, 'El usuario ya existe')
             return render(request, 'auth/user_form.html', {'form': form})
+        print('\n', form.is_valid(), '\n')
         if form.is_valid():
             username = form['username'].value()
             grupos = form['groups'].value()
-            form.save()        
+            form.save()
+            print('\n', 'USER_CREATE', '\n')
+
             # UserApp es clase hija de usuario por eso accede a los atributos de usuario    
             usuario = models.UserApp.objects.get(username = username)
             user_filter = models.UserApp.objects.filter(username = username)
@@ -354,7 +359,8 @@ def user_create(request):
                         # usuario.save()
                 except:
                     pass
-            usuario.save()    
+            usuario.save()
+            print('llegueeee')  
             register_logs(request, User, usuario.pk, str(usuario), 1)
             notify.send(request.user, recipient=usuario, verb='Bienvenido a SISGEPO!!!', level='success')
             messages.success(request, "Usuario creado con éxito")

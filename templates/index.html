@@ -62,9 +62,6 @@
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" style="color: white"><i class="fas fa-bars"></i></a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="{% url 'inicio' %}" class="nav-link" style="color: white">Inicio</a>
-            </li>
             {% comment %} <li class="nav-item d-none d-sm-inline-block">
                 <a href="{% url 'profile' request.user.pk %}" class="nav-link" style="color: white">Perfil</a>
             </li> {% endcomment %}
@@ -621,14 +618,14 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.base.view_client %}
+                            {% comment %} {% if perms.base.view_client %}
                             <li class="nav-item">
                                 <a href="{% url 'base:clients' %}" class="nav-link {% block client %}{% endblock %}">
                                     <i class="fa fa-user nav-icon"></i>
                                     <p>Clientes</p>
                                 </a>
                             </li>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             {% if perms.SISGDDO.view_area %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
