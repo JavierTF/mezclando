@@ -84,6 +84,18 @@ const UpdateEmployee = function () {
 
     const initEvent = function () {
 
+        $('#id_prefix').on('change', function () {
+            if ($('#id_prefix').val() != '') {
+                 if(!$('#id_prefix').val().match(/^[A-Za-z.]+$/)) {
+                    show_error_message($('#id_prefix'), 'Este campo solo admite letras');
+                } else {
+                    hiden_error_message($('#id_prefix'));
+                }
+            } else {
+                show_error_message($('#id_prefix'), 'Este campo es requerido');
+            }
+        });
+
         $('#id_first_name').on('change', function () {
             if ($('#id_first_name').val() != '') {
                 hiden_error_message($('#id_first_name'));
@@ -114,7 +126,15 @@ const UpdateEmployee = function () {
 
         $('#id_identification').on('change', function () {
             if ($('#id_identification').val() != '') {
-                hiden_error_message($('#id_identification'));
+                if(!$('#id_identification').val().match(/^\d{2}([0]?[0-9]|[1]?[0-2])([0-2]?[0-9]|[3]?[0-1])\d{5}$/)){
+                    show_error_message($('#id_identification'), 'Formato de carnet de identidad incorrecto');
+                } else {
+                    if($('#id_identification').val().length !== 11) {
+                        show_error_message($('#id_identification'), 'Este campo debe contener 11 caractéres');
+                    } else {
+                        hiden_error_message($('#id_identification'));
+                    }
+                }
             } else {
                 show_error_message($('#id_identification'), 'Este campo es requerido');
             }
@@ -196,6 +216,16 @@ const UpdateEmployee = function () {
 
         $('#form_submit').click(function () {
 
+            if ($('#id_prefix').val() != '') {
+                show_error_message($('#id_prefix'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_prefix').val().match(/^[A-Za-z.]+$/)) {
+                show_error_message($('#id_prefix'), 'Este campo solo admite letras');
+                return;
+            }
+
             if($('#id_first_name').val() == ''){
                 show_error_message($('#id_first_name'), 'Este campo es requerido');
                 return;
@@ -218,6 +248,16 @@ const UpdateEmployee = function () {
 
             if($('#id_identification').val() == ''){
                 show_error_message($('#id_identification'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_identification').val().match(/^\d{2}([0]?[0-9]|[1]?[0-2])([0-2]?[0-9]|[3]?[0-1])\d{5}$/)){
+                show_error_message($('#id_identification'), 'Formato de carnet de identidad incorrecto');
+                return;
+            }
+
+            if($('#id_identification').val().length !== 11) {
+                show_error_message($('#id_identification'), 'Este campo debe contener 11 caractéres');
                 return;
             }
 
@@ -249,12 +289,13 @@ const UpdateEmployee = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'El Empleado se ha modificado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'El Empleado se ha modificado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

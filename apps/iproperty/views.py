@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 
 from apps.base.utils import logs
-from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, IndustrialProperty
-from apps.iproperty.forms import ProductClassificationModelForm, PatentClassificationModelForm, FigurativeElementClassificationModelForm, DrawingClassificationModelForm, IndustrialPropertyModelForm
+from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, TypeLegalDocument, IndustrialProperty
+from apps.iproperty.forms import ProductClassificationModelForm, PatentClassificationModelForm, FigurativeElementClassificationModelForm, DrawingClassificationModelForm, TypeLegalDocumentModelForm, IndustrialPropertyModelForm
 
 
 # Products
@@ -226,6 +226,60 @@ def delete_drawings(request, drawing_id):
     logs(request, DrawingClassification, model, 3)
     model.delete()
     return redirect(reverse_lazy('iproperty:list_drawings'))
+
+
+@permission_required('iproperty.view_typelegaldocument', login_url=reverse_lazy('inicio'), raise_exception=True)
+def list_typelegaldocument(request):
+    models = TypeLegalDocument.objects.all()
+    template_models_list = 'property/type_legal_document/list.html'
+
+    return render(
+        request,
+        'property/type_legal_document/base.html',
+        {
+            'template_models_list': template_models_list,
+            'models': models,
+        }
+    )
+
+
+@permission_required('iproperty.add_typelegaldocument', login_url=reverse_lazy('inicio'), raise_exception=True)
+def create_typelegaldocument(request):
+    form = TypeLegalDocumentModelForm()
+
+    if request.method == 'POST':
+        form = TypeLegalDocumentModelForm(request.POST)
+
+        if form.is_valid():
+            instance = form.save()
+            logs(request, TypeLegalDocument, instance, 1)
+            return JsonResponse({'results': {'url': reverse_lazy('iproperty:list_typelegaldocument')}})
+
+    return render(request, 'property/type_legal_document/create.html', {'form': form})
+
+
+@permission_required('iproperty.change_typelegaldocument', login_url=reverse_lazy('inicio'), raise_exception=True)
+def update_typelegaldocument(request, typelegaldocument_id):
+    instance = get_object_or_404(TypeLegalDocument, pk=typelegaldocument_id)
+    form = TypeLegalDocumentModelForm(instance=instance)
+
+    if request.method == 'POST':
+        form = TypeLegalDocumentModelForm(instance=instance, data=request.POST)
+
+        if form.is_valid():
+            instance = form.save()
+            logs(request, TypeLegalDocument, instance, 2)
+            return JsonResponse({'results': {'url': reverse_lazy('iproperty:list_typelegaldocument')}})
+
+    return render(request, 'property/type_legal_document/update.html', {'instance': instance, 'form': form})
+
+
+@permission_required('iproperty.delete_typelegaldocument', login_url=reverse_lazy('inicio'), raise_exception=True)
+def delete_typelegaldocument(request, typelegaldocument_id):
+    model = get_object_or_404(TypeLegalDocument, pk=typelegaldocument_id)
+    logs(request, TypeLegalDocument, model, 3)
+    model.delete()
+    return redirect(reverse_lazy('iproperty:list_typelegaldocument'))
 
 
 # iProperties

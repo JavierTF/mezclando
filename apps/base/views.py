@@ -287,6 +287,42 @@ def delete_employee(request, employee_id):
     return redirect(reverse_lazy('base:employees'))
 
 
+@permission_required('base.view_employee', login_url=reverse_lazy('inicio'), raise_exception=True)
+def export_employee(request):
+    if request.method == 'GET':
+        logos = get_logos()
+        logo1 = logos['logo1']
+        logo2 = logos['logo2']
+        models = Employee.objects.all()
+        html_string = render_to_string(
+            'base/employees/export_list.html',
+            {'models': models, 'owner': request.user, 'date': request.GET.get('export_date')}
+        )
+        html = HTML(string=html_string, base_url=request.build_absolute_uri())
+        uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
+        main_doc = html.render(
+            stylesheets=[CSS(settings.STATICFILES_DIRS[0] + '/base/css/pdf/styles.css'),
+                         CSS(settings.STATICFILES_DIRS[0] + '/base/css/pdf/style.bundle.pdf.css'),
+                         CSS(string=".logo-header-container {width: 50% !important;background-image: url(" + request.build_absolute_uri(
+                             logo1.url or '') + ");background-position: left top;background-repeat: no-repeat;background-size: 28rem;height: 12rem; opacity: 0.75;} .logo1-header-container {width: 50% !important;background-image: url(" + request.build_absolute_uri(
+                             logo2.url or '') + ");background-position: right top;background-repeat: no-repeat;background-size: 8rem;height: 12rem; opacity: 0.75;}"),
+                         ],
+        )
+
+        main_doc.write_pdf(
+            target=os.path.join(uri_tmp, 'Lista de Trabajadores.pdf'),
+            zoom=0.75,
+        )
+
+        fs = FileSystemStorage(uri_tmp)
+        with fs.open('Lista de Trabajadores.pdf') as pdf:
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="Lista de Trabajadores.pdf"'
+            return response
+
+    return redirect(reverse_lazy('base:employees'))
+
+
 @permission_required('base.view_process', login_url=reverse_lazy('inicio'), raise_exception=True)
 def ProcessView(request):
     """
@@ -507,17 +543,3 @@ def import_db(request, file):
     messages.success(request, "Éxito importando la base de datos")
 
     return redirect(reverse_lazy('base:export_db'))
-
-
-def create_afectation(request):
-    form = AfectationModelForm()
-
-    if request.method == 'POST':
-        form = AfectationModelForm(request.POST)
-
-        if form.is_valid():
-            instance = form.save()
-            logs(request, Afectaciones, instance, 1)
-            return JsonResponse({'results': {'url': reverse_lazy('base:P01')}})
-
-    return render(request, 'base/P01/createAfectation.html', {'form': form})

@@ -11,9 +11,9 @@ def model_upload_image(instance, filename):
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=150)
-    acronym = models.CharField(max_length=3)
-    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
+    acronym = models.CharField(max_length=3, verbose_name='Siglas')
+    active = models.BooleanField(default=True, verbose_name='Activo')
 
     class Meta:
         verbose_name = 'Country'
@@ -41,8 +41,8 @@ class LogoEntity(models.Model):
 
 
 class Position(models.Model):
-    name = models.CharField(max_length=150)
-    active = models.BooleanField(default=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
+    active = models.BooleanField(default=True, verbose_name='Activo')
 
     def __str__(self):
         return self.name
