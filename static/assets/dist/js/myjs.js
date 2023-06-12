@@ -1,14 +1,17 @@
-/*const Toast = Swal.mixin({
-  toast: true,
-  position: 'top-right',
-  iconColor: 'red',
-  customClass: {
-    popup: 'colored-toast'
-  },
-  showConfirmButton: true,
-  timer: 4000,
-  timerProgressBar: false
-})*/
+if (typeof Swal == null){
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-right',
+    iconColor: 'red',
+    customClass: {
+        popup: 'colored-toast'
+    },
+    showConfirmButton: true,
+    timer: 6000,
+    timerProgressBar: false
+    }) 
+}
+
 
 // Para llenar los campos del modal a la hora de editar
 function toModal(pdesc, pabbr) {
@@ -253,9 +256,17 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + dia;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser mayor o igual que " + dia,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + dia;
         } else {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + v2.name;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser mayor o igual que " + v2.name,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -270,9 +281,17 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + dia;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser menor o igual que " + dia,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + dia;
         } else {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + v2.name;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser menor o igual que " + v2.name,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -287,9 +306,17 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + dia;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser mayor que " + dia,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + dia;
         } else {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + v2.name;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser mayor que " + v2.name,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
         return flag;
@@ -305,9 +332,17 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + dia;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser menor que " + dia,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + dia;
         } else {
-          node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + v2.name;
+          Toast.fire({
+            type: 'error',
+            title: v1.name + " debe ser menor que " + v2.name,
+          });
+          // node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -473,8 +508,10 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
         } else {
           Toast.fire({
             type: 'error',
-            title: v1[0]["name"] + " debe ser mayor o igual que " + v2,
+            title: v1[0]["name"] + " debe ser mayor o igual a " + v2 + "elementos",
           });
+          v1 = v1[0]
+          v1.removeClass("is-valid").addClass("is-invalid");
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -493,8 +530,10 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
         } else {
           Toast.fire({
             type: 'error',
-            title: v1[0]["name"] + " debe ser menor o igual que " + v2,
+            title: v1[0]["name"] + " debe ser menos de " + v2 + " elementos",
           });
+          v1 = v1[0]
+          v1.removeClass("is-valid").addClass("is-invalid");
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -513,8 +552,10 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
         } else {
           Toast.fire({
             type: 'error',
-            title: v1[0]["name"] + " debe ser mayor que " + v2,
+            title: v1[0]["name"] + " deben ser más de " + v2 + " elementos",
           });
+          v1 = v1[0]
+          v1.removeClass("is-valid").addClass("is-invalid");
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
@@ -533,8 +574,10 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
         } else {
           Toast.fire({
             type: 'error',
-            title: v1[0]["name"] + " debe ser menor que " + v2,
+            title: v1[0]["name"] + " debe ser menor a " + v2 + " elementos",
           });
+          v1 = v1[0]
+          v1.removeClass("is-valid").addClass("is-invalid");
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {

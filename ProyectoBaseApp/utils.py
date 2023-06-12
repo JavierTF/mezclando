@@ -399,15 +399,18 @@ def list_address_db():
     lines = fich.readlines()
     fich.close()
     res = []
-    if lines.__len__() > 0:
+    if lines:
         for line in lines:
-            fich = line.split("/")[2]
-            date = fich.split("_")[0]
-            Year = date[0:4]
-            Month = date[4:6]
-            Day = date[6:8]
-            res.append([fich,Year,Month,Day])
+            parts = line.split("/")
+            if len(parts) >= 3:
+                fich = parts[2]
+                date = fich.split("_")[0]
+                Year = date[0:4]
+                Month = date[4:6]
+                Day = date[6:8]
+                res.append([fich, Year, Month, Day])
     return res
+
 
 def save_address_dbs(address):
     print('---address', address)

@@ -354,7 +354,7 @@ urlpatterns = [
 
     # Salva y Reastaura bdd
     path('administration/db/save', views.db_save, name="db_save"),
-    path('administration/db/restore/<str:name>)',
+    path('administration/db/restore',
          views.db_restore, name="db_restore"),
 
 #     # Gestion Integrada

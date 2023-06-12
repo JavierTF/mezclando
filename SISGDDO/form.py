@@ -279,13 +279,13 @@ class consecutivo_form(ModelForm):
     area = forms.ModelChoiceField(queryset = area.objects.filter(activo = True), required = True, label = 'Área*',
                 empty_label='Escriba y seleccione...',
                 widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
-    jefe_proyecto = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True, position__in = idJefe), required = True, label = 'Jefe de proyecto*',
+    jefe_proyecto = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True).filter(position__in = idJefe), required = True, label = 'Jefe de proyecto*',
                 empty_label='Escriba y seleccione...',
                 widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
-    especialista_calidad = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True, position__in = idCalidad), required = True, label = 'Especialista de Calidad*',
+    especialista_calidad = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True).filter(position__in = idCalidad), required = True, label = 'Especialista de Calidad*',
                 empty_label='Escriba y seleccione...',
                 widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
-    disennador = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True, position__in = idDisennador), required = True, label = 'Diseñador*',
+    disennador = forms.ModelChoiceField(queryset = Employee.objects.filter(active = True).filter(position__in = idDisennador), required = True, label = 'Diseñador*',
                 empty_label='Escriba y seleccione...',
                 widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
     fuente_financiamiento = forms.ModelChoiceField(queryset = fuente_financiamiento.objects.filter(activo = True), required = True, label = 'Fuente de financiamiento*', 
@@ -416,7 +416,7 @@ class acuerdo_form(ModelForm):
     fecha = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = True, label = 'Fecha*', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
     fecha_limite = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = False, label = 'Fecha límite', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
     fecha_cumplimiento = forms.DateField(initial=datetime.now().strftime("%d/%m/%Y"), required = False, label = 'Fecha de cumplimiento', widget=forms.widgets.DateInput(attrs={'type': 'date', 'class': 'form-control','append': 'fa fa-calendar', 'icon_toggle': True})) 
-    trabajador = forms.ModelMultipleChoiceField(queryset = Employee.objects.filter(active = True), required = True, label = 'Responsable(s)*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
+    employee = forms.ModelMultipleChoiceField(queryset = Employee.objects.filter(active = True), required = True, label = 'Responsable(s)*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
     observaciones = forms.CharField(required = False, label = 'Observaciones', max_length = 250, widget = widgets.Textarea(attrs={'class': 'form-control', 'autocomplete': 'on', 'placeholder': 'Introduzca la observación'}))
     estado = forms.ModelChoiceField(queryset = estado_acuerdo.objects.filter(activo = True), required = True, label = 'Estado*', empty_label='Escriba y seleccione...', widget = widgets.Select(attrs = {'class': ' form-control texto select2','autocomplete': 'on'}))
     activo = forms.BooleanField(initial = True, label = 'Activo*', required = False,
@@ -444,6 +444,9 @@ class acuerdo_form(ModelForm):
                 "id": widgets.NumberInput(attrs={'class': ' form-control','min':1,'max':100000}),
                 "no": widgets.NumberInput(attrs={'class': ' form-control', 'min':1, 'max':100000, 
                     'value' : get_no_acuerdo()}),
+        }
+        labels = {
+            'employee': 'trabajador',
         }
 
 #moduloJavier
@@ -563,7 +566,7 @@ class accion_indicador_objetivo_form(ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(licenciaForm, self).__init__(*args, **kwargs)
 #         # self.fields['entidad_emite'].queryset = entidad.objects.filter(activo=True)
-#         self.fields['trabajador_responsable'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['trabajador_responsable'].queryset = Employee.objects.filter(activo=True)
 #         self.fields['proceso'].queryset = proceso.objects.filter(activo=True)
 
 #     # entidad_emite = forms.ModelChoiceField(queryset=None, label='Entidad que emite*',empty_label='Escriba una opción',widget=widgets.Select(attrs={'class': ' form-control texto select2','autocomplete': 'on'}))
@@ -745,7 +748,7 @@ class incidenciaForm(ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(proyectoForm, self).__init__(*args, **kwargs)
 #         self.fields['area'].queryset = area.objects.filter(activo=True)
-#         self.fields['jefe_proyecto'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['jefe_proyecto'].queryset = Employee.objects.filter(activo=True)
 #         self.fields['estado'].queryset = estado_proyecto.objects.filter()
 #         self.fields['sosi'].queryset = sosi.objects.filter()
 #         self.fields['cenda'].queryset = CENDA.objects.filter()
@@ -777,11 +780,11 @@ class incidenciaForm(ModelForm):
 #         super(entradaproyectoForm, self).__init__(*args, **kwargs)
 #         self.fields['lenguaje_prog'].queryset = lenguaje_prog.objects.filter(activo=True)
 #         self.fields['sistema_operativo'].queryset = sistema_operativo.objects.filter(activo=True)
-#         self.fields['trabajador_calidad_interna'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['trabajador_calidad_interna'].queryset = Employee.objects.filter(activo=True)
 #         self.fields['formatos'].queryset = formato.objects.filter(activo=True)
 #         self.fields['estado_entradas_proyecto'].queryset = estado_entradas_proyecto.objects.filter()
 #         self.fields['proyecto'].queryset = proyecto.objects.filter()
-#         self.fields['jefe_UEB_grupo'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['jefe_UEB_grupo'].queryset = Employee.objects.filter(activo=True)
 
 #     lenguaje_prog = forms.ModelChoiceField(queryset=None,label='Lenguaje de Programación*' ,empty_label='Escriba una opción',widget=widgets.Select(attrs={'class': ' form-control texto select2','autocomplete': 'on'}))
 #     sistema_operativo = forms.ModelChoiceField(queryset=None,label='Sistema Operativo*' ,empty_label='Escriba una opción',widget=widgets.Select(attrs={'class': ' form-control texto select2','autocomplete': 'on'}))
@@ -805,7 +808,7 @@ class incidenciaForm(ModelForm):
 # class atencion_cliente_externoForm(ModelForm):
     # def __init__(self, *args, **kwargs):
     #     super(atencion_cliente_externoForm, self).__init__(*args, **kwargs)
-    #     self.fields['trabajador'].queryset = trabajador.objects.filter(activo=True)
+    #     self.fields['trabajador'].queryset = Employee.objects.filter(activo=True)
     #     self.fields['proceso'].queryset = proceso.objects.filter(activo=True)
     #     self.fields['cliente'].queryset = cliente_externo.objects.filter(activo=True)
     #     self.fields['estado'].queryset = estado_no_conformidad.objects.filter()
@@ -832,7 +835,7 @@ class incidenciaForm(ModelForm):
 class auditoria_internaForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(auditoria_internaForm, self).__init__(*args, **kwargs)
-        self.fields['trabajadores'].queryset = trabajador.objects.filter(activo=True)
+        self.fields['trabajadores'].queryset = Employee.objects.filter(activo=True)
         self.fields['area'].queryset = area.objects.filter(activo=True)
         self.fields['metodos_prueba'].queryset = metodosprueba.objects.filter()
         self.fields['plan_medidas'].queryset = plan_medidas.objects.filter()
@@ -994,7 +997,7 @@ class auditoria_externaForm(ModelForm):
 # class acciones_prevenntivasForm(ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(acciones_prevenntivasForm, self).__init__(*args, **kwargs)
-#         self.fields['responsable'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['responsable'].queryset = Employee.objects.filter(activo=True)
 
 
 #     responsable = forms.ModelMultipleChoiceField(queryset=None,label='Responsable(s)*', widget=widgets.SelectMultiple(attrs={'class': ' form-control texto select2','autocomplete': 'on' ,'multiple':'multiple'}))
@@ -1013,7 +1016,7 @@ class auditoria_externaForm(ModelForm):
 # class acciones_correptivasForm(ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(acciones_correptivasForm, self).__init__(*args, **kwargs)
-#         self.fields['responsable'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['responsable'].queryset = Employee.objects.filter(activo=True)
 
 #     responsable = forms.ModelMultipleChoiceField(queryset=None,label='Responsable(s)*', widget=widgets.SelectMultiple(
 #         attrs={'class': ' form-control texto select2', 'autocomplete': 'on', 'multiple': 'multiple'}))
@@ -1098,7 +1101,7 @@ class procesoForm(ModelForm):
 # class eficacia_procesosForm(ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(eficacia_procesosForm, self).__init__(*args, **kwargs)
-#         self.fields['trabajador'].queryset = trabajador.objects.filter(activo=True)
+#         self.fields['trabajador'].queryset = Employee.objects.filter(activo=True)
 #         self.fields['proceso'].queryset = proceso.objects.filter(activo=True)
 
 #     trabajador = forms.ModelChoiceField(queryset=None,label='Jefe de Proceso*' ,empty_label='Escriba una opción', widget=widgets.Select(

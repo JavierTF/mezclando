@@ -67,6 +67,10 @@ class Employee(models.Model):
     position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True, verbose_name="Cargo")
     active = models.BooleanField(default=True, verbose_name="Activo")
 
+    class Meta:
+        verbose_name = "Trabajador"  # Nombre que se mostrará en las alertas y notificaciones
+        verbose_name_plural = "Trabajadores"  # Nombre en plural (opcional)
+
     def __str__(self):
         return "{}{} {}".format("%s " % self.prefix if self.prefix else "", self.first_name, self.last_name)
 

@@ -69,8 +69,7 @@
                                         <select name="especialista_calidad" class=" form-control texto select2" autocomplete="on" required id="id_especialista_calidad">
                                             <option value="">Escriba y seleccione...</option>                                        
                                             {% for option in ttrab %}
-                                                <option value="{{ option.id }}">
-                                                    {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                <option value="{{ option.id }}">{{ option.first_name }} {{ option.last_name }}
                                                 </option>
                                             {% endfor %}     
                                         </select>
@@ -84,7 +83,7 @@
                                                 <option value="">Escriba y seleccione...</option>                                        
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}">
-                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                        {{ option.first_name }} {{ option.last_name }}
                                                     </option>
                                                 {% endfor %}     
                                             </select>
@@ -180,7 +179,7 @@
                                                 <option value="">Escriba y seleccione...</option>                                        
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}">
-                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                        {{ option.first_name }} {{ option.last_name }}
                                                     </option>
                                                 {% endfor %}     
                                             </select>
@@ -354,18 +353,7 @@
 {% endblock %}
 {% block script %}
 
-    <script type="application/javascript">
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'red',
-            customClass: {
-              popup: 'colored-toast'
-            },
-            showConfirmButton: true,
-            timer: 4000,
-            timerProgressBar: false
-          })        
+    <script type="application/javascript">       
 
 //VALIDACION CAMPOS VACIOS
         $('#id_codigo').bind('focusout',function(){

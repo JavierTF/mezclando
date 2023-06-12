@@ -1,6 +1,4 @@
-import random
 import subprocess
-import uuid
 from datetime import date
 
 from django.contrib import messages
@@ -34,6 +32,11 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from SISGDDO.views_sisgddo import handle_exceptions, is_superuser
+import subprocess
+from getpass import getpass
+import os
+import json
+from django.http import HttpResponse
 
 @handle_exceptions
 def just_login(request):
@@ -54,7 +57,8 @@ def validar(request):
     response['object'] = request.user
     return JsonResponse(response)
 
-@handle_exceptions
+# al entrar me manda para el 404, esto es en ProyectoBaseApp.views.loguear() si le dejo el handle_exceptions como funcion decoradora, que en caso de ser superuser no tiene UserApp, lo ideal sería antes de iniciar todo buscar los usuarios que no tengan datos completos, guardar valores y seguir. (Quizás haya otra vía) (Puede enlentecer el login, aunque debería ser solo para el primer usuario)
+# @handle_exceptions
 def loguear(request):
     # dir_ip = request.META['REMOTE_ADDR']
     # dir_ip = request.META['HTTP_X_FORWARDED_FOR']
@@ -320,7 +324,7 @@ def user_list(request):
 @permission_required('auth.add_user')
 @handle_exceptions
 def user_create(request):
-    print('USER_CREATE')
+    # print('USER_CREATE')
     if request.POST:
         form = forms.UserForm(request.POST, request.FILES)
         cant_user = models.UserApp.objects.filter(first_name__iexact=request.POST.get('first_name').strip(),last_name__iexact=request.POST.get('last_name').strip()).count()
@@ -447,36 +451,113 @@ def history_list(request):
 @staff_member_required
 @handle_exceptions
 def db_save(request):
-    print('**** LLEGUEEE')
-    list = list_address_db()
-    if request.POST:
-        address = "static/db/" + str(date.today().strftime("%Y%m%d")) + "_SISGEPO.sql"
-        try:
-            subprocess.Popen("pg_dump -c -h localhost -p 5432 -U postgres --no-password proyectobasedb >" + address,
-                             shell=True)
-        except:
-            messages.error(request, "Error al salvar los datos")
-            return render(request, 'Security/salvarestaura.html', {'list_db': list})
-        else:
-            save_address_dbs(address)
-            list = list_address_db()
+    lista = list_address_db()
+    
+    # if request.method == 'POST':
+    address = f"static/db/{date.today().strftime('%Y%m%d')}_SISGEPO.sql"
+    password = 'postgres'
+    
+    try:
+        env = os.environ.copy()
+        env['PGPASSWORD'] = password
+        
+        result = subprocess.run(
+            [
+                'pg_dump',
+                '-d',
+                'probando',
+                '-c',
+                '-h',
+                '127.0.0.1',
+                '-p',
+                '5432',
+                '-U',
+                'postgres',
+                '-f',
+                address
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=True,
+            env=env
+        )
+        
+        if result.returncode == 0:
             messages.success(request, "Éxito al salvar los datos")
-            return render(request, 'Security/salvarestaura.html', {'list_db': list})
-    return render(request, 'Security/salvarestaura.html', {'list_db': list})
+            save_address_dbs(address)
+            lista = list_address_db()
+            return render(request, 'Security/salvarestaura.html', {'list_db': lista})
+        else:
+            error_message = result.stderr.strip()
+            print(f"Error al generar el respaldo de la base de datos: {error_message}")
+            messages.error(request, "Error al salvar los datos")
+    except subprocess.CalledProcessError as e:
+        print(f"Error al generar el respaldo de la base de datos: {e.stderr}")
+        messages.error(request, "Error al salvar los datos")
+    
+    return render(request, 'Security/salvarestaura.html', {'list_db': lista})
 
+@csrf_protect
 @login_required
 @staff_member_required
 @handle_exceptions
-def db_restore(request, name):
-    list = list_address_db()
-    print('NAME', name)
-    address = "static/db/" + name
-    try:
-        subprocess.Popen("psql -h localhost -p 5432 -U postgres --no-password proyectobasedb <" + address, shell=True)
-    except:
-        messages.error(request, "Error al restaurar la base de datos")
-        return render(request, 'Security/salvarestaura.html', {'list_db': list})
-    else:
-        messages.success(request, "Éxito restaurando la base de datos")
-        return render(request, 'Security/salvarestaura.html',
-                      {'list_db': list})
+def db_restore(request):
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        data = json.loads(body_unicode)
+        name = data['name']
+        lista = list_address_db()
+        address = "static/db/" + name
+        address = address[:-1]
+        password = 'postgres'
+
+        try:
+            env = os.environ.copy()
+            env['PGPASSWORD'] = password
+
+            try:
+                with open(address, 'r') as file:
+                    try:
+                        result = subprocess.run(
+                            [
+                                'psql',
+                                '-h',
+                                'localhost',
+                                '-p',
+                                '5432',
+                                '-U',
+                                'postgres',
+                                '-d',
+                                'probando',
+                                '-f',
+                                address
+                            ],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            text=True,
+                            check=True,
+                            env=env
+                        )
+                        if result.returncode == 0:
+                            messages.success(request, "Éxito restaurando la base de datos")
+                            return render(request, 'Security/salvarestaura.html', {'list_db': lista})
+                        else:
+                            error_message = result.stderr.strip()
+                            print(f"Error al restaurar la base de datos: {error_message}")
+                            messages.error(request, "Error al restaurar la base de datos")
+                            return HttpResponse("Error al restaurar la base de datos", status=405)
+                    except subprocess.CalledProcessError as e:
+                        print(f"Error al ejecutar el comando psql: {e.stderr}")
+                        messages.error(request, "Error al restaurar la base de datos")
+                        return HttpResponse("Error al restaurar la base de datos", status=405)
+            except IOError as e:
+                print(f"No se puede abrir el archivo: {str(e)}")
+                messages.error(request, "No se puede abrir el archivo")
+                return HttpResponse("No se puede abrir el archivo", status=405)
+        except Exception as e:
+            print(f"Error general: {str(e)}")
+            messages.error(request, "Error al restaurar la base de datos")
+            return HttpResponse("Error al restaurar la base de datos", status=405)
+
+    return render(request, 'Security/salvarestaura.html', {'list_db': lista})

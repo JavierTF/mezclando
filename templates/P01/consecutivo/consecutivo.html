@@ -199,7 +199,7 @@
                                         {{ lt.tipo }}
                                     </td>
                                     <td>
-                                        {% for trab in lt.trabajador.all %}
+                                        {% for trab in lt.employee.all %}
                                             {{ trab }}
                                         {% endfor %}
                                     </td>
@@ -289,28 +289,16 @@
         return filteredRows;
     }
 
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-right',
-        iconColor: 'red',
-        customClass: {
-          popup: 'colored-toast'
-        },
-        showConfirmButton: true,
-        timer: 4000,
-        timerProgressBar: false
-      }) 
-
     $('#exportar').on('click', function() {
         Toast.fire({
             type: 'info',
-            title: 'Exportando PDF...',
+            title: '   Exportando PDF...',
         });
         let arreglo = selectOnlyFiltered();
         if (arreglo.length == 0){
             Toast.fire({
                 type: 'warning',
-                title: 'Nada que exportar...',
+                title: '   Nada que exportar...',
             });
             return;
         }
@@ -318,7 +306,7 @@
         for (x of arreglo) {
             arr.push(x[0]);
         }
-        console.log(arr);
+        //console.log(arr);
         
         var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
         

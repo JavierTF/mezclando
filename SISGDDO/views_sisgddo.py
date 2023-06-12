@@ -16,7 +16,7 @@ from weasyprint import HTML,CSS
 from datetime import date,timedelta,datetime
 from base64 import b64encode
 from dateutil import parser
-from django.contrib.auth.models import Group,User
+from django.contrib.auth.models import User
 from django.template import RequestContext
 from weasyprint import HTML
 from ProyectoBaseApp import models as modelsadmin
@@ -27,7 +27,7 @@ from django.shortcuts import render
 from notifications.signals import notify
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from apps.base.models import Employee
+from apps.base.models import Employee, Position
 from SISGDDO import models, form
 from SISGDDO.models import consecutivo, estado_indicador_objetivos, estado_entradas_proyecto, entrada_proyecto, acuerdo,linea_tematica,incidencia,proyecto,auditoria_externa,auditoria_interna,area,curso,formato,estado_acuerdo,estado_proyecto, trabajador_consecutivo, trabajador_proyecto
 from SISGDDO.models import tipo_proyecto, fuente_financiamiento, formato, estado_entradas_proyecto, entidad, rol_trabajador_proyecto, objetivo, indicador_objetivos, accion_indicador_objetivo, estado_indicador_objetivos
@@ -66,9 +66,27 @@ from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponseServerError
 from functools import wraps
 from django.utils.decorators import method_decorator
+import traceback
+import textwrap
 
 def is_superuser(user):
     return user.is_superuser
+
+# def handle_exceptions(view_func):
+#     @wraps(view_func)
+#     def wrapped_view(request, *args, **kwargs):
+#         try:
+#             return view_func(request, *args, **kwargs)
+#         except (PermissionDenied) as e:
+#             print('\n', 'Excepción: ', e, '\n')
+#             return redirect('error403')        
+#         except (TypeError, ObjectDoesNotExist, ValueError, AttributeError) as e:
+#             print('\n', 'Excepción: ', e, '\n')
+#             return redirect('error404')
+#         except Exception as e:
+#             print('\n', 'Excepción: ', e, '\n')
+#             return redirect('error500')
+#     return wrapped_view
 
 def handle_exceptions(view_func):
     @wraps(view_func)
@@ -76,13 +94,28 @@ def handle_exceptions(view_func):
         try:
             return view_func(request, *args, **kwargs)
         except (PermissionDenied) as e:
-            print('\n', 'Excepción: ', e, '\n')
+            print('\nExcepción:')
+            print(textwrap.fill(str(e), width=100))
+            print('Nombre de la función:', view_func.__name__)
+            print('Template:', request.resolver_match.view_name)
+            print('Línea de error:', traceback.format_exc().splitlines()[-1])
+            print()
             return redirect('error403')        
         except (TypeError, ObjectDoesNotExist, ValueError, AttributeError) as e:
-            print('\n', 'Excepción: ', e, '\n')
+            print('\nExcepción:')
+            print(textwrap.fill(str(e), width=100))
+            print('Nombre de la función:', view_func.__name__)
+            print('Template:', request.resolver_match.view_name)
+            print('Línea de error:', traceback.format_exc().splitlines()[-1])
+            print()
             return redirect('error404')
         except Exception as e:
-            print('\n', 'Excepción: ', e, '\n')
+            print('\nExcepción:')
+            print(textwrap.fill(str(e), width=100))
+            print('Nombre de la función:', view_func.__name__)
+            print('Template:', request.resolver_match.view_name)
+            print('Línea de error:', traceback.format_exc().splitlines()[-1])
+            print()
             return redirect('error500')
     return wrapped_view
 
@@ -174,7 +207,7 @@ class DashboardGraficobarra(LoginRequiredMixin,TemplateView):
         data = 0
         year = datetime.now().year
         for m in range(1,2):
-            cantidad_trabajadores_activos= models.trabajador.objects.filter(activo=True).count()
+            cantidad_trabajadores_activos= Employee.objects.filter(active=True).count()
             data = cantidad_trabajadores_activos
         return data
 
@@ -182,7 +215,7 @@ class DashboardGraficobarra(LoginRequiredMixin,TemplateView):
         data = 0
         year = datetime.now().year
         for m in range(1,2):
-            cantidad_trabajadores_inactivos= models.trabajador.objects.filter(activo=False).count()
+            cantidad_trabajadores_inactivos= Employee.objects.filter(activo=False).count()
             data = cantidad_trabajadores_inactivos
         return data
 
@@ -289,7 +322,7 @@ def listar_incidencias(request):
 
 @login_required()
 def listar_reservasdecuadro(request):
-    listreservas = models.trabajador.objects.filter(es_reserva=True)
+    listreservas = Employee.objects.filter(es_reserva=True)
     contexto = {
         'reservas': listreservas
     }
@@ -297,7 +330,7 @@ def listar_reservasdecuadro(request):
 
 @login_required()
 def det_reservasdecuadro(request,pk):
-    reserva = models.trabajador.objects.filter(pk=pk).get()
+    reserva = Employee.objects.filter(pk=pk).get()
     contexto = {
         'reserva': reserva
     }
@@ -305,7 +338,7 @@ def det_reservasdecuadro(request,pk):
 
 @login_required()
 def det_cuadro(request,pk):
-    cuadro = models.trabajador.objects.filter(pk=pk).get()
+    cuadro = Employee.objects.filter(pk=pk).get()
     contexto = {
         'cuadro': cuadro
     }
@@ -313,7 +346,7 @@ def det_cuadro(request,pk):
 
 @login_required()
 def listar_cuadro(request):
-    listcuadros = models.trabajador.objects.filter(es_cuadro=True)
+    listcuadros = Employee.objects.filter(es_cuadro=True)
     contexto = {
         'cuadros': listcuadros
     }
@@ -330,7 +363,7 @@ def listar_cuadro(request):
 
 # @login_required()
 # def listar_formaciontrabajador(request):
-#     listform = models.trabajador.objects.all()
+#     listform = Employee.objects.all()
 #     contexto = {
 #         'form': listform
 #     }
@@ -820,7 +853,7 @@ class IncidenciasDetailView(LoginRequiredMixin,DetailView):
 
 #vistas #Javier #listar
 @login_required
-@permission_required('sisgddo.view_area')
+@permission_required('SISGDDO.view_area')
 @handle_exceptions
 def listar_area(request):
     contexto = {
@@ -1184,7 +1217,7 @@ class nomarea(LoginRequiredMixin, CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_area'))
+    @method_decorator(permission_required('SISGDDO.add_area'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1500,7 +1533,7 @@ class nomestado_acuerdo(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_estado_acuerdo'))
+    @method_decorator(permission_required('SISGDDO.add_estado_acuerdo'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1537,7 +1570,7 @@ class nomestado_proyecto(LoginRequiredMixin,CreateView):
         }
     
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_estdo_proyecto'))
+    @method_decorator(permission_required('SISGDDO.add_estdo_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1569,7 +1602,7 @@ class nomtipo_proyecto(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_tipo_proyecto'))
+    @method_decorator(permission_required('SISGDDO.add_tipo_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1605,7 +1638,7 @@ class nomtipo_codigo(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_tipo_codigo'))
+    @method_decorator(permission_required('SISGDDO.add_tipo_codigo'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1641,7 +1674,7 @@ class nomfuente_financiamiento(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_fuente_financiamiento'))
+    @method_decorator(permission_required('SISGDDO.add_fuente_financiamiento'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1673,7 +1706,7 @@ class nomformato(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_formato'))
+    @method_decorator(permission_required('SISGDDO.add_formato'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1709,7 +1742,7 @@ class nomentidad(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_entidad'))
+    @method_decorator(permission_required('SISGDDO.add_entidad'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1745,7 +1778,7 @@ class nomestado_entrada(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_estado_entradas_proyecto'))
+    @method_decorator(permission_required('SISGDDO.add_estado_entradas_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1781,7 +1814,7 @@ class nomestado_indicador(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_estado_indicador_objetivos'))
+    @method_decorator(permission_required('SISGDDO.add_estado_indicador_objetivos'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1818,7 +1851,7 @@ class nomrol_trabajador_proyecto(LoginRequiredMixin,CreateView):
         }
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.add_rol_trabajador_proyecto'))
+    @method_decorator(permission_required('SISGDDO.add_rol_trabajador_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -1846,7 +1879,7 @@ class nomrol_trabajador_proyecto(LoginRequiredMixin,CreateView):
             return render(self.request, self.template_name, self.contexto)
 
 @login_required
-@permission_required('sisgddo.add_consecutivo')
+@permission_required('SISGDDO.add_consecutivo')
 @handle_exceptions
 def nomconsecutivo(request):
     tcod = tipo_codigo.objects.filter(activo = True)
@@ -1916,8 +1949,12 @@ def nomconsecutivo(request):
             except:
                 pass
 
+        # idJefe = Position.objects.filter(active = True, name = 'Jefe de Proyecto')
+        # idCalidad = Position.objects.filter(active = True, name = 'Especialista de Calidad')
+        # idDisennador = Position.objects.filter(active = True, name = 'Diseñador')
+
         trabajador_consecutivo.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             consecutivo = objeto,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -1962,7 +1999,7 @@ def nomconsecutivo(request):
                 pass
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             proyecto = proy,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -1975,7 +2012,7 @@ def nomconsecutivo(request):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_entrada_proyecto')
+@permission_required('SISGDDO.add_entrada_proyecto')
 @handle_exceptions
 def nomentrada_proyecto(request, id):
     proy = proyecto.objects.get(consecutivo = id)
@@ -2033,7 +2070,7 @@ def nomentrada_proyecto(request, id):
         # return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_sosi')
+@permission_required('SISGDDO.add_sosi')
 @handle_exceptions
 def nomsosi(request, id):
     cons = consecutivo.objects.get(id = id)
@@ -2086,7 +2123,7 @@ def nomsosi(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_indicador_objetivos')
+@permission_required('SISGDDO.add_indicador_objetivos')
 @handle_exceptions
 def nomindicador_objetivo(request, id = 0):
     test = estado_indicador_objetivos.objects.filter(activo = True)
@@ -2152,7 +2189,7 @@ def nomindicador_objetivo(request, id = 0):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_accion_indicador_objetivo')
+@permission_required('SISGDDO.add_accion_indicador_objetivo')
 @handle_exceptions
 def nomaccion_indicador_objetivo(request, id = 0):
     tarea = area.objects.filter(activo = True)
@@ -2197,7 +2234,7 @@ def nomaccion_indicador_objetivo(request, id = 0):
         return HttpResponseRedirect(success_url)
     
 @login_required
-@permission_required('sisgddo.add_proyecto')
+@permission_required('SISGDDO.add_proyecto')
 @handle_exceptions
 def nomproyecto(request):
     tcod = tipo_codigo.objects.filter(activo = True)
@@ -2269,7 +2306,7 @@ def nomproyecto(request):
                 pass
 
         trabajador_consecutivo.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             consecutivo = objeto,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -2314,32 +2351,33 @@ def nomproyecto(request):
                 pass
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             proyecto = proy,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )        
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['especialista_calidad'].value()),
+            employee = Employee.objects.get(pk = forms['especialista_calidad'].value()),
             proyecto = proy,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
         )
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['disennador'].value()),
+            employee = Employee.objects.get(pk = forms['disennador'].value()),
             proyecto = proy,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
         )
 
         proy.save()
 
-        # register_logs(request, consecutivo, get_object().pk, get_object().__str__(), 2)
+        register_logs(request, objeto, objeto.pk, objeto.__str__(), 2)
+        register_logs(request, proy, proy.pk, proy.__str__(), 2)
 
         messages.success(request, "Consecutivo y Proyecto creados con éxito")
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_objetivo')
+@permission_required('SISGDDO.add_objetivo')
 @handle_exceptions
 def nomobjetivo(request):
     tind = indicador_objetivos.objects.filter(activo = True)
@@ -2387,7 +2425,7 @@ def nomobjetivo(request):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_premio')
+@permission_required('SISGDDO.add_premio')
 @handle_exceptions
 def nompremio(request):
     tent = entidad.objects.filter(activo = True)
@@ -2425,7 +2463,7 @@ def nompremio(request):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.add_acuerdo')
+@permission_required('SISGDDO.add_acuerdo')
 @handle_exceptions
 def nomacuerdo(request):
     ttrab = Employee.objects.filter(active = True)
@@ -2458,11 +2496,11 @@ def nomacuerdo(request):
 
         """hago una lista y para cada formato guardo el elemento,
             la intencion es luego pasarle la lista a consecutivo"""
-        responsables = forms['trabajador'].value()
+        responsables = forms['employee'].value()
         for f in responsables:
             try:
                 felem = Employee.objects.get(pk = f)
-                ac.trabajador.add(felem)
+                ac.employee.add(felem)
             except:
                 pass
 
@@ -2473,7 +2511,7 @@ def nomacuerdo(request):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_premio')
+@permission_required('SISGDDO.change_premio')
 @handle_exceptions
 def premio_update(request, id):
     objeto = premio.objects.get(id = id) 
@@ -2515,7 +2553,7 @@ def premio_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_objetivo')
+@permission_required('SISGDDO.change_objetivo')
 @handle_exceptions
 def objetivo_update(request, id):
     objeto = objetivo.objects.get(id = id) 
@@ -2569,7 +2607,7 @@ def objetivo_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_indicador_objetivos')
+@permission_required('SISGDDO.change_indicador_objetivos')
 @handle_exceptions
 def indicador_objetivo_update(request, id):
     objeto = indicador_objetivos.objects.get(id = id) 
@@ -2628,7 +2666,7 @@ def indicador_objetivo_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_accion_indicador_objetivo')
+@permission_required('SISGDDO.change_accion_indicador_objetivo')
 @handle_exceptions
 def accion_indicador_objetivo_update(request, id):
     objeto = accion_indicador_objetivo.objects.get(id = id) 
@@ -2669,14 +2707,14 @@ def accion_indicador_objetivo_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_acuerdo')
+@permission_required('SISGDDO.change_acuerdo')
 @handle_exceptions
 def acuerdo_update(request, id):
     objeto = acuerdo.objects.get(id = id) 
 
     ttrab = Employee.objects.filter(active = True)
     test = estado_acuerdo.objects.filter(activo = True)
-    myworkers = objeto.trabajador.all()
+    myworkers = objeto.employee.all()
 
     template_name = 'P01/acuerdo/acuerdo_update_form.html'
     success_url = reverse_lazy("listar_acuerdo")
@@ -2711,12 +2749,12 @@ def acuerdo_update(request, id):
 
         """hago una lista y para cada formato guardo el elemento,
             la intencion es luego pasarle la lista a consecutivo"""
-        objeto.trabajador.clear()
-        responsables = forms['trabajador'].value()
+        objeto.employee.clear()
+        responsables = forms['employee'].value()
         for f in responsables:
             try:
                 felem = Employee.objects.get(pk = f)
-                objeto.trabajador.add(felem)
+                objeto.employee.add(felem)
             except:
                 pass
 
@@ -2734,21 +2772,18 @@ class nomfuente_financiamiento(LoginRequiredMixin,CreateView):
             'form' : form.fuente_financiamiento_form
         }
 
-    @login_required
-    @permission_required('sisgddo.add_fuente_financiamiento')
-    @handle_exceptions
+    @method_decorator(login_required)
+    @method_decorator(permission_required('SISGDDO.add_fuente_financiamiento'))
+    @method_decorator(handle_exceptions)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get(self, request):
         return render(request, self.template_name, self.contexto)
 
-    @login_required
-    @permission_required('sisgddo.view_fuente_financiamiento')
-    @handle_exceptions
     def get_success_url(self):
         return reverse_lazy('listar_fuente_financiamiento')
 
-    @login_required
-    @permission_required('sisgddo.add_fuente_financiamiento')
-    @handle_exceptions
     def post(self, request, *args, **kwargs):
         forms = form.fuente_financiamiento_form(request.POST)
         if forms.is_valid():
@@ -2772,7 +2807,7 @@ class area_update(LoginRequiredMixin, UpdateView):
     template_name = 'nomencladores/area/area_update_form.html'
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_area'))
+    @method_decorator(permission_required('SISGDDO.change_area'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -2787,7 +2822,7 @@ class area_update(LoginRequiredMixin, UpdateView):
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
 @login_required
-@permission_required('sisgddo.delete_area')
+@permission_required('SISGDDO.delete_area')
 @handle_exceptions
 def eliminar_area(request, id):
     objeto = models.area.objects.get(id = id)
@@ -2802,7 +2837,7 @@ def eliminar_area(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_trabajador_consecutivo')
+@permission_required('SISGDDO.delete_trabajador_consecutivo')
 @handle_exceptions
 def eliminar_rol_trabajador_consecutivo(request, id):
     objeto = models.rol_trabajador_consecutivo.objects.get(id = id)
@@ -2914,7 +2949,7 @@ def eliminar_clasificacion_dibujo_modelo_industrial(request, id):
 #         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
 @login_required
-@permission_required('sisgddo.delete_trabajador_proyecto')
+@permission_required('SISGDDO.delete_trabajador_proyecto')
 @handle_exceptions
 def eliminar_rol_trabajador_proyecto(request, id):
     objeto = models.rol_trabajador_proyecto.objects.get(id = id)
@@ -2929,7 +2964,7 @@ def eliminar_rol_trabajador_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_consecutivo')
+@permission_required('SISGDDO.delete_consecutivo')
 @handle_exceptions
 def eliminar_consecutivo(request, id):
     objeto = models.consecutivo.objects.get(id = id)
@@ -2944,7 +2979,7 @@ def eliminar_consecutivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_entrada_proyecto')
+@permission_required('SISGDDO.delete_entrada_proyecto')
 @handle_exceptions
 def eliminar_entrada_proyecto(request, id):
     objeto = entrada_proyecto.objects.get(id = id)
@@ -2965,7 +3000,7 @@ def eliminar_entrada_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_premio')
+@permission_required('SISGDDO.delete_premio')
 @handle_exceptions
 def eliminar_premio(request, id):
     objeto = models.premio.objects.get(id = id)
@@ -2985,7 +3020,7 @@ def eliminar_premio(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_acuerdo')
+@permission_required('SISGDDO.delete_acuerdo')
 @handle_exceptions
 def eliminar_acuerdo(request, id):
     objeto = models.acuerdo.objects.get(id = id)
@@ -3005,7 +3040,7 @@ def eliminar_acuerdo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_objetivo')
+@permission_required('SISGDDO.delete_objetivo')
 @handle_exceptions
 def eliminar_objetivo(request, id):
     objeto = models.objetivo.objects.get(id = id)
@@ -3025,7 +3060,7 @@ def eliminar_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_indicador_objetivos')
+@permission_required('SISGDDO.delete_indicador_objetivos')
 @handle_exceptions
 def eliminar_indicador_objetivo(request, id):
     objeto = models.indicador_objetivos.objects.get(id = id)
@@ -3045,7 +3080,7 @@ def eliminar_indicador_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_accion_indicador_objetivo')
+@permission_required('SISGDDO.delete_accion_indicador_objetivo')
 @handle_exceptions
 def eliminar_accion_indicador_objetivo(request, id):
     objeto = models.accion_indicador_objetivo.objects.get(id = id)
@@ -3065,7 +3100,7 @@ def eliminar_accion_indicador_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_sosi')
+@permission_required('SISGDDO.delete_sosi')
 @handle_exceptions
 def eliminar_sosi(request, id):
     objeto = models.sosi.objects.get(id = id)
@@ -3099,7 +3134,7 @@ def eliminar_sosi(request, id):
 #         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
 @login_required
-@permission_required('sisgddo.delete_entrada_proyecto')
+@permission_required('SISGDDO.delete_entrada_proyecto')
 @handle_exceptions
 def eliminar_entrada_proyecto(request, id):
     objeto = models.entrada_proyecto.objects.get(id = id)
@@ -3119,7 +3154,7 @@ def eliminar_entrada_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_proyecto')
+@permission_required('SISGDDO.delete_proyecto')
 @handle_exceptions
 def eliminar_proyecto(request, id):
     objeto = models.proyecto.objects.get(consecutivo = id)
@@ -3136,7 +3171,7 @@ def eliminar_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_consecutivo')
+@permission_required('SISGDDO.delete_consecutivo')
 @handle_exceptions
 def detalle_consecutivo(request, id):
     objeto = models.consecutivo.objects.get(id = id)
@@ -3189,7 +3224,7 @@ def detalle_consecutivo(request, id):
     }
 
 @login_required
-@permission_required('sisgddo.view_premio')
+@permission_required('SISGDDO.view_premio')
 @handle_exceptions
 def detalle_premio(request, id):
     objeto = models.premio.objects.get(id = id)
@@ -3203,7 +3238,7 @@ def detalle_premio(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.view_indicador_objetivos')
+@permission_required('SISGDDO.view_indicador_objetivos')
 @handle_exceptions
 def detalle_indicador_objetivo(request, id):
     objeto = models.indicador_objetivos.objects.get(id = id)
@@ -3227,7 +3262,7 @@ def detalle_indicador_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.view_accion_indicador_objetivo')
+@permission_required('SISGDDO.view_accion_indicador_objetivo')
 @handle_exceptions
 def detalle_accion_indicador_objetivo(request, id):
     objeto = models.accion_indicador_objetivo.objects.get(id = id)
@@ -3247,14 +3282,14 @@ def detalle_accion_indicador_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.view_acuerdo')
+@permission_required('SISGDDO.view_acuerdo')
 @handle_exceptions
 def detalle_acuerdo(request, id):
     objeto = models.acuerdo.objects.get(id = id)
 
     ttrab = Employee.objects.filter(active = True)
     test = estado_acuerdo.objects.filter(activo = True)
-    myworkers = objeto.trabajador.all()
+    myworkers = objeto.employee.all()
 
     template_name = 'P01/acuerdo/acuerdo_detail.html'
     contexto = {
@@ -3269,7 +3304,7 @@ def detalle_acuerdo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.view_objetivo')
+@permission_required('SISGDDO.view_objetivo')
 @handle_exceptions
 def detalle_objetivo(request, id):
     objeto = models.objetivo.objects.get(id = id)
@@ -3289,7 +3324,7 @@ def detalle_objetivo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_rol_trabajador_proyecto')
+@permission_required('SISGDDO.delete_rol_trabajador_proyecto')
 @handle_exceptions
 def eliminar_rol_trabajador_proyecto(request, id):
     objeto = models.rol_trabajador_proyecto.objects.get(id = id)
@@ -3304,7 +3339,7 @@ def eliminar_rol_trabajador_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.view_proyecto')
+@permission_required('SISGDDO.view_proyecto')
 @handle_exceptions
 def detalle_proyecto(request, id):
     objeto = models.proyecto.objects.get(consecutivo = id)
@@ -3390,7 +3425,7 @@ def detalle_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_formato')
+@permission_required('SISGDDO.delete_formato')
 @handle_exceptions
 def eliminar_formato(request, id):
     objeto = models.formato.objects.get(id = id)
@@ -3405,7 +3440,7 @@ def eliminar_formato(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_estado_acuerdo')
+@permission_required('SISGDDO.delete_estado_acuerdo')
 @handle_exceptions
 def eliminar_estado_acuerdo(request, id):
     objeto = models.estado_acuerdo.objects.get(id = id)
@@ -3420,7 +3455,7 @@ def eliminar_estado_acuerdo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_estado_proyecto')
+@permission_required('SISGDDO.delete_estado_proyecto')
 @handle_exceptions
 def eliminar_estado_proyecto(request, id):
     objeto = models.estado_proyecto.objects.get(id = id)
@@ -3435,7 +3470,7 @@ def eliminar_estado_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_estado_entradas_proyecto')
+@permission_required('SISGDDO.delete_estado_entradas_proyecto')
 @handle_exceptions
 def eliminar_estado_entrada(request, id):
     objeto = models.estado_entradas_proyecto.objects.get(id = id)
@@ -3449,7 +3484,7 @@ def eliminar_estado_entrada(request, id):
         return redirect('listar_estado_entrada')
 
 @login_required
-@permission_required('sisgddo.delete_estado_indicador_objetivos')
+@permission_required('SISGDDO.delete_estado_indicador_objetivos')
 @handle_exceptions
 def eliminar_estado_indicador(request, id):
     objeto = models.estado_indicador_objetivos.objects.get(id = id)
@@ -3464,7 +3499,7 @@ def eliminar_estado_indicador(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_tipo_proyecto')
+@permission_required('SISGDDO.delete_tipo_proyecto')
 @handle_exceptions
 def eliminar_tipo_proyecto(request, id):
     objeto = models.tipo_proyecto.objects.get(id = id)
@@ -3479,7 +3514,7 @@ def eliminar_tipo_proyecto(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_tipo_codigo')
+@permission_required('SISGDDO.delete_tipo_codigo')
 @handle_exceptions
 def eliminar_tipo_codigo(request, id):
     objeto = models.tipo_codigo.objects.get(id = id)
@@ -3495,7 +3530,7 @@ def eliminar_tipo_codigo(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_fuente_financiamiento')
+@permission_required('SISGDDO.delete_fuente_financiamiento')
 @handle_exceptions
 def eliminar_fuente_financiamiento(request, id):
     objeto = models.fuente_financiamiento.objects.get(id = id)
@@ -3510,7 +3545,7 @@ def eliminar_fuente_financiamiento(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_entidad')
+@permission_required('SISGDDO.delete_entidad')
 @handle_exceptions
 def eliminar_entidad(request, id):
     objeto = models.entidad.objects.get(id = id)
@@ -3525,7 +3560,7 @@ def eliminar_entidad(request, id):
     return render(request, template_name, contexto)
 
 @login_required
-@permission_required('sisgddo.delete_linea_tematica')
+@permission_required('SISGDDO.delete_linea_tematica')
 @handle_exceptions
 def eliminar_linea_tematica(request, id):
     objeto = models.linea_tematica.objects.get(id = id)
@@ -3540,7 +3575,7 @@ def eliminar_linea_tematica(request, id):
     return render(request, template_name, contexto)
     
 @login_required
-@permission_required('sisgddo.change_area')
+@permission_required('SISGDDO.change_area')
 @handle_exceptions
 def act_desactarea(request, id):
     valor = request.POST.get('activo')
@@ -3703,21 +3738,18 @@ class nomlinea_tematica(LoginRequiredMixin,CreateView):
             'form' : form.linea_tematica_form
         }
 
-    @login_required
-    @permission_required('sisgddo.add_linea_tematica')
-    @handle_exceptions
+    @method_decorator(login_required)
+    @method_decorator(permission_required('SISGDDO.add_linea_tematica'))
+    @method_decorator(handle_exceptions)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get(self, request):
         return render(request, self.template_name, self.contexto)
 
-    @login_required
-    @permission_required('sisgddo.view_linea_tematica')
-    @handle_exceptions
     def get_success_url(self):
         return reverse_lazy('listar_linea_tematica')
 
-    @login_required
-    @permission_required('sisgddo.add_linea_tematica')
-    @handle_exceptions
     def post(self, request, *args, **kwargs):
         forms = form.linea_tematica_form(request.POST)
         # obtener el value valor dentro del forms
@@ -3745,7 +3777,7 @@ class nomlinea_tematica(LoginRequiredMixin,CreateView):
             return render(request, self.template_name, self.contexto)
 
 @login_required
-@permission_required('sisgddo.view_linea_tematica')
+@permission_required('SISGDDO.view_linea_tematica')
 @handle_exceptions
 def listar_linea_tematica(request):
     lineas= models.linea_tematica.objects.filter()
@@ -3755,7 +3787,7 @@ def listar_linea_tematica(request):
     return render(request, 'nomencladores/linea_tematica/linea_tematica.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_estado_acuerdo')
+@permission_required('SISGDDO.view_estado_acuerdo')
 @handle_exceptions
 def listar_estado_acuerdo(request):
     estados = models.estado_acuerdo.objects.filter()
@@ -3765,7 +3797,7 @@ def listar_estado_acuerdo(request):
     return render(request, 'nomencladores/estado_acuerdo/estado_acuerdo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_estado_proyecto')
+@permission_required('SISGDDO.view_estado_proyecto')
 @handle_exceptions
 def listar_estado_proyecto(request):
     estados = models.estado_proyecto.objects.filter()
@@ -3775,7 +3807,7 @@ def listar_estado_proyecto(request):
     return render(request, 'nomencladores/estado_proyecto/estado_proyecto.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_tipo_proyecto')
+@permission_required('SISGDDO.view_tipo_proyecto')
 @handle_exceptions
 def listar_tipo_proyecto(request):
     tipos = models.tipo_proyecto.objects.filter()
@@ -3785,7 +3817,7 @@ def listar_tipo_proyecto(request):
     return render(request, 'nomencladores/tipo_proyecto/tipo_proyecto.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_tipo_codigo')
+@permission_required('SISGDDO.view_tipo_codigo')
 @handle_exceptions
 def listar_tipo_codigo(request):
     tipos = models.tipo_codigo.objects.filter()
@@ -3795,7 +3827,7 @@ def listar_tipo_codigo(request):
     return render(request, 'nomencladores/tipo_codigo/tipo_codigo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_fuente_financiamiento')
+@permission_required('SISGDDO.view_fuente_financiamiento')
 @handle_exceptions
 def listar_fuente_financiamiento(request):
     datos = models.fuente_financiamiento.objects.filter()
@@ -3811,7 +3843,7 @@ class estado_acuerdo_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_estado_acuerdo')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_estado_acuerdo'))
+    @method_decorator(permission_required('SISGDDO.change_estado_acuerdo'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3832,7 +3864,7 @@ class estado_proyecto_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_estado_proyecto')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_estado_proyecto'))
+    @method_decorator(permission_required('SISGDDO.change_estado_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3853,7 +3885,7 @@ class tipo_proyecto_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_tipo_proyecto')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_tipo_proyecto'))
+    @method_decorator(permission_required('SISGDDO.change_tipo_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3874,7 +3906,7 @@ class tipo_codigo_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_tipo_codigo')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_tipo_codigo'))
+    @method_decorator(permission_required('SISGDDO.change_tipo_codigo'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3895,7 +3927,7 @@ class fuente_financiamiento_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_fuente_financiamiento')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_fuente_financiamiento'))
+    @method_decorator(permission_required('SISGDDO.change_fuente_financiamiento'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3916,7 +3948,7 @@ class formato_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_formato')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_formato'))
+    @method_decorator(permission_required('SISGDDO.change_formato'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3937,7 +3969,7 @@ class entidad_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_entidad')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_update'))
+    @method_decorator(permission_required('SISGDDO.change_update'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3958,7 +3990,7 @@ class estado_entrada_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_estado_entrada')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_estado_entradas_proyecto'))
+    @method_decorator(permission_required('SISGDDO.change_estado_entradas_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -3979,7 +4011,7 @@ class estado_indicador_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_estado_entrada')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_estado_indicador_objetivos'))
+    @method_decorator(permission_required('SISGDDO.change_estado_indicador_objetivos'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -4000,7 +4032,7 @@ class rol_trabajador_proyecto_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_rol_trabajador_proyecto')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_rol_trabajador_proyecto'))
+    @method_decorator(permission_required('SISGDDO.change_rol_trabajador_proyecto'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -4021,7 +4053,7 @@ class linea_tematica_update(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy('listar_linea_tematica')
 
     @method_decorator(login_required)
-    @method_decorator(permission_required('auth.change_linea_tematica'))
+    @method_decorator(permission_required('SISGDDO.change_linea_tematica'))
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -4036,7 +4068,7 @@ class linea_tematica_update(LoginRequiredMixin,UpdateView):
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
 @login_required
-@permission_required('sisgddo.change_consecutivo')
+@permission_required('SISGDDO.change_consecutivo')
 @handle_exceptions
 def consecutivo_update(request, id):
 
@@ -4113,10 +4145,10 @@ def consecutivo_update(request, id):
             except:
                 pass
 
-        objeto.trabajador.clear()
+        objeto.employee.clear()
 
         trabajador_consecutivo.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             consecutivo = objeto,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -4164,10 +4196,10 @@ def consecutivo_update(request, id):
             except:
                 pass
 
-        objeto2.trabajador.clear()
+        objeto2.employee.clear()
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             consecutivo = objeto2,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -4178,7 +4210,7 @@ def consecutivo_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_entrada_proyecto')
+@permission_required('SISGDDO.change_entrada_proyecto')
 @handle_exceptions
 def entrada_proyecto_update(request, id):
     # el id es una entrada
@@ -4246,7 +4278,7 @@ def entrada_proyecto_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_sosi')
+@permission_required('SISGDDO.change_sosi')
 @handle_exceptions
 def sosi_update(request, id):
     # el id es un sosi
@@ -4290,7 +4322,7 @@ def sosi_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.view_sosi')
+@permission_required('SISGDDO.view_sosi')
 @handle_exceptions
 def detalle_sosi(request, id):
     # el id es un sosi
@@ -4332,7 +4364,7 @@ def detalle_sosi(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_proyecto')
+@permission_required('SISGDDO.change_proyecto')
 @handle_exceptions
 def proyecto_update(request, id):
     # objeto es un consecutivo
@@ -4398,9 +4430,9 @@ def proyecto_update(request, id):
         'test' : test,
         'tfue' : tfue,
         'myformats' : myformats,
-        'jefe' : jefe.trabajador.id,
-        'calidad' : calidad.trabajador.id,
-        'disennador' : disennador.trabajador.id,
+        'jefe' : jefe.employee.id,
+        'calidad' : calidad.employee.id,
+        'disennador' : disennador.employee.id,
         'previouscode' : form.consecutivo_form.Meta.get_codigo,
 
     }
@@ -4449,10 +4481,10 @@ def proyecto_update(request, id):
             except:
                 pass
 
-        objeto.trabajador.clear()
+        objeto.employee.clear()
 
         trabajador_consecutivo.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             consecutivo = objeto,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
@@ -4498,22 +4530,22 @@ def proyecto_update(request, id):
             except:
                 pass
 
-        objeto2.trabajador.clear()
+        objeto2.employee.clear()
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
+            employee = Employee.objects.get(pk = forms['jefe_proyecto'].value()),
             proyecto = objeto2,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Jefe de proyecto')
         )
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['especialista_calidad'].value()),
+            employee = Employee.objects.get(pk = forms['especialista_calidad'].value()),
             proyecto = objeto2,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Especialista de calidad')
         )
 
         trabajador_proyecto.objects.create(
-            trabajador = Employee.objects.get(pk = forms['disennador'].value()),
+            employee = Employee.objects.get(pk = forms['disennador'].value()),
             proyecto = objeto2,
             rol = rol_trabajador_proyecto.objects.get(nombre = 'Diseñador')
         )
@@ -4525,7 +4557,7 @@ def proyecto_update(request, id):
         return HttpResponseRedirect(success_url)
 
 @login_required
-@permission_required('sisgddo.change_linea_tematica')
+@permission_required('SISGDDO.change_linea_tematica')
 @handle_exceptions
 def act_desactlinea_tematica(request, id):
     valor = request.POST.get('activo')
@@ -4535,7 +4567,7 @@ def act_desactlinea_tematica(request, id):
     return redirect('listar_linea_tematica')
 
 @login_required
-@permission_required('sisgddo.change_estado_acuerdo')
+@permission_required('SISGDDO.change_estado_acuerdo')
 @handle_exceptions
 def act_desactestado_acuerdo(request, id):
     valor = request.POST.get('activo')
@@ -4545,7 +4577,7 @@ def act_desactestado_acuerdo(request, id):
     return redirect('listar_estado_acuerdo')
 
 @login_required
-@permission_required('sisgddo.change_estado_entradas_proyecto')
+@permission_required('SISGDDO.change_estado_entradas_proyecto')
 @handle_exceptions
 def act_desactentrada_proyecto(request, id):
     valor = request.POST.get('activo')
@@ -4560,7 +4592,7 @@ def act_desactentrada_proyecto(request, id):
     # return redirect(f'adicionar/entrada_proyecto/{consec}')
 
 @login_required
-@permission_required('sisgddo.change_consecutivo')
+@permission_required('SISGDDO.change_consecutivo')
 @handle_exceptions
 def act_desactconsecutivo(request, id):
     valor = request.POST.get('activo')
@@ -4584,7 +4616,7 @@ def act_desactconsecutivo(request, id):
     return redirect('listar_consecutivo')
 
 @login_required
-@permission_required('sisgddo.change_proyecto')
+@permission_required('SISGDDO.change_proyecto')
 @handle_exceptions
 def act_desactproyecto(request, id):
     valor = request.POST.get('activo')
@@ -4607,7 +4639,7 @@ def act_desactproyecto(request, id):
     return redirect('listar_proyecto')
 
 @login_required
-@permission_required('sisgddo.change_premio')
+@permission_required('SISGDDO.change_premio')
 @handle_exceptions
 def act_desactpremio(request, id):
     valor = request.POST.get('activo')
@@ -4626,7 +4658,7 @@ def act_desactpremio(request, id):
     return redirect('listar_premio')
 
 @login_required
-@permission_required('sisgddo.change_acuerdo')
+@permission_required('SISGDDO.change_acuerdo')
 @handle_exceptions
 def act_desactacuerdo(request, id):
     valor = request.POST.get('activo')
@@ -4645,7 +4677,7 @@ def act_desactacuerdo(request, id):
     return redirect('listar_acuerdo')
 
 @login_required
-@permission_required('sisgddo.change_indicador_objetivos')
+@permission_required('SISGDDO.change_indicador_objetivos')
 @handle_exceptions
 def act_desactindicador_objetivo(request, id):
     valor = request.POST.get('activo')
@@ -4664,7 +4696,7 @@ def act_desactindicador_objetivo(request, id):
     return redirect('listar_indicador_objetivo')
 
 @login_required
-@permission_required('sisgddo.change_accion_indicador_objetivo')
+@permission_required('SISGDDO.change_accion_indicador_objetivo')
 @handle_exceptions
 def act_desactaccion_indicador_objetivo(request, id):
     valor = request.POST.get('activo')
@@ -4683,7 +4715,7 @@ def act_desactaccion_indicador_objetivo(request, id):
     return redirect('listar_accion_indicador_objetivo')
 
 @login_required
-@permission_required('sisgddo.change_sosi')
+@permission_required('SISGDDO.change_sosi')
 @handle_exceptions
 def act_desactsosi(request, id):
     valor = request.POST.get('activo')
@@ -4702,7 +4734,7 @@ def act_desactsosi(request, id):
     return redirect('listar_sosi')
 
 @login_required
-@permission_required('sisgddo.change_objetivo')
+@permission_required('SISGDDO.change_objetivo')
 @handle_exceptions
 def act_desactobjetivo(request, id):
     valor = request.POST.get('activo')
@@ -4721,7 +4753,7 @@ def act_desactobjetivo(request, id):
     return redirect('listar_objetivo')
 
 @login_required
-@permission_required('sisgddo.change_estado_proyecto')
+@permission_required('SISGDDO.change_estado_proyecto')
 @handle_exceptions
 def act_desactestado_proyecto(request, id):
     valor = request.POST.get('activo')
@@ -4731,7 +4763,7 @@ def act_desactestado_proyecto(request, id):
     return redirect('listar_estado_proyecto')
 
 @login_required
-@permission_required('sisgddo.change_tipo_proyecto')
+@permission_required('SISGDDO.change_tipo_proyecto')
 @handle_exceptions
 def act_desacttipo_proyecto(request, id):
     valor = request.POST.get('activo')
@@ -4741,7 +4773,7 @@ def act_desacttipo_proyecto(request, id):
     return redirect('listar_tipo_proyecto')
 
 @login_required
-@permission_required('sisgddo.change_tipo_codigo')
+@permission_required('SISGDDO.change_tipo_codigo')
 @handle_exceptions
 def act_desacttipo_codigo(request, id):
     valor = request.POST.get('activo')
@@ -4760,7 +4792,7 @@ def act_desacttipo_codigo(request, id):
     return redirect('listar_tipo_codigo')
 
 @login_required
-@permission_required('sisgddo.change_fuente_financiamiento')
+@permission_required('SISGDDO.change_fuente_financiamiento')
 @handle_exceptions
 def act_desactfuente_financiamiento(request, id):
     valor = request.POST.get('activo')
@@ -4770,7 +4802,7 @@ def act_desactfuente_financiamiento(request, id):
     return redirect('listar_fuente_financiamiento')
 
 @login_required
-@permission_required('sisgddo.change_formato')
+@permission_required('SISGDDO.change_formato')
 @handle_exceptions
 def act_desactformato(request, id):
     valor = request.POST.get('activo')
@@ -4780,7 +4812,7 @@ def act_desactformato(request, id):
     return redirect('listar_formato')
 
 @login_required
-@permission_required('sisgddo.change_entidad')
+@permission_required('SISGDDO.change_entidad')
 @handle_exceptions
 def act_desactentidad(request, id):
     valor = request.POST.get('activo')
@@ -4790,7 +4822,7 @@ def act_desactentidad(request, id):
     return redirect('listar_entidad')
 
 @login_required
-@permission_required('sisgddo.change_estado_entradas_proyecto')
+@permission_required('SISGDDO.change_estado_entradas_proyecto')
 @handle_exceptions
 def act_desactestado_entrada(request, id):
     valor = request.POST.get('activo')
@@ -4800,7 +4832,7 @@ def act_desactestado_entrada(request, id):
     return redirect('listar_estado_entrada')
 
 @login_required
-@permission_required('sisgddo.change_estado_indicador_objetivos')
+@permission_required('SISGDDO.change_estado_indicador_objetivos')
 @handle_exceptions
 def act_desactestado_indicador(request, id):
     valor = request.POST.get('activo')
@@ -4810,7 +4842,7 @@ def act_desactestado_indicador(request, id):
     return redirect('listar_estado_indicador')
 
 @login_required
-@permission_required('sisgddo.change_consecutivo')
+@permission_required('SISGDDO.change_consecutivo')
 @handle_exceptions
 def act_desactrol_consecutivo(request, id):
     valor = request.POST.get('activo')
@@ -4820,7 +4852,7 @@ def act_desactrol_consecutivo(request, id):
     return redirect('listar_rol_trabajador_consecutivo')
 
 @login_required
-@permission_required('sisgddo.change_rol_trabajador_proyecto')
+@permission_required('SISGDDO.change_rol_trabajador_proyecto')
 @handle_exceptions
 def act_desactrol_proyecto(request, id):
     valor = request.POST.get('activo')
@@ -4857,13 +4889,13 @@ def act_desactProc(request,id):
 # @login_required()
 # def act_desactTrabajador(request,id):
 #     valor_campo = request.POST.get('activo')
-#     trabajador = models.trabajador.objects.get(id=id)
-#     trabajador.activo = True if valor_campo == "on" else False
-#     trabajador.save()
+#     employee = Employee.objects.get(id=id)
+#     employee.activo = True if valor_campo == "on" else False
+#     employee.save()
 #     return redirect('listar_trabajadores')
 
 @login_required
-@permission_required('sisgddo.change_formato')
+@permission_required('SISGDDO.change_formato')
 @handle_exceptions
 def listar_formato(request):
     datos = models.formato.objects.filter()
@@ -4873,7 +4905,7 @@ def listar_formato(request):
     return render(request, 'nomencladores/formato/formato.html', contexto)
 
 @login_required
-@permission_required('sisgddo.change_entidad')
+@permission_required('SISGDDO.change_entidad')
 @handle_exceptions
 def listar_entidad(request):
     datos = models.entidad.objects.filter()
@@ -4883,7 +4915,7 @@ def listar_entidad(request):
     return render(request, 'nomencladores/entidad/entidad.html', contexto)
 
 @login_required
-@permission_required('sisgddo.change_estado_entradas_proyecto')
+@permission_required('SISGDDO.change_estado_entradas_proyecto')
 @handle_exceptions
 def listar_estado_entrada(request):
     datos = models.estado_entradas_proyecto.objects.filter()
@@ -4893,7 +4925,7 @@ def listar_estado_entrada(request):
     return render(request, 'nomencladores/estado_entrada/estado_entrada.html', contexto)
 
 @login_required
-@permission_required('sisgddo.change_estado_indicador_objetivos')
+@permission_required('SISGDDO.change_estado_indicador_objetivos')
 @handle_exceptions
 def listar_estado_indicador(request):
     datos = models.estado_indicador_objetivos.objects.filter()
@@ -4903,7 +4935,7 @@ def listar_estado_indicador(request):
     return render(request, 'nomencladores/estado_indicador/estado_indicador.html', contexto)
 
 @login_required
-@permission_required('sisgddo.change_rol_trabajador_proyecto')
+@permission_required('SISGDDO.change_rol_trabajador_proyecto')
 @handle_exceptions
 def listar_rol_trabajador_consecutivo(request):
     datos = models.rol_trabajador_consecutivo.objects.filter()
@@ -4913,7 +4945,7 @@ def listar_rol_trabajador_consecutivo(request):
     return render(request, 'nomencladores/rol_trabajador_consecutivo/rol_trabajador_consecutivo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.change_rol_trabajador_proyecto')
+@permission_required('SISGDDO.change_rol_trabajador_proyecto')
 @handle_exceptions
 def listar_rol_trabajador_proyecto(request):
     datos = models.rol_trabajador_proyecto.objects.filter()
@@ -4923,9 +4955,11 @@ def listar_rol_trabajador_proyecto(request):
     return render(request, 'nomencladores/rol_trabajador_proyecto/rol_trabajador_proyecto.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_consecutivo')
+@permission_required('SISGDDO.view_consecutivo')
 @handle_exceptions
 def listar_consecutivo(request):
+    # sys.stdout.reconfigure(line_buffering=True, encoding='utf-8', errors='backslashreplace', width=1000)
+
     datos = models.consecutivo.objects.all()
     contexto = {
         'lista': datos,
@@ -4977,7 +5011,7 @@ def listar_consecutivo(request):
 #         return HttpResponse(pdf, content_type = 'application/pdf')
 
 @login_required
-@permission_required('sisgddo.view_entradas_proyecto')
+@permission_required('SISGDDO.view_entradas_proyecto')
 @handle_exceptions
 def listar_entrada_proyecto(request):
     datos = models.entradas_proyecto.objects.all()
@@ -4988,7 +5022,7 @@ def listar_entrada_proyecto(request):
     return render(request, 'P01/entrada_proyecto/entrada_proyecto.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_sosi')
+@permission_required('SISGDDO.view_sosi')
 @handle_exceptions
 def listar_sosi(request):
     datos = models.sosi.objects.all()
@@ -5000,7 +5034,7 @@ def listar_sosi(request):
     return render(request, 'P01/sosi/sosi.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_indicador_objetivos')
+@permission_required('SISGDDO.view_indicador_objetivos')
 @handle_exceptions
 def listar_indicador_objetivo(request):
     datos = models.indicador_objetivos.objects.all()
@@ -5012,7 +5046,7 @@ def listar_indicador_objetivo(request):
     return render(request, 'P01/indicador_objetivo/indicador_objetivo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_accion_indicador_objetivo')
+@permission_required('SISGDDO.view_accion_indicador_objetivo')
 @handle_exceptions
 def listar_accion_indicador_objetivo(request):
     datos = models.accion_indicador_objetivo.objects.all()
@@ -5024,7 +5058,7 @@ def listar_accion_indicador_objetivo(request):
     return render(request, 'P01/accion_indicador_objetivo/accion_indicador_objetivo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_proyecto')
+@permission_required('SISGDDO.view_proyecto')
 @handle_exceptions
 def listar_proyecto(request):
     datos = models.proyecto.objects.all()
@@ -5035,7 +5069,7 @@ def listar_proyecto(request):
     return render(request, 'P01/proyecto/proyecto.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_objetivo')
+@permission_required('SISGDDO.view_objetivo')
 @handle_exceptions
 def listar_objetivo(request):
     datos = models.objetivo.objects.all()
@@ -5054,7 +5088,7 @@ def listar_objetivo(request):
     return render(request, 'P01/objetivo/objetivo.html', contexto)
 
 @login_required
-@permission_required('sisgddo.view_premio')
+@permission_required('SISGDDO.view_premio')
 @handle_exceptions
 def listar_premio(request):
     datos = models.premio.objects.all()
@@ -5083,7 +5117,7 @@ def listar_premio(request):
 
 @csrf_protect
 @login_required
-@permission_required(['sisgddo.view_consecutivo', 'sisgddo.view_premio'])
+@permission_required(['SISGDDO.view_consecutivo', 'SISGDDO.view_premio'])
 @handle_exceptions
 def exportar(request):
     if request.method == "POST":
@@ -5100,6 +5134,8 @@ def exportar(request):
                 arr = models.consecutivo.objects.filter(pk__in=objs)
             elif data['tabla'] == 'premio':
                 arr = models.premio.objects.filter(pk__in=objs)
+            elif data['tabla'] == 'proyecto':
+                arr = models.proyecto.objects.filter(pk__in=objs)
             else:
                 pass
         except:
@@ -5116,10 +5152,10 @@ def exportar(request):
         try:
             if data['tabla'] == 'consecutivo':
                 html_string = render_to_string('reportes/tabla.html', contexto)
-                # arr = models.consecutivo.objects.filter(pk__in=objs)
             elif data['tabla'] == 'premio':
                 html_string = render_to_string('reportes/tabla_premio.html', contexto)
-                # arr = models.proyecto.objects.filter(pk__in=objs)
+            elif data['tabla'] == 'proyecto':
+                html_string = render_to_string('reportes/tabla.html', contexto)
             else:
                 pass
         except:
@@ -5136,10 +5172,11 @@ def exportar(request):
     return HttpResponse("Método no permitido", status=405)
 
 @login_required
-@permission_required('sisgddo.view_acuerdo')
+@permission_required('SISGDDO.view_acuerdo')
 @handle_exceptions
 def listar_acuerdo(request):
     datos = models.acuerdo.objects.all()
+
     contexto = {
         'lista': datos,
     }
@@ -5330,7 +5367,7 @@ def listar_auditoriaexterna(request):
 #         forms = form.trabajadorForm(request.POST)
 #         if forms.is_valid():
 #             forms.save()
-#             id_trabajo = trabajador.objects.last()
+#             id_trabajo = Employee.objects.last()
 #             register_logs(request, trabajador, id_trabajo.pk, id_trabajo.__str__(), 1)
 #             messages.success(request, "Registro creado con éxito")
 #             return HttpResponseRedirect(self.success_url)
@@ -5341,7 +5378,7 @@ def listar_auditoriaexterna(request):
 
 # @login_required()
 # def listar_trabajadoresentrar(request):
-#     listtrab=models.trabajador.objects.all()
+#     listtrab=Employee.objects.all()
 #     contexto = {
 #         'listtrab': listtrab
 #     }
@@ -5515,7 +5552,7 @@ class clasificacionincidenciasUpdate(LoginRequiredMixin,UpdateView):
 #         if forms.is_valid():
 #             encuesta = forms.save(commit=False)
 #             # if request.user.id == 3:
-#             trabajador =models.trabajador.objects.filter(id=11).first()
+#             employee =Employee.objects.filter(id=11).first()
 #             encuesta.elaborado_por = trabajador
 #             encuesta.documento = 'valoracion_encuesta/valoracion_encuesta%s.pdf' % (date.today())
 #             encuesta.save()
@@ -5625,7 +5662,7 @@ def ReporteReserva(request):
     mes_usuario = request.GET.get('mes')
     anno_usuario = request.GET.get('ano')
     if mes_usuario and anno_usuario:
-        for i in models.trabajador.objects.filter(es_reserva=True):
+        for i in Employee.objects.filter(es_reserva=True):
             if int(mes_usuario) == i.fecha_inicio_reserva.month and int(anno_usuario) == i.fecha_inicio_reserva.year:
                 datos.append(i)
     return render(request, 'reportes/reportereservacuadros.html',{'datos': datos,'ano': anno_usuario ,'mes':mes_usuario})
@@ -5636,7 +5673,7 @@ def ReporteCuadros(request):
     mes_usuario = request.GET.get('mes')
     anno_usuario = request.GET.get('ano')
     if mes_usuario and anno_usuario:
-        for i in models.trabajador.objects.filter(es_cuadro=True):
+        for i in Employee.objects.filter(es_cuadro=True):
             if int(mes_usuario) == i.fecha_inicio_cuadro.month and int(anno_usuario) == i.fecha_inicio_cuadro.year:
                 datos.append(i)
     return render(request, 'reportes/reportecuadros.html',{'datos': datos,'ano': anno_usuario ,'mes':mes_usuario})
@@ -5953,7 +5990,7 @@ class ExportarReservas_PDF(LoginRequiredMixin,View):
         datos = []
         mes_usuario = request.GET.get('mes')
         anno_usuario = request.GET.get('ano')
-        for i in models.trabajador.objects.filter(es_reserva=True):
+        for i in Employee.objects.filter(es_reserva=True):
             if int(mes_usuario) == i.fecha_inicio_reserva.month and int(anno_usuario) == i.fecha_inicio_reserva.year:
                 datos.append(i)
         context = {'title': 'Listado de Reservas','datos': datos,'mes': mes_usuario,'ano':anno_usuario}
@@ -5970,7 +6007,7 @@ class ExportarCuadros_PDF(LoginRequiredMixin,View):
         datos = []
         mes_usuario = request.GET.get('mes')
         anno_usuario = request.GET.get('ano')
-        for i in models.trabajador.objects.filter(es_cuadro=True):
+        for i in Employee.objects.filter(es_cuadro=True):
             if int(mes_usuario) == i.fecha_inicio_cuadro.month and int(anno_usuario) == i.fecha_inicio_cuadro.year:
                 datos.append(i)
         context = {'title': 'Listado de Cuadros','datos': datos,'mes': mes_usuario,'ano':anno_usuario}

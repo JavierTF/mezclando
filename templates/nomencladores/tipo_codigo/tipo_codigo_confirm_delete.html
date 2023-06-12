@@ -20,11 +20,11 @@
                     <div class="alert">
 
                     <h4>
-                        ¿Está seguro que desea eliminar la información del tipo de codigo <strong>{{ object.nombre |capfirst }}</strong>?
+                        ¿Está seguro que desea eliminar la información del tipo de código <strong>{{ object.nombre |capfirst }}</strong>?
                         La información no podrá restaurarse.
                     </h4>
-                    <h5>Quizás desee desactivar el Tipo. Al desactivarlo usted no lo podrá utilizar pero no quedará eliminado. Esta opción es reversible.
-                        <a href="{% url 'listar_tipo_codigo' %}" style="color: #007bff">Ir a desactivar tipo de codigo</a> 
+                    <h5>Quizás desee desactivar el Tipo de código. Al desactivarlo usted no lo podrá utilizar pero no quedará eliminado. Esta opción es reversible.
+                        <a href="{% url 'listar_tipo_codigo' %}" style="color: #007bff">Ir a desactivar tipo de código</a> 
                     </h5>
                     &nbsp;
                     <form action="" method="post">{% csrf_token %}

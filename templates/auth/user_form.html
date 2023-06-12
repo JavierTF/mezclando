@@ -26,8 +26,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Formulario usuario</h3>
+                    <div class="card-header row">
+                        <h3 class="card-title col-11">Formulario usuario</h3>
+                        <h3 class="card-title col-1 ">
+                            <a href="javascript:void(0)"><span><i id="informacion" class="fa fa-question-circle fa-pull-right text-info"></i></span></a>
+                        </h3>
                     </div>
                     <!-- /.card-header -->
 
@@ -172,17 +175,33 @@
         validate_regex(r, $('#id_last_name'), text);
     });
 
+    $('#id_password1').focus(function() {
+        $('#informacion').removeClass('text-info').addClass('text-danger');
+    });
+
+    $('#id_password2').focus(function() {
+        $('#informacion').removeClass('text-info').addClass('text-danger');
+    });
+
     $('#id_password1').bind('blur', function(){
-        //validate_campos_vacios($(this));
         const text = "Por favor, inserte contraseña válida";
         validate_regex(d, $('#id_password1'), text);
+        $('#informacion').removeClass('text-danger').addClass('text-info');
     });
     
     $('#id_password2').bind('blur', function(){
-        //validate_campos_vacios($(this));
         const text = "Por favor, inserte contraseña válida";
         validate_regex(d, $('#id_password2'), text);
-    });   
+        $('#informacion').removeClass('text-danger').addClass('text-info');
+    });
+    
+    $('#informacion').on('click', function() {
+        Swal.fire({
+          title: 'Requisitos para la contraseña',
+          html: '<strong>Longitud</strong>: Entre 8 y 15 caracteres.<br><strong>Letras</strong>: Al menos una letra minúscula.<br><strong>Letras</strong>: Al menos una letra mayúscula.<br><strong>Dígitos</strong>: Al menos un dígito.<br><strong>Caracteres</strong>: Al menos uno: $, @, !, %, *, ?, &, ., \\, /.',
+          confirmButtonText: 'Aceptar',
+        });
+      });
 
     $('.form-horizontal').submit(function (event) {
         event.preventDefault();     

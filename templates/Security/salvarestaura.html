@@ -28,7 +28,16 @@
         </div><!-- /.container-fluid -->
     </div>
 {% endblock %}
-
+{% block miestilo %}
+<style>
+    .my-custom-popup-class {
+        border: 1.5px solid #AAAAFF;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        background: #CECEFF;
+        color: #363636;
+      }
+</style>
+{% endblock %}
 {% block content %}
     <section class="content">
         <div class="row">
@@ -88,7 +97,7 @@
                                             <td>
                                 {% if request.user.is_staff %}
                                 <span class="input-group-sm">
-                                <a href="{% url 'db_restore' u.0 %}"
+                                <a id="restaurar" href="javascript:void(0)" aria-href="{% url 'db_restore' %}" aria-data="{{ u.0 }}"
                                    class="btn btn-sm btn-primary" title="Restaurar base de datos">
                                     <i class="fa fa-level-up" title="Restaurar salva"></i>
                                     <i class="fa fa-database"></i>
@@ -117,4 +126,57 @@
         <!-- /.row -->
     </section>
 
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}"></script>
+    <script>
+    $(document).ready(function () {
+        $('#restaurar').on('click', function(e) {
+            e.preventDefault();
+    
+            const alert = Swal.fire({
+                title: '<div class="spinner-background" style="border: none;"><i class="fa-li fa fa-spinner fa-spin fa-2x" style="color: #007BFF;"></i></div>',
+                //html: '<div style="border: none;">Cargando</div>',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                background: 'transparent',
+            });                                                            
+    
+            const href = $(this).attr('aria-href');
+            //console.log($(this).attr('aria-href'))
+            //console.log($(this).attr('aria-data'))
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+    
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', href, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRFToken', csrf_token);
+    
+            var data = {
+                name: $(this).attr('aria-data'),
+            };
+            var jsonData = JSON.stringify(data);
+    
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    //var response = xhr.responseText;
+                    alert.close();
+                    Toast.fire({
+                        type: 'success',
+                        title: '   Datos restaurados',
+                    });
+                } else {
+                    Toast.fire({
+                        type: 'error',
+                        title: 'Error al realizar la solicitud'
+                    });
+                }
+            };
+            xhr.send(jsonData);
+        });
+    });    
+    </script>
 {% endblock %}

@@ -194,19 +194,16 @@
 {% endblock %}
 {% block script %}
 <script>
-      $(document).ready(function()
-{
+    $(document).ready(function(){
+        $('.switch').click(function(){
+            $(this).toggleClass("switchOn");
+        });
 
-$('.switch').click(function()
-    {
-        $(this).toggleClass("switchOn");
     });
-
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
-});
+            $('.checkbox-activate').change(function()
+        {
+        $(this).closest('form').submit();
+    });
 
 </script>
 {% endblock %}

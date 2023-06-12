@@ -387,18 +387,7 @@
 {% endblock %}
 {% block script %}
 
-    <script type="application/javascript">
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'red',
-            customClass: {
-              popup: 'colored-toast'
-            },
-            showConfirmButton: true,
-            timer: 4000,
-            timerProgressBar: false
-          })        
+    <script type="application/javascript">       
 
 //VALIDACION CAMPOS VACIOS
         $('#id_codigo').bind('focusout',function(){

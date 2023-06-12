@@ -129,7 +129,7 @@
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 {% if request.user.is_superuser or request.user.is_staff %}
-                                    {% if not u.0.is_superuser %}
+                                    {% if not u.0.is_superuser and u.0.pk != request.user.pk %}
                                     <a href="{% url 'user_delete' u.0.pk %}"
                                     class="btn btn-sm btn-danger" title="Eliminar">
                                         <i class="fa fa-trash"></i>

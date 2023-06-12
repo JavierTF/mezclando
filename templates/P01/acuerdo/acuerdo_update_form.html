@@ -99,11 +99,11 @@
                                         <div class="form-group col-md-12">
                                             <label class="control-label"><label for="id_responsables">Responsable(s)*:</label></label>
                                             <div>
-                                                <select name="trabajador" class=" form-control texto select2" autocomplete="on" required multiple id="id_responsables">
+                                                <select name="employee" class=" form-control texto select2" autocomplete="on" required multiple id="id_responsables">
                                                     <option value="">Escriba y seleccione...</option>                                        
                                                     {% for option in ttrab %}
                                                         <option value="{{ option.id }}" {% if option in myworkers %} selected {% endif %}>
-                                                            {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                            {{ option.nombre }} {{ option.first_name }} {{ option.last_name }}
                                                         </option>
                                                     {% endfor %}     
                                                 </select>
@@ -157,6 +157,7 @@
 {% block script %}
 
     <script type="application/javascript">
+        $(document).ready(function() {
 
 //VALIDACION CAMPOS VACIOS
         $('#id_numero').prop("disabled", true);
@@ -202,6 +203,6 @@
         });
 
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
-
+});
 </script>
 {% endblock %}

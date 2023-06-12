@@ -39,7 +39,7 @@
     <!-- summernote -->
     <link rel="stylesheet" href="{% static 'assets/plugins/summernote/summernote-bs4.css' %}">
     <!-- Google Font: Source Sans Pro -->
-    <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet">
+    {% comment %} <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet"> {% endcomment %}
 {#    <link rel="stylesheet" href="{% static 'assets/plugins/datatables/jquery.dataTables.min.css' %}">#}
     <link rel="stylesheet" href="{% static 'assets/plugins/datatables-rowgroup/css/rowGroup.bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css' %}">
@@ -249,7 +249,7 @@
 
                     <li class="nav-item has-treeview  {% block menu_gestion %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_gestion_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-user-secret"></i>
+                            <i class="nav-icon fa fa-refresh"></i>
                             <p>
                                 Procesos
                                 <i class="fas fa-angle-left right"></i>
@@ -258,7 +258,7 @@
                         <ul class="nav nav-treeview">
                         <li class="nav-item has-treeview {% block menu_p00 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p00_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-book-reader"></i>
+                            <i class="nav-icon fa fa-share-alt"></i>
                             <p>
                                Gestión Integrada
                                 <i class="fas fa-angle-left right"></i>
@@ -389,7 +389,7 @@
                     {% if perms.SISGDDO.view_premio %}
                     <li class="nav-item has-treeview {% block menu_p03 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p03_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-book-reader"></i>
+                            <i class="nav-icon fa fa-code"></i>
                             <p>
                                 Desarrollo
                                 <i class="fas fa-angle-left right"></i>
@@ -455,7 +455,7 @@
 
                     <li class="nav-item has-treeview {% block menu_p01 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p01_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-book-reader"></i>
+                            <i class="nav-icon fa fa-lightbulb"></i>
                             <p>
                                 Gestión de Innovación
                                 <i class="fas fa-angle-left right"></i>
@@ -464,7 +464,7 @@
                         {% if perms.SISGDDO.view_consecutivo %}
                         <li class="nav-item">
                             <a href="{% url 'listar_consecutivo' %}" class="nav-link {% block consecutivo %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-copyright nav-icon"></i>
                                 <p>Consecutivos</p>
                             </a>
                         </li>
@@ -497,7 +497,7 @@
                         {% if perms.SISGDDO.view_proyecto %}
                         <li class="nav-item">
                             <a href="{% url 'listar_proyecto' %}" class="nav-link {% block proyecto %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fa fa-paypal nav-icon"></i>
                                 <p>Proyectos</p>
                             </a>
                         </li>
@@ -551,7 +551,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'listar_acuerdo' %}"
                                    class="nav-link {% block acuerdo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-font nav-icon"></i>
                                     <p>Acuerdos</p>
                                 </a>
                             </li>
@@ -562,7 +562,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'listar_indicador_objetivo' %}"
                                    class="nav-link {% block indicador_objetivo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-industry nav-icon"></i>
                                     <p>Indicador de Objetivo</p>
                                 </a>
                             </li>
@@ -573,7 +573,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'listar_accion_indicador_objetivo' %}"
                                    class="nav-link {% block accion_indicador_objetivo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-plus-circle nav-icon"></i>
                                     <p>Acciones de Indicadores</p>
                                 </a>
                             </li>
@@ -584,7 +584,7 @@
                             <li class="nav-item">
                                 <a href="{% url 'listar_objetivo' %}"
                                    class="nav-link {% block objetivo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-crosshairs nav-icon"></i>
                                     <p>Objetivos</p>
                                 </a>
                             </li>
@@ -598,7 +598,7 @@
                     <li class="nav-header" style="color: blue"></li>
                     <li class="nav-item has-treeview {% block menu_nomencladores %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_nomencladores_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-user-secret"></i>
+                            <i class="nav-icon fa fa-list-alt"></i>
                             <p >
                                 Nomencladores
                                 <i class="fas fa-angle-left right"></i>
@@ -608,7 +608,7 @@
                             {% if perms.base.view_country %}
                                 <li class="nav-item">
                                     <a href="{% url 'base:countries' %}" class="nav-link {% block country %}{% endblock %}">
-                                        <i class="far fa-circle nav-icon"></i>
+                                        <i class="fa fa-globe nav-icon"></i>
                                         <p>Países</p>
                                     </a>
                                 </li>
@@ -616,7 +616,7 @@
                             {% if perms.base.view_entity %}
                             <li class="nav-item">
                                 <a href="{% url 'base:entities' %}" class="nav-link {% block entity %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-building nav-icon"></i>
                                     <p>Entidades</p>
                                 </a>
                             </li>
@@ -624,7 +624,7 @@
                             {% if perms.base.view_client %}
                             <li class="nav-item">
                                 <a href="{% url 'base:clients' %}" class="nav-link {% block client %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-user nav-icon"></i>
                                     <p>Clientes</p>
                                 </a>
                             </li>
@@ -632,7 +632,7 @@
                             {% if perms.SISGDDO.view_area %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-sitemap nav-icon"></i>
                                     <p>Áreas</p>
                                 </a>
                             </li>
@@ -640,7 +640,7 @@
                             {% if perms.base.view_position %}
                             <li class="nav-item">
                                 <a href="{% url 'base:positions' %}" class="nav-link {% block position %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-briefcase nav-icon"></i>
                                     <p>Cargos</p>
                                 </a>
                             </li>
@@ -648,7 +648,7 @@
                             {% if perms.base.view_employee %}
                             <li class="nav-item">
                                 <a href="{% url 'base:employees' %}" class="nav-link {% block employee %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-id-badge nav-icon"></i>
                                     <p>Trabajadores</p>
                                 </a>
                             </li>
@@ -656,7 +656,7 @@
                             {% if perms.SISGDDO.view_linea_tematica %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_linea_tematica' %}" class="nav-link {% block linea_tematica %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-bookmark nav-icon"></i>
                                     <p>Líneas temáticas</p>
                                 </a>
                             </li>
@@ -664,7 +664,7 @@
                             {% if perms.SISGDDO.view_estado_acuerdo %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_estado_acuerdo' %}" class="nav-link {% block estado_acuerdo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-check-circle nav-icon"></i>
                                     <p>Estados de acuerdo</p>
                                 </a>
                             </li>
@@ -673,15 +673,23 @@
                             {% if perms.SISGDDO.view_estado_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_estado_proyecto' %}" class="nav-link {% block estado_proyecto %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-clock nav-icon"></i>
                                     <p>Estados de proyecto</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.SISGDDO.view_tipo_codigo %}
+                            <li class="nav-item">
+                                <a href="{% url 'listar_tipo_codigo' %}" class="nav-link {% block tipo_codigo %}{% endblock %}">
+                                    <i class="fa fa-text-width nav-icon"></i>
+                                    <p>Tipos de código</p>
                                 </a>
                             </li>
                             {% endif %}
                             {% if perms.SISGDDO.view_tipo_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_tipo_proyecto' %}" class="nav-link {% block tipo_proyecto %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-certificate nav-icon"></i>
                                     <p>Tipos de proyecto</p>
                                 </a>
                             </li>
@@ -689,7 +697,7 @@
                             {% if perms.SISGDDO.view_fuente_financiamiento %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_fuente_financiamiento' %}" class="nav-link {% block fuente_financiamiento %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-credit-card nav-icon"></i>
                                     <p>Fuentes de financiamiento</p>
                                 </a>
                             </li>
@@ -697,7 +705,7 @@
                             {% if perms.SISGDDO.view_formato %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_formato' %}" class="nav-link {% block formato %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-file-text nav-icon"></i>
                                     <p>Formatos</p>
                                 </a>
                             </li>
@@ -705,7 +713,7 @@
                             {% if perms.SISGDDO.view_estado_entrada %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_estado_entrada' %}" class="nav-link {% block estado_entrada %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-calendar nav-icon"></i>
                                     <p>Estados entradas-proyecto</p>
                                 </a>
                             </li>
@@ -721,7 +729,7 @@
                             {% if perms.SISGDDO.view_estado_indicador_objetivos %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_estado_indicador' %}" class="nav-link {% block estado_indicador %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-italic nav-icon"></i>
                                     <p>Estados de indicador</p>
                                 </a>
                             </li>
@@ -737,7 +745,7 @@
                             {% if perms.SISGDDO.view_rol_trabajador_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_rol_trabajador_proyecto' %}" class="nav-link {% block rol_trabajador_proyecto %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-street-view nav-icon"></i>
                                     <p>Roles trabajador-proyecto</p>
                                 </a>
                             </li>
@@ -755,7 +763,7 @@
                             {% if perms.effectiveness.view_indicator %}
                             <li class="nav-item">
                                 <a href="{% url 'effectiveness:indicators' %}" class="nav-link {% block indicator %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-tachometer nav-icon"></i>
                                     <p>Indicadores</p>
                                 </a>
                             </li>
@@ -763,7 +771,7 @@
                             {% if perms.complaints.view_wayofreception %}
                             <li class="nav-item">
                                 <a href="{% url 'complaints:receptions' %}" class="nav-link {% block reception %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-location-arrow nav-icon"></i>
                                     <p>Vías de recepción</p>
                                 </a>
                             </li>
@@ -771,7 +779,7 @@
                             {% if perms.iproperty.view_productclassification %}
                             <li class="nav-item">
                                 <a href="{% url 'iproperty:list_products' %}" class="nav-link {% block products %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-barcode nav-icon"></i>
                                     <p>Clasificación de productos y servicios</p>
                                 </a>
                             </li>
@@ -779,7 +787,7 @@
                             {% if perms.iproperty.view_patentclassification %}
                             <li class="nav-item">
                                 <a href="{% url 'iproperty:list_patents' %}" class="nav-link {% block patents %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-copyright nav-icon"></i>
                                     <p>Clasificación de patentes</p>
                                 </a>
                             </li>
@@ -795,7 +803,7 @@
                             {% if perms.iproperty.view_drawingclassification %}
                             <li class="nav-item">
                                 <a href="{% url 'iproperty:list_drawings' %}" class="nav-link {% block drawings %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-object-group nav-icon"></i>
                                     <p>Clasificación de dibujos</p>
                                 </a>
                             </li>
@@ -857,7 +865,7 @@
                     <li class="nav-header" style="color: blue"></li>
                     <li class="nav-item has-treeview {% block menu_seguridad %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_seguridad_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-user-secret"></i>
+                            <i class="nav-icon fa fa-cog"></i>
                             <p>
                                 Administración
                                 <i class="fas fa-angle-left right"></i>
@@ -866,27 +874,27 @@
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'user_list' %}" class="nav-link {% block usuarios %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-users"></i>
                                     <p>Usuarios</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'group_list' %}" class="nav-link {% block grupo %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-registered nav-icon"></i>
                                     <p>Roles</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'history_list_300' %}"
                                    class="nav-link {% block historial %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-dot-circle nav-icon"></i>
                                     <p>Trazas</p>
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'db_save' %}"
                                    class="nav-link {% block salvabd %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-database"></i>
                                     <p>Salva y Restaura BD</p>
                                 </a>
                             </li>
@@ -1075,7 +1083,7 @@
     $(document).ready(function () {
         const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end',
+            position: 'bottom-right',
             showConfirmButton: false,
             timer: 5000
         });
@@ -1538,6 +1546,17 @@ $(document).ready(function(){
         }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
     }]
 }); {% endcomment %}
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'bottom-right',
+    //iconColor: 'red',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 6000,
+    //timerProgressBar: false
+  }) 
 </script>
 </body>
 </html>

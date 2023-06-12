@@ -68,18 +68,16 @@
 
                                             <td>
                                 <span class="input-group-sm">
-                                <a href="{% url 'db_restore' u.0 %}"
+                                <a href="{% url 'db_restore' %}"
                                    class="btn btn-sm btn-primary" title="Restaurar base de datos">
                                     <i class="fa fa-level-up"></i>
                                     <i class="fa fa-database"></i>
 
                                 </a>
-                                    {% if request.user.is_superuser %}
-                                        <a href="{% static 'db' %}/{{ u.0 }}" class="btn btn-default btn-sm"
-                                        title="Descargar base de datos" download>
-                                        <i class="fa fa-arrow-circle-o-down"></i>
-                                        </a>
-                                    {% endif %}
+                                <a href="{% static 'db' %}/{{ u.0 }}" class="btn btn-default btn-sm"
+                                title="Descargar base de datos" download>
+                                <i class="fa fa-arrow-circle-o-down"></i>
+                                </a>
                                 </span>
                                             </td>
                                         </tr>

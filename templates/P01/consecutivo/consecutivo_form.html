@@ -70,7 +70,7 @@
                                             <option value="">Escriba y seleccione...</option>                                        
                                             {% for option in ttrab %}
                                                 <option value="{{ option.id }}">
-                                                    {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                    {{ option.first_name }} {{ option.last_name }}
                                                 </option>
                                             {% endfor %}     
                                         </select>
@@ -84,7 +84,7 @@
                                                 <option value="">Escriba y seleccione...</option>                                        
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}">
-                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                        {{ option.first_name }} {{ option.last_name }}
                                                     </option>
                                                 {% endfor %}     
                                             </select>
@@ -180,7 +180,7 @@
                                                 <option value="">Escriba y seleccione...</option>                                        
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}">
-                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                        {{ option.first_name }} {{ option.last_name }}
                                                     </option>
                                                 {% endfor %}     
                                             </select>
@@ -355,17 +355,6 @@
 {% block script %}
 
     <script type="application/javascript">
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-right',
-            iconColor: 'red',
-            customClass: {
-              popup: 'colored-toast'
-            },
-            showConfirmButton: true,
-            timer: 4000,
-            timerProgressBar: false
-          })    
           
 //VALIDACION CAMPOS VACIOS
         $('#id_codigo').bind('focusout',function(){

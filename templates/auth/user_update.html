@@ -23,8 +23,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Formulario usuario</h3>
+                    <div class="card-header row">
+                        <h3 class="card-title col-11">Formulario usuario</h3>
+                        <h3 class="card-title col-1 ">
+                            <span><i id="informacion" class="fa fa-question-circle fa-pull-right text-info"></i></span>
+                        </h3>
                     </div>
                     <!-- /.card-header -->
 
@@ -129,14 +132,14 @@
 {% block script %}
     <script src="{% static 'assets/dist/js/myjs.js' %}"></script>
     <script>
-        $(document).ready(function () {
-            $('#id_password1').attr('placeholder', 'Introduzca contraseña');
-            $('#id_password2').attr('placeholder', 'Introduzca contraseña nuevamente');
-            $('#id_username').attr('placeholder', 'Introduzca nombre de usuario');
-            $('#id_email').attr('placeholder', 'Introduzca e-mail de CITMATEL');
-            $('#id_first_name').attr('placeholder', 'Introduzca nombre');
-            $('#id_last_name').attr('placeholder', 'Introduzca apellidos');
-        })
+    $(document).ready(function () {
+        $('#id_password1').attr('placeholder', 'Introduzca contraseña');
+        $('#id_password2').attr('placeholder', 'Introduzca contraseña nuevamente');
+        $('#id_username').attr('placeholder', 'Introduzca nombre de usuario');
+        $('#id_email').attr('placeholder', 'Introduzca e-mail de CITMATEL');
+        $('#id_first_name').attr('placeholder', 'Introduzca nombre');
+        $('#id_last_name').attr('placeholder', 'Introduzca apellidos');
+    })
 
     const r = /^([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+)(\s+([A-Za-zÑñÁáÉéÍíÓóÚú]+['\-]{0,1}[A-Za-zÑñÁáÉéÍíÓóÚú]+))*$/;
     const d = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.\\/])[A-Za-z\d$@$!%*?&.\\/]{8,15}$/;
@@ -157,23 +160,38 @@
         validate_regex(r, $('#id_last_name'), text);
     }
 
+    $('#id_password1').focus(function() {
+        $('#informacion').removeClass('text-info').addClass('text-danger');
+    });
+
+    $('#id_password2').focus(function() {
+        $('#informacion').removeClass('text-info').addClass('text-danger');
+    });
+
     $('#id_password1').bind('blur', function(){
         const text = "Por favor, inserte contraseña válida";
         validate_regex(d, $('#id_password1'), text);
+        $('#informacion').removeClass('text-danger').addClass('text-info');
     });
     
     $('#id_password2').bind('blur', function(){
-        console.log('BLUR');
         const text = "Por favor, inserte contraseña válida";
         validate_regex(d, $('#id_password2'), text);
-    });
+        $('#informacion').removeClass('text-danger').addClass('text-info');
+    });  
+    
+    $('#informacion').on('click', function() {
+        Swal.fire({
+          title: 'Requisitos para la contraseña',
+          html: '<strong>Longitud</strong>: Entre 8 y 15 caracteres.<br><strong>Letras</strong>: Al menos una letra minúscula.<br><strong>Letras</strong>: Al menos una letra mayúscula.<br><strong>Dígitos</strong>: Al menos un dígito.<br><strong>Caracteres</strong>: Al menos uno: $, @, !, %, *, ?, &, ., \\, /.',
+          confirmButtonText: 'Aceptar',
+        });
+      });
 
     $('.form-horizontal').submit(function (event) {
         event.preventDefault();     
 
         let f1 = validar_existencia_ambos(document.getElementById('id_password1'), document.getElementById('id_password2'));  
-        
-        console.log('F1', f1);
         
         var href = $(this).attr('formaction');
         var success = $(this).attr('formsuccess'); 
@@ -181,7 +199,6 @@
 
         if (typeof f1 !== 'undefined'){
             if (!f1){
-                console.log('f1 false');
                 return false;
             } else {
                 var x = validate_campos_iguales($('#id_password1'), $('#id_password2'), "contraseña");                

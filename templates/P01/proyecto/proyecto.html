@@ -110,12 +110,17 @@ left: 24px !important;
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Listado de Proyectos </h3>
+                    <div class="row card-header">
+                        <form id="formExportar" class="form-horizontal col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
+                            {% if perms.SISGDDO.view_proyecto %}
+                                <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
+                            {% endif %}                                
+                        </form>
+                        
                         {% if perms.SISGDDO.add_proyecto %}
-                        <a href="{% url 'adicionar_proyecto' %}" class="btn btn-primary fa-pull-right">
-                            <span class="fa fa-plus"> Adicionar </span>
-                        </a>
+                            <a href="{% url 'adicionar_proyecto' %}" class="btn btn-primary fa-pull-right">
+                                <span class="fa fa-plus"> Adicionar </span>
+                            </a>
                         {% endif %}
                     </div>
                     <!-- /.card-header -->
@@ -270,19 +275,82 @@ left: 24px !important;
 {% endblock %}
 {% block script %}
 <script>
-      $(document).ready(function()
-{
+$(document).ready(function(){
+    var href = $('#formExportar').attr('formaction');
+    
+    var table = $('#example1').DataTable();
+    //table.column(0).visible(false);
 
-$('.switch').click(function()
-    {
+    function selectOnlyFiltered(){
+        var filteredRows = table.rows({filter: 'applied'}).data().toArray();
+        return filteredRows;
+    }
+
+    $('#exportar').on('click', function() {
+        Toast.fire({
+            type: 'info',
+            title: '   Exportando PDF...',
+        });
+        let arreglo = selectOnlyFiltered();
+        if (arreglo.length == 0){
+            Toast.fire({
+                type: 'warning',
+                title: '   Nada que exportar...',
+            });
+            return;
+        }
+        let arr = [];
+        for (x of arreglo) {
+            arr.push(x[0]);
+        }
+        //console.log(arr);
+        
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', href, true);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', csrf_token);
+        
+        var data = {
+            tabla: 'proyecto',
+            arr: arr,
+            titulo: 'Listado de proyectos',
+        };
+        var jsonData = JSON.stringify(data);
+        //console.log(jsonData);
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Crear una URL del Blob de la respuesta
+                var blob = xhr.response;
+                var url = URL.createObjectURL(blob);
+            
+                // Crear un enlace para mostrar el PDF en el navegador
+                var link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.click();
+            } else {
+                // Manejar errores de la solicitud AJAX
+                Toast.fire({
+                    type: 'error',
+                    title: 'Error al obtener el archivo PDF',
+                });
+                //console.error('Error al obtener el archivo PDF.');
+            }
+        };
+        xhr.send(jsonData);
+    });
+
+    $('.switch').click(function(){
         $(this).toggleClass("switchOn");
     });
 
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
-});
-
+    });
+    $('.checkbox-activate').change(function(){
+        $(this).form().submit();
+    });
 </script>
 {% endblock %}

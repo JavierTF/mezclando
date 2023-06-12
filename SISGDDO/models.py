@@ -281,14 +281,13 @@ class acuerdo(models.Model):
     fecha = models.DateField(verbose_name = 'fecha*')
     fecha_limite = models.DateField(verbose_name = 'fecha límite para cumplir', null = True, blank = False)
     fecha_cumplimiento = models.DateField(verbose_name = 'fecha de cumplimiento', null = True, blank = False)
-    trabajador = models.ManyToManyField(Employee, verbose_name = 'responsable*')
+    employee = models.ManyToManyField(Employee, verbose_name = 'responsable*')
     observaciones = models.TextField(verbose_name = 'observaciones', null = True, blank = False)
     estado = models.ForeignKey(estado_acuerdo, on_delete = models.SET('Estado eliminado'), verbose_name = 'estado de acuerdo*', null = True)
     activo = models.BooleanField(default = True, verbose_name = "activo*")
 
     def __str__(self):
-        # return str(self.numero) + str(self.nombre)
-        return str(self.numero)
+        return str(self.numero) + ' ' + str(self.nombre)
 
 # Nomenclador para Incidencias Erik
 # class estado_incidencia(models.Model):
@@ -368,7 +367,7 @@ class consecutivo(models.Model):
     tipo = models.ForeignKey(tipo_proyecto, on_delete = models.SET('Tipo de proyecto eliminado de la Base de datos'),
                             verbose_name = 'tipo de proyecto*', null = True)
     area = models.ForeignKey(area, on_delete = models.SET('Área eliminada de la BD'), verbose_name = 'área*')
-    trabajador = models.ManyToManyField(Employee, verbose_name = 'rol en el proyecto*', through = 'trabajador_consecutivo')
+    employee = models.ManyToManyField(Employee, verbose_name = 'rol en el proyecto*', through = 'trabajador_consecutivo')
     fuente_financiamiento = models.ForeignKey(fuente_financiamiento, on_delete = models.SET('Fuente de financiamiento eliminada de la BD'), verbose_name = 'fuente de financiamiento*', null = True)
     aprobacion_consejo = models.CharField(max_length = 25, verbose_name = 'aprobación Consejo Editorial', null = True, blank = True)
     fecha_aprobacion = models.DateField(default = datetime.now, verbose_name = "fecha de aprobación Consejo Editorial", null = True, blank = True)
@@ -434,7 +433,7 @@ class proyecto(models.Model):
     tipo = models.ForeignKey(tipo_proyecto, on_delete = models.SET('Tipo de proyecto eliminado de la Base de datos'),
                             verbose_name = 'tipo de proyecto*', null = True)
     area = models.ForeignKey(area, on_delete = models.SET('Área eliminada de la BD'), verbose_name = 'área*')
-    trabajador = models.ManyToManyField(Employee, verbose_name = 'rol en el proyecto*', through = 'trabajador_proyecto')
+    employee = models.ManyToManyField(Employee, verbose_name = 'rol en el proyecto*', through = 'trabajador_proyecto')
     fuente_financiamiento = models.ForeignKey(fuente_financiamiento, on_delete = models.SET('Fuente de financiamiento eliminada de la BD'), verbose_name = 'fuente de financiamiento*', null = True)
     aprobacion_consejo = models.CharField(max_length = 25, verbose_name = 'aprobación Consejo Editorial', null = True, blank = True)
     fecha_aprobacion = models.DateField(default = datetime.now, verbose_name = "fecha de aprobación Consejo Editorial", null = True, blank = True)
@@ -482,22 +481,22 @@ class rol_trabajador_proyecto(models.Model):
         return str(self.nombre)
 
 class trabajador_consecutivo(models.Model):
-    trabajador = models.ForeignKey(Employee, verbose_name = 'trabajador*', on_delete = models.CASCADE)
+    employee = models.ForeignKey(Employee, verbose_name = 'trabajador*', on_delete = models.CASCADE)
     consecutivo = models.ForeignKey(consecutivo, verbose_name = 'consecutivo*', on_delete = models.CASCADE, null = True)
     rol = models.ForeignKey(rol_trabajador_proyecto, verbose_name = 'rol*', on_delete = models.SET('Rol eliminado de la BD'))
 
     def __str__(self):
-        return str(self.trabajador) + str(self.consecutivo) + str(self.rol)
+        return str(self.employee) + str(self.consecutivo) + str(self.rol)
 
 #esta tabla es el rol del trabajador en el proyecto
 class trabajador_proyecto(models.Model):
-    trabajador = models.ForeignKey(Employee, verbose_name = 'trabajador*', on_delete = models.CASCADE)
+    employee = models.ForeignKey(Employee, verbose_name = 'trabajador*', on_delete = models.CASCADE)
     proyecto = models.ForeignKey(proyecto, verbose_name = 'proyecto*', on_delete = models.CASCADE)
     rol = models.ForeignKey(rol_trabajador_proyecto, verbose_name = 'rol*', on_delete = models.SET('Rol eliminado de la BD'))
     activo = models.BooleanField(default = True, verbose_name = "activo*")
 
     def __str__(self):
-        return str(self.trabajador) + " " + str(self.proyecto) + " " + str(self.rol)
+        return str(self.employee) + " " + str(self.proyecto) + " " + str(self.rol)
 
 # moduloJavier
 class dato_adicional(proyecto):

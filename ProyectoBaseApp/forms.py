@@ -377,8 +377,8 @@ class UserUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         form = self.get_form(UserAdminProfile)  
         self.object = self.get_object()
-        us = models.UserApp.objects.filter(pk = self.get_object().pk)
-        us = models.UserApp.objects.filter(pk = self.get_object().pk)
+        us = User.objects.filter(pk = self.get_object().pk)
+        userapp = models.UserApp.objects.filter(pk = self.get_object().pk)
 
         us.update(
             username = form['username'].value(),
@@ -390,23 +390,27 @@ class UserUpdate(UpdateView):
             image = form['image'].value(),   
         )
 
+        userapp.update(  
+            image = form['image'].value(),   
+        )
+
         """hago una lista y para cada formato guardo el elemento,
             la intencion es luego pasarle la lista a consecutivo"""
-        mus = models.UserApp.objects.get(pk = self.get_object().pk)
+        # mus = User.objects.get(pk = self.get_object().pk)
 
-        mus.groups.clear()
+        us.groups.clear()
         grupos = form['groups'].value()
         for f in grupos:
             try:
                 felem = Group.objects.get(id = f)
-                mus.groups.add(felem)
+                us.groups.add(felem)
             except:
                 pass
         
-        mus.save()
+        us.save()
 
         notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
-        register_logs(request, models.UserApp, self.get_object().uui, self.get_object().__str__(), 2)
+        register_logs(request, us, self.get_object().uui, self.get_object().__str__(), 2)
         messages.success(request, "Usuario modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
     

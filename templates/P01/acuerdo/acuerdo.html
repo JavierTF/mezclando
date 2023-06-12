@@ -158,7 +158,7 @@ left: 24px !important;
                                         {{ lt.nombre }}
                                     </td>
                                     <td>
-                                        {% for trab in lt.trabajador.all %}
+                                        {% for trab in lt.employee.all %}
                                             {{ trab }} {% if not forloop.last %} - {% endif %}
                                         {% endfor %}
                                     </td>
@@ -218,19 +218,15 @@ left: 24px !important;
 {% endblock %}
 {% block script %}
 <script>
-      $(document).ready(function()
-{
-
-$('.switch').click(function()
-    {
-        $(this).toggleClass("switchOn");
+    $(document).ready(function() {
+        $('.switch').click(function() {
+            $(this).toggleClass("switchOn");
+        });
+    
+        $('.checkbox-activate').change(function() {
+            $(this).closest('form').trigger('submit');
+        });
     });
-
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
-});
 
 </script>
 {% endblock %}
