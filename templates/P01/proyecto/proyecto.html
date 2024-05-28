@@ -827,7 +827,24 @@ $(document).ready(function(){
             }
             fila += '<td>' + formatos + '</td>';
 
-            fila += '<td>' + item.registro_aprobacion__employee + '</td>';
+            // Ciclo para concatenar los empleados según su posición
+            var empleados = '';
+            var jp_empleados = [];
+            var ec_empleados = [];
+
+            for (var i = 0; i < item.empleados.length; i++) {
+                var empleado = item.empleados[i];
+                if (empleado.position__name === 'Jefe de proyecto') {
+                    jp_empleados.push('<strong>JP:</strong> ' + empleado.first_name + ' ' + empleado.last_name);
+                } else if (empleado.position__name === 'Comercial') {
+                    ec_empleados.push('<strong>EC:</strong> ' + empleado.first_name + ' ' + empleado.last_name);
+                }
+            }
+
+            // Concatenar JP y EC empleados
+            empleados += jp_empleados.join(', ') + (jp_empleados.length > 0 && ec_empleados.length > 0 ? '<br>' : '') + ec_empleados.join(', ');
+
+            fila += '<td>' + empleados + '</td>';
             fila += '<td>' + item.estado__nombre + '</td>';
             fila += '<td>';
                 

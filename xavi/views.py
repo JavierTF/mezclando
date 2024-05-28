@@ -7088,7 +7088,7 @@ def listar_proyecto(request):
             num_entradas_activas=Count('entradas', filter=Q(entradas__activo=True))
         ).filter(
             id__in = id_list
-        ).prefetch_related('formato').distinct().order_by('-id')
+        ).prefetch_related('formato', 'registro_aprobacion__employee').distinct().order_by('-id')
 
         # Impresión para depuración
         print(f'Filtrado final: {queryset.count()} proyectos')
@@ -7096,8 +7096,7 @@ def listar_proyecto(request):
 
         # Convertir el queryset a una lista de diccionarios, asegurando eliminación de duplicados y añadiendo los formatos
         proyectos_list = queryset.values(
-            'id', 'nombre_proyecto', 'codigo', 'registro_aprobacion__centro_costo__nombre', 
-            'registro_aprobacion__employee', 'estado__nombre', 'sosi', 'num_entradas_activas'
+            'id', 'nombre_proyecto', 'codigo', 'registro_aprobacion__centro_costo__nombre', 'estado__nombre', 'sosi', 'num_entradas_activas'
         ).distinct()
 
         # Convertir a una lista y agregar formatos manualmente
@@ -7107,6 +7106,9 @@ def listar_proyecto(request):
             # Agregar formatos al proyecto
             proyecto_obj = queryset.get(id=proyecto['id'])
             unique_proyectos[proyecto['id']]['formatos'] = list(proyecto_obj.formato.values('id', 'nombre'))
+
+            empleados = proyecto_obj.registro_aprobacion.employee.values('id', 'first_name', 'last_name', 'position__name')
+            unique_proyectos[proyecto['id']]['empleados'] = list(empleados)
 
         # Convertir el diccionario de vuelta a una lista
         lista_queryset = list(unique_proyectos.values())
