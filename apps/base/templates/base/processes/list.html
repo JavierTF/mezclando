@@ -5,11 +5,11 @@
         <tr>
             <th>No.</th>
             <th>Código</th>
-            <th>Procesos</th>
-            <th>Responsables</th>
+            <th>Proceso</th>
+            <th>Responsable</th>
             <th>Edición</th>
             <th>Revisión</th>
-            <th></th>
+            <th>Acciones</th>        
         </tr>
         </thead>
         <tbody>
@@ -21,39 +21,38 @@
                 <td>
                     {{ model.abbreviation }}
                 </td>
-                <td>{{ model.name }}</td>
+                <td>{% if model.file_exists %}<a href="{{ model.file.url }}" target="_blank">{{ model.name }}</a> {% else %}{{ model.name }}{% endif %}</td>
                 <td>{{ model.responsible|default_if_none:"" }}</td>
                 <td>{{ model.edition }}</td>
                 <td>{{ model.revision }}</td>
                 <td>
                     <span class="input-group">
-                    {% if perms.base.change_process %}
+
                         <a href="{% url 'base:update_processes' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.base.delete_process %}
+                  
+
                         <a href="#" model-url="{% url 'base:delete_processes' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_process" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                   
                     </span>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
-        <tfoot>
+        {% comment %} <tfoot>
         <tr>
             <th>No.</th>
             <th>Código</th>
-            <th>Procesos</th>
-            <th>Responsables</th>
+            <th>Proceso</th>
+            <th>Responsable</th>
             <th>Edición</th>
-            <th>Revisión</th>
-            <th></th>
+            <th>Revisión</th>            
         </tr>
-        </tfoot>
+        </tfoot> {% endcomment %}
     </table>
 </div>

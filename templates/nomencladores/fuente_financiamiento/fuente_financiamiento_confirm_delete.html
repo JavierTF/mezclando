@@ -4,6 +4,27 @@
 {% block page_title %}
     <title>SISGEPO | Eliminar Fuentes de financiamiento</title>
 {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Eliminar Fuente de financiamiento.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_fuente_financiamiento' %}">Fuente de financiamiento</a></li>
+                            <li class="breadcrumb-item active">Eliminar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
 {% block content %}
     <section class="content">
         <div class="row">
@@ -19,15 +40,20 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
+                    <h5 class="text-center">
                         ¿Está seguro que desea eliminar la información de la fuente de financiamiento <strong>{{ object.nombre |capfirst }}</strong>?
-                        La información no podrá restaurarse.
-                    </h4>
-                    <h5>Quizás desee desactivar la Fuente de financiamiento. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
-                        <a href="{% url 'listar_fuente_financiamiento' %}" style="color: #007bff">Ir a desactivar fuente de financiamiento</a> 
+                        <br />La información no podrá restaurarse.
                     </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'eliminar_fuente_financiamiento' object.id %}"
+                        formsuccess="{% url 'listar_fuente_financiamiento' %}"
+                    >
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar

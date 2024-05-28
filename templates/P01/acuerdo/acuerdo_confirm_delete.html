@@ -1,8 +1,8 @@
-{% extends 'P01/acuerdo/acuerdo.html' %}
+{% extends 'P01/acuerdo/acuerdo_form.html' %}
 {% load static %}
 
 {% block page_title %}
-    <title>SISGEPO | Eliminar Acuerdo</title>
+    <title>SISGEPO | Eliminar Acuerdo del Consejo de Dirección</title>
 {% endblock %}
 
 {% block wrapper %}
@@ -10,14 +10,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Eliminar Consecutivo y Acuerdo.</h1>
+                    <h1 class="m-0 text-dark">Eliminar Acuerdo del Consejo de Dirección.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_acuerdo' %}">Acuerdo</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_acuerdo' %}">Acuerdo del Consejo de Dirección</a></li>
                             <li class="breadcrumb-item active">Eliminar </li>
                         {% endblock %}
                     </ol>
@@ -41,15 +42,19 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
+                    <h5 class="text-center">
                         ¿Está seguro que desea eliminar la información del acuerdo <strong>{{ object.nombre |capfirst }}</strong>?
-                        La información no podrá restaurarse.
-                    </h4>
-                    <h5>Quizás desee desactivar el Acuerdo. Al desactivarlo usted no lo podrá utilizar pero no quedará eliminado. Esta opción es reversible.
-                        <a href="{% url 'listar_acuerdo' %}" style="color: #007bff">Ir a desactivar acuerdo</a> 
+                        <br />La información no podrá restaurarse.
                     </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'eliminar_acuerdo' object.id %}"
+                        formsuccess="{% url 'listar_acuerdo' %}"
+                    >
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar

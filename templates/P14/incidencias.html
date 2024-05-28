@@ -88,13 +88,13 @@
                                     <span class="input-group-sm">
                                     {% if perms.SISGDDO.change_incidencias %}
                                     <a href="{% url 'modificar_incidencia' incidencia.pk %}"
-                                        class="btn btn-sm btn-primary" title="modificar">
+                                        class="btn btn-sm btn-primary" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
                                     {% if perms.SISGDDO.view_incidencias %}
                                     <a href="{% url 'detalle_incidencia' incidencia.pk %}"
-                                         class="btn btn-sm btn-primary" title="detalle">
+                                         class="btn btn-sm btn-primary" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}

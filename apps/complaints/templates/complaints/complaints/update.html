@@ -34,6 +34,9 @@ label.required::after {
     content: ' *';
     color: red;
 }
+#myTable_wrapper.dataTables_wrapper.dt-bootstrap4.no-footer {
+    width: 100%;
+}
 </style>
 {% endblock %}
 {% block content %}
@@ -46,17 +49,80 @@ label.required::after {
                             <form id="form_update_complaint" class="form-horizontal" method="post" action="{% url 'complaints:update_complaint' instance.id %}">
                                 {% csrf_token %}
                                 <div class="row form-body">
-                                    {% for field in form %}
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label">{{ field.label_tag }}</label>
-                                                <div class="input-content">
-                                                    {{ field }}
-                                                    <small class="text-red">{{ field.errors }}</small>
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.reception_date.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.reception_date }}
+                                                <small class="text-red">{{ form.reception_date.errors }}</small>
                                             </div>
                                         </div>
-                                    {%  endfor %}
+                                    </div>
+                                    {% if instance.status == 2 %}
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.deadline.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.deadline }}
+                                                <small class="text-red">{{ form.deadline.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.client.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.client }}
+                                                <small class="text-red">{{ form.client.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.process.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.process }}
+                                                <small class="text-red">{{ form.process.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.way_of_reception.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.way_of_reception }}
+                                                <small class="text-red">{{ form.way_of_reception.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.reason.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.reason }}
+                                                <small class="text-red">{{ form.reason.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.status.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.status }}
+                                                <small class="text-red">{{ form.status.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.field.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.field }}
+                                                <small class="text-red">{{ form.field.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr>
                                 <h2>Seguimiento</h2>
@@ -92,7 +158,7 @@ label.required::after {
                                     </table>
                                     <small id="text_error_actions" class="text-red"></small>
                                 </div>
-                                <div class="row">
+                                <div class="row align-items-center">
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="required col-md-4 control-label">Fecha</label>
@@ -120,7 +186,7 @@ label.required::after {
                                 <div class="form-actions fluid">
                                     <div class="col-md-offset-3 col-md-9">
                                         <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
-                                        <a href="{% url 'complaints:list_complaints' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                        <a href="{% url 'complaints:list_complaints' %}" type="button" class="btn btn-danger">Cancelar</a>
                                     </div>
                                 </div>
                             </form>

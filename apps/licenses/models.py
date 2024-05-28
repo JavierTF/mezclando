@@ -8,9 +8,9 @@ from apps.licenses.validators import DateInPastValidator, DateInFutureValidator,
 from apps.licenses.utils import set_license_number
 
 LICENSE_STATUS = (
-    (1, "ACTIVO"),
-    (2, "EN PROCESO"),
-    (3, "VENCIDO"),
+    (1, "Vigente"),
+    (2, "En proceso de renovación"),
+    (3, "Vencido"),
 )
 
 
@@ -26,9 +26,9 @@ class License(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de creada')
     grant_date = models.DateField(verbose_name='Fecha de otorgamiento', validators=[DateInFutureValidator()])
     expiration_date = models.DateField(verbose_name='Fecha de vencimiento')
-    process = models.ForeignKey(Process, verbose_name='Proceso', on_delete=models.CASCADE, related_name='licenses')
+    process = models.ForeignKey(Process, verbose_name='Proceso controlador de la actividad', on_delete=models.CASCADE, related_name='licenses')
     responsible = models.ForeignKey(Employee, verbose_name='Responsable', on_delete=models.CASCADE, related_name='licenses')
-    associated_process = models.ForeignKey(Process, verbose_name='Proceso asociado', on_delete=models.SET_NULL, null=True, blank=True, related_name='associated_processes')
+    associated_process = models.ForeignKey(Process, verbose_name='Proceso responsable de la actividad', on_delete=models.SET_NULL, null=True, blank=True, related_name='associated_processes')
     status = models.PositiveIntegerField(verbose_name='Estado', choices=LICENSE_STATUS, null=True, blank=True, default=1)
     observation = models.TextField(max_length=250, verbose_name='Observación', null=True, blank=True)
     file = models.FileField(verbose_name='Subir Documento', upload_to=model_upload_image, null=True, blank=True)

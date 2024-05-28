@@ -1,0 +1,163 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block titulo_archivo %} {{ titulo_archivo }} {% endblock %}
+    </title>
+    <style>
+        .header {
+            margin-top: -60px !important;
+            margin-bottom: -30px !important;
+        }
+
+        .header-recipe {
+            display: flex;
+            justify-content: space-between;
+            //width: auto;
+        }
+
+        .logo-header-container, .logo1-header-container {
+            width: 130px !important;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            height: 12rem;
+            opacity: 0.75;
+            overflow: hidden;
+        }
+
+        .logo-header-container {
+            margin-left: -10px !important;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+        }     
+
+        .center-text {
+            text-align: center;
+        }
+
+        .bottom-border {
+            border-bottom: 1px solid #ccc;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        #example2 th {
+            text-align: center;
+        }
+
+        #example2 span {
+            color: transparent;
+        }
+
+        .rojo {
+            background-color: #f95858;
+        }
+
+        .naranja {
+            background-color: rgb(235, 156, 58);
+        }
+
+        .verde {
+            background-color: #4fcd4f;
+        }
+
+        {% comment %} EVITAR QUE EL CONTENIDO SALTE DE PAGINA {% endcomment %}
+        table {
+            page-break-inside: avoid;
+            width: 100%;
+        }
+    
+        .no-page-break {
+            page-break-inside: avoid;
+        }
+
+        div.font-black {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="kt-portlet kt-portlet--mobile">
+        <header id="header" class="header">
+            <div class="row header-recipe">
+                <div class="logo-header-container fa-pull-left">
+                    <span class="logo-header-recipe"></span>
+                </div>
+                <div class="logo1-header-container fa-pull-right">
+                    <span class="logo1-header-recipe"></span>
+                </div>
+            </div>
+        </header>
+        <div class="kt-separator mx-auto" style="width: 98%;"></div>
+        <div>
+            <div class="col-12 content-recipe">
+                <table>
+                    <!-- Primera Fila -->
+                    <tr class="kt-separator">
+                        <td colspan="2" class="center-text">
+                            <h6 style="color: black; font-weight: semi-bold;">SISTEMA INTEGRADO DE GESTIÓN.</h6>
+                        </td>
+                    </tr>
+                    <tr class="kt-portlet__body">
+                        <td>
+                            <h6 style="color: black; font-weight: semi-bold;">{% block titulo_tabla %} {{ titulo }} {% endblock %}</h6>
+                        </td>
+                        <td class="text-right">
+                            <h6 style="color: black; font-weight: semi-bold">{{ date|date:"d.M.Y" }}</h6>
+                        </td>
+                    </tr>
+                </table>
+                {% block tabla_dinamica %}
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Afectación</th>
+                            <th>Fecha de recepción</th>
+                            <th>Solicitado por</th>
+                            <th>Responsable</th>
+                            <th>Formato</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="dtrg-group"></tr>
+                        {% for afec in models %}
+                            <tr>
+                                <td>{{ afec.afectacion }}</td>
+                                <td>{{ afec.fecha_recepcion }}</td>
+                                <td>{{ afec.propuesto }}</td>
+                                <td>{{ afec.responsable }}</td>
+                                <td>{{ afec.formato }}</td>
+                                <td>{{ afec.estado }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endblock %}
+                <h6 style="color: black; font-weight: semi-bold">Elaborado por: {{ owner.get_full_name }}</h6>
+            </div>
+            <div class="kt-separator"></div>
+            <footer>
+                <div class="row footer-recipe">
+                    <div class="contact-footer-recipe">
+                        <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                        <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                        <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

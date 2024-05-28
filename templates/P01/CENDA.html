@@ -1,0 +1,109 @@
+{% extends 'index.html' %}
+{% block cenda %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p01 %} active menu-open{% endblock %}
+{% block menu_p01_active %} active {% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Salvas del Centro Nacional de Derecho de Autor.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Salva CENDA</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Listado de Salvas en el CENDA</h3>
+                        {% if perms.SISGDDO.add_cenda %}
+                        <a href="{% url 'agregar_cenda' %}" title="nueva salva" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Salva CENDA</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th>
+                                    Cotitular
+                                </th>
+                                <th>
+                                    Fecha Inscripción
+                                </th>
+                                <th>
+                                    Colección
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for cenda in listcenda %}
+                                {% if request.cenda.id != cenda.pk %}
+                                 <tr>
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+                                        <td>
+                                            {{ cenda.cotitular }}
+                                        </td>
+                                        <td>
+                                            {{ cenda.fecha_incrip }}
+                                        </td>
+                                        <td>
+                                            {{ cenda.coleccion }}
+                                        </td>
+                                        <td>
+                                        <span class="input-group-sm">
+                                        {% if perms.SISGDDO.change_cenda %}
+                                        <a href="{% url 'modificar_cenda' cenda.pk %}"
+                                         class="btn btn-sm btn-primary" title="Modificar">
+                                         <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        </span>
+                                        </td>
+                                 </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}

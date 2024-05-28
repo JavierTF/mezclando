@@ -26,13 +26,13 @@
                 </td>
                 <td>
                     <span class="input-group">
-                    {% if perms.base.change_client %}
+
                         <a href="{% url 'base:update_client' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.base.delete_client %}
+                    
+
                         <a href="#" model-url="{% url 'base:delete_client' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_client" title="eliminar">
                         <i class="fa fa-trash"></i>

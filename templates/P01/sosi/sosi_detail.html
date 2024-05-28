@@ -1,10 +1,10 @@
 {% extends 'P01/sosi/sosi.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
-<script src="{% static 'django_select2/django_select2.js' %}"></script>
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
-<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
     <title>SISGEPO | Detalle de SOSI</title>
@@ -15,17 +15,31 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Detalle SOSI.</h1>
+                    <h1 class="m-0 text-dark">Detalles SOSI </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_sosi' %}">SOSI</a></li>
-                            <li class="breadcrumb-item active">Detalle </li>
+                            <li class="breadcrumb-item active">
+                                {% comment %} <a href="{% url 'listar_sosi' %}"> {% endcomment %}
+                                <a href="javascript:void(0)">
+                                    SOSI
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active">Detalles</li>
                         {% endblock %}
                     </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -33,75 +47,6 @@
 {% endblock %}
 {% block miestilo %}
 <style>
-.btn-primary-transparent{
-    color: #007bff;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
-    }
-
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
-
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
 </style>
 {% endblock %}
 {% block content %}
@@ -119,9 +64,12 @@ left: 24px !important;
                     <!-- BEGIN FORM-->
                     <form id="c" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'modificar_sosi' objeto.id %}">
                         {% csrf_token %}
+                        <div class="col-md-12 row">
+                            <label><label for="id_proyecto"><i class="informacion_proyecto_header">Información del proyecto</i></label></label>
+                        </div>
                         <div class="row">
-                            <div class="form-group col-md-1">
-                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                            {% comment %} <div class="form-group col-md-1">
+                                <label class="control-label"><label for="id_activo">Activo:</label></label>
                                 <div>
                                     <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" {% if objeto.activo %}
                                     checked
@@ -130,99 +78,159 @@ left: 24px !important;
                                     <small class="text-red"></small>
                                 </div>
                                 
-                            </div>  
+                            </div>   {% endcomment %}
 
-                            <div class="form-group col-md-7">
-                                <label class="control-label"><label for="id_consecutivo">Consecutivo*:</label></label>
+                            <div class="form-group col-md-2">
                                 <div>
-                                    <label class="control-label">{{ objeto.consecutivo }}</label>
+                                    <label class="control-label"><label for="id_proyecto">Código:</label></label>
+                                    <span>{{ objeto.proyecto.codigo }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-10">
+                                <div>
+                                    <label class="control-label"><label for="id_proyecto">Proyecto:</label></label>
+                                    <span>{{ objeto.proyecto.nombre_proyecto }}</span>
                                 </div>
                             </div>
 
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_numero_salva">Número de salva*:</label></label>
+                            <div class="form-group col-md-6">
                                 <div>
-                                    <input type="text" maxlength="10" name="numero_salva" value="{{ objeto.numero_salva }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_numero_salva" placeholder="Introduzca número de salva">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_proyecto">Formato(s):</label></label>
+                                    <span>
+                                        {% for formato in proyecto.formato.all %}
+                                            {{ formato.nombre }}
+                                        {% endfor %}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_fecha">Fecha*:</label></label>
+                            <div class="form-group col-md-6">
                                 <div>
-                                    <input type="date" name="fecha" value="{{ objeto.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha" placeholder="Introduzca fecha">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_proyecto">Línea temática:</label></label>
+                                    <span>{{ proyecto.registro_aprobacion.linea_tematica.nombre }}</span>
                                 </div>
                             </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_anno">Año:</label></label>
+                            {% comment %} <div class="form-group col-md-10">
                                 <div>
-                                    <input type="number" maxlength="4" name="anno" value="{% if objeto.anno %}{{ objeto.anno }}{% else %}{% now "Y" %}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_anno" placeholder="Introduzca año">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_proyecto">Proyecto:</label></label>
+                                    <span>{{ objeto.proyecto.nombre_proyecto }}</span>
+                                </div>
+                            </div> {% endcomment %}
+
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <div>
+                                    <label class="control-label"><label for="id_numero_salva">Número de salva:</label></label>
+                                    <span>{{ objeto.numero_salva }}</span>
                                 </div>
                             </div>
+                            <div class="form-group col-md-2">
+                                <div>
+                                    <label class="control-label"><label for="id_fecha">Fecha:</label></label>
+                                    <span>{{ objeto.fecha | date:"d.M.Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1">
+                                <div>
+                                    <label class="control-label"><label for="id_anno">Año:</label></label>
+                                    <span>{{ objeto.fecha | date:"Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <div>
+                                    <label class="control-label"><label for="id_ubicacion_salva">Ubicación:</label></label>
+                                    <span>{% if objeto.ubicacion_salva %}{{ objeto.ubicacion_salva }}{% else %} ------{% endif %}</span>
+                                </div>
+                            </div>
+                            <div class="col-md-5" style="display: inline-block">
+                                <div> 
+                                    <label>Repositorio:</label>
+                                    {% if tipo_archivo == 'url' %}
+                                        <a href="{{ objeto.archivo }}" target="_blank">{{ objeto.archivo }}</a>
+                                    {% elif tipo_archivo == 'recurso' %}
+                                        {% comment %} <a href="javascript:void(0)" id="id_recurso" data-url="{% url 'abrir_recurso' %}">{{ objeto.archivo }}</a> {% endcomment %}
+                                        <span id="id_recurso" style="cursor: pointer; color: #007BFF;" data-url="{% url 'abrir_recurso' %}" data-id-sosi="{{ objeto.pk }}">{{ objeto.archivo }}</span>
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                </div>
+                            </div>                       
                             
                         </div>   
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_especialista">Especialista*:</label></label>
                                 <div>
-                                    <select name="especialista" class=" form-control texto select2" autocomplete="on" required id="id_especialista">
-                                        <option value="">Escriba y seleccione...</option>                                        
-                                        {% for option in ttrab %}
-                                            <option value="{{ option.id }}"
-                                                {% if option.id == objeto.especialista.id %} selected {% endif %}>
-                                                {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
-                                            </option>
-                                        {% endfor %}     
-                                    </select>
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_especialista">Entregado por:</label></label>
+                                    <span>{{ objeto.especialista.first_name }} {{ objeto.especialista.last_name }}</span>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_autor">Autor:</label></label>
                                 <div>
-                                    <input type="text" maxlength="50" name="autor" value="{% if objeto.anno %}{{ objeto.autor }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_autor" placeholder="Introduzca autor">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_especialista">Recibido por:</label></label>
+                                    <span>{{ objeto.recibe.first_name }} {{ objeto.recibe.last_name }}</span>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_ubicacion_salva">Ubicación:</label></label>
                                 <div>
-                                    <input type="text" maxlength="10" name="ubicacion_salva" value="{% if objeto.ubicacion_salva %}{{ objeto.ubicacion_salva }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_ubicacion_salva" placeholder="Introduzca ubicación de la salva">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_autor">Autor (Área):</label></label>
+                                    <span>{% if objeto.proyecto.registro_aprobacion.centro_costo.nombre %}{{ objeto.proyecto.registro_aprobacion.centro_costo.nombre }}{% else %} ----- {% endif %}</span>
                                 </div>
-                            </div>                            
+                            </div>
+                                                      
                         </div>   
                         <div class="row">
-                            <div class="form-group col-md-8">
-                                <label class="control-label"><label for="id_observaciones">Observaciones:</label></label>
+                            <div class="form-group col-md-4">
                                 <div>
-                                    <input type="text" maxlength="150" name="observaciones" value="{% if objeto.observaciones %}{{ objeto.observaciones }}{% endif %}" class="form-control" append="fa fa-calendar" icon_toggle id="id_observaciones" placeholder="Introduzca observaciones">
-                                    <small class="text-red"></small>
+                                    <label class="control-label"><label for="id_idioma">Idioma(s):</label></label>
+                                    <span>
+                                        {% if objeto.idioma.all|length %} {% for formato in objeto.idioma.all %}
+                                            {{ formato.nombre }}{% if not forloop.last %},{% endif %}
+                                        {% endfor %}{% else %}-----{% endif %}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="col-md-4" style="display: inline-block">
-                                <label>Archivo:</label><br>
-                                <div> 
-                                    {% if objeto.archivo %}
-                                        <a href="/media/{{ objeto.archivo }}" target="_blank">Descargar</a>
-                                    {% else %}
-                                        <span>-----</span>
-                                    {% endif %}
+                            <div class="form-group col-md-8">
+                                <div>
+                                    <label class="control-label"><label for="id_observaciones">Observaciones:</label></label>
+                                    <span>{% if objeto.observaciones %}{{ objeto.observaciones }}{% else %} ----- {% endif %}</span>
                                 </div>
-                            </div>                         
-                        </div>    
+                            </div>                       
+                        </div>  
+                        <div class="row">
+                            {% if objeto.autor.all|length > 4 %}
+                            <div class="form-group col-md-2">
+                                <b>Colectivo de autores</b>
+                            </div>
+                            {% endif %}
+                            <div class="form-group {% if objeto.autor.all|length > 4 %} col-md-10 {% else %} col-md-12 {% endif %}">
+                                <div>
+                                    <label class="control-label"><label for="id_idioma">Autor(es):</label></label>
+                                    <span>
+                                        {% if objeto.autor.all|length %} {% for formato in objeto.autor.all %}
+                                            {{ formato.nombre }}{% if not forloop.last %},{% endif %}
+                                        {% endfor %}{% else %}-----{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>  
                     {% block error %}
                     {% endblock %}
                     {% block correcto %}
                     {% endblock %}
                         {% block botones %}
-                         <div class="form-actions fluid">
-                            <div class="col-md-offset-3 col-md-9">
-                                <a href="{% url 'listar_sosi' %}" type="button" class="btn btn-danger">Atrás</a>
-                            </div>
+                        <div class="form-actions fluid">
+                            {% if perms.xavi.view_proyecto or perms.xavi.view_sosi %}
+                                <a href="{% url 'listar_proyecto' %}" type="button" class="btn btn-outline-primary">Listado de proyectos</a>
+                            {% endif %}
+                            {% if perms.xavi.change_sosi %}
+                                <a href="{% url 'modificar_sosi' objeto.id %}" type="button" class="btn btn-outline-info">Modificar SOSI</a>
+                            {% endif %}
+                            {% if perms.xavi.delete_sosi %}
+                                <a href="{% url 'eliminar_sosi' objeto.id %}" type="button" class="btn btn-danger">Eliminar SOSI</a>
+                            {% endif %}
                         </div>
                         {% endblock %}
                     </form>
@@ -278,7 +286,48 @@ left: 24px !important;
     $('#id_autor').prop("disabled", true);    
     $('#id_ubicacion_salva').prop("disabled", true);   
     $('#id_observaciones').prop("disabled", true);   
-    {% comment %} $('#id_archivo').prop("disabled", true);    {% endcomment %}
+    $('#id_archivo').prop("disabled", true);
+
+    $('#id_recurso').on('click', function(){
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        let idSosi = $(this).attr("data-id-sosi");
+        console.log('legueeee', idSosi);
+        
+        $.ajax({
+            url: $(this).attr("data-url"),
+            type: "POST",
+            dataType: "JSON",
+            data: JSON.stringify({ 'idsosi': idSosi }),
+            headers: { 'X-CSRFToken': csrf_token },
+            processData: false,
+            contentType: false,
+            success: function (data, status)
+            {
+                //console.log('DATA DATA DATA', data);
+                if (data.result == "success") {
+                    Toast.fire({
+                        type: 'info',
+                        title: `${data.title}`,
+                    });
+                } else if (data.result == "errorField") {
+                    //console.log('DATA ERRORFIELD', data)
+                    Swal.fire({
+                        title: data.title,
+                        text: data.text,
+                        type: "error",
+                    })
+                } else if (data.result == "error") {
+                    var element = document.querySelector(`[name="${data.field}"]`);
+                    if (element){
+                        element.focus();
+                    }
+                    updateErrorMessage(element, data.title);
+                    $('button[type="submit"]').prop("disabled", true);
+                }
+            }
+        });
+    });
+    
     
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
 

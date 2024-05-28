@@ -1,0 +1,103 @@
+{% extends 'index.html' %}
+{% block page_title %}
+    <title>SISGEPO | Contactos</title>
+{% endblock %}
+{% block contactos %} active {% endblock %}
+{% block menu_nomencladores %} active menu-open {% endblock %}
+{% block menu_nomencladores_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion2_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Listar Contactos.</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Contactos.</li>
+                        {% endblock %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block miestilo %}
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                       
+                            <a href="{% url 'agregar_contacto' %}" class="btn btn-primary fa-pull-right">
+                                <span class="fa fa-plus"> Adicionar</span>
+                            </a>
+                        
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Nombre</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for conc in lista %}
+                                    <tr id="{{ conc.id }}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ conc.nombre }}</td>
+                                        <td>
+                                            <span class="input-group">
+                                               
+                                                    <a href="{% url 'modificar_contacto' conc.id %}"
+                                                        class="btn btn-sm btn-primary btn-primary-transparent"
+                                                        title="Modificar">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                
+                                                
+                                                    <a href="{% url 'eliminar_contacto' conc.id %}"
+                                                        class="btn btn-sm btn-primary btn-primary-transparent ml-2"
+                                                        title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                               
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+
+            $('.switch').click(function () {
+                $(this).toggleClass("switchOn");
+            });
+
+            $('.checkbox-activate').change(function () {
+                $(this).form().submit();
+            });
+
+        });
+    </script>
+{% endblock %}

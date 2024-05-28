@@ -1,8 +1,19 @@
 {% extends 'Security/users.html' %}
 {% load static %}
-
+{% block page_title %}
+    <title>SISGEPO | Detalle Usuario</title>
+{% endblock %}
 {% block miestilo %}
     <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
+    <style>
+        #formDetalle input,
+        #formDetalle select,
+        .select2-container--bootstrap4.select2-container--disabled .select2-selection,
+        .select2-container--bootstrap4.select2-container--disabled .select2-selection::before {
+            background-color: white;
+            border: none;
+        }
+    </style>
 {% endblock %}
 
 {% block breadcumb %}
@@ -10,28 +21,32 @@
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
         {% block group_wrapper %}
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Administración</a></li>
             <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
             <li class="breadcrumb-item active">Detalles </li>
         {% endblock %}
     </ol>
 </div><!-- /.col -->
 {% endblock %}
-
+{% block title_page %}
+    <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Detalles Usuarios</h1>
+    </div><!-- /.col -->
+{% endblock %}
 {% block content %}
 <section class="content">
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    {% comment %} <div class="card-header">
                         <h3 class="card-title">Formulario usuario</h3>
-                    </div>
+                    </div> {% endcomment %}
                     <!-- /.card-header -->
 
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'user_update' object.id %}" formsuccess="{% url 'user_list' %}">
+                    <form id="formDetalle" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'user_update' object.id %}" formsuccess="{% url 'user_list' %}">
                         {% csrf_token %}
                       <input name="id" type="hidden" value="{{ object.id }}">
                         <div class="form-body">

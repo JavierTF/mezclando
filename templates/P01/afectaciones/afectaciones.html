@@ -1,11 +1,15 @@
 {% extends 'index.html' %}
-
-{% block consecutivo %}
-    active
+{% block page_title %}
+    <title>SISGEPO | Afectaciones</title>
+{% endblock %}
+{% block afectaciones %}
+active
 {% endblock %}
 
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
+{% block menu_p14 %} active menu-open{% endblock %}
+{% block menu_p14_active %} active {% endblock %}
 
 
 {% block wrapper %}
@@ -13,12 +17,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Afectaciones</h1>
+                    <h1 class="m-0 text-dark">Listado de Afectaciones a la Producción</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">P00</a></li>
                         {% block group_wrapper %}
                             <li class="breadcrumb-item active">Afectaciones.</li>
                         {% endblock %}
@@ -107,25 +111,28 @@ left: 24px !important;
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    
-                    <a href="{% url 'create_afectation' %}" class="btn btn-primary fa-pull-right">
-                        <span class="fa fa-plus"> Adicionar</span>
-                    </a>
-                  
-                    <form action="{% url 'base:export_procedures' %}" class="form-horizontal">
-                        <div class="row col-6">
-                            <div class="col-6">
-                                <input type="text" class="form-control" name="export_date">
-                            </div>
+                <div class="row card-header">
+                
+                    <form action="{% url 'exportar_afectaciones' %}" method = "POST" class="form-horizontal" id="exportar">
+                        <div class="row col-12 align-items-center">
                             
-                            <div class="col-5">
+                            <div class="col-4">
                                 <button type="submit" class="btn btn-outline-secondary fa-pull-left">
                                     <span class="fa fa-file-pdf"> Exportar</span>
                                 </button>
                             </div>
                         </div>
+                        {% csrf_token %}
+                        <input type="hidden" id="filtered_data" name="filtered_data">
                     </form>
+                    
+                    {% if perms.SISGDDO.add_afectaciones %}
+                    <div class="col-10 align-items-rigth" >
+                        <a href="{% url 'create_afectation' %}" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Adicionar </span>
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
 
                     <div class="card-body">
@@ -142,39 +149,39 @@ left: 24px !important;
                                     Fecha de recepción
                                 </th>
                                 <th>
-                                    Propuesto por
+                                    Solicitado por
                                 </th>
                                 <th>
                                     Ejecutor {% comment %} Departamento {% endcomment %}
                                 </th>
                                 <th>
-                                    Mes Planeado Resolverse
+                                    Formato
                                 </th>
                                 <th>
-                                    Observaciones mes actual
+                                    Estado
                                 </th>
                                 <th>
-                                    Observaciones mes próximo
+                                    Acciones
                                 </th>
+                                
                             
                                
                             </tr>
                             </thead>
                             <tbody>
-                        
+                                {% with counter=0 %}
                          {% for lt in lista %}
-                                <tr id="{{ lt.id }}">
+                         {% if lt.activo %}
+                         {% with counter=counter|add:1 %}
+                                <tr>
                                     <td>
                                         {{ forloop.counter }}
-                                    </td>
-                                    <td>
-                                        {{ lt.numero }}
                                     </td>
                                     <td>
                                         {{ lt.afectacion }}
                                     </td>
                                     <td>
-                                        {{ lt.fecha_entrada }} 
+                                        {{ lt.fecha_recepcion.date }} 
                                     </td>
                                     <td>
                                         {{ lt.propuesto }}
@@ -183,53 +190,47 @@ left: 24px !important;
                                         {{ lt.responsable }}
                                     </td>
                                     <td>
-                                       {{ lt.mesplaneado }}
-  
-                                    </td>
-                                    <td>
-                                        {{ lt.observacionesactual }}
-                                    </td>
-                                    <td>
-                                        {{ lt.observacionesfutura }}
+                                        {% if lt.formato %}
+                                        {{ lt.formato }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
                                     </td>
                                     <td>
                                         {{ lt.estado }}
-                                    </td>                
-                                     <td>
-                    <span class="input-group">
-                    {% if perms.base.change_process %}
-                        <a href="{% url 'base:update_processes' model.id %}"
-                            class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
-                        <i class="fa fa-edit"></i>
-                        </a>
-                    {% endif %}
-                    {% if perms.base.delete_process %}
-                        <a href="#" model-url="{% url 'base:delete_processes' model.id %}"
-                            class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_process" title="eliminar">
-                        <i class="fa fa-trash"></i>
-                        </a>
-                    {% endif %}
-                    </span>
+                                    </td>  
+                                    <td>
+                                       <span class="input-group">
+                                       
+                                       
+                                        
+                                        <a href="{% url 'detalle_afectacion' lt.numero %}"
+                                             class="btn btn-sm btn-primary btn-primary-transparent" title="Detalles de la afectación">
+                                        <i class="fa fa-eye"></i>
+                                        </a>
+                                        
+                                        {% if not lt.estado == 'Cerrado' %}
+                                        <a href="{% url 'cambiar_afectacion' lt.numero %}"
+                                            class="btn btn-sm btn-primary btn-primary-transparent" title="Seguimiento de la afectación">
+                                        <i class="fa fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        
+                                            <a href="{% url 'eliminar_afectacion' lt.numero %}"
+                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar la afectación">
+                                            <i class="fa fa-trash"></i>
+                                            </a>
+                
+                    
+              </span>
                 </td> 
-                <td>
-                    <span class="input-group">
-                   {%comment%} {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                    <label>
-                         {%comment%}<form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate"> {%endcomment%}
-                            {% csrf_token %}
-                            <span style="display: none">{{ lt.activo }}</span>
-                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                        </form>
-                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                    </div>
-                       
-                   </a>
-                    {%comment%} {% endif %} {%endcomment%}
-                </span>
-                    </td>
-                {% endfor %}                       
+                                 
                                    
                                 </tr>
+                                {% endwith %}
+                                {% endif %}
+                {% endfor %} 
+                 {% endwith %}      
                                 {% comment %} {% c = c + 1 %} {% endcomment %}
                             {%comment%} {% endfor %} {%endcomment%}
                             </tbody>
@@ -250,8 +251,40 @@ left: 24px !important;
 {% endblock %}
 {% block script %}
 <script>
+    
       $(document).ready(function()
 {
+    
+    function selectOnlyFiltered(){
+        var filteredRows = $('#example1').DataTable().rows({ filter: 'applied' }).data().toArray();
+        return filteredRows;
+    }
+
+    $('#exportar').on('click', function() {
+        Toast.fire({
+            type: 'info',
+            title: '   Exportando PDF...',
+        });
+        let arreglo = selectOnlyFiltered();
+        if (arreglo.length == 0) {
+            Toast.fire({
+                type: 'warning',
+                title: '   Nada que exportar...',
+            });
+            return;
+        }
+        let arr = [];
+        for (x of arreglo) {
+            arr.push(x[0]);
+        }
+    
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+
+        $('#filtered_data').val(JSON.stringify(arr)); // Almacenar los datos filtrados en el campo oculto
+        $(this).submit(); // Enviar el formulario
+    });
+    
 
 $('.switch').click(function()
     {

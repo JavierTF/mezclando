@@ -1,0 +1,145 @@
+{% extends 'P00/Incidencias/incidencias.html' %}
+{% load static %}
+{% block page_title %}
+    <title>SISGEPO | Incidencia | Detalles</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Detalles de la Incidencia de Cliente Interno </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_incidencias' %}">P00 / Incidencias</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<style>
+    .no-padding-left{
+        padding-left: 0 !important;
+    }
+
+    .bordear{
+        border-radius: 16px;
+        border: 1px solid #ccc !important;
+        padding: 0.01em 16px;
+    }
+</style>
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %}<div class="card-header">
+                        <h3 class="card-title">Detalle de la Incidencia</h3>
+                    </div>
+                    <!-- /.card-header -->{% endcomment %}
+                    <div class="card-body">
+                    <div class="row portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="col-md-12 modal-body">
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Estado:</label><br>
+                                    <span id="estado" style="padding: 5px; border-radius: 16px;
+                                    border: 1px solid #ccc !important;">{{ object.estado }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de recepción:</label><br>
+                                    <span>{{ object.fecha_recepcion }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Hora de recepción:</label><br>
+                                    <span>{{ object.hora }}</span> 
+                                </div>
+                                
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Incidencia:</label><br>
+                                    <span>{{ object.titulo }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Proceso asociado:</label><br>
+                                    {% if object.proceso %}
+                                        {{ object.proceso }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Reportado por:</label><br>
+                                    <span>
+                                        {{ object.trabajador }}
+                                    </span> 
+                                </div>
+                               
+                               
+                                
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Ejecutor:</label><br>
+                                    <span>{{ object.ejecutante }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Descripción de la incidencia:</label><br>
+                                    <span>{{ object.descripcion }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Seguimiento de la incidencia:</label><br>
+                                    {% if object.respuesta %}
+                                        {{ object.respuesta }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                                
+                            </div>   
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de cierre:</label><br>
+                                    {% if object.fecha_cierre %}
+                                        {{ object.fecha_cierre }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                            </div>               
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'modificar_incidencias' object.id %}" type="button" class="btn btn-primary btn-primary">Modificar</a>
+                            </div>
+                          </div>
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_incidencias' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

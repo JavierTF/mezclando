@@ -1,19 +1,25 @@
 {% extends 'auth/user_form.html' %}
 {% load static %}
-
+{% block page_title %}
+    <title>SISGEPO | Eliminar Usuario</title>
+{% endblock %}
 {% block breadcumb %}
 <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
         {% block group_wrapper %}
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Administración</a></li>
             <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
             <li class="breadcrumb-item active">Eliminar </li>
         {% endblock %}
     </ol>
 </div><!-- /.col -->
 {% endblock %}
-
+{% block title_page %}
+    <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Eliminar Usuarios</h1>
+    </div><!-- /.col -->
+{% endblock %}
 {% block content %}
     <section class="content">
         <div class="row">
@@ -29,14 +35,23 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
-                        Está seguro que desea eliminar la información del usuario(( <strong>{{ object.username|capfirst }}</strong> )).
-                        La
+                    <h5 style="text-align: center;">
+                        Está seguro que desea eliminar la información del usuario <strong>{{ object.username|capfirst }}</strong> .
+                        <br />La
                         información no podrá
                         restaurarse
-                    </h4>
+                    </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    {% comment %} <form action="" method="post"> {% endcomment %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'user_delete' object.id %}"
+                        formsuccess="{% url 'user_list' %}"
+                    >
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar
@@ -64,3 +79,85 @@
 {% endblock %}
 
 
+{% block script %}
+<script>
+    function submitForm(formulario) {
+        console.log('first first first');
+        formulario.on("submit", function (e) {
+            e.preventDefault();
+    
+            // Validación de contraseñas
+            var password1 = $("#id_password1").val();
+            var password2 = $("#id_password2").val();
+
+            var password1Element = document.getElementById("id_password2");
+            var password2Element = document.getElementById("id_password2");
+    
+            /*if (!password1 || !password2) {
+                if (!password1){
+                    updateErrorMessage(password1Element, "La contraseñas es requerida");
+                    password1Element.classList.remove('is-valid');
+                    password1Element.classList.add('is-invalid');
+                }
+                if (!password2){
+                    updateErrorMessage(password1Element, "La contraseñas es requerida");
+                    password2Element.classList.remove('is-valid');
+                    password2Element.classList.add('is-invalid');
+                }
+                return false;
+            }*/
+             if (password1 !== password2) {
+                updateErrorMessage(password1Element, "Las contraseñas no coinciden");
+                updateErrorMessage(password2Element, "Las contraseñas no coinciden");
+                password1Element.classList.remove('is-valid');
+                password1Element.classList.add('is-invalid');
+                password2Element.classList.remove('is-valid');
+                password2Element.classList.add('is-invalid');
+                return false;
+            }
+    
+            var href = formulario.attr("formaction");
+            var listar = formulario.attr("formsuccess");
+            var data = formulario.serializeArray();
+    
+            if ($(".is-invalid").length > 0) {
+                return false;
+            } else {
+                $('button[type="submit"]').prop("disabled", true);
+    
+                var form = document.getElementById(formulario.attr("id"));
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+    
+                $.ajax({
+                    url: formulario.attr("formaction"),
+                    type: formulario.attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.result == "success") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', listar); 
+                            });
+                        } else if (data.result == "error") {
+                            var element = document.querySelector(`[name="${data.field}"]`);
+                            updateErrorMessage(element, data.title);
+                            $('button[type="submit"]').prop("disabled", true);
+                        }
+                    },
+                });
+            }
+        });
+    }
+    
+    submitForm($("#formulario"));
+</script>
+{% endblock %}

@@ -149,29 +149,17 @@ left: 24px !important;
                                         
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_entidad %}
-                                    <label>
-                                        <form action="{% url 'act_desactentidad' lt.id %}" method="POST" class="form-activate">
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.change_entidad %}
+                                    
                                     <a href="{% url 'modificar_entidad' lt.pk %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.delete_entidad %}
+                                    
                                         <a href="{% url 'eliminar_entidad' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
-                                    {% endif %}
+                                    
                                     </span>
                                     
                                     </td>

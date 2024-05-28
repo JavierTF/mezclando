@@ -1,0 +1,60 @@
+{% extends 'reportes/base_reportes.html' %}
+
+{% block tabla_dinamica %}
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th style="width: 40px;">#</th>
+            <th style="width: 65px;">No/Fecha</th>
+            <th>Nombre</th>
+            <th>Observaciones</th>
+            <th style="width: 130px;">Responsable(s)</th>
+            <th style="width: 80px;">Fecha límite cumplimiento</th>
+            <th style="width: 80px;">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="dtrg-group"></tr>
+        {% for model in models %}
+            <tr>
+                <td style="text-align: center;">{{ forloop.counter }}</td>
+                <td style="text-align: center;">{{ model.numero }}/{{ model.fecha|date:"Y" }}</td>
+                <td>{{ model.nombre }}</td>
+                <td>
+                    {% if model.observaciones %}
+                        {{ model.observaciones }}
+                    {% else %}
+                        ------
+                    {% endif %}
+                </td>
+                <td>
+                    {% for responsable in model.employee.all %}
+                        {{ responsable.scientific_category.prefix }} {{ responsable.first_name }} {{ responsable.last_name }} {% if not forloop.last %} <br /> {% endif %}
+                    {% endfor %}
+                </td>
+                <td style="text-align: center;">
+                    {% if model.fecha_limite %} 
+                        {{ model.fecha_limite|date:"d.M.Y" }}
+                    {% else %}
+                        -------
+                    {% endif %}
+                </td>
+                <td>
+                    <span
+                        {% if model.estado.nombre|lower == "pendiente" %}
+                        class="rojo"
+                        {% elif model.estado.nombre|lower == "en proceso" %}
+                        class="naranja"
+                        {% elif model.estado.nombre|lower == "cumplido" %}
+                        class="naranja"
+                        {% else %}
+                        class=""
+                        {% endif%}
+                    >..</span>
+                    {{ model.estado.nombre }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

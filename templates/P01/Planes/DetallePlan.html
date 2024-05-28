@@ -1,0 +1,120 @@
+{% extends 'P01/Planes/Planes1.html' %}
+{% load static %}
+{% block page_title %}
+    <title>SISGEPO | Plan de trabajo | Detalles</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Detalles de la Actividad del plan </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_plan' %}">P00 / Planes</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<style>
+    .no-padding-left{
+        padding-left: 0 !important;
+    }
+
+    .bordear{
+        border-radius: 16px;
+        border: 1px solid #ccc !important;
+        padding: 0.01em 16px;
+    }
+</style>
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %}<div class="card-header">
+                        <h3 class="card-title">Detalle de la Incidencia</h3>
+                    </div>
+                    <!-- /.card-header -->{% endcomment %}
+                    <div class="card-body">
+                    <div class="row portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="col-md-12 modal-body">
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Descripción:</label><br>
+                                    <span id="descripcion" style="padding: 5px; border-radius: 16px;
+                                    border: 1px solid #ccc !important;">{{ object.descripcion }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Día de actividad:</label><br>
+                                    <span>{{ object.dia }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Hora programada:</label><br>
+                                   
+                                    <span>   {{ object.hora }}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Lugar Previsto:</label><br>
+                                    <span>{{ object.lugar }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Trabajador que preside:</label><br>
+                                    <span>{% for pr in pre %}
+                                        {{ pr }}
+                                        <br>
+                                        {% endfor %}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Trabajadores que Paticipan:</label><br>
+                                    <span>{% for p in part %}
+                                        {{ p }}
+                                        <br>
+                                        {% endfor %}</span> 
+                                </div>
+                            </div>
+                           
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                {%if object.plan == 'Empresa'%}
+                                <a href="{% url 'cambiar_plan' object.id %}" type="button" class="btn btn-primary btn-primary">Modificar</a>
+                                {%else%}
+                                <a href="{% url 'cambiar_plan1' object.id %}" type="button" class="btn btn-primary btn-primary">Modificar</a>
+                                {%endif%}
+                            </div>
+                          </div>
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                {%if object.plan == 'Empresa'%}
+                                <a href="{% url 'listar_plan1' %}" type="button" class="btn btn-danger">Atrás</a>
+                                {%else%}
+                                <a href="{% url 'listar_plan2' %}" type="button" class="btn btn-danger">Atrás</a>
+                                {%endif%}
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

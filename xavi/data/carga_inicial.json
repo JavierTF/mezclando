@@ -1,0 +1,705 @@
+[
+    {
+        "model": "base.scientificcategory",
+        "pk": 1,
+        "fields": {
+            "name": "Doctor en Ciencias",
+            "prefix": "Dr.C.",
+            "active": true
+        }
+    },
+    {
+        "model": "base.position",
+        "pk": 1,
+        "fields": {
+            "name": "Jefe de proyecto",
+            "active": true
+        }
+    },
+    {
+        "model": "base.position",
+        "pk": 2,
+        "fields": {
+            "name": "Comercial",
+            "active": true
+        }
+    },
+    {
+        "model": "base.position",
+        "pk": 3,
+        "fields": {
+            "name": "Diseñador",
+            "active": true
+        }
+    },
+    {
+        "model": "base.employee",
+        "pk": 1,
+        "fields": {
+            "first_name": "Jefe",
+            "last_name": "del proyecto",
+            "identification": "90072827569",
+            "active": true,
+            "position_id": 1,
+            "scientific_category_id": 1
+        }
+    },
+    {
+        "model": "base.employee",
+        "pk": 2,
+        "fields": {
+            "first_name": "Comercial",
+            "last_name": "que atiende",
+            "identification": "90072827568",
+            "active": true,
+            "position_id": 2,
+            "scientific_category_id": 1
+        }
+    },
+    {
+        "model": "base.employee",
+        "pk": 3,
+        "fields": {
+            "first_name": "Diseñador",
+            "last_name": "de todo",
+            "identification": "90072827567",
+            "active": true,
+            "position_id": 3,
+            "scientific_category_id": 1
+        }
+    },
+    {
+        "model": "xavi.etapa_proyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Definición",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.etapa_proyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Ejecución",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.fuente_financiamiento",
+        "pk": 1,
+        "fields": {
+            "nombre": "BNC",
+            "activo": true
+        }
+    },    
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 1,
+        "fields": {
+            "nombre": "Solicitado",
+            "activo": true,
+            "etapa_id": 1
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 2,
+        "fields": {
+            "nombre": "Aprobado",
+            "activo": true,
+            "etapa_id": 1
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 3,
+        "fields": {
+            "nombre": "Adelantado",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 4,
+        "fields": {
+            "nombre": "Atrasado",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 5,
+        "fields": {
+            "nombre": "En fecha",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 6,
+        "fields": {
+            "nombre": "Interrumpido",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 7,
+        "fields": {
+            "nombre": "Terminado",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 8,
+        "fields": {
+            "nombre": "Cancelado",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 9,
+        "fields": {
+            "nombre": "Reiniciado",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto",
+        "pk": 10,
+        "fields": {
+            "nombre": "Extendido",
+            "activo": true,
+            "etapa_id": 2
+        }
+    },    
+    {
+        "model": "xavi.estado_proyecto_dgca",
+        "pk": 1,
+        "fields": {
+            "nombre": "Conforme",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto_dgca",
+        "pk": 2,
+        "fields": {
+            "nombre": "No conforme",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto_dgca",
+        "pk": 3,
+        "fields": {
+            "nombre": "Rechazado",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto_dgca",
+        "pk": 4,
+        "fields": {
+            "nombre": "Liberado",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_proyecto_dgca",
+        "pk": 5,
+        "fields": {
+            "nombre": "En revisión",
+            "activo": true
+        }
+    },   
+    {
+        "model": "xavi.estado_software",
+        "pk": 1,
+        "fields": {
+            "nombre": "I. Determinación de los requisitos del cliente",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_software",
+        "pk": 2,
+        "fields": {
+            "nombre": "II. Análisis y Diseño",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_software",
+        "pk": 3,
+        "fields": {
+            "nombre": "III. Implementación",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.estado_software",
+        "pk": 4,
+        "fields": {
+            "nombre": "IV. Pruebas",
+            "activo": true
+        }
+    },  
+    {
+        "model": "xavi.accion_control_etapa",
+        "pk": 1,
+        "fields": {
+            "nombre": "Realizado",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.accion_control_etapa",
+        "pk": 2,
+        "fields": {
+            "nombre": "Revisado",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.accion_control_etapa",
+        "pk": 3,
+        "fields": {
+            "nombre": "Aprobado",
+            "activo": true
+        }
+    },   
+    {
+        "model": "xavi.fuente_financiamiento",
+        "pk": 2,
+        "fields": {
+            "nombre": "BCC",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.fuente_financiamiento",
+        "pk": 3,
+        "fields": {
+            "nombre": "MFP",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.fuente_financiamiento",
+        "pk": 4,
+        "fields": {
+            "nombre": "MEP",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.fuente_financiamiento",
+        "pk": 5,
+        "fields": {
+            "nombre": "BICSA",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.linea_tematica",
+        "pk": 1,
+        "fields": {
+            "nombre": "Matemáticas",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.linea_tematica",
+        "pk": 2,
+        "fields": {
+            "nombre": "Física",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.linea_tematica",
+        "pk": 3,
+        "fields": {
+            "nombre": "Química",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.linea_tematica",
+        "pk": 4,
+        "fields": {
+            "nombre": "Historia",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.linea_tematica",
+        "pk": 5,
+        "fields": {
+            "nombre": "Literatura",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.area",
+        "pk": 1,
+        "fields": {
+            "nombre": "Multimedia",
+            "centro_costo": 12345,
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.area",
+        "pk": 2,
+        "fields": {
+            "nombre": "Servicios",
+            "centro_costo": 54321,
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.area",
+        "pk": 3,
+        "fields": {
+            "nombre": "Redes",
+            "centro_costo": 98765,
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.area",
+        "pk": 4,
+        "fields": {
+            "nombre": "Software",
+            "centro_costo": 67890,
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.area",
+        "pk": 5,
+        "fields": {
+            "nombre": "Diseño",
+            "centro_costo": 45678,
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 1,
+        "fields": {
+            "nombre": "APK",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 2,
+        "fields": {
+            "nombre": "EPUB",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 3,
+        "fields": {
+            "nombre": "PDF",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 4,
+        "fields": {
+            "nombre": "DOCX",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 5,
+        "fields": {
+            "nombre": "MP4",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.formato",
+        "pk": 6,
+        "fields": {
+            "nombre": "JPEG",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 1,
+        "fields": {
+            "nombre": "PCC",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 2,
+        "fields": {
+            "nombre": "CITMATEL",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 3,
+        "fields": {
+            "nombre": "MINAG",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 4,
+        "fields": {
+            "nombre": "ONEI",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 5,
+        "fields": {
+            "nombre": "FMC",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.prioridad",
+        "pk": 6,
+        "fields": {
+            "nombre": "CTC",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.clasificacion",
+        "pk": 1,
+        "fields": {
+            "nombre": "Proyecto Innovación y Desarrollo 2",
+            "siglas": "I+D",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.subclasificacion",
+        "pk": 1,
+        "fields": {
+            "nombre": "Subclase 1",
+            "activo": true,
+            "clasificacion_id": 1
+        }
+    },
+    {
+        "model": "xavi.subclasificacion",
+        "pk": 2,
+        "fields": {
+            "nombre": "Subclase 2",
+            "activo": false,
+            "clasificacion_id": 1
+        }
+    },
+    {
+        "model": "xavi.subclasificacion",
+        "pk": 3,
+        "fields": {
+            "nombre": "Subclase 3",
+            "activo": true,
+            "clasificacion_id": 1
+        }
+    },
+    {
+        "model": "xavi.subclasificacion",
+        "pk": 4,
+        "fields": {
+            "nombre": "Subclase 4",
+            "activo": true,
+            "clasificacion_id": 1
+        }
+    },
+    {
+        "model": "xavi.clasificacion",
+        "pk": 2,
+        "fields": {
+            "nombre": "PSCT nombre largo",
+            "siglas": "PSCT",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.clasificacion",
+        "pk": 3,
+        "fields": {
+            "nombre": "Proy. de Producción",
+            "siglas": "PPS",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.clasificacion",
+        "pk": 4,
+        "fields": {
+            "nombre": "Proy. de Algo ahí",
+            "siglas": "PAA",
+            "activo": false
+        }
+    },
+    {
+        "model": "xavi.tipo_moneda",
+        "pk": 1,
+        "fields": {
+            "nombre": "Moneda Libremente Convertible",
+            "siglas": "MLC",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.tipo_moneda",
+        "pk": 2,
+        "fields": {
+            "nombre": "Peso Cubano",
+            "siglas": "CUP",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.tipo_moneda",
+        "pk": 3,
+        "fields": {
+            "nombre": "Dólar estadounidense",
+            "siglas": "USD",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.idioma",
+        "pk": 1,
+        "fields": {
+            "nombre": "Inglés",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.idioma",
+        "pk": 2,
+        "fields": {
+            "nombre": "Español",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.idioma",
+        "pk": 3,
+        "fields": {
+            "nombre": "Francés",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.tipo_extension",
+        "pk": 1,
+        "fields": {
+            "nombre": "En tiempo",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.tipo_extension",
+        "pk": 2,
+        "fields": {
+            "nombre": "En costo",
+            "activo": true
+        }
+    },
+    {
+        "model": "xavi.tipo_extension",
+        "pk": 3,
+        "fields": {
+            "nombre": "En tiempo y costo",
+            "activo": true
+        }
+    },
+    {
+        "model": "base.entity",
+        "pk": 1,
+        "fields": {
+          "name": "CITMA",
+          "active": true
+        }
+      },
+      {
+        "model": "base.entity",
+        "pk": 2,
+        "fields": {
+          "name": "CITMATEL",
+          "active": true
+        }
+      },
+      {
+        "model": "base.entity",
+        "pk": 3,
+        "fields": {
+          "name": "MINAG",
+          "active": true
+        }
+      },
+      {
+        "model": "base.entity",
+        "pk": 4,
+        "fields": {
+          "name": "MINCIN",
+          "active": true
+        }
+      },
+      {
+        "model": "base.entity",
+        "pk": 5,
+        "fields": {
+          "name": "MINCONS",
+          "active": true
+        }
+      },
+      {
+        "model": "xavi.estado_acuerdo",
+        "pk": 1,
+        "fields": {
+          "nombre": "Pendiente",
+          "activo": true
+        }
+      },
+      {
+        "model": "xavi.estado_acuerdo",
+        "pk": 2,
+        "fields": {
+          "nombre": "En proceso",
+          "activo": true
+        }
+      },
+      {
+        "model": "xavi.estado_acuerdo",
+        "pk": 3,
+        "fields": {
+          "nombre": "Cumplido",
+          "activo": true
+        }
+      }
+]

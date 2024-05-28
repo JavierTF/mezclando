@@ -1,5 +1,8 @@
 {% extends 'index.html' %}
 {% load tagspropias %}
+{% block page_title %}
+    <title>SISGEPO | Trazas</title>
+{% endblock %}
 {% block menu_seguridad %}
 menu-open
 {% endblock %}
@@ -14,13 +17,14 @@ active
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Historial.</h1>
+                    <h1 class="m-0 text-dark">Historial de trazas</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">Administración</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Historial</li>
+                            <li class="breadcrumb-item active">Historial de trazas</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -35,10 +39,7 @@ active
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Historial de las acciones realizadas en la aplicación</h3>
-
-                    </div>
+                    
                     <!-- /.card-header -->
 
                     <div class="card-body">
@@ -49,16 +50,16 @@ active
                                     No.
                                 </th>
                                 <th>
-                                    Fecha
+                                    Fecha y Hora
                                 </th>
                                 <th>
-                                    Nombre
+                                    Nombre 
                                 </th>
                                 <th>
                                     Usuario
                                 </th>
                                 <th>
-                                    Descripción
+                                    Acción realizada
                                 </th>
                                 <th>
                                     IP
@@ -82,13 +83,13 @@ active
                                     </td>
                                     <td>
                                         {% if h.action_flag == 0%}
-                                            Accedió al listado de {{ h.content_type }}
+                                            Accedió al <b>listado</b> de <b>{{ h.content_type.model }}</b>
                                         {% elif h.action_flag == 1 %}
-                                            Agregó un/a {{ h.content_type }}
+                                            <b>Agregó</b> un/a {{ h.content_type.model }}: <b>{{ h.object_repr }}</b>
                                         {% elif h.action_flag == 2 %}
-                                            Modificó un/a {{ h.content_type }}
+                                            <b>Modificó</b> un/a {{ h.content_type.model }}: <b>{{ h.object_repr }}</b>
                                         {% elif h.action_flag == 3 %}
-                                            Elimino un/a {{ h.content_type }}
+                                            <b>Eliminó</b> un/a {{ h.content_type.model }}: <b>{{ h.object_repr }}</b>
                                         {% elif h.action_flag == 4 %}
                                             Inició sesión
                                         {% elif h.action_flag == 5 %}
@@ -101,7 +102,8 @@ active
                                             Reactivar el usuario {{ h.object_repr }}
                                         {% elif h.action_flag == 9 %}
                                            ERROR de login(4 intentos)! <strong>{{ h.object_repr }}</strong>
-                                        
+                                        {% elif h.action_flag == 11 %}
+                                            {{ h.object_repr }}
                                         {% endif %}
                                     </td>
 

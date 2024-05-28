@@ -70,12 +70,12 @@
                         class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Detalles">
                         <i class="fa fa-eye"></i>
                     </a>
-                    {% if perms.effectiveness.delete_effectiveness %}
+
                         <a href="#" model-url="{% url 'effectiveness:delete_effectiveness' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_effectiveness" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                    
                     </span>
                 </td>
             </tr>

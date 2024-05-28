@@ -11,6 +11,35 @@
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
 
+{% block sosi %}
+    active
+{% endblock %}
+
+{% block menu_p01 %}
+    menu-open
+{% endblock %}
+{% block menu_p01_active %}
+    active
+{% endblock %}
+{% block menu_gestion_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_gestion_proyectos_active %}
+    active
+{% endblock %}
+{% block menu_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_proyectos_active %}
+    active
+{% endblock %}
+{% block gestion_proyectos %}
+    active
+{% endblock %}
+{% block proyectos %}
+    active
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -38,70 +67,6 @@
     background-color: transparent;
     border-color: transparent;
 }
-
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
-    }
-
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
-
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
 </style>
 {% endblock %}
 
@@ -112,7 +77,7 @@ left: 24px !important;
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Listado de Entrada de Proyecto </h3>
-                        {% if perms.SISGDDO.add_entrada_proyecto %}
+                        {% if perms.xavi.add_entrada_proyecto %}
                         <a href="{% url 'adicionar_entrada_proyecto' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar </span>
                         </a>
@@ -182,7 +147,7 @@ left: 24px !important;
                                     </td>                                    
                                     <td>
                                     <span class="input-group">
-                                    {% comment %} {% if perms.SISGDDO.change_entrada_proyecto %} 
+                                    {% comment %} {% if perms.xavi.change_entrada_proyecto %} 
                                     <label>
                                         <form action="{% url 'act_desactconsecutivo' lt.consecutivo.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -193,15 +158,15 @@ left: 24px !important;
                                     </div>
                                     </label>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_Entrada de Entrada de Entrada de Proyecto %}
+                                    {% if perms.xavi.change_Entrada de Entrada de Entrada de Proyecto %}
                                     <a href="{% url 'modificar_Entrada de Entrada de Entrada de Proyecto' lt.consecutivo.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_Entrada de Entrada de Entrada de Proyecto %}
+                                    {% if perms.xavi.delete_Entrada de Entrada de Entrada de Proyecto %}
                                         <a href="{% url 'eliminar_Entrada de Entrada de Entrada de Proyecto' lt.consecutivo.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 
@@ -229,19 +194,60 @@ left: 24px !important;
 {% endblock %}
 {% block script %}
 <script>
-      $(document).ready(function()
-{
+    $(document).ready(function(){
 
-$('.switch').click(function()
-    {
-        $(this).toggleClass("switchOn");
+    function submitForm(formulario) {
+        console.log('first first first')
+        formulario.on("submit", function (e) {
+            e.preventDefault();
+            var href = formulario.attr("formaction");
+            var listar = formulario.attr("formsuccess");
+            var data = formulario.serializeArray();
+    
+            if ($(".is-invalid").length > 0) {
+                return false;
+            } else {
+                $('button[type="submit"]').prop("disabled", true);
+    
+                var form = document.getElementById(formulario.attr("id"));
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+    
+                $.ajax({
+                    url: formulario.attr("formaction"),
+                    type: formulario.attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.result == "success") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', listar); 
+                            });
+                        } else if (data.result == "error") {
+                            var element = document.querySelector(`[name="${data.field}"]`);
+                                if (element){
+                                    element.focus();
+                                }
+                            updateErrorMessage(element, data.title);
+                            $('button[type="submit"]').prop("disabled", true);
+                        }
+                    },
+                });
+            }
+        });
+    }
+    
+    submitForm($("#formulario"));
+
     });
-
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
-});
 
 </script>
 {% endblock %}

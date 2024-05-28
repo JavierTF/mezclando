@@ -25,7 +25,7 @@
                 <tr>
                     <td>
                         <h6 style="color: black; font-weight: bold">SISTEMA INTEGRADO DE GESTIÓN. LISTA MAESTRA</h6>
-                        <h6 style="color: black; font-weight: bold">ALCANCE: CALIDAD, MEDIO AMBIENTE, SEGURIDAD Y SALUD DEL TRABAJO</h6>
+                        <h6 style="color: black; font-weight: bold">ALCANCE: CALIDAD, MEDIO AMBIENTE, SEGURIDAD Y SALUD EN EL TRABAJO</h6>
                     </td>
                     <td class="text-right">
                         <p>{{ date }}</p>
@@ -37,7 +37,7 @@
                 <thead>
                 <tr>
                     <th>Proceso</th>
-                    <th>Responsables</th>
+                    <!-- <th>Responsables</th> -->
                     <th>Edición</th>
                     <th>Revisión</th>
                 </tr>
@@ -45,11 +45,13 @@
                 <tbody>
                 {% regroup models by process as processes  %}
                 {% for process in processes %}
-                    <tr class="dtrg-group"><td colspan="4">{{ process.grouper.abbreviation }} {{ process.grouper.name }}</td></tr>
+                    <tr class="dtrg-group">
+                        <td colspan="4">{{ process.grouper.classifier.name }} {{ process.grouper.name }} {{ process.grouper.abbreviation }}</td>
+                    </tr>
                     {% for procedure in process.list %}
                         <tr>
                             <td>{{ procedure }}</td>
-                            <td>{{ process.grouper.responsible|default_if_none:"" }}</td>
+                            <!-- <td>{{ process.grouper.responsible|default_if_none:"" }}</td> -->
                             <td>{{ procedure.edition }}</td>
                             <td>{{ procedure.revision }}</td>
                         </tr>
@@ -59,7 +61,7 @@
                 <tfoot>
                 <tr>
                     <th>Procedimiento</th>
-                    <th>Responsable</th>
+                    <!-- <th>Responsable</th> -->
                     <th>Edición</th>
                     <th>Revisión</th>
                 </tr>

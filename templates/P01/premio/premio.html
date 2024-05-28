@@ -1,29 +1,31 @@
 {% extends 'index.html' %}
 
 {% block page_title %}
-    <title>SISGEPO | Premios</title>
-{% endblock %}
-
-{% block premio %}
-    active
+    <title>SISGEPO | Premios y Reconocimientos</title>
 {% endblock %}
 
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open {% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+{% block premio %}
+    active
+{% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Premios</h1>
+                    <h1 class="m-0 text-dark">Listar Premios y Reconocimientos</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Premio.</li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión Integrada</a></li>
+                            <li class="breadcrumb-item active">Premios y Reconocimientos.</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -33,75 +35,14 @@
 {% endblock %}
 {% block miestilo %}
 <style>
-.btn-primary-transparent{
-    color: #007bff;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
+    #formExportar .control-label {
+        margin-top: 5px;
     }
 
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
-
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
+    .disabled-link {
+        pointer-events: none;
+        opacity: 0.6;
+    }
 </style>
 {% endblock %}
 
@@ -111,17 +52,74 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="row card-header">
-                        <form id="formExportar" class="form-horizontal col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
-                            {% if perms.SISGDDO.view_premio %}
-                                <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
-                            {% endif %}                                
+                        <form 
+                        id="formExportar" 
+                        class="form-horizontal col-12" 
+                        method="post" 
+                        enctype="multipart/form-data" 
+                        formaction="{% url 'exportar' %}" 
+                        formerror="{% url 'base:create_logoentity' %}"
+                        formfilter="{% url 'listar_premio' %}"
+                        >
+                            <div class="row">
+                                {% if perms.xavi.view_premio %}
+                                <label class="control-label"><label for="id_fecha_inicio">Desde:</label></label>
+                                <div class="col-md-2">
+                                    <input type="date" name="fecha_inicio" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio">
+                                    <small class="text-red"></small>
+                                </div>
+                                <label class="control-label"><label for="id_fecha_fin">Hasta:</label></label>
+                                <div class="col-md-2">
+                                    <input type="date" name="fecha_fin" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_fin">
+                                    <small class="text-red"></small>
+                                </div>
+                                <div class="col-md-2">
+                                    <a id="filtrar"
+                                        data-filtrado="false" 
+                                        data-view="{{ perms.xavi.view_premio }}"
+                                        data-hrefView="{% url 'detalle_premio' 777 %}"
+                                        data-change="{{ perms.xavi.change_premio }}" 
+                                        data-hrefChange="{% url 'modificar_premio' 777 %}"
+                                        data-delete="{{ perms.xavi.delete_premio }}" 
+                                        data-hrefDelete="{% url 'eliminar_premio' 777 %}"
+                                        href="javascript:void(0);" 
+                                        class="btn btn-dark"
+                                    ><span id="spanFilter" class="fa fa-filter"> Filtrar </span></a>
+                                </div>
+                                <div class="col-md-2">
+                                    <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
+                                </div>
+                                {% endif %}                                
+                                {% if perms.xavi.add_premio %}
+                                <div class="col-md-3">
+                                    <a href="{% url 'adicionar_premio' %}" class="btn btn-primary fa-pull-right">
+                                        <span class="fa fa-plus"> Adicionar </span>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <hr />
+                            <div class="row">
+                                {% if perms.xavi.view_premio %}
+                                    <label class="control-label"><label for="id_tipo_orden">Ordenar por fecha:</label></label>
+                                    <div class="col-md-2">
+                                        <select name="tipo_orden" class=" form-control texto select2" autocomplete="on" required id="id_tipo_orden">
+                                            <option value="none" selected>---</option> 
+                                            <option value="asc" {%if orden == 'asc' %} selected {% endif %}>Ascendentemente</option>
+                                            <option value="desc" {%if orden == 'desc' %} selected {% endif %}>Descendentemente</option>
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a id="ordenar"
+                                            data-orden="{{ orden }}"
+                                            href="{% url 'listar_premio_orden' 'x' %}"
+                                            class="btn {% if orden %} btn-outlined-dark {% else %} btn-dark disabled-link {% endif %}"
+                                        ><span id="spanOrder" class="fa fa-sort"> Ordenar </span></a>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </form>
-                        
-                        {% if perms.SISGDDO.add_premio %}
-                            <a href="{% url 'adicionar_premio' %}" class="btn btn-primary fa-pull-right">
-                                <span class="fa fa-plus"> Adicionar </span>
-                            </a>
-                        {% endif %}
                     </div>
                     <!-- /.card-header -->
 
@@ -129,9 +127,9 @@ left: 24px !important;
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>
+                                {% comment %} <th style="display: none">
                                     ID
-                                </th>
+                                </th> {% endcomment %}
                                 <th>
                                     Número
                                 </th>
@@ -139,26 +137,22 @@ left: 24px !important;
                                     Nombre
                                 </th>
                                 <th>
-                                    Entidad
+                                    Entidad que otorga el reconocimiento
                                 </th>
-                                <th>
+                                <th class="no-sort">
                                     Fecha
                                 </th>
                                 <th>
-                                    Archivo
-                                </th>
-                                <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% comment %} {% c = 0 %} {% endcomment %}
                             {% for lt in lista %}
                                 <tr id="{{ lt.id }}">
-                                    <td>
+                                    {% comment %} <td style="display: none">
                                         {{ lt.id }}
-                                    </td>
+                                    </td> {% endcomment %}
                                     <td>
                                         {{ forloop.counter }}
                                     </td>
@@ -168,40 +162,26 @@ left: 24px !important;
                                     <td>
                                         {{ lt.entidad }}
                                     </td>
-                                    <td>
+                                    <td class="no-sort" style="width: 200px;">
                                         {{ lt.fecha }}
                                     </td>
                                     <td>
-                                        {{ lt.archivo }}
-                                    </td>                                        
-                                    <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_premio %}
-                                    <label>
-                                        <form action="{% url 'act_desactpremio' lt.id %}" method="POST" class="form-activate">
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.view_premio %}
+                                    {% if perms.xavi.view_premio %}
                                     <a href="{% url 'detalle_premio' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_premio %}
+                                    {% if perms.xavi.change_premio %}
                                     <a href="{% url 'modificar_premio' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_premio %}
+                                    {% if perms.xavi.delete_premio %}
                                         <a href="{% url 'eliminar_premio' lt.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %}
@@ -210,102 +190,275 @@ left: 24px !important;
                                 </tr>
                             {% endfor %}
                             </tbody>
-
                         </table>
                     </div>
                     <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
-
                 <!-- /.card -->
             </div>
             <!-- /.col -->
         </div>
         <!-- /.row -->
     </section>
-
 {% endblock %}
+
 {% block script %}
 <script>
       $(document).ready(function()
 {
+    function checkOrdenarButton (element){
+        const ordenValue = element.val()
+        if (ordenValue === 'none'){
+            let ordenBack = $('#ordenar').attr('data-orden');
+            if (!ordenBack){
+                $('#ordenar').addClass('disabled-link');
+                console.log('ordenBack', ordenBack);
+            } else {
+                $('#spanOrder').removeClass('fa-sort').addClass('fa-refresh').text(' No ordenar')
+
+            }
+        } else {
+            $('#ordenar').removeClass('disabled-link');
+        }
+    }
+
+    $('#id_tipo_orden').change(function() {
+        const ordenValue = $(this).val();
+        checkOrdenarButton($(this));
+
+        const ordenarLink = $('#ordenar');
+        let newHref = ordenarLink.attr('href');
+        
+
+        if (ordenValue === 'asc' || ordenValue === 'desc') {
+            newHref = newHref.replace('x', ordenValue);
+        } else {
+            newHref = newHref.replace(ordenValue, 'x');
+        }
+
+        ordenarLink.attr('href', newHref);
+    });
+    
     var href = $('#formExportar').attr('formaction');
     
     var table = $('#example1').DataTable();
-    //table.column(0).visible(false);
 
     function selectOnlyFiltered(){
         var filteredRows = table.rows({filter: 'applied'}).data().toArray();
         return filteredRows;
     }
 
-    $('#exportar').on('click', function() {
-        Toast.fire({
-            type: 'info',
-            title: '   Exportando PDF...',
+    var elementosFiltradosPorFecha = null;
+
+    var urlActual = window.location.href;
+
+    var partesUrl = urlActual.split('/');
+
+    var cadenaHastaTercero = partesUrl.slice(0, 3).join('/');
+
+    let urlView = $('#filtrar').attr('data-hrefView');
+    let urlChange = $('#filtrar').attr('data-hrefChange');
+    let urlDelete = $('#filtrar').attr('data-hrefDelete');
+
+    cadenaHastaTercero = cadenaHastaTercero.concat(urlView);
+
+    function actualizarTabla(nuevaLista) {
+        $('#example1 tbody').empty();
+
+        let contador = 1;
+    
+        nuevaLista.forEach(function(item) {
+            var fila = '<tr>';
+            // esto debe ser un contador
+            fila += '<td>' + contador + '</td>';
+            fila += '<td>' + item.nombre + '</td>';
+            fila += '<td>' + item.entidad__name + '</td>';
+            let fechaString = item.fecha;
+            let fecha = new Date(fechaString);
+
+            let dia = fecha.getUTCDate();
+            let mes = fecha.toLocaleString('es', { month: 'long' });
+            let año = fecha.getUTCFullYear();
+
+            let fechaFormateada = `${dia} de ${mes} de ${año}`;
+            fila += '<td>' + fechaFormateada + '</td><td>';
+
+                
+            if ($('#filtrar').attr('data-view') === 'True') {
+                let viewUrl = urlView.replace('/777/', '/' + item.id + '/');
+                fila += `<a href="${viewUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">`;
+                fila += '<i class="fa fa-eye"></i>';
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-change') === 'True') {
+                let changewUrl = urlChange.replace('/777', '/' + item.id);
+                fila += `<a href="${changewUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">`;
+                fila += '<i class="fa fa-edit"></i>';
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-delete') === 'True') {
+                let deleteUrl = urlDelete.replace('/777/', '/' + item.id + '/');
+                fila += `<a href="${deleteUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Eliminar">`;
+                fila += '<i class="fa fa-trash"></i>';
+                fila += '</a>';
+            }
+        
+            fila += '</td></tr>';
+        
+            $('#example1 tbody').append(fila);
+            contador++;
         });
-        let arreglo = selectOnlyFiltered();
-        if (arreglo.length == 0){
-            Toast.fire({
-                type: 'warning',
-                title: '   Nada que exportar...',
+        
+        $('#spanFilter').text(' Limpiar ').removeClass('fa-filter').addClass('fa-refresh');
+        $('#filtrar').attr('data-filtrado', 'true');
+    }    
+
+    var formulario = $('#formExportar');
+
+    $('#filtrar').on('click', function(e) {
+        e.preventDefault();
+        if ($('#filtrar').attr('data-filtrado') === 'true'){
+            let listarPremio = $('#formExportar').attr("formfilter");
+            $(location).attr('href', listarPremio);
+        }
+        if ($('#id_fecha_inicio').val() == '' || $('#id_fecha_fin').val() == ''){
+            Swal.fire({
+                type: "warning",
+                title: "Seleccione la fecha de inicio o fin",
             });
             return;
         }
-        let arr = [];
-        for (x of arreglo) {
-            arr.push(x[0]);
+
+        let href = $('#formExportar').attr('formfilter');
+    
+        let arreglo = selectOnlyFiltered();
+    
+        if (arreglo.length === 0) {
+            Toast.fire({
+                type: 'warning',
+                title: 'Nada que filtrar...',
+            });
+            return;
         }
-        //console.log(arr);
-        
+
+        Toast.fire({
+            type: 'info',
+            title: 'Filtrando...',
+        });
+    
+        let arr = arreglo.map(x => x['DT_RowId']);
+    
+        var form = document.getElementById(formulario.attr("id"));
+        var form_data = new FormData(form);
         var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        form_data.append("csrfmiddlewaretoken", csrf_token);
+        form_data.append("arr", arr);
+
+        $.ajax({
+            url: formulario.attr("formfilter"),
+            type: formulario.attr("method"),
+            dataType: "JSON",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                //console.log('DATA DATA DATA', data);
+                if (data.result == "success") {
+                    if (data['lista'].length > 0){
+                        actualizarTabla(data['lista']);
+                        elementosFiltradosPorFecha = data['lista'].map(item => item.id)
+                        //console.log('elementosFiltradosPorFecha', elementosFiltradosPorFecha)
+                    } else {
+                        Swal.fire({
+                            title: 'No se ha filtrado',
+                            text: 'No hay elementos comprendidos en esas fechas',
+                            type: 'warning',
+                        })
+                    }
+                    
+                } else if (data.result == "error") {
+                    Swal.fire({
+                        title: 'Error al filtrar',
+                        text: 'Error error error',
+                        type: 'error',
+                    })
+                }
+            },
+        });
+    });   
+
+    $('#exportar').on('click', function(e) {
+        Toast.fire({
+            type: 'info',
+            title: 'Exportando PDF...',
+        });
+    
+        let arreglo = selectOnlyFiltered();
         
+        if (arreglo.length === 0) {
+            Toast.fire({
+                type: 'warning',
+                title: 'Nada que exportar...',
+            });
+            return;
+        }
+    
+        let arr = arreglo.map(x => x['DT_RowId']);
+
+        if ($('#filtrar').attr('data-filtrado') === 'true'){
+            arr = elementosFiltradosPorFecha
+        }
+    
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', href, true);
+        var url = href;
+    
+        xhr.open('POST', url, true);
         xhr.responseType = 'blob';
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('X-CSRFToken', csrf_token);
-        
+
+        var urlError = $('#formExportar').attr("formerror");
+    
         var data = {
             tabla: 'premio',
             arr: arr,
-            titulo: 'Listado de premios',
+            titulo: 'Listado de Premios y Reconocimientos',
         };
+    
         var jsonData = JSON.stringify(data);
-        //console.log(jsonData);
-        
+
+        var jsonResponse = null;
+    
         xhr.onload = function() {
             if (xhr.status === 200) {
-                // Crear una URL del Blob de la respuesta
                 var blob = xhr.response;
-                var url = URL.createObjectURL(blob);
-            
-                // Crear un enlace para mostrar el PDF en el navegador
+                var pdfUrl = URL.createObjectURL(blob);
+    
                 var link = document.createElement('a');
-                link.href = url;
+                link.href = pdfUrl;
                 link.target = '_blank';
                 link.click();
-            } else {
-                // Manejar errores de la solicitud AJAX
-                Toast.fire({
-                    type: 'error',
-                    title: 'Error al obtener el archivo PDF',
+            } else if (xhr.status === 404) {
+                Swal.fire({
+                    type: "error",
+                    title: "Error al obtener el archivo PDF",
+                    text: 'Actualice los logos',
+                })
+                .then((result) => {
+                    window.location.href = urlError;
                 });
-                //console.error('Error al obtener el archivo PDF.');
+            } else {
+                Swal.fire({
+                    type: "error",
+                    title: "Hubo un error",
+                    text: jsonResponse ? jsonResponse.title : 'Error desconocido',
+                });
             }
         };
+    
         xhr.send(jsonData);
-    });
-
-$('.switch').click(function()
-    {
-        $(this).toggleClass("switchOn");
-    });
-
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
+    });   
 });
 
 </script>

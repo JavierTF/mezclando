@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.base.models import Country, Entity, LogoEntity, Position, Employee, InfoEmployee, Process, Procedure
+from apps.base.models import Country, Entity, LogoEntity, Position, Employee, InfoEmployee, ProcessClassifier, Process, Procedure
 
 
 @admin.register(Country)
@@ -28,9 +28,14 @@ class InfoEmployeeInLine(admin.TabularInline):
     extra = 1
 
 
+# @admin.register(ScientificCategory)
+# class ScientificCategoryAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'prefix', 'active', )
+
+
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('get_full_name', 'identification', 'position', 'active', )
+    list_display = ('get_full_name', 'identification', 'position', 'image', 'active', )
     inlines = [InfoEmployeeInLine, ]
 
     @admin.display(description='Nombre y Apellidos')
@@ -38,9 +43,14 @@ class EmployeeAdmin(admin.ModelAdmin):
         return obj.get_full_name()
 
 
+@admin.register(ProcessClassifier)
+class ProcessClassifierAdmin(admin.ModelAdmin):
+    list_display = ('name','active', )
+
+
 @admin.register(Process)
 class ProcessAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order', 'abbreviation', 'responsible', 'edition', 'revision', 'active', )
+    list_display = ('classifier', 'name', 'order', 'abbreviation', 'responsible', 'edition', 'revision', 'active', )
 
 
 @admin.register(Procedure)

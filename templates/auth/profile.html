@@ -1,6 +1,9 @@
 {% extends 'index.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
+{% block page_title %}
+    <title>SISGEPO | Perfil de usuario</title>
+{% endblock %}
 {% block perfil_active %}
     active
 {% endblock %}
@@ -40,7 +43,14 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formUpload" role="form" method="post" enctype="multipart/form-data">
+                        <form
+                            id="formulario"
+                            class="form-horizontal"
+                            method="post"
+                            enctype="multipart/form-data"
+                            formaction="{% url 'profile' request.user.pk %}"
+                            formsuccess="{% url 'inicio' %}"
+                        >
                             {% csrf_token %}
                             <div class="card-body">
                             <div class="form-row">
@@ -99,7 +109,7 @@
                             <div class="form-actions fluid">
                             <div class="col-md-offset-3 col-md-9">
 
-                              <button type="submit" class="btn btn-primary mb-3">Enviar</button>
+                              <button type="submit" class="btn btn-danger mb-3">Atrás</button>
                              <br>
 
                              </div>
@@ -132,10 +142,10 @@
                 <div class="modal-footer">
                     <div class="btn-group pull-left" role="group">
                         <button type="button" class="btn btn-default js-zoom-in" title="Aumentar tamaño">
-                            <span class="glyphicon glyphicon-zoom-in"></span>
+                            <small class="glyphicon glyphicon-zoom-in" style="margin-top: -2px;"><b>+</b></small>
                         </button>
                         <button type="button" class="btn btn-default js-zoom-out" title="Disminuir tamaño">
-                            <span class="glyphicon glyphicon-zoom-out"></span>
+                            <small class="glyphicon glyphicon-zoom-out" style="margin-top: -2px;"><b>-</b></small>
                         </button>
                     </div>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -147,7 +157,7 @@
     </div>
 {% endblock %}
 {% block script %}
-    <script src="{% static 'assets/cropme/js/cropper.min.js' %}"></script>
+    <script src="{% static 'assets/cropme/js/cropper.min.js' %}" type="text/javascript"></script>
     <script>
         $(function () {
             /* SCRIPT TO OPEN THE MODAL WITH THE PREVIEW */
@@ -191,6 +201,54 @@
                 $image.cropper("zoom", -0.1);
             });
 
+            function submitForm(formulario) {
+                console.log('first first first')
+                formulario.on("submit", function (e) {
+                    e.preventDefault();
+                    var href = formulario.attr("formaction");
+                    var listar = formulario.attr("formsuccess");
+                    var data = formulario.serializeArray();
+            
+                    if ($(".is-invalid").length > 0) {
+                        console.log('AKI')
+                        return false;
+                    } else {
+                        $('button[type="submit"]').prop("disabled", true);
+            
+                        var form = document.getElementById(formulario.attr("id"));
+                        var form_data = new FormData(form);
+                        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                        form_data.append("csrfmiddlewaretoken", csrf_token);
+            
+                        $.ajax({
+                            url: formulario.attr("formaction"),
+                            type: formulario.attr("method"),
+                            dataType: "JSON",
+                            data: form_data,
+                            processData: false,
+                            contentType: false,
+                            success: function (data) {
+                                if (data.result == "success") {
+                                    Swal.fire({
+                                        title: data.title,
+                                        type: data.result,
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    }).then((result) => {
+                                        $(location).attr('href', listar); 
+                                    });
+                                } else if (data.result == "error") {
+                                    var element = document.querySelector(`[name="${data.field}"]`);
+                                    updateErrorMessage(element, data.title);
+                                    $('button[type="submit"]').prop("disabled", true);
+                                }
+                            },
+                        });
+                    }
+                });
+            }
+            
+
             /* SCRIPT TO COLLECT THE DATA AND POST TO THE SERVER */
             $("#crop_upload").click(function () {
                 cropData = $image.cropper("getData");
@@ -198,7 +256,8 @@
                 $("#id_y").val(cropData["y"]);
                 $("#id_height").val(cropData["height"]);
                 $("#id_width").val(cropData["width"]);
-                $("#formUpload").submit();
+                //submitForm($("#formulario"));
+                $("#formulario").submit();
                 {#$("#modalCrop").modal("hidde");#}
             });
 
@@ -282,7 +341,7 @@
         });
 
     </script>
-    <script src="{% static 'assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
     <script>
         {% if FA2 %}
             $("#id_verificar").bootstrapSwitch("state", true)
@@ -292,7 +351,8 @@
     $('#id_img').change(function(){
             var file_name =$(this).val().split('.');
             var ext = file_name[file_name.length - 1];
-            if(ext != "jpg" && ext != "JPG" && ext != "jpeg" && ext != "JPEG" && ext != "png" && ext != "PNG")
+            let validExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+            if(!validExtensions.includes(ext))
             {
                     $('#crop_upload').hide();
                     $('.btn-group.pull-left').hide();

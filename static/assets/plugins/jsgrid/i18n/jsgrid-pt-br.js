@@ -14,7 +14,7 @@
         },
 
         loadIndicator: {
-            message: "Carregando..."
+            message: "Cargando..."
         },
 
         fields: {

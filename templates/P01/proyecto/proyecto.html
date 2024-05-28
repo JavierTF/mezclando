@@ -4,7 +4,28 @@
     <title>SISGEPO | Proyectos</title>
 {% endblock %}
 
-{% block proyecto %}
+{% block menu_p01 %}
+    menu-open
+{% endblock %}
+{% block menu_p01_active %}
+    active
+{% endblock %}
+{% block menu_gestion_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_gestion_proyectos_active %}
+    active
+{% endblock %}
+{% block menu_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_proyectos_active %}
+    active
+{% endblock %}
+{% block gestion_proyectos %}
+    active
+{% endblock %}
+{% block proyectos %}
     active
 {% endblock %}
 
@@ -16,16 +37,26 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Proyectos</h1>
+                    <h1 class="m-0 text-dark">Listar Proyectos </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Proyecto.</li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyectos</a></li>
+                            <li class="breadcrumb-item active">Listar</li>
                         {% endblock %}
                     </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -33,75 +64,40 @@
 {% endblock %}
 {% block miestilo %}
 <style>
-.btn-primary-transparent{
-    color: #007bff;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
+    #filterContainer {
+        background-color: #f5fcff;
     }
 
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
+    #filterContainer2 {
+        background-color: #f7faff;
+    }
 
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
+    #filterContainer3 {
+        background-color: #fffafa;
+    }
+    
+    #select2-id_periodo-container, 
+    #select2-id_area-container,
+    #select2-id_fecha_dgca-container,
+    #select2-id_area_dgca-container,
+    #select2-id_estado_dgca-container,    
+    #select2-id_idioma-container,    
+    input[type="number"][name="anno"].form-control {
+        background-color: white;
+    }
+
+    #id_atrasado {
+        width: 20%;
+    }
+
+    select[name="idioma"] + .select2-container {
+        background-color: white;
+    }
+
+    select[name="linea_tematica"] + .select2-container {
+        background-color: white;
+    }
+    
 </style>
 {% endblock %}
 
@@ -111,17 +107,262 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="row card-header">
-                        <form id="formExportar" class="form-horizontal col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
-                            {% if perms.SISGDDO.view_proyecto %}
-                                <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
+                        <form 
+                        id="formFiltrar" 
+                        class="form-horizontal col-12" 
+                        method="post" 
+                        enctype="multipart/form-data" 
+                        formaction="{% url 'exportar' %}" 
+                        formerror="{% url 'base:create_logoentity' %}"
+                        formfilter="{% url 'listar_proyecto' %}"
+                        >
+                            <div class="row">
+                                {% if perms.xavi.view_proyecto or perms.xavi.view_sosi or perms.xavi.view_entrada_proyecto %}
+                                <label class="control-label"><label for="id_tipo_filtrado">Tipo de filtrado:</label></label>
+                                <div class="col-md-2">
+                                    <select name="tipo_filtrado" class=" form-control texto select2" autocomplete="on" required id="id_tipo_filtrado" aria-tipo="{{ tipo_fecha }}">
+                                        <option value="">Escriba y seleccione...</option>
+                                        <option value="fecha_inicio">Fecha de inicio</option>  
+                                        <option value="fecha_terminacion">Fecha de terminación</option>  
+                                        {% comment %} <option value="fecha_entrega">Fecha de entrega SOSI</option>  
+                                        <option value="fecha_cierre">Fecha de cierre</option>   {% endcomment %}
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                                <label class="control-label"><label for="id_fecha_inicio">Desde:</label></label>
+                                <div class="col-md-2">
+                                    <input type="date" name="fecha_inicio" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio">
+                                    <small class="text-red"></small>
+                                </div>
+                                <label class="control-label"><label for="id_fecha_fin">Hasta:</label></label>
+                                <div class="col-md-2">
+                                    <input type="date" name="fecha_fin" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_fin">
+                                    <small class="text-red"></small>
+                                </div>
+                                <div class="col-md-3">
+                                    <button id="filtrar" type="button" data-filtrado="false" data-view="{{ perms.xavi.view_proyecto }}" data-hrefView="{% url 'detalle_proyecto' 777 %}" data-change="{{ perms.xavi.change_proyecto }}" data-hrefChange="{% url 'modificar_proyecto' 777 %}" data-delete="{{ perms.xavi.delete_proyecto }}" data-hrefDelete="{% url 'eliminar_proyecto' 777 %}" data-entrada="{{ perms.xavi.add_entrada_proyecto }}" data-hrefEntrada="{% url 'adicionar_entrada_proyecto' 777 %}" data-sosi="{{ perms.xavi.add_sosi }}" data-hrefAddSosi="{% url 'adicionar_sosi' 777 %}" data-hrefDetailSosi="{% url 'detalle_sosi' 777 %}" class="btn btn-dark">
+                                        <span id="spanFilter" class="fa fa-filter"> Filtrar </span>
+                                    </button>                                      
+                                </div>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row card-header">
+                        <form id="formExportar" class="form-horizontal row col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
+                            {% if perms.xavi.view_proyecto or perms.xavi.view_sosi or perms.xavi.view_entrada_proyecto %}
+                                <label class="control-label"><label for="id_tipo_reporte">Tipo de reporte:</label></label>
+                                <div class="col-md-3">
+                                    <select name="tipo_reporte" class=" form-control texto select2" autocomplete="on" required id="id_tipo_reporte">
+                                        <option value="none" selected>---</option> 
+                                        {% if perms.xavi.view_proyecto %} 
+                                            <option value="reporte_estadistico">Estadístico</option>
+                                            <option value="reporte_gestion">Estado de la gestión</option>
+                                        {% endif %}
+                                        {% if perms.xavi.view_entrada_proyecto %}
+                                            <option value="reporte_dgca">DGCA</option>
+                                        {% endif %}
+                                        {% if perms.xavi.view_sosi %}
+                                            <option value="reporte_sosi">SOSI</option>
+                                        {% endif %}
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                                <button id="exportar" type="button" class="btn btn-outline-info">
+                                    <span class="fa fa-file"> Exportar </span>
+                                </button>
                             {% endif %}                                
                         </form>
                         
-                        {% if perms.SISGDDO.add_proyecto %}
-                            <a href="{% url 'adicionar_proyecto' %}" class="btn btn-primary fa-pull-right">
-                                <span class="fa fa-plus"> Adicionar </span>
+                        {% if perms.xavi.add_proyecto %}
+                            <a href="{% url 'adicionar_proyecto' %}" class="btn btn-primary col-2">
+                                <span class="fa fa-plus"> Adicionar</span>
                             </a>
                         {% endif %}
+                    </div>
+                    <div id="filterContainer" class="row card-header" style="display: none;">
+                        <form id="formReporteEstadistico" class="form-horizontal row col-12" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
+                            <div class="row">
+                                <div class="col-md-12" style="font-weight: bold;">
+                                    <p>Reporte estadístico para la gestión de proyectos</p>
+                                </div> 
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_periodo">Periodo:</label></label>
+                                    <div>
+                                        <select name="periodo" class="form-control texto select2" autocomplete="on" id="id_periodo" style="background-color: white;">
+                                            <option value="---">---</option> 
+                                            <option value="periodo_anno" selected>Año</option>
+                                            <option value="periodo_trimestre_i">Trimestre I</option>  
+                                            <option value="periodo_trimestre_ii">Trimestre II</option>
+                                            <option value="periodo_trimestre_iii">Trimestre III</option>
+                                            <option value="periodo_trimestre_iv">Trimestre IV</option>
+                                            <option value="periodo_semestre_i">Semestre I</option>
+                                            <option value="periodo_semestre_ii">Semestre II</option>
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                              
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_anno">Año:</label></label>
+                                    <div>
+                                        <input type="number" name="anno" class="form-control" min="1" max="9999" value="{% now 'Y' %}" maxlength="4">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label"><label for="id_fecha_inicio_reporte">Desde:</label></label>
+                                    <div>
+                                        <input type="date" name="fecha_inicio_reporte" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio_reporte">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                               
+                                <div class="form-group col-md-2">
+                                    <label class="control-label"><label for="id_fecha_fin_reporte">Hasta:</label></label>
+                                    <div>
+                                        <input type="date" name="fecha_fin_reporte" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_fin_reporte">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                          
+                                <div class="form-group col-md-1">
+                                    <label class=" control-label"><label for="id_atrasado">Atrasado:</label></label>
+                                    <div>
+                                        <input type="checkbox" name="atrasado" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_atrasado">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>    
+                                {% comment %} <div class="form-group col-md-12">
+                                    <label class="control-label"><label for="id_objetivo">Objetivo:</label></label>
+                                    <div>
+                                        <textarea name="objetivo" cols="40" rows="1" class="form-control" autocomplete="on" placeholder="Introduzca el objetivo" maxlength="120" id="id_objetivo"></textarea>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="control-label"><label for="id_observaciones">Observaciones:</label></label>
+                                    <div>
+                                        <textarea name="observaciones" cols="40" rows="3" class="form-control" autocomplete="on" placeholder="Introduzca las observaciones" maxlength="250" id="id_observaciones"></textarea>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                       {% endcomment %}
+                                
+                                {% comment %} {% if perms.xavi.view_proyecto %}
+                                    <a id="filtroReporte" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Filtrar </span></a>
+                                {% endif %}    {% endcomment %}
+                            </div>                             
+                        </form>
+                    </div>
+                    <div id="filterContainer2" class="row card-header" style="display: none;">
+                        <form id="formReporteDGCA" class="form-horizontal row col-12" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
+                            <div class="row">
+                                <div class="col-md-12" style="font-weight: bold;">
+                                    <p>Proyectos entregados al departamento de gestión de la calidad para su revisión</p>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_fecha_dgca">Tipo de fecha:</label></label>
+                                    <div>
+                                        <select name="fecha_dgca" class=" form-control texto select2" autocomplete="on" id="id_fecha_dgca" style="background-color: white;">
+                                            <option value="">Escriba y seleccione...</option>
+                                            <option value="fecha_entrada_dgca">Fecha de entrada</option>  
+                                            <option value="fecha_salida_dgca">Fecha de salida</option>
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                                
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_anno_dgca">Año:</label></label>
+                                    <div>
+                                        <input type="number" name="anno_dgca" class=" form-control" min="1" max="9999" value="" maxlength="4">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label"><label for="id_fecha_inicio_dgca">Desde:</label></label>
+                                    <div>
+                                        <input type="date" name="fecha_inicio_dgca" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio_dgca">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                               
+                                <div class="form-group col-md-2">
+                                    <label class="control-label"><label for="id_fecha_fin_dgca">Hasta:</label></label>
+                                    <div>
+                                        <input type="date" name="fecha_fin_dgca" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_fin_dgca">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                          
+                                {% comment %} <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_area_dgca">Área:</label></label>
+                                    <div>
+                                        <select name="area_dgca" class=" form-control texto select2" autocomplete="on" id="id_area_dgca" style="background-color: white;">
+                                            <option value="">Escriba y seleccione...</option>
+                                            {% for option in tareas %}
+                                                <option value="{{ option.id }}">({{ option.centro_costo }}) {{ option.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_estado_dgca">Estado DGCA:</label></label>
+                                    <div>
+                                        <select name="estado_dgca" class=" form-control texto select2" autocomplete="on" id="id_estado_dgca" style="background-color: white;">
+                                            <option value="">Escriba y seleccione...</option>
+                                            {% for option in tdgca %}
+                                                <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                         
+                                
+                                {% comment %} {% if perms.xavi.view_proyecto %}
+                                    <a id="filtroReporte" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Filtrar </span></a>
+                                {% endif %}    {% endcomment %}
+                            </div>                             
+                        </form>
+                    </div>
+                    <div id="filterContainer3" class="row card-header" style="display: none;">
+                        <form id="formReporteSOSI" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
+                            <div class="row">
+                                <div class="col-md-12" style="font-weight: bold;">
+                                    <p>Reporte SOSI</p>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label class=" control-label"><label for="id_anno_sosi">Año:</label></label>
+                                    <div>
+                                        <input type="number" name="anno_sosi" class=" form-control" min="1" max="9999" value="" maxlength="4">
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                                 
+                                <div class="form-group col-md-4">
+                                    <label class=" control-label"><label for="id_linea_tematica">Línea temática:</label></label>
+                                    <div>
+                                        <select name="linea_tematica" class=" form-control texto select2" autocomplete="on" id="id_linea_tematica" style="background-color: white;">
+                                            <option value="">Escriba y seleccione...</option>
+                                            {% for option in tlineas %}
+                                                <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>  
+                                <div class="form-group col-md-6">
+                                    <label class="control-label"><label for="id_formato">Idioma:</label></label>
+                                    <div >
+                                        <select name="idioma" class=" form-control texto select2" autocomplete="on" id="id_idioma" multiple>
+                                            <option value="">Escriba y seleccione...</option>                                        
+                                            {% for option in tidiomas %}
+                                                <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                            {% endfor %}
+                                            </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>                         
+                                
+                                {% comment %} {% if perms.xavi.view_proyecto %}
+                                    <a id="filtroReporte" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Filtrar </span></a>
+                                {% endif %}    {% endcomment %}
+                            </div>                             
+                        </form>
                     </div>
                     <!-- /.card-header -->
 
@@ -132,35 +373,36 @@ left: 24px !important;
                                 <th>
                                     Número
                                 </th>
-                                <th>
+                                <th style="width: 60px;">
                                     Código
                                 </th>
                                 <th>
                                     Nombre
                                 </th>
                                 <th>
-                                    Formato
-                                </th>
-                                <th>
                                     Área
                                 </th>
-                                <th>
-                                    Tipo de proyecto
+                                 <th>
+                                    Formato(s)
                                 </th>
                                 <th>
                                     Equipo de proyecto
-                                </th>
+                                </th> 
+                                {% comment %}
+                                <th>
+                                    Tipo de proyecto
+                                </th>                                
                                 <th>
                                     Fecha de entrada
                                 </th>
                                 <th>
                                     Fecha de cierre
-                                </th>
+                                </th>{% endcomment %}
                                 <th>
                                     Estado
                                 </th>
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -177,6 +419,9 @@ left: 24px !important;
                                     <td>
                                         {{ lt.nombre_proyecto }}
                                     </td>
+                                    <td>
+                                        {{ lt.registro_aprobacion.centro_costo.nombre }}
+                                    </td>
                                     <td>                                        
                                         {% if lt.formato.all|length > 0 %}
                                             {% for formato in lt.formato.all %}
@@ -187,23 +432,33 @@ left: 24px !important;
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {{ lt.area }}
-                                    </td>
-                                    <td>
-                                        {{ lt.tipo }}
-                                    </td>
-                                    <td>
-                                        {% if lt.trabajador.all|length > 0 %}
-                                            {% for trab in lt.trabajador.all %}
-                                                {% cycle '<strong>JP:</strong>' '<strong>DIS:</strong>' '<strong>EC:</strong>' %}
-                                                {{ trab }} {% if not forloop.last %} - {% endif %}
-                                            {% endfor %}
+                                        {% if lt.registro_aprobacion.employee.all %}
+                                            {% with trabajadores=lt.registro_aprobacion.employee.all %}
+                                                {% if trabajadores %}
+                                                    {% for trab in trabajadores %}
+                                                        {% cycle '<strong>JP:</strong>' '<strong>EC:</strong>' '<strong>DIS:</strong>' %}
+                                                        {{ trab }}{% if not forloop.last %} <br /> {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    -----
+                                                {% endif %}
+                                            {% endwith %}
                                         {% else %}
                                             -----
                                         {% endif %}
                                     </td>
+                                    
+                                    {% comment %}
                                     <td>
-                                        {{ lt.fecha_entrada }}
+                                        {{ lt.tipo }}
+                                    </td>
+                                    
+                                    <td>
+                                        {% if lt.registro_aprobacion %}
+                                            {{ lt.registro_aprobacion.fecha_inicio|date:"d.M.Y" }}
+                                        {% else %}
+                                            -------
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {% if lt.fecha_cierre %}
@@ -211,48 +466,49 @@ left: 24px !important;
                                         {% else %}
                                             -----
                                         {% endif %}
-                                    </td>
+                                    </td>   {% endcomment %}   
                                     <td>
-                                        {{ lt.estado }}
-                                    </td>                                        
-                                    <td>
-                                    <span class="input-group">
-                                    {% if perms.SISGDDO.change_proyecto %}
-                                    <label>
-                                        <form action="{% url 'act_desactproyecto' lt.id %}" method="POST" class="form-activate">
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.view_proyecto %}
-                                    <a href="{% url 'detalle_proyecto' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
-                                    <i class="fa fa-eye"></i>
-                                    </a>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.change_proyecto %}
-                                    <a href="{% url 'modificar_proyecto' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
-                                    <i class="fa fa-edit"></i>
-                                    </a>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.delete_proyecto %}
-                                        <a href="{% url 'eliminar_proyecto' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
-                                        <i class="fa fa-trash"></i>
-                                        </a>
-                                    {% endif %} 
-                                    {% if perms.SISGDDO.add_sosi %}
-                                        <a href="{% url 'adicionar_entrada_proyecto' lt.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar entrada">
-                                        <i class="fa fa-angle-double-right"></i>
-                                        </a>
-                                    {% endif %}
-                                </span>
+                                        {{ lt.estado.nombre }}
+                                    </td>                                 
+                                    <td style="width: 195px !important;">
+                                        <span class="input-group">
+                                            {% if perms.xavi.view_proyecto %}
+                                            <a href="{% url 'detalle_proyecto' lt.id %}"
+                                                class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
+                                            <i class="fa fa-eye"></i>
+                                            </a>
+                                            {% endif %}
+                                            {% if perms.xavi.view_proyecto or perms.xavi.add_proyecto or perms.xavi.change_proyecto %}
+                                            <a href="{% url 'modificar_proyecto' lt.id %}"
+                                                class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
+                                            <i class="fa fa-edit"></i>
+                                            </a>
+                                            {% endif %}
+                                            {% if perms.xavi.delete_proyecto %}
+                                                <a href="{% url 'eliminar_proyecto' lt.pk %}"
+                                                    class="btn btn-sm btn-primary btn-primary-transparent ml-1" title="Eliminar">
+                                                <i class="fa fa-trash"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if perms.xavi.add_sosi or perms.xavi.view_sosi or perms.xavi.change_sosi or perms.xavi.delete_sosi %}
+                                                <a href="{% url 'adicionar_sosi' lt.id %}"
+                                                    class="btn btn-sm btn-success btn-primary{% if not lt.sosi or lt.sosi.activo == False %}-transparent ml-1 {% else %} ml-1 {% endif %}" {% if lt.sosi %} title="Detalles SOSI" {% else %} title="Adicionar SOSI" {% endif %}
+                                                    >
+                                                <i class="fa fa-cloud"></i>
+                                                </a>
+                                            {% endif %} 
+                                            {% if perms.xavi.add_entrada_proyecto or perms.xavi.view_entrada_proyecto or perms.xavi.change_entrada_proyecto or perms.xavi.delete_entrada_proyecto %}
+                                                <a href="{% url 'adicionar_entrada_proyecto' lt.id %}"
+                                                    class="btn btn-sm btn-primary btn-primary-transparent ml-1" title="Adicionar entrada">
+                                                <i class="fa fa-sign-out"></i>
+                                                    {% if lt.num_entradas_activas > 0 %}
+                                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                                                        {{ lt.num_entradas_activas }}
+                                                    </span>
+                                                    {% endif %}
+                                                </a>
+                                            {% endif %}                                                                                       
+                                        </span>
                                     </td>
                                 </tr>
                                 {% comment %} {% c = c + 1 %} {% endcomment %}
@@ -276,6 +532,28 @@ left: 24px !important;
 {% block script %}
 <script>
 $(document).ready(function(){
+    $('#exportar').prop('disabled', true);
+
+    function controlarOpciones() {
+        var tipoFecha = "{{ tipo_fecha }}"; // Obtener el valor de tipo_fecha desde el contexto de Django
+        var select = document.getElementById("id_tipo_filtrado");
+        
+        // Limpiar las opciones actuales
+        select.innerHTML = '<option value="">Escriba y seleccione...</option>';
+        let ariaTipo = $('#id_tipo_filtrado').attr('aria-tipo');
+        
+        // Agregar las opciones correspondientes según el valor de tipo_fecha
+        if (ariaTipo == 'proyecto') {
+            select.innerHTML += '<option value="fecha_inicio">Fecha de inicio</option>';
+            select.innerHTML += '<option value="fecha_terminacion">Fecha de terminación</option>';
+            //$('#filtrar').show();
+        } else {
+            select.innerHTML += '<option value="fecha_entrega">Fecha de entrega</option>';
+            select.innerHTML += '<option value="fecha_cierre">Fecha de cierre</option>';
+            //$('#filtrar').hide();
+        }
+    }
+
     var href = $('#formExportar').attr('formaction');
     
     var table = $('#example1').DataTable();
@@ -286,28 +564,123 @@ $(document).ready(function(){
         return filteredRows;
     }
 
-    $('#exportar').on('click', function() {
+    let longArr = selectOnlyFiltered();
+    if (longArr.length == 0){
+        $('#filtrar').prop('disabled', true);
+    }
+
+    $('#id_tipo_reporte').on('change', function (){
+        if ($('#id_tipo_reporte option:selected').val() == 'none'){
+            $('#exportar').prop('disabled', true);
+        } else {
+            $('#exportar').prop('disabled', false);
+        }
+
+        if ($('#id_tipo_reporte option:selected').val() != ''){
+            if ($('#id_tipo_reporte option:selected').val() == 'reporte_estadistico'){
+                $('#id_tipo_filtrado').attr('aria-tipo', 'proyecto');
+                controlarOpciones();
+                $('#filterContainer2').css('display', 'none');
+                $('#filterContaine3').css('display', 'none');
+                $('#filterContainer').css('display', 'block');
+            } else if ($('#id_tipo_reporte option:selected').val() == 'reporte_dgca') {
+                $('#id_tipo_filtrado').attr('aria-tipo', 'proyecto');
+                controlarOpciones();
+                $('#filterContainer').css('display', 'none');
+                $('#filterContainer3').css('display', 'none');
+                $('#filterContainer2').css('display', 'block');
+            } else if ($('#id_tipo_reporte option:selected').val() == 'reporte_sosi') {
+                $('#id_tipo_filtrado').attr('aria-tipo', 'sosi');
+                controlarOpciones();
+                $('#filterContainer').css('display', 'none');
+                $('#filterContainer2').css('display', 'none');
+                $('#filterContainer3').css('display', 'block');
+            } else {
+                $('#filterContainer').css('display', 'none');
+                $('#filterContainer2').css('display', 'none');
+                $('#filterContainer3').css('display', 'none');
+            }
+        } else {
+            $('#filterContainer').css('display', 'none');
+        }
+    });
+
+    $('#exportar').on('click', function() {       
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_estadistico'){
+            $('#id_tipo_filtrado').attr('aria-tipo', 'proyecto');
+
+            if ($('input[name="anno"]').val() == ''){
+                validate_campos_vacios($('input[name="anno"]'));
+            }
+            $('input[name="anno"]').bind('focusout',function(){
+                validate_campos_vacios($('input[name="anno"]'));
+            });
+            
+            if ($('input[name="anno"]').val() == ''){
+                return;
+            }
+
+            if ($('input[name="anno"]').val() != ''){
+                if ($('#id_periodo option:selected').val() == '---'){
+                    if ($('#id_fecha_inicio_reporte').val().trim() == '' || $('#id_fecha_fin_reporte').val().trim() == ''){
+                        Swal.fire({
+                            type: "warning",
+                            title: "Seleccione Periodo o Fecha de inicio y fin",
+                        });
+                        return;
+                    }
+                }                
+            }
+        }
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_dgca'){
+            let t = document.getElementById('id_fecha_dgca');
+            $('#id_fecha_dgca').on('change', function(e){
+                validate_select($('#id_fecha_dgca'), e);
+            });
+            
+            if ($('#id_fecha_dgca').val() == ''){
+                updateErrorMessage(t, 'Por favor, no deje el campo vacío');
+                return;
+            }
+
+            if ($('#id_fecha_dgca option:selected').val() != ''){
+                console.log('entro');
+                if ($('input[name="anno_dgca"]').val() == ''){
+                    console.log('entro2');
+                    if ($('#id_fecha_inicio_dgca').val().trim() == '' || $('#id_fecha_fin_dgca').val().trim() == ''){
+                        console.log('entro3');
+                        Swal.fire({
+                            type: "warning",
+                            title: "Seleccione Año o periodo Desde y Hasta",
+                        });
+                        return;
+                    }
+                }                
+            }
+        }
         Toast.fire({
             type: 'info',
             title: '   Exportando PDF...',
         });
         let arreglo = selectOnlyFiltered();
         if (arreglo.length == 0){
-            Toast.fire({
-                type: 'warning',
-                title: '   Nada que exportar...',
+            Swal.fire({
+                type: "info",
+                title: "Nada que exportar",
             });
             return;
         }
         let arr = [];
+        //console.log('\nArreglo', arreglo);
         for (x of arreglo) {
-            arr.push(x[0]);
+            arr.push(x['DT_RowId']);
         }
-        //console.log(arr);
+        console.log('ARR', arr);
         
         var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
         
         var xhr = new XMLHttpRequest();
+        
         xhr.open('POST', href, true);
         xhr.responseType = 'blob';
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -318,6 +691,68 @@ $(document).ready(function(){
             arr: arr,
             titulo: 'Listado de proyectos',
         };
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_estadistico'){
+            
+            data = {
+                ...data, 
+                tabla: 'estadistico_proyecto',
+                titulo: 'Reporte estadístico para la gestión de proyectos',
+                periodo: $('#id_periodo option:selected').val(),
+                anno: $('input[name="anno"]').val(),
+                atrasado: $('#id_atrasado').prop('checked'),
+                fecha_inicio: $('input[name="fecha_inicio_reporte"]').val(),
+                fecha_fin: $('input[name="fecha_fin_reporte"]').val(),
+                //objetivo: $('#id_objetivo').val(),
+                //observaciones: $('#id_observaciones').val(),
+            };
+        } 
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_dgca'){
+            data = {
+                ...data, 
+                tabla: 'dgca_proyecto',
+                titulo: 'Proyectos entregados al departamento de gestión de la calidad para su revisión',
+                tipo_fecha: $('#id_fecha_dgca option:selected').val(),
+                anno: $('input[name="anno_dgca"]').val(),
+                fecha_inicio: $('input[name="fecha_inicio_dgca"]').val(),
+                fecha_fin: $('input[name="fecha_fin_dgca"]').val(),
+                //area: $('#id_area_dgca option:selected').val(),
+                estado: $('#id_estado_dgca option:selected').val(),
+            };
+        }
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_gestion'){
+            
+            data = {
+                ...data, 
+                tabla: 'gestion_proyecto',
+                titulo: 'Estado de la gestión de los proyectos',
+                /*tipo_fecha: $('#id_fecha_dgca option:selected').val(),
+                anno: $('input[name="anno_dgca"]').val(),
+                fecha_inicio: $('input[name="fecha_inicio_dgca"]').val(),
+                fecha_fin: $('input[name="fecha_fin_dgca"]').val(),
+                area: $('#id_area_dgca option:selected').val(),
+                estado: $('#id_estado_dgca option:selected').val(),*/
+            };
+        }
+        if ($('#id_tipo_reporte option:selected').val() == 'reporte_sosi'){
+            
+            data = {
+                ...data, 
+                tabla: 'reporte_sosi',
+                titulo: 'Estado de la gestión de SOSI',
+                fecha_entrada: $('input[name="fecha_inicio"]').val(),
+                fecha_cierre: $('input[name="fecha_fin"]').val(),
+                anno: $('input[name="anno_sosi"]').val(),
+                linea_tematica: $('select[name="linea_tematica"]').val(),
+                idiomas: $('select[name="idioma"]').val(),
+                /*tipo_fecha: $('#id_fecha_dgca option:selected').val(),
+                anno: $('input[name="anno_dgca"]').val(),
+                fecha_inicio: $('input[name="fecha_inicio_dgca"]').val(),
+                fecha_fin: $('input[name="fecha_fin_dgca"]').val(),
+                area: $('#id_area_dgca option:selected').val(),
+                estado: $('#id_estado_dgca option:selected').val(),*/
+            };
+        }
+        console.log('\n', data);
         var jsonData = JSON.stringify(data);
         //console.log(jsonData);
         
@@ -332,6 +767,11 @@ $(document).ready(function(){
                 link.href = url;
                 link.target = '_blank';
                 link.click();
+            } else if (xhr.status === 410) {
+                Swal.fire({
+                    type: "info",
+                    title: "Nada que exportar",
+                });
             } else {
                 // Manejar errores de la solicitud AJAX
                 Toast.fire({
@@ -344,13 +784,183 @@ $(document).ready(function(){
         xhr.send(jsonData);
     });
 
-    $('.switch').click(function(){
-        $(this).toggleClass("switchOn");
-    });
+    var elementosFiltradosPorFecha = null;
 
-    });
-    $('.checkbox-activate').change(function(){
-        $(this).form().submit();
-    });
+    var urlActual = window.location.href;
+
+    var partesUrl = urlActual.split('/');
+
+    var cadenaHastaTercero = partesUrl.slice(0, 3).join('/');
+
+    let urlView = $('#filtrar').attr('data-hrefView');
+    let urlChange = $('#filtrar').attr('data-hrefChange');
+    let urlDelete = $('#filtrar').attr('data-hrefDelete');
+    let urlEntrada = $('#filtrar').attr('data-hrefEntrada');
+    let urlAddSosi = $('#filtrar').attr('data-hrefAddSosi');
+    let urlDetailSosi = $('#filtrar').attr('data-hrefDetailSosi');
+
+    cadenaHastaTercero = cadenaHastaTercero.concat(urlView);
+
+    var formulario = $('#formExportar');
+
+    function actualizarTabla(nuevaLista) {
+        $('#example1 tbody').empty();
+
+        let contador = 1;
+    
+        nuevaLista.forEach(function(item) {
+            console.log('ITEM', item);
+            var fila = '<tr>';
+            // esto debe ser un contador
+            fila += '<td>' + contador + '</td>';
+            fila += '<td>' + item.codigo + '</td>';
+            fila += '<td>' + item.nombre_proyecto + '</td>';
+            fila += '<td>' + item.registro_aprobacion__centro_costo__nombre + '</td>';
+
+            // Ciclo para concatenar los formatos
+            var formatos = '';
+            for (var i = 0; i < item.formatos.length; i++) {
+                formatos += item.formatos[i].nombre;
+                if (i < item.formatos.length - 1) {
+                    formatos += ', ';
+                }
+            }
+            fila += '<td>' + formatos + '</td>';
+
+            fila += '<td>' + item.registro_aprobacion__employee + '</td>';
+            fila += '<td>' + item.estado__nombre + '</td>';
+            fila += '<td>';
+                
+            if ($('#filtrar').attr('data-view') === 'True') {
+                
+                let viewUrl = urlView.replace('/777/', '/' + item.id + '/');
+                //console.log('viewUrl', viewUrl);
+                fila += `<a href="${viewUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">`;
+                fila += '<i class="fa fa-eye"></i>';
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-change') === 'True') {
+                let changewUrl = urlChange.replace('/777', '/' + item.id);
+                fila += `<a href="${changewUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">`;
+                fila += '<i class="fa fa-edit"></i>';
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-delete') === 'True') {
+                let deleteUrl = urlDelete.replace('/777/', '/' + item.id + '/');
+                fila += `<a href="${deleteUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Eliminar">`;
+                fila += '<i class="fa fa-trash"></i>';
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-entrada') === 'True') {
+                let entradaUrl = urlEntrada.replace('/777', '/' + item.id);
+                fila += `<a href="${entradaUrl}" class="btn btn-sm btn-primary btn-primary-transparent" title="Adicionar entrada">`;
+                fila += '<i class="fa fa-sign-out"></i>';
+                if (item.num_entradas_activas){
+                    fila += `<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" style="top: auto !important;">${item.num_entradas_activas}</span>`;
+                }
+                fila += '</a>';
+            }
+            if ($('#filtrar').attr('data-sosi') === 'True') {
+                if (item.sosi == null){
+                    let sosiUrl = urlAddSosi.replace('/777', '/' + item.id);
+                    fila += `<a href="${sosiUrl}" class="btn btn-sm btn-primary-transparent ml-1" title="Adicionar SOSI">`;
+                } else {
+                    let sosiUrl = urlDetailSosi.replace('/777', '/' + item.sosi);
+                    fila += `<a href="${sosiUrl}" class="btn btn-sm btn-success ml-3" title="Detalles SOSI">`;
+                }
+                fila += '<i class="fa fa-cloud"></i>';
+                fila += '</a>';
+            }
+        
+            fila += '</td></tr>';
+        
+            $('#example1 tbody').append(fila);
+            contador++;
+        });
+        
+        $('#spanFilter').text(' Limpiar ').removeClass('fa-filter').addClass('fa-refresh');
+        $('#filtrar').attr('data-filtrado', 'true');
+    } 
+
+    $('#filtrar').on('click', function(e) {
+        e.preventDefault();
+        if ($('#filtrar').attr('data-filtrado') === 'true'){
+            let listarPremio = $('#formFiltrar').attr("formfilter");
+            $(location).attr('href', listarPremio);
+            return;
+        }
+        if ($('#id_tipo_filtrado').val() == '' || $('#id_fecha_inicio').val() == '' || $('#id_fecha_fin').val() == ''){
+            Swal.fire({
+                type: "warning",
+                title: "Seleccione el tipo de filtrado, la fecha de inicio o la fecha de fin",
+            });
+            return;
+        }
+
+        let href = $('#formExportar').attr('formfilter');
+    
+        let arreglo = selectOnlyFiltered();
+    
+        if (arreglo.length === 0) {
+            Swal.fire({
+                type: "info",
+                title: "Nada que filtrar",
+            });
+            return;
+        }
+
+        Toast.fire({
+            type: 'info',
+            title: 'Filtrando...',
+        });
+    
+        let arr = arreglo.map(x => x['DT_RowId']);
+    
+        var form = document.getElementById(formulario.attr("id"));
+        var form_data = new FormData(form);
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        form_data.append("csrfmiddlewaretoken", csrf_token);
+        form_data.append("arr", arr);
+        form_data.append("tipo_filtrado", $('#id_tipo_filtrado').val());
+        form_data.append("fecha_inicio", $('#id_fecha_inicio').val());
+        form_data.append("fecha_fin", $('#id_fecha_fin').val());
+
+        $.ajax({
+            url: formulario.attr("formfilter"),
+            type: formulario.attr("method"),
+            dataType: "JSON",
+            data: form_data,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                //console.log('DATA DATA DATA', data);
+                if (data.result == "success") {
+                    if (data['lista'].length > 0){
+                        actualizarTabla(data['lista']);
+                        elementosFiltradosPorFecha = data['lista'].map(item => item.id)
+                        //console.log('elementosFiltradosPorFecha', elementosFiltradosPorFecha)
+                    } else {
+                        Swal.fire({
+                            title: 'No se ha filtrado',
+                            text: 'No hay elementos comprendidos en esas fechas',
+                            type: 'warning',
+                        })
+                    }
+                    /*$('#id_tipo_filtrado').prop('disabled', true);
+                    $('#id_fecha_inicio').prop('disabled', true);
+                    $('#id_fecha_fin').prop('disabled', true);*/
+                    
+                } else if (data.result == "error") {
+                    Swal.fire({
+                        title: 'Error al filtrar',
+                        text: 'Error error error',
+                        type: 'error',
+                    });
+                }
+            },
+        });
+    });  
+
+});
 </script>
 {% endblock %}

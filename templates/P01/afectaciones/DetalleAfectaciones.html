@@ -1,0 +1,137 @@
+{% extends 'P01/afectaciones/afectaciones.html' %}
+{% load static %}
+{% block page_title %}
+    <title>SISGEPO | Afectación | Detalles</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Detalles de la Afectación a la producción </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_afectacion' %}">P00 / Afectación</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<style>
+    .no-padding-left{
+        padding-left: 0 !important;
+    }
+
+    .bordear{
+        border-radius: 16px;
+        border: 1px solid #ccc !important;
+        padding: 0.01em 16px;
+    }
+</style>
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %}<div class="card-header">
+                        <h3 class="card-title">Detalle de la Incidencia</h3>
+                    </div>
+                    <!-- /.card-header -->{% endcomment %}
+                    <div class="card-body">
+                    <div class="row portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="col-md-12 modal-body">
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Estado:</label><br>
+                                    <span id="estado" style="padding: 5px; border-radius: 16px;
+                                    border: 1px solid #ccc !important;">{{ object.estado }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de recepción:</label><br>
+                                    <span>{{ object.fecha_recepcion }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Formato:</label><br>
+                                    {% if object.formato %}
+                                        {{ object.formato }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                                
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Afectación:</label><br>
+                                    <span>{{ object.afectacion }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Solicitado por:</label><br>
+                                    <span>
+                                        {{ object.propuesto }}
+                                    </span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Ejecutor:</label><br>
+                                    <span>{{ object.responsable }}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de cierre:</label><br>
+                                    {% if object.fecha_cierre %}
+                                        {{ object.fecha_cierre }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+
+                                </div>
+                                
+                                <div class="col-md-4" style="display: inline-block">
+                                   
+                                    <label>Seguimiento Actual:</label><br>
+                                    <span>{% for eq in equip %}
+                                        {{ eq }}
+                                        {% if eq.isdigit %}
+                                        <br>
+                                        {% endif %}
+                                        {% endfor %}</span> 
+                                </div>
+                                
+                               
+                               
+                            </div>           
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'modificar_afectacion' object.numero %}" type="button" class="btn btn-primary btn-primary">Modificar</a>
+                            </div>
+                          </div>
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_afectacion' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

@@ -7,9 +7,11 @@
                 Número
             </th>
             <th>
+                Proceso
+            </th>
+            <th>
                 Nombre
             </th>
-
             <th>
                 Activo
             </th>
@@ -23,13 +25,16 @@
                     {{ forloop.counter }}
                 </td>
                 <td>
+                    {{ model.process.name }}
+                </td>
+                <td>
                     {{ model.name }}
                 </td>
                 <td>
                     <span class="input-group">
-                    {% if perms.effectiveness.change_indicator %}
+                  
                     <label>
-                        <form action="#" method="POST" class="form-activate">
+                        <form action="{% url 'effectiveness:activate_indicator' model.id %}" method="POST" class="form-activate">
                             {% csrf_token %}
                             <span style="display: none">{{ model.active }}</span>
                             <input type="checkbox" name="activate" {% if model.active %} checked {% endif %} class="checkbox-activate"/>
@@ -37,18 +42,16 @@
                         <div class="switch {% if model.active %} switchOn {% endif %}">
                         </div>
                     </label>
-                    {% endif %}
-                    {% if perms.effectiveness.change_indicator %}
+                   
                         <a href="{% url 'effectiveness:update_indicator' model.id %}" class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.effectiveness.delete_indicator %}
+                   
                         <a href="#" model-url="{% url 'effectiveness:delete_indicator' model.id %}"
                            class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_indicator" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                    
                     </span>
                 </td>
             </tr>

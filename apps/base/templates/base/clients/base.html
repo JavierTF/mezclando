@@ -104,11 +104,11 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        {% if perms.base.add_client %}
+
                         <a href="{% url 'base:create_client' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
-                        {% endif %}
+                      
                     </div>
                     {% include template_models_list %}
                 </div>

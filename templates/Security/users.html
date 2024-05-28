@@ -1,4 +1,7 @@
 {% extends 'index.html' %}
+{% block page_title %}
+    <title>SISGEPO | Usuarios</title>
+{% endblock %}
 {% load static %}
 
 {% block menu_seguridad %}
@@ -13,7 +16,7 @@
 
 {% block miestilo %}
     <link rel="stylesheet" href="{% static 'assets/dist/css/mystyles.css' %}">
-    {% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+    {% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
 {% endblock %}
 
 {% block wrapper %}
@@ -22,7 +25,7 @@
             <div class="row mb-2">
                 {% block title_page %}
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Usuarios.</h1>
+                    <h1 class="m-0 text-dark">Listar Usuarios</h1>
                 </div><!-- /.col -->
                 {% endblock %}
                 {% block breadcumb %}
@@ -30,7 +33,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Seguridad</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Administración</a></li>
                             <li class="breadcrumb-item active"><a href="{% url 'user_list' %}">Usuarios</a></li>
                             <li class="breadcrumb-item active">Listar </li>
                         {% endblock %}
@@ -48,7 +51,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Listado de usuarios</h3>
+                        {% comment %} <h3 class="card-title">Listado de usuarios</h3> {% endcomment %}
                         <a href="{% url 'user_create' %}" class="btn btn-primary fa-pull-right" title="Nuevo usuario">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
@@ -60,22 +63,21 @@
                             <thead>
                             <tr>
                                 <th>
-                                    Número
+                                    No.
                                 </th>
                                 <th>
                                     Usuario
                                 </th>
                                 <th>
-                                    Nombre y Apellidos
+                                    Nombre y apellidos
                                 </th>
                                 <th>
-                                    Última autenticación
+                                    Fecha y hora de última autenticación
                                 </th>
-
-                                <th>
+                                <th style="text-align: center; width: 30px;">
                                     ¿Activo?
                                 </th>
-                                <th>
+                                <th style="width: 50px;">
                                     Acciones
                                 </th>
                             </tr>
@@ -101,15 +103,20 @@
                                             {% endif %}
                                         </td>
 
-                                        <td>
+                                        <td style="text-align: center;">
                                             {% if u.0.is_active %}
-                                                Sí
+                                            <ul>
+                                                <li style="list-style-type:'\2714';"></li>
+                                            </ul>
                                             {% else %}
-                                                No
+                                            <ul>
+                                                <li style="list-style-type:'\2796';"></li>
+                                            </ul>
                                             {% endif %}
                                         </td>
+                                        
                                         <td>
-                                {% if request.user.is_staff %}
+                                {% if perms.auth.change_user %}
                                 {% comment %} <label>
                                     <form action="{% url 'user_activate' u.pk %}" method="POST" class="form-activate">
                                         {% csrf_token %}
@@ -120,22 +127,23 @@
                                     </div>
                                 </label> {% endcomment %}
                                 <span class="input-group-sm" >
+                                <a href="{% url 'user_detail' u.0.pk %}"
+                                   class="btn btn-sm btn-success" title="Ver detalles" style="background-color: green;">
+                                    <i class="fa fa-eye"></i>
+                                </a>
                                 <a href="{% url 'user_update' u.0.pk %}"
                                    class="btn btn-sm btn-primary" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a href="{% url 'user_detail' u.0.pk %}"
-                                   class="btn btn-sm btn-warning" title="Ver detalles">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                {% if request.user.is_superuser or request.user.is_staff %}
+                                {% endif %}
+                                {% if request.user.is_superuser or perms.auth.delete_user %}
                                     {% if not u.0.is_superuser and u.0.pk != request.user.pk %}
                                     <a href="{% url 'user_delete' u.0.pk %}"
                                     class="btn btn-sm btn-danger" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                     </a>
                                     {% endif %}
-                                {% endif %}
+                                
                                 {% endif %}
                                 </span>
                                         </td>

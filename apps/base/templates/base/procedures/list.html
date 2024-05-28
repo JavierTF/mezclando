@@ -5,7 +5,7 @@
         <tr>
             <th>Ficha de Procesos</th>
             <th>Proceso</th>
-            <th>Responsables</th>
+            <!-- <th>Responsable</th> -->
             <th>Edición</th>
             <th>Revisión</th>
             <th></th>
@@ -16,38 +16,38 @@
         {% for process in processes %}
             {% for procedure in process.list %}
                 <tr>
-                    <td>{{ process.grouper.abbreviation }} {{ process.grouper.name }}</td>
+                    <td>{{ process.grouper.classifier.name }} {{ process.grouper.name }} {{ process.grouper.abbreviation }}</td>
                     <td>{% if procedure.file_exists %}<a href="{{ procedure.file.url }}" target="_blank">{{ procedure }}</a> {% else %}{{ procedure }}{% endif %}</td>
-                    <td>{{ process.grouper.responsible|default_if_none:"" }}</td>
+                    <!-- <td>{{ process.grouper.responsible|default_if_none:"" }}</td> -->
                     <td>{{ procedure.edition }}</td>
                     <td>{{ procedure.revision }}</td>
                     <td>
-                        {% if perms.base.change_procedure %}
+
                             <a href="{% url 'base:update_procedures' procedure.id %}"
                                class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                                 <i class="fa fa-edit"></i>
                             </a>
-                        {% endif %}
-                        {% if perms.base.delete_procedure %}
+                       
+
                             <a href="#" model-url="{% url 'base:delete_procedures' procedure.id %}"
                                class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_procedure" title="eliminar">
                                 <i class="fa fa-trash"></i>
                             </a>
-                        {% endif %}
+                      
                     </td>
                 </tr>
             {% endfor %}
         {% endfor %}
         </tbody>
-        <tfoot>
+        {% comment %} <tfoot>
         <tr>
+            <th>Ficha de Procesos</th>
             <th>Proceso</th>
-            <th>Procedimiento</th>
-            <th>Responsable</th>
+            <!-- <th>Responsable</th> -->
             <th>Edición</th>
             <th>Revisión</th>
             <th></th>
         </tr>
-        </tfoot>
+        </tfoot> {% endcomment %}
     </table>
 </div>

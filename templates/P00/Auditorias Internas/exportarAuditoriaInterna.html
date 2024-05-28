@@ -1,0 +1,86 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h6 style="color: black; font-weight: bold">SISTEMA INTEGRADO DE GESTIÓN. AUDITORÍAS INTERNAS</h6>
+                    </td>
+                    <td class="text-right">
+                        <p>{{ date }}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th><strong>Título del informe</th>
+                    <th><strong>Fecha de inicio de auditoría</th>
+		    <th><strong>Fecha de fin de auditoría</th>
+                    <th><strong>Proceso que se audita</th>
+                    <th><strong>Responsable</th>
+                    <th><strong>Objetivos de la auditoría</th>
+                    <th><strong>Alcance de la auditoría</th>
+                    <th><strong>Criterios de la auditoría</th>
+                    <th><strong>Observaciones de la auditoría</th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                    <tr class="dtrg-group"></tr>
+                    {% for afec in models %}
+                        <tr>
+                            <td>{{ afec.titulo }}</td>
+                            <td>{{afec.fechainicio }}</td>
+                            <td>{{afec.fechafin }}</td>
+                            <td>{{ afec.proceso }}</td>
+                            <td>{{ afec.responsable }}</td>
+                            <td>{{ afec.objetivos }}</td>
+                            <td>{{ afec.alcance }}</td>
+                            <td>{{ afec.criterios }}</td>
+                            <td>{{ afec.observaciones }}</td>
+                        </tr>
+                    {% endfor %}
+               
+                </tbody>
+                
+            </table>
+        </div>
+        <p>Elaborado por: {{ owner.get_full_name }}</p>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                   
+                    <p>Ave. 47 No. 1802 entre  18a y 20, Miramar, Playa. La Habana CP 11300.</p>
+                    <p>Tel: (+53) 7204 3600 / 7204 3145</p>
+                    <p>E-mail: comercial@citmatel.cu </p>
+                    <p>Sitio web: / www.citmatel.cu  </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

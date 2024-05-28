@@ -18,6 +18,7 @@ def current_year():
 
 
 class Indicator(models.Model):
+    process = models.ForeignKey(Process, on_delete=models.CASCADE, related_name='indicators')
     name = models.CharField(max_length=150, verbose_name='Nombre del Indicador')
     active = models.BooleanField(default=True)
 

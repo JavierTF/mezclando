@@ -1,6 +1,13 @@
 {% extends 'auth/group_form.html' %}
 {% load static %}
-
+{% block page_title %}
+    <title>SISGEPO | Eliminar Rol</title>
+{% endblock %}
+{% block action_page %}<span class="action_page"> Eliminar </span>{% endblock %}
+{% block group_wrapper %}
+    <li class="breadcrumb-item"><a href="{% url 'group_list' %}">Roles</a></li>
+    <li class="breadcrumb-item active"><span class="action_page">Eliminar</span></li>
+{% endblock %}
 {% block content %}
     <section class="content">
         <div class="row">
@@ -16,14 +23,23 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
-                        Esta seguro que desea eliminar la informción del rol(( <strong>{{ object.name|capfirst }}</strong> )).
-                        La
+                    <h5 style="text-align: center;">
+                        Está seguro que desea eliminar la información del rol <strong>{{ object.name|capfirst }}</strong>.
+                        <br />La
                         información no podrá
                         restaurarse
-                    </h4>
+                    </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    {% comment %} <form action="" method="post"> {% endcomment %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'group_delete' object.id %}"
+                        formsuccess="{% url 'group_list' %}"
+                    >
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar
@@ -48,6 +64,60 @@
         <!-- /.row -->
     </section>
 {% endblock %}
+{% block script %}
+<script>
 
+    function submitForm(formulario) {
+        console.log('first first first')
+        formulario.on("submit", function (e) {
+            e.preventDefault();
+            var href = formulario.attr("formaction");
+            var listar = formulario.attr("formsuccess");
+            var data = formulario.serializeArray();
+      
+            if ($(".is-invalid").length > 0) {
+                return false;
+            } else {
+                $('button[type="submit"]').prop("disabled", true);
+      
+                var form = document.getElementById(formulario.attr("id"));
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+      
+                $.ajax({
+                    url: formulario.attr("formaction"),
+                    type: formulario.attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.result == "success") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', listar); 
+                            });
+                        } else if (data.result == "error") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            })
+                            $('button[type="submit"]').prop("disabled", true);
+                        }
+                    },
+                });
+            }
+        });
+      }
+      
+      submitForm($("#formulario"));
+</script>
 
-
+{% endblock %}

@@ -60,18 +60,17 @@
                         class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="detalles">
                         <i class="fa fa-eye"></i>
                     </a>
-                    {% if perms.iproperty.change_industrialproperty %}
+                    
                         <a href="{% url 'iproperty:update_property' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="modificar">
                             <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.iproperty.delete_industrialproperty %}
+                 
                         <a href="#" model-url="{% url 'iproperty:delete_property' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_property" title="eliminar">
                             <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                   
                     </span>
                 </td>
             </tr>

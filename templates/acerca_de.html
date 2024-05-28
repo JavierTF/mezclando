@@ -1,0 +1,85 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block page_title %}
+    <title>SISGEPO | Acerca de</title>
+{% endblock %}
+{% block acerca_de %}
+  active
+{% endblock %}
+
+{% block miestilo %}
+    <style>
+        .content-wrapper {
+            background-color: white;
+        }
+    </style>
+{% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    {% comment %} <h1 class="m-0 text-dark">Listar Acuerdos del Consejo de Dirección</h1> {% endcomment %}
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        {% comment %} <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li> {% endcomment %}
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Acerca de SISGEPO</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                {% comment %} <div class="card"> {% endcomment %}
+                    {% comment %} <div class="card-header alert-primary">
+                        <h3 class="card-title">SISGEPO</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body text-center">
+                        <div class="portlet-body form">
+                        <!-- BEGIN FORM-->
+                            <div class="alert">
+
+                                <h6 class="text-center d-flex align-items-center" style="padding-left: 25%; padding-right: 25%; height: 300px;">
+                                    <p>Tecnologías utilizadas:</p><br />
+                                    <p>Python 3.9</p><br />
+                                    <p>Django 4.1</p><br />
+                                    <p>Postgres 12</p>
+                                </h6>
+                                
+                                
+                            </div>
+                        <!-- END FORM-->
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                {% comment %} </div> {% endcomment %}
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+
+
+{% block script %}
+  <script type="application/javascript">
+    // Agrega tus scripts adicionales aquí si es necesario
+  </script>
+  <script>
+     
+  </script>
+{% endblock %}

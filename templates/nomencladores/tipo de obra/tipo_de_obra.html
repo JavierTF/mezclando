@@ -153,13 +153,13 @@ left: 24px !important;
                                         {% endif %}
                                         {% if perms.SISGDDO.change_tipo_de_obra %}
                                             <a href="{% url 'modificar_tipo_de_obra' obras.pk %}"
-                                                class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                                class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                             <i class="fa fa-edit"></i>
                                             </a>
                                         {% endif %}
                                         {% if perms.SISGDDO.delete_tipo_de_obra %}
                                             <a href="{% url 'eliminar_tipo_de_obra' obras.pk %}"
-                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                             <i class="fa fa-trash"></i>
                                             </a>
                                         {% endif %}

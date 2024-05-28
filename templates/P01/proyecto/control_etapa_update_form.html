@@ -1,0 +1,855 @@
+{% extends 'P01/proyecto/proyecto.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
+
+{% block page_title %}
+    <title>SISGEPO | Modificar Proyecto</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar control de etapas del Proyecto </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyectos</a></li>
+                            <li class="breadcrumb-item active">Modificar</li>
+                        {% endblock %}
+                    </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+    hr {
+        border-top: 1px solid rgba(0,0,0,.05);
+    }
+
+    .encabezado-proyecto {
+        margin-bottom: 15px; 
+        color: #007BFF; 
+        padding: 5px 5px 5px 8px; 
+        border: 2px solid #007BFF; 
+        border-radius: 4px
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form 
+                        id="formAddProyecto" 
+                        class="form-horizontal" 
+                        method="post" 
+                        enctype="multipart/form-data" 
+                        formaction="{% url 'modificar_control_etapa' form.pk %}" 
+                        formsuccess="{% url 'listar_proyecto' %}"
+                    >
+                        {% csrf_token %}
+                        <div class="col-md-3 col-md-offset-9 encabezado-proyecto">Datos generales del proyecto</div>
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class=" control-label"><label for="id_no">Número:</label></label><br>
+                                <span>{{ form.no }}</span>
+                            </div>   
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_codigo">Código generado:</label></label><br>
+                                <span>{{ form.codigo }}</span>
+                            </div>
+                            <div class="col-md-9">
+                                <label class="control-label"><label for="id_nombre_proyecto">Nombre*:</label></label><br>
+                                <span>{{ form.nombre_proyecto }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_tipo_codigo">Clasificación*:</label></label><br>
+                                <span>{{ form.subclasificacion.clasificacion.nombre }}</span>
+                            </div>                       
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_subclasificacion">Subclasificación*:</label></label><br>
+                                <span>{{ form.subclasificacion.nombre }}</span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_formato">Formato:</label></label><br>
+                                <span>
+                                    {% for option in myformats %}
+                                        {{ option.nombre }} {% if myformats|length > 1 %} {% if not loop.last %} | {% endif %} {% endif %}
+                                    {% empty %}
+                                        -----
+                                    {% endfor %}
+                                </span>
+                            </div>                            
+                        </div>
+                        <hr />
+                        <div class="col-md-3 col-md-offset-9 encabezado-proyecto">Datos del registro de control de etapas</div>
+                        <div class="row" >
+                            <div class="col-4" style="margin-top: 6px;">
+                              <div class="list-group" id="list-tab" role="tablist">
+                                <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">I. Determinación de los requisitos del cliente</a>
+                                <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">II. Análisis y Diseño</a>
+                                <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">III. Implementación</a>
+                                <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">IV. Pruebas</a>
+                              </div>
+                            </div>
+                            <div class="col-8">
+                              <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_realizado_por_requisitos">Realizado por*:</label></label>
+                                            <div>
+                                                <select name="realizado_por_requisitos" class=" form-control texto select2" autocomplete="on"  id="id_realizado_por_requisitos">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if realizado_por_requisitos and option.id == realizado_por_requisitos.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_realizado_requisitos">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_realizado_requisitos" value="{{ realizado_por_requisitos.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_realizado_requisitos">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>     
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_revisado_por_requisitos">Revisado por*:</label></label>
+                                            <div>
+                                                <select name="revisado_por_requisitos" class=" form-control texto select2" autocomplete="on"  id="id_revisado_por_requisitos">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if revisado_por_requisitos and option.id == revisado_por_requisitos.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_revisado_requisitos">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_revisado_requisitos" value="{{ revisado_por_requisitos.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_revisado_requisitos">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_aprobado_por_requisitos">Aprobado por*:</label></label>
+                                            <div>
+                                                <select name="aprobado_por_requisitos" class=" form-control texto select2" autocomplete="on"  id="id_aprobado_por_requisitos">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if aprobado_por_requisitos and option.id == aprobado_por_requisitos.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_aprobado_requisitos">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_aprobado_requisitos" value="{{ aprobado_por_requisitos.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_aprobado_requisitos">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>                                                                 
+                                    </div>                                      
+                                </div>
+                                <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_realizado_por_diseno">Realizado por*:</label></label>
+                                            <div>
+                                                <select name="realizado_por_diseno" class=" form-control texto select2" autocomplete="on"  id="id_realizado_por_diseno">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if realizado_por_diseno and option.id == realizado_por_diseno.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_realizado_diseno">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_realizado_diseno" value="{{ realizado_por_diseno.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_realizado_diseno">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>     
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_revisado_por_diseno">Revisado por*:</label></label>
+                                            <div>
+                                                <select name="revisado_por_diseno" class=" form-control texto select2" autocomplete="on"  id="id_revisado_por_diseno">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if revisado_por_diseno and option.id == revisado_por_diseno.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_revisado_diseno">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_revisado_diseno" value="{{ revisado_por_diseno.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_revisado_diseno">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_aprobado_por_diseno">Aprobado por*:</label></label>
+                                            <div>
+                                                <select name="aprobado_por_diseno" class=" form-control texto select2" autocomplete="on"  id="id_aprobado_por_diseno">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if aprobado_por_diseno and option.id == aprobado_por_diseno.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_aprobado_diseno">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_aprobado_diseno" value="{{ aprobado_por_diseno.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_aprobado_diseno">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>                                                                 
+                                    </div> 
+                                </div>
+                                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_realizado_por_implementacion">Realizado por*:</label></label>
+                                            <div>
+                                                <select name="realizado_por_implementacion" class=" form-control texto select2" autocomplete="on"  id="id_realizado_por_implementacion">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if realizado_por_implementacion and option.id == realizado_por_implementacion.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_realizado_implementacion">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_realizado_implementacion" value="{{ realizado_por_implementacion.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_realizado_implementacion">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>     
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_revisado_por_implementacion">Revisado por*:</label></label>
+                                            <div>
+                                                <select name="revisado_por_implementacion" class=" form-control texto select2" autocomplete="on"  id="id_revisado_por_implementacion">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if revisado_por_implementacion and option.id == revisado_por_implementacion.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_revisado_implementacion">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_revisado_implementacion" value="{{ revisado_por_implementacion.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_revisado_implementacion">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_aprobado_por_implementacion">Aprobado por*:</label></label>
+                                            <div>
+                                                <select name="aprobado_por_implementacion" class=" form-control texto select2" autocomplete="on"  id="id_aprobado_por_implementacion">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if aprobado_por_implementacion and option.id == aprobado_por_implementacion.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_aprobado_implementacion">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_aprobado_implementacion" value="{{ aprobado_por_implementacion.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_aprobado_implementacion">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>                                                                 
+                                    </div> 
+                                </div>
+                                <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_realizado_por_pruebas">Realizado por*:</label></label>
+                                            <div>
+                                                <select name="realizado_por_pruebas" class=" form-control texto select2" autocomplete="on"  id="id_realizado_por_pruebas">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if realizado_por_pruebas and option.id == realizado_por_pruebas.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_realizado_pruebas">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_realizado_pruebas" value="{{ realizado_por_pruebas.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_realizado_pruebas">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>     
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_revisado_por_pruebas">Revisado por*:</label></label>
+                                            <div>
+                                                <select name="revisado_por_pruebas" class=" form-control texto select2" autocomplete="on"  id="id_revisado_por_pruebas">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if revisado_por_pruebas and option.id == revisado_por_pruebas.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_revisado_pruebas">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_revisado_pruebas" value="{{ revisado_por_pruebas.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_revisado_pruebas">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>  
+                                        <div class="form-group col-md-6">
+                                            <label class="control-label"><label for="id_aprobado_por_pruebas">Aprobado por*:</label></label>
+                                            <div>
+                                                <select name="aprobado_por_pruebas" class=" form-control texto select2" autocomplete="on"  id="id_aprobado_por_pruebas">
+                                                    <option value="">Escriba y seleccione...</option>                                        
+                                                    {% for option in ttrab %}
+                                                        <option value="{{ option.id }}" {% if aprobado_por_pruebas and option.id == aprobado_por_pruebas.employee.id %} selected {% endif %}>
+                                                            {{ option.first_name }} {{ option.last_name }}
+                                                        </option>
+                                                    {% endfor %}     
+                                                </select>
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="control-label"><label for="id_fecha_aprobado_pruebas">Fecha*:</label></label>
+                                            <div>
+                                                <input type="date" name="fecha_aprobado_pruebas" value="{{ aprobado_por_pruebas.fecha | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle  id="id_fecha_aprobado_pruebas">
+                                                <small class="text-red"></small>
+                                            </div>
+                                        </div>                                                                 
+                                    </div> 
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <br />
+                                             
+                        
+                    {% block error %}
+                    {% endblock %}
+                    {% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
+    <script type="application/javascript">       
+        if ($('#id_tipo_codigo').val() === ''){
+            $('#id_subclasificacion').prop('disabled', true);
+        } else {
+            $('#id_subclasificacion').prop('disabled', false);
+        }
+
+        {/* $('#id_codigo').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        }); */}
+
+        $('#id_realizado_por_requisitos').change(function(event){
+            validate_select($('#id_realizado_por_requisitos'), event);
+            validar_existencia_ambos(document.getElementById('id_realizado_por_requisitos'), document.getElementById('id_fecha_realizado_requisitos'));
+        });
+
+        $('#id_fecha_realizado_requisitos').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_realizado_requisitos'), '', 'menor_igual', $('#id_fecha_realizado_requisitos'));
+            validar_existencia_ambos(document.getElementById('id_realizado_por_requisitos'), document.getElementById('id_fecha_realizado_requisitos'));
+        });
+
+        $('#id_revisado_por_requisitos').change(function(event){
+            validate_select($('#id_revisado_por_requisitos'), event);
+            validar_existencia_ambos(document.getElementById('id_revisado_por_requisitos'), document.getElementById('id_fecha_revisado_requisitos'));
+        });
+
+        $('#id_fecha_revisado_requisitos').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_revisado_requisitos'), '', 'menor_igual', $('#id_fecha_revisado_requisitos'));
+            validar_existencia_ambos(document.getElementById('id_revisado_por_requisitos'), document.getElementById('id_fecha_revisado_requisitos'));
+        });
+
+        $('#id_aprobado_por_requisitos').change(function(event){
+            validate_select($('#id_aprobado_por_requisitos'), event);
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_requisitos'), document.getElementById('id_fecha_aprobado_requisitos'));
+        });
+
+        $('#id_fecha_aprobado_requisitos').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobado_requisitos'), '', 'menor_igual', $('#id_fecha_aprobado_requisitos'));
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_requisitos'), document.getElementById('id_fecha_aprobado_requisitos'));
+        });
+
+        //-----------------------------
+
+        $('#id_realizado_por_diseno').change(function(event){
+            validate_select($('#id_realizado_por_diseno'), event);
+            validar_existencia_ambos(document.getElementById('id_realizado_por_diseno'), document.getElementById('id_fecha_realizado_diseno'));
+        });
+
+        $('#id_fecha_realizado_diseno').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_realizado_diseno'), '', 'menor_igual', $('#id_fecha_realizado_diseno'));
+            validar_existencia_ambos(document.getElementById('id_realizado_por_diseno'), document.getElementById('id_fecha_realizado_diseno'));
+        });
+
+        $('#id_revisado_por_diseno').change(function(event){
+            validate_select($('#id_revisado_por_diseno'), event);
+            validar_existencia_ambos(document.getElementById('id_revisado_por_diseno'), document.getElementById('id_fecha_revisado_diseno'));
+        });
+
+        $('#id_fecha_revisado_diseno').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_revisado_diseno'), '', 'menor_igual', $('#id_fecha_revisado_diseno'));
+            validar_existencia_ambos(document.getElementById('id_revisado_por_diseno'), document.getElementById('id_fecha_revisado_diseno'));
+        });
+
+        $('#id_aprobado_por_diseno').change(function(event){
+            validate_select($('#id_aprobado_por_diseno'), event);
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_diseno'), document.getElementById('id_fecha_aprobado_diseno'));
+        });
+
+        $('#id_fecha_aprobado_diseno').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobado_diseno'), '', 'menor_igual', $('#id_fecha_aprobado_diseno'));
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_diseno'), document.getElementById('id_fecha_aprobado_diseno'));
+        });
+
+        //-------------------
+
+        $('#id_realizado_por_implementacion').change(function(event){
+            validate_select($('#id_realizado_por_implementacion'), event);
+            validar_existencia_ambos(document.getElementById('id_realizado_por_implementacion'), document.getElementById('id_fecha_realizado_implementacion'));
+        });
+
+        $('#id_fecha_realizado_implementacion').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_realizado_implementacion'), '', 'menor_igual', $('#id_fecha_realizado_implementacion'));
+            validar_existencia_ambos(document.getElementById('id_realizado_por_implementacion'), document.getElementById('id_fecha_realizado_implementacion'));
+        });
+
+        $('#id_revisado_por_implementacion').change(function(event){
+            validate_select($('#id_revisado_por_diseno'), event);
+            validar_existencia_ambos(document.getElementById('id_revisado_por_implementacion'), document.getElementById('id_fecha_revisado_implementacion'));
+        });
+
+        $('#id_fecha_revisado_implementacion').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_revisado_implementacion'), '', 'menor_igual', $('#id_fecha_revisado_implementacion'));
+            validar_existencia_ambos(document.getElementById('id_revisado_por_implementacion'), document.getElementById('id_fecha_revisado_implementacion'));
+        });
+
+        $('#id_aprobado_por_implementacion').change(function(event){
+            validate_select($('#id_aprobado_por_implementacion'), event);
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_implementacion'), document.getElementById('id_fecha_aprobado_implementacion'));
+        });
+
+        $('#id_fecha_aprobado_implementacion').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobado_implementacion'), '', 'menor_igual', $('#id_fecha_aprobado_implementacion'));
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_implementacion'), document.getElementById('id_fecha_aprobado_implementacion'));
+        });
+
+        //-------------------
+
+        $('#id_realizado_por_pruebas').change(function(event){
+            validate_select($('#id_realizado_por_pruebas'), event);
+            validar_existencia_ambos(document.getElementById('id_realizado_por_pruebas'), document.getElementById('id_fecha_realizado_pruebas'));
+        });
+
+        $('#id_fecha_realizado_pruebas').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_realizado_pruebas'), '', 'menor_igual', $('#id_fecha_realizado_pruebas'));
+            validar_existencia_ambos(document.getElementById('id_realizado_por_pruebas'), document.getElementById('id_fecha_realizado_pruebas'));
+        });
+
+        $('#id_revisado_por_pruebas').change(function(event){
+            validate_select($('#id_revisado_por_pruebas'), event);
+            validar_existencia_ambos(document.getElementById('id_revisado_por_pruebas'), document.getElementById('id_fecha_revisado_pruebas'));
+        });
+
+        $('#id_fecha_revisado_pruebas').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_revisado_pruebas'), '', 'menor_igual', $('#id_fecha_revisado_pruebas'));
+            validar_existencia_ambos(document.getElementById('id_revisado_por_pruebas'), document.getElementById('id_fecha_revisado_pruebas'));
+        });
+
+        $('#id_aprobado_por_pruebas').change(function(event){
+            validate_select($('#id_aprobado_por_pruebas'), event);
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_pruebas'), document.getElementById('id_fecha_aprobado_pruebas'));
+        });
+
+        $('#id_fecha_aprobado_pruebas').on('change', function(e){
+            validate_campos_vacios($(this));
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobado_pruebas'), '', 'menor_igual', $('#id_fecha_aprobado_pruebas'));
+            validar_existencia_ambos(document.getElementById('id_aprobado_por_pruebas'), document.getElementById('id_fecha_aprobado_pruebas'));
+        });
+
+        //-------------------
+
+        function setCodigo(){
+            let siglas = $('#id_tipo_codigo option:selected').attr('data-siglas').trim();
+            let anno = new Date();
+            anno = anno.getUTCFullYear().toString().substr(2);
+            //let anno = $('#id_tipo_codigo option:selected').attr('data-creado').substr(2);
+            let no = $('#id_tipo_codigo').attr('data-no');
+            numerosCod = $('#id_codigo').val().substr(3).trim();
+            if (parseInt(no) < 10){
+                no = `0${no}`;
+            }
+            //let siglasServ = $('#id_tipo_codigo option:selected').text().trim().substr(0,3).toUpperCase();
+            if ($('#id_tipo_codigo').val() != ''){
+                document.getElementById('id_codigo').value = `${siglas}${anno}${no}`;
+            } else {
+                document.getElementById('id_codigo').value = '';
+            }
+        } 
+
+        // $('#id_especialista_calidad').change(function(event){
+        //     validate_select($('#id_especialista_calidad'), event);
+        // });
+
+        // $('#id_disennador').change(function(event){
+        //     validate_select($('#id_disennador'), event);
+        // });
+
+        $('#id_tipo_codigo').change(function (event) {
+            validate_select($('#id_tipo_codigo'), event);
+            setCodigo();
+
+            if ($('#id_tipo_codigo option:selected').attr('data-siglas') != 'SER'){
+                $('#id_formato').attr('disabled', false);
+                $('#id_formato').attr('', true);
+                var labelElement = $(".form-group.col-md-4 label[for='id_formato']");
+                var labelText = labelElement.text();
+                var insertIndex = labelText.length - 1;
+                labelText = labelText.slice(0, insertIndex) + '<span style="color: red;">*</span>' + labelText.slice(insertIndex);
+                labelElement.html(labelText);
+            } else {
+                $('#id_formato').attr('', false);
+                $('#id_formato').attr('disabled', true);
+                var labelElement = $(".form-group.col-md-4 label[for='id_formato']");
+                var labelText = labelElement.html(); // Usamos html() para obtener el contenido HTML completo
+                labelText = labelText.replace('<span style="color: red;">*</span>', '');
+                labelElement.html(labelText);
+            }
+        
+            if ($('#id_tipo_codigo').val() == '') {
+                $('#id_subclasificacion').prop('disabled', true);
+            } else {
+                var data = {
+                    csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                    id_clasificacion: parseInt($('#id_tipo_codigo').val())
+                };
+        
+                $.ajax({
+                    url: "{% url 'cargar_subclasificacion' %}",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: data,
+                    success: function (data) {
+                        $('#id_subclasificacion').empty();
+                        var array = data['tsubclasificacion'];
+                        console.log("array array", array);
+                        array.forEach(element => {
+                            $('#id_subclasificacion').append(`<option value="${element.id}">${element.nombre}</option>`)
+                        })
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al cargar la frase:", error);
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se pudieron cargar los datos",
+                            type: "error",
+                        })
+                    },
+                    complete: function () {
+                        $('#id_subclasificacion').prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        if ($('#id_tipo_codigo option:selected').attr('data-siglas') != 'SER'){
+            $('#id_formato').on('change', function(event){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+                validar_comparar_valores_contables($(this), 6, 'menor_igual');
+            });
+        }
+        
+
+        {/* $('#id_tipo').change(function(event){
+            validate_select($('#id_tipo'), event);
+        });
+
+        $('#id_area').on('change', function(e){
+            validate_select($('#id_area'), e);
+        });
+
+        $('#id_jefe_proyecto').on('change', function(e){
+            validate_select($('#id_jefe_proyecto'), e);
+        });
+
+        $('#id_fuente_financiamiento').on('change', function(e){
+            validate_select($('#id_fuente_financiamiento'), e);
+        }); */}
+
+        {% comment %} $('#id_estado').on('change', function(e){
+            validate_select($('#id_estado'), e);
+        }); {% endcomment %}
+
+        {/* $('#id_formato').on('change', function(event){
+            if ($('#id_codigo').val().substr(0, 2) == 'DES'){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+            }            
+            validar_comparar_valores_contables($(this), 6, 'menor_igual');
+        }); */}
+
+        {/* $('#id_fecha_entrada').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_terminacion'), 'menor', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_extension'), 'menor', $('#id_fecha_entrada'));
+        });
+
+        $('#id_fecha_aprobacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobacion'), '', 'menor_igual', $('#id_fecha_aprobacion'));
+        });
+
+        $('#id_fecha_inicio').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual', $('#id_fecha_inicio'));
+            if ($('#id_fecha_cierre').val() !== undefined){
+                validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor', $('#id_fecha_cierre'));
+            }            
+        });
+
+        $('#id_fecha_interrupcion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_interrupcion'), '', 'menor_igual', $('#id_fecha_interrupcion'));
+        });
+
+        $('#id_fecha_terminacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_terminacion'));
+        });
+
+        $('#id_fecha_extension').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_extension'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_extension'));
+        });
+
+        $('#id_fecha_cierre').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual', $('#id_fecha_cierre'));
+        }); */}
+
+        {/* $('#id_informe_apertura').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);            
+        });
+
+        $('#id_informe_cierre').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
+        }); */}
+
+        //$('#id_no').prop("disabled", true);
+
+        $('#formAddProyecto').on('submit', function (e) {
+            e.preventDefault();
+
+            /*if ($('#id_informe_apertura').val().length > 0){
+                if ($('#id_fecha_inicio').val().length = 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'El campo informe de apertura está cargado. Llene la fecha de inicio',
+                    });
+                    $('#id_informe_apertura').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }*/
+            
+            // if ($('#id_informe_cierre').val().length > 0){
+            //     if ($('#id_fecha_cierre').val().length = 0){
+            //         Toast.fire({
+            //             type: 'error',
+            //             title: 'El campo informe de cierre está cargado. Llene la fecha de cierre',
+            //         });
+            //         $('#id_fecha_cierre').removeClass("is-valid").addClass("is-invalid");
+            //         return false;
+            //     }
+            // }
+
+            /*let f1 = validar_existencia_ambos(document.getElementById('id_financista_mlc'), document.getElementById('id_financiamiento_mlc'));
+                let f2 = validar_existencia_ambos(document.getElementById('id_financista_cup'), document.getElementById('id_financiamiento_cup'));     
+                
+                if (typeof f1 !== 'undefined'){
+                    if (!f1){
+                        return false;
+                    }
+                }
+    
+                if (typeof f2 !== 'undefined'){
+                    if (!f2){
+                        return false;
+                    }
+                }       
+            
+            if ($('#id_ingreso_mlc').val() == '' || $('#id_ingreso_cup').val() == ''){
+                Swal.fire({
+                    title: "Error",
+                    text: "Seleccione ingreso en MLC y/o en CUP",
+                    type: "error",
+                })
+            }*/
+
+            var href = $(this).attr('formaction');
+            var listarProyecto = $(this).attr('formsuccess');
+            var data = $(this).serializeArray();
+
+            if ($('.is-invalid').length > 0){
+                return false;
+            }
+            else{
+                $('button[type="submit"]').prop("disabled", true);
+
+                var form = document.getElementById("formAddProyecto");
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+                // form_data.append("informe_apertura", document.getElementById('id_informe_apertura').files[0]);
+                // form_data.append("informe_cierre", document.getElementById('id_informe_cierre').files[0]);
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+
+                $.ajax({
+                    url: $(this).attr("formaction"),
+                    type: $(this).attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data, status)
+                    {
+                        console.log('DATA DATA DATA', data.result);
+                        if (data.result === "success") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', listarProyecto); 
+                            });
+                        } else if (data.result === "errorField") {
+                            Swal.fire({
+                                title: data.title,
+                                text: data?.text + ": " + data?.error_message,
+                                type: "error",
+                            })
+                        } else if (data.result === "error") {
+                            var element = document.querySelector(`[name="${data.field}"]`);
+                                if (element){
+                                    element.focus();
+                                }
+                            updateErrorMessage(element, data.title);
+                            $('button[type="submit"]').prop("disabled", true);
+                        }
+                    }
+                });
+            }
+        });
+
+        if ($('#existeSosi').val() == 'none'){
+            Swal.fire({
+                title: 'Error: SOSI no existe',
+                text: 'Cree un SOSI para este proyecto',
+                type: 'error',
+                allowOutsideClick: false
+            }).then(() => {
+                window.location.href = '{% url "modificar_sosi" form.pk %}';
+            });
+        }
+
+{/* VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO */}
+
+</script>
+{% endblock %}

@@ -10,6 +10,8 @@
 
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
+{% block menu_p01 %} active menu-open {% endblock %}
+{% block menu_p01_active %} active {% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
@@ -103,6 +105,27 @@
     left: 24px !important;
 }
 </style>
+<style>
+    /* Estilo para mensajes de éxito */
+    .messages li {
+        margin-top: 5px;
+        width: 96%;
+        padding-left: 5px;
+    }
+
+    .messages li.success {
+      background-color: #4CAF50; /* Verde */
+      color: white;
+      list-style-type: none; /* Quitar viñeta */
+    }
+  
+    /* Estilo para mensajes de error */
+    .messages li.error {
+      background-color: #dc3545; /* Rojo */
+      color: white;
+      list-style-type: none; /* Quitar viñeta */
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -112,12 +135,12 @@
                 <div class="card">
                     <div class="row card-header">
                         <form id="formExportar" class="form-horizontal col-10" method="post" enctype="multipart/form-data" formaction="{% url 'exportar' %}">
-                            {% if perms.SISGDDO.view_consecutivo %}
+                            {% if perms.xavi.view_consecutivo %}
                                 <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
                             {% endif %}                                
                         </form>
                         
-                        {% if perms.SISGDDO.add_consecutivo %}
+                        {% if perms.xavi.add_consecutivo %}
                             <a href="{% url 'adicionar_consecutivo' %}" class="btn btn-primary fa-pull-right">
                                 <span class="fa fa-plus"> Adicionar </span>
                             </a>
@@ -129,9 +152,9 @@
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>
+                                {% comment %} <th>
                                     ID
-                                </th>
+                                </th> {% endcomment %}
                                 <th>
                                     Número
                                 </th>
@@ -163,7 +186,7 @@
                                     Estado
                                 </th>
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -172,11 +195,11 @@
                             {% for lt in lista %}
                                 <tr id="{{ lt.id }}">
                                     <td>
-                                        {{ lt.id }}
-                                    </td>
-                                    <td>
                                         {{ forloop.counter }}
                                     </td>
+                                    {% comment %} <td>
+                                        {{ lt.id }}
+                                    </td>                                     {% endcomment %}
                                     <td>
                                         {{ lt.codigo }}
                                     </td>
@@ -218,7 +241,7 @@
                                     </td>                                        
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_consecutivo %}
+                                    {% if perms.xavi.change_consecutivo %}
                                     <label>
                                         <form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -229,25 +252,25 @@
                                     </div>
                                     </label>
                                     {% endif %}
-                                    {% if perms.SISGDDO.view_consecutivo %}
+                                    {% if perms.xavi.view_consecutivo %}
                                     <a href="{% url 'detalle_consecutivo' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_consecutivo %}
+                                    {% if perms.xavi.change_consecutivo %}
                                     <a href="{% url 'modificar_consecutivo' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_consecutivo %}
+                                    {% if perms.xavi.delete_consecutivo %}
                                         <a href="{% url 'eliminar_consecutivo' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 
-                                    {% if perms.SISGDDO.add_sosi %}
+                                    {% if perms.xavi.add_sosi %}
                                         <a href="{% url 'adicionar_sosi' lt.id %}"
                                             class="btn btn-sm btn-primary btn-primary-transparent ml-2"  {% if lt.sosi %} title="detalles sosi" {% else %} title="adicionar sosi" {% endif %}
                                             >
@@ -280,6 +303,7 @@
       $(document).ready(function()
 {
     var href = $('#formExportar').attr('formaction');
+    console.log('HREF', href)
     
     var table = $('#example1').DataTable();
     //table.column(0).visible(false);

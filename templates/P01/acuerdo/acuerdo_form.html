@@ -1,13 +1,13 @@
 {% extends 'P01/acuerdo/acuerdo.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
-<script src="{% static 'django_select2/django_select2.js' %}"></script>
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
-<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
-    <title>SISGEPO | Adicionar Acuerdo</title>
+    <title>SISGEPO | Adicionar Acuerdos del Consejo de Dirección</title>
 {% endblock %}
 
 {% block wrapper %}
@@ -15,14 +15,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Adicionar Acuerdo.</h1>
+                    <h1 class="m-0 text-dark">Adicionar Acuerdos del Consejo de Dirección.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_acuerdo' %}">Acuerdo</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_acuerdo' %}">Acuerdos del Consejo de Dirección</a></li>
                             <li class="breadcrumb-item active">Adicionar </li>
                         {% endblock %}
                     </ol>
@@ -44,94 +45,92 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form id="formAddAcuerdo" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_acuerdo' %}">
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'adicionar_acuerdo' %}"
+                        formsuccess="{% url 'listar_acuerdo' %}"
+                    >
                         {% csrf_token %}
                         <div class="form-body">
                             <div class="row">
-                                <div class="form-group col-md-1">
-                                    <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                                <div class="form-group col-md-1" title="ACD No.: {{ numero }}">
+                                    <label class=" control-label"><label for="id_numero">Número:</label></label>
                                     <div>
-                                        <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" checked>
-                                        <small class="text-red"></small>
-                                    </div>                                
-                                </div>  
-                                <div class="form-group col-md-3">
-                                    <label class=" control-label"><label for="id_numero">Número*:</label></label>
-                                    <div>
-                                        <input type="number" name="numero" class=" form-control" min="1" max="100000" value={{ numero }} maxlength="10" required id="id_numero">
+                                        <input type="number" name="numero" class=" form-control" min="1" max="100000" value="{{ numero }}"  maxlength="10" id="id_numero" readonly>
                                         <small class="text-red"></small>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="form-group col-md-8">
                                     <label class="control-label"><label for="id_nombre">Nombre*:</label></label>
                                     <div>
-                                        <input type="text" name="nombre" class="form-control texto" placeholder="Introduzca el nombre" required id="id_nombre" value="">
+                                        <input type="text" name="nombre" class="form-control texto" placeholder="Introduzca el nombre" required id="id_nombre" value="" required>
                                         <small class="text-red"></small>
                                     </div>
-                                </div>                                               
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label class="control-label"><label for="id_fecha">Fecha*:</label></label>
+                                </div> 
+                                <div class="form-group col-md-3">
+                                    <label class="control-label"><label for="id_fecha">Fecha de registro*:</label></label>
                                     <div>
-                                        <input type="date" name="fecha" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha">
+                                        <input type="date" name="fecha" value="{{ now|date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha">
                                         <small class="text-red"></small>
                                     </div>
-                                </div>                             
-                                <div class="form-group col-md-4">
-                                    <label class="control-label"><label for="id_fecha_limite">Fecha límite:</label></label>
+                                </div>                                
+                            </div>
+                            <div class="row">                                
+                                <div class="form-group col-md-9">
+                                    <label class="control-label"><label for="id_responsables">Responsable(s)*:</label></label>
+                                    <div>
+                                        <select name="employee" class=" form-control texto select2" autocomplete="on" required multiple id="id_responsables">
+                                            <option value="">Escriba y seleccione...</option>                                        
+                                            {% for option in ttrab %}
+                                                <option value="{{ option.id }}" >
+                                                    {{ option.scientific_category.prefix }} {{ option.first_name }} {{ option.last_name }}
+                                                </option>
+                                            {% endfor %}     
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>    
+                                <div class="form-group col-md-3">
+                                    <label class="control-label"><label for="id_fecha_limite">Fecha límite de cumplimiento:</label></label>
                                     <div>
                                         <input type="date" name="fecha_limite" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_limite">
                                         <small class="text-red"></small>
                                     </div>
-                                </div> 
-                                <div class="form-group col-md-4">
-                                    <label class="control-label"><label for="id_fecha_cumplimiento">Fecha de cumplido:</label></label>
-                                    <div>
-                                        <input type="date" name="fecha_cumplimiento" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_cumplimiento">
-                                        <small class="text-red"></small>
-                                    </div>
-                                </div>                   
+                                </div>                                                           
                             </div>
-                            <div class="row">                            
-                                <div class="col-md-4">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <label class="control-label"><label for="id_responsables">Responsable(s)*:</label></label>
-                                            <div>
-                                                <select name="employee" class=" form-control texto select2" autocomplete="on" required multiple id="id_responsables">
-                                                    <option value="">Escriba y seleccione...</option>                                        
-                                                    {% for option in ttrab %}
-                                                        <option value="{{ option.id }}" >
-                                                            {{ option.nombre }} {{ option.first_name }} {{ option.last_name }}
-                                                        </option>
-                                                    {% endfor %}     
-                                                </select>
-                                                <small class="text-red"></small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="control-label"><label for="id_estado">Estado*:</label></label>
-                                            <div>
-                                                <select name="estado" class=" form-control texto select2" autocomplete="on" required id="id_estado">
-                                                    <option value="">Escriba y seleccione...</option>                                        
-                                                    {% for option in test %}
-                                                        <option value="{{ option.id }}">{{ option.nombre }}</option>
-                                                    {% endfor %} 
-                                                </select>
-                                                <small class="text-red"></small>
-                                            </div>
-                                        </div>  
-                                    </div>
-                                </div> 
-                                <div class="form-group col-md-8">
+                            <div class="row">
+                                <div class="form-group col-md-9">
                                     <label class="control-label"><label for="id_observaciones">Observaciones:</label></label>
                                     <div>
                                         <textarea name="observaciones" cols="40" rows="5" class="form-control" autocomplete="on" placeholder="Introduzca las causas de la interrupción" maxlength="250" id="id_observaciones"></textarea>
                                         <small class="text-red"></small>
                                     </div>
                                 </div>
-                            </div>                                                                   
+                                <div class="row col-md-3">
+                                    {% comment %} <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_fecha_cumplimiento">Fecha de cumplimiento:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_cumplimiento" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_cumplimiento">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div> {% endcomment %}
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_estado">Estado*:</label></label>
+                                        <div>
+                                            <select name="estado" class=" form-control texto select2" autocomplete="on" required id="id_estado">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in test %}
+                                                    <option value="{{ option.id }}" {% if option.nombre|lower == 'pendiente' %}selected {% else %} disabled="disabled" {% endif %}>{{ option.nombre|capfirst }}</option>
+                                                {% endfor %} 
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>                                                                 
                         </div>    
                     {% block error %}
                     {% endblock %}
@@ -155,53 +154,130 @@
 </section>
 {% endblock %}
 {% block script %}
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
 
     <script type="application/javascript">
-
-//VALIDACION CAMPOS VACIOS
-        $('#id_numero').prop("disabled", true);
 
         $('#id_nombre').bind('focusout',function(){
             validate_campos_vacios($(this));
         });
 
-        $('#id_fecha').on('change', function(e){
-            if ($('#id_fecha_limite').val()){
-                validar_comparar_fechas(document.getElementById('id_fecha'), document.getElementById('id_fecha_limite'), 'menor_igual');
+        $('#id_fecha').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_fecha').on('change blur', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha'), '', 'menor_igual');
+            if ($('#id_fecha_limite').val() != ''){
+                validar_comparar_fechas(document.getElementById('id_fecha_limite'), document.getElementById('id_fecha'), 'mayor_igual', $('#id_fecha_limite'));
             }
-            if ($('#id_fecha_cumplimiento').val()){
-                validar_comparar_fechas(document.getElementById('id_fecha'), document.getElementById('id_fecha_cumplimiento'), 'menor_igual');
+            /*if ($('#id_fecha_cumplimiento').val() != ''){
+                validar_comparar_fechas(document.getElementById('id_fecha_cumplimiento'), document.getElementById('id_fecha_limite'), 'mayor_igual', $('#id_fecha_cumplimiento'));
+            }*/
+        });
+
+        $('#id_fecha_limite').on('change blur', function(e){
+            if ($('#id_fecha_limite').val() != ''){
+                console.log('ENTREE')
+                validar_comparar_fechas(document.getElementById('id_fecha_limite'), document.getElementById('id_fecha'), 'mayor_igual', $('#id_fecha_limite'));
+                /*if ($('#id_fecha_cumplimiento').val() != ''){
+                    console.log('ENTREE')
+                    validar_comparar_fechas(document.getElementById('id_fecha_cumplimiento'), document.getElementById('id_fecha_limite'), 'mayor_igual', $('#id_fecha_cumplimiento'));
+                }*/
             }
         });
 
-        $('#id_fecha_limite').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_limite'), document.getElementById('id_fecha'), 'mayor_igual');
-            if ($('#id_fecha_cumplimiento').val()){
-                validar_comparar_fechas(document.getElementById('id_fecha'), document.getElementById('id_fecha_cumplimiento'), 'mayor_igual');
+        {% comment %} function validarEstadoCumplido() {
+            var element = document.querySelector('#id_estado');
+            var fechaCumplimiento = document.querySelector('#id_fecha_cumplimiento');
+
+            if ($('#id_estado option:selected').text().toLowerCase() == 'cumplido'){
+                console.log($('#id_estado option:selected').text());
+                if ($('#id_fecha_cumplimiento').val() == ''){
+                    updateErrorMessage(fechaCumplimiento, 'Seleccione Fecha de cumplimiento');
+                    fechaCumplimiento.classList.remove('is-valid');
+                    fechaCumplimiento.classList.add('is-invalid');
+                }
+            }            
+        } {% endcomment %}
+
+        {% comment %} $('#id_fecha_cumplimiento').on('change blur', function(e){
+            if ($('#id_fecha_cumplimiento').val() != ''){
+                if ($('#id_estado option:selected').text().toLowerCase() != 'cumplido'){
+                    var element = document.querySelector('#id_estado');
+                    updateErrorMessage(element, 'El Estado debe ser "Cumplido"');
+                    element.classList.remove('is-valid');
+                    element.classList.add('is-invalid');
+                }
             }
+            if ($('#id_fecha_cumplimiento').val() != ''){
+                validar_comparar_fechas(document.getElementById('id_fecha_cumplimiento'), document.getElementById('id_fecha'), 'mayor_igual', $('#id_fecha_cumplimiento'));
+                validarEstadoCumplido();
+            }            
+        }); {% endcomment %}
+
+        $('#id_responsables').on('change blur', function(e){
+            validate_select($('#id_responsables'), event);
         });
 
-        $('#id_fecha_cumplimiento').on('change', function(e){
-            validar_comparar_fechas(document.getElementById('id_fecha_cumplimiento'), document.getElementById('id_fecha'), 'mayor_igual');
-            if ($('#id_fecha_limite').val()){
-                validar_comparar_fechas(document.getElementById('id_fecha_cumplimiento'), document.getElementById('id_fecha_limite'), 'menor_igual');
-            }
+        $('#id_estado').on('change blur', function(e){
+            validate_select($('#id_estado'), event);
+            /*if ($('#id_fecha_cumplimiento').val() == ''){
+                validate_campos_vacios($('#id_fecha_cumplimiento'));
+            }*/
+            //validarEstadoCumplido();
         });
 
-        $('#id_archivo').on('change', function(){
-            validar_archivos($('#id_archivo'), ['docx', 'doc', 'pdf']);            
-        });
-
-        $('#id_responsables').on('change', function(event){
-            validar_comparar_valores_contables($(this), 0, 'mayor');
-            validar_comparar_valores_contables($(this), 6, 'menor_igual');
-        });
-
-        $('#id_estado').on('change', function(e){
-            validate_select($('#id_estado'), e);
-        });
-
-//VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
+        function submitForm(formulario) {
+            console.log('first first first')
+            formulario.on("submit", function (e) {
+                e.preventDefault();
+                var href = formulario.attr("formaction");
+                var listar = formulario.attr("formsuccess");
+                var data = formulario.serializeArray();
+        
+                if ($(".is-invalid").length > 0) {
+                    return false;
+                } else {
+                    $('button[type="submit"]').prop("disabled", true);
+        
+                    var form = document.getElementById(formulario.attr("id"));
+                    var form_data = new FormData(form);
+                    var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                    form_data.append("csrfmiddlewaretoken", csrf_token);
+        
+                    $.ajax({
+                        url: formulario.attr("formaction"),
+                        type: formulario.attr("method"),
+                        dataType: "JSON",
+                        data: form_data,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.result == "success") {
+                                Swal.fire({
+                                    title: data.title,
+                                    type: data.result,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then((result) => {
+                                    $(location).attr('href', listar); 
+                                });
+                            } else if (data.result == "error") {
+                                var element = document.querySelector(`[name="${data.field}"]`);
+                                if (element){
+                                    element.focus();
+                                }
+                                updateErrorMessage(element, data.title);
+                                $('button[type="submit"]').prop("disabled", true);
+                            }
+                        },
+                    });
+                }
+            });
+        }
+        
+        submitForm($("#formulario"));
 
 </script>
 {% endblock %}

@@ -110,7 +110,7 @@
                 <div class="card">
                     <div class="card-header">
                         {% comment %} <h3 class="card-title">Listado de Tipos de codigo </h3> {% endcomment %}
-                        {% if perms.SISGDDO.add_tipo_codigo %}
+                        {% if perms.xavi.add_tipo_codigo %}
                         <a href="{% url 'agregar_tipo_codigo' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
@@ -149,7 +149,7 @@
                                         
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_tipo_codigo %}
+                                    {% if perms.xavi.change_tipo_codigo %}
                                     <label>
                                         <form action="{% url 'act_desacttipo_codigo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -160,15 +160,15 @@
                                     </div>
                                     </label>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_tipo_codigo %}
+                                    {% if perms.xavi.change_tipo_codigo %}
                                     <a href="{% url 'modificar_tipo_codigo' lt.pk %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_tipo_codigo %}
+                                    {% if perms.xavi.delete_tipo_codigo %}
                                         <a href="{% url 'eliminar_tipo_codigo' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %}

@@ -119,7 +119,7 @@ left: 24px !important;
                         {% endif %}
                         {% if perms.SISGDDO.view_consecutivo %}
                                     <a href=" #"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                 </a>
                                 {% endif %}
@@ -197,19 +197,19 @@ left: 24px !important;
                                     {% endif %}
                                     {% if perms.SISGDDO.view_consecutivo %}
                                     <a href="{% url 'detalle_consecutivo' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
                                     {% if perms.SISGDDO.change_consecutivo %}
                                     <a href="{% url 'modificar_consecutivo' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
                                     {% if perms.SISGDDO.delete_consecutivo %}
                                         <a href="{% url 'eliminar_consecutivo' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 

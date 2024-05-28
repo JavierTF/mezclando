@@ -17,11 +17,14 @@ import pymysql
 
 pymysql.install_as_MySQLdb()
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# DEBUG = False if settings.DATABASES['default']['HOST'] == 'localhost' or '127.0.0.1' else True
+DEBUG = True
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+if DEBUG == False:
+    BASE_DIR = '/home/access/mezclando'
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -30,16 +33,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '+!*=oq431ze#qj^%sfyjv%#o09@5g_+jjy%3^^cio#r8c-)6wz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False if settings.DATABASES['default']['HOST'] == 'localhost' or '127.0.0.1' else True
-DEBUG = True
-
 
 ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
 INSTALLED_APPS = [
+    'xavi',
     'SISGDDO',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,7 +59,14 @@ INSTALLED_APPS = [
     'apps.licenses',  # Licencias
     'apps.complaints',  # Quejas
     'apps.iproperty',  # Propiedad Industrial
-    ]
+]
+
+if DEBUG == True:
+    try:
+        INSTALLED_APPS.append("django_browser_reload")
+        INSTALLED_APPS.append("debug_toolbar")
+    except:
+        pass
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +77,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG == True:
+    try:
+        MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
+        MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    except:
+        pass
 
 ROOT_URLCONF = 'Tesis_Citmatel.urls'
 
@@ -102,16 +116,28 @@ WSGI_APPLICATION = 'Tesis_Citmatel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'salva',        
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+if DEBUG == True:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'prueba',        
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
     }
-}
+else:    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'SISGDDO',        
+            'USER': 'postgres',
+            'PASSWORD': 'soloyo1234',
+            'HOST': '172.16.1.62',
+            'PORT': '5432',
+        }
+    }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -203,7 +229,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 # This is the directory where Django will look for static files.
 STATICFILES_DIRS = [
@@ -218,8 +244,12 @@ STATICFILES_DIRS = [
 
 #Fotos de las reservas de cuadro
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = 'media/'
+
+if DEBUG == True:
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+else:
+    MEDIA_ROOT = '/home/access/mezclando/media'
 
 LOGIN_REDIRECT_URL = reverse_lazy('inicio')
 LOGOUT_REDIRECT_URL = reverse_lazy('ce_login')

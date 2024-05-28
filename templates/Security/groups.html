@@ -1,4 +1,7 @@
 {% extends 'index.html' %}
+{% block page_title %}
+    <title>SISGEPO | Roles</title>
+{% endblock %}
 {% block menu_seguridad %}
 menu-open
 {% endblock %}
@@ -14,11 +17,12 @@ active
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Roles.</h1>
+                    <h1 class="m-0 text-dark">{% block action_page %} Listar {% endblock %}Roles </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">Administración</a></li>
                         {% block group_wrapper %}
                             <li class="breadcrumb-item active">Roles</li>
                         {% endblock %}
@@ -34,8 +38,8 @@ active
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Listado de Roles</h3>
-                        <a href="{% url 'group_create' %}" class="btn btn-primary fa-pull-right" title="Nuevo rol">
+                        {% comment %} <h3 class="card-title">Listado de Roles</h3> {% endcomment %}
+                        <a href="{% url 'group_create' %}" class="btn btn-primary fa-pull-right" title="Nuevo Rol">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
                     </div>
@@ -45,9 +49,8 @@ active
                             <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Rol</th>
+                                <th>Nombre de Rol</th>
                                 <th>Acciones</th>
-
                             </tr>
                             </thead>
                             <tbody>
@@ -59,7 +62,7 @@ active
                                     <td>
                                         {{ rol.name }}
                                     </td>
-                                    {% if request.user.is_staff %}
+                                    {% if perms.auth.add_user %}
                                     <td>
                                     <span class="input-group-sm">
                                     <a href="{% url 'group_detalle' rol.pk %}"
@@ -93,3 +96,60 @@ active
     </section>
 {% endblock %}
 
+
+<script>
+function submitForm(formulario) {
+    console.log('first first first')
+    formulario.on("submit", function (e) {
+        e.preventDefault();
+        var href = formulario.attr("formaction");
+        var listar = formulario.attr("formsuccess");
+        var data = formulario.serializeArray();
+  
+        if ($(".is-invalid").length > 0) {
+            return false;
+        } else {
+            $('button[type="submit"]').prop("disabled", true);
+  
+            var form = document.getElementById(formulario.attr("id"));
+            var form_data = new FormData(form);
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            form_data.append("csrfmiddlewaretoken", csrf_token);
+  
+            $.ajax({
+                url: formulario.attr("formaction"),
+                type: formulario.attr("method"),
+                dataType: "JSON",
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.result == "success") {
+                        console.log('LLEGUEEE')
+                        Swal.fire({
+                            title: data.title,
+                            type: data.result,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then((result) => {
+                            $(location).attr('href', listar); 
+                        });
+                    } else if (data.result == "error") {
+                        Swal.fire({
+                            title: data.title,
+                            type: data.result,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        // var element = document.querySelector(`[name="${data.field}"]`);
+                        // updateErrorMessage(element, data.title);
+                        $('button[type="submit"]').prop("disabled", true);
+                    }
+                },
+            });
+        }
+    });
+  }
+  
+  submitForm($("#formulario"));
+</script>

@@ -10,6 +10,7 @@ SELECTED = (
 
 
 class IndicatorModelForm(forms.ModelForm):
+    process = forms.ModelChoiceField(label="Proceso", queryset=Process.objects.all(), widget=forms.Select(attrs={"class": "form-control select2", "prompt": ""}))
 
     required_css_class = 'required'
 

@@ -15,10 +15,7 @@
             <th>
                 Cargo
             </th>
-
-            <th>
-                Activo
-            </th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -39,29 +36,21 @@
                 </td>
                 <td>
                     <span class="input-group">
-                    {% if perms.base.change_employee %}
-                    <label>
-                        <form action="#" method="POST" class="form-activate">
-                            {% csrf_token %}
-                            <span style="display: none">{{ model.active }}</span>
-                            <input type="checkbox" name="activate" {% if model.active %} checked {% endif %} class="checkbox-activate"/>
-                        </form>
-                        <div class="switch {% if model.active %} switchOn {% endif %}">
-                        </div>
-                    </label>
-                    {% endif %}
-                    {% if perms.base.change_employee %}
+                    <a href="{% url 'base:detail_employee' model.id %}"
+                        class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                    <i class="fa fa-eye"></i>
+                    </a>
+
                         <a href="{% url 'base:update_employee' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.base.delete_employee %}
+                   
                         <a href="#" model-url="{% url 'base:delete_employee' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_employee" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                    
                     </span>
                 </td>
             </tr>

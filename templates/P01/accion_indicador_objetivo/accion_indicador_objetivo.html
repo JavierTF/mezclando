@@ -1,29 +1,31 @@
 {% extends 'index.html' %}
 
 {% block page_title %}
-    <title>SISGEPO | Acciones de Indicador de Objetivo</title>
+    <title>SISGEPO | Tareas de Objetivos de Trabajo</title>
 {% endblock %}
 
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p14 %} active menu-open {% endblock %}
+{% block menu_p14_active %} active {% endblock %}
 {% block accion_indicador_objetivo %}
     active
 {% endblock %}
-
-{% block menu_nomencladores %} active menu-open {% endblock %}
-{% block menu_nomencladores_active %} active {% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Acciones de Indicadores de Objetivos</h1>
+                    <h1 class="m-0 text-dark">Listar Tareas de Objetivos de Trabajo</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Acción de Indicador de Objetivos.</li>
+                            <li class="breadcrumb-item active">Tareas de Objetivos de Trabajo.</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -112,7 +114,7 @@
                 <div class="card">
                     <div class="card-header">
                         {% comment %} <h3 class="card-title">Listado de Indicador de Objetivos </h3> {% endcomment %}
-                        {% if perms.SISGDDO.add_accion_indicador_objetivo %}
+                        {% if perms.xavi.add_accion_indicador_objetivo or perms.xavi.add_objetivo %}
                         <a href="{% url 'adicionar_accion_indicador_objetivo' 0 %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar </span>
                         </a>
@@ -131,13 +133,16 @@
                                     Nombre
                                 </th>
                                 <th>
-                                    Indicador
+                                    Código
                                 </th>
                                 <th>
-                                    Área
+                                    Objetivo de trabajo
                                 </th>
+                                {% comment %} <th>
+                                    Área responsable
+                                </th> {% endcomment %}
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -151,15 +156,18 @@
                                         <td>
                                             {{ lt.nombre }}
                                         </td>                                        
+                                        <td style="width: 60px;">
+                                            {% if lt.codigo %}{{ lt.codigo }}{% else %} -------- {% endif %}
+                                        </td>                                        
                                         <td>
-                                            {% if lt.indicador %}{{ lt.indicador }}{% else %} Sin asignar {% endif %}
+                                            {% if lt.indicador %}{{ lt.indicador }}{% else %} -------- {% endif %}
                                         </td>   
-                                        <td>
-                                            {{ lt.area.nombre }}
-                                        </td>                                     
+                                        {% comment %} <td>
+                                            {{ lt.descripcion.area }}
+                                        </td>                                      {% endcomment %}
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_accion_indicador_objetivo %}
+                                    {% comment %} {% if perms.xavi.change_accion_indicador_objetivo %}
                                     <label>
                                         <form action="{% url 'act_desactaccion_indicador_objetivo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -169,22 +177,22 @@
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>
                                     </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.view_accion_indicador_objetivo %}
+                                    {% endif %} {% endcomment %}
+                                    {% if perms.xavi.view_accion_indicador_objetivo or perms.xavi.view_objetivo %}
                                     <a href="{% url 'detalle_accion_indicador_objetivo' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_accion_indicador_objetivo %}
+                                    {% if perms.xavi.change_accion_indicador_objetivo or perms.xavi.change_objetivo %}
                                     <a href="{% url 'modificar_accion_indicador_objetivo' lt.pk %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_accion_indicador_objetivo %}
+                                    {% if perms.xavi.delete_accion_indicador_objetivo or perms.xavi.delete_objetivo %}
                                         <a href="{% url 'eliminar_accion_indicador_objetivo' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 

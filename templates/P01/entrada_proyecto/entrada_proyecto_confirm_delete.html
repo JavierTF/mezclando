@@ -1,4 +1,4 @@
-{% extends 'P01/proyecto/proyecto.html' %}
+{% extends 'P01/entrada_proyecto/entrada_proyecto.html' %}
 {% load static %}
 {% block page_title %}
     <title>SISGEPO | Eliminar Entrada de Proyecto</title>
@@ -8,17 +8,27 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Eliminar Entrada de proyecto.</h1>
+                    <h1 class="m-0 text-dark">Eliminar Entrada de Proyecto</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Entrada de proyecto</a></li>
-                            <li class="breadcrumb-item active">Eliminar </li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyectos</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'adicionar_entrada_proyecto' object.proyecto.id %}">Entradas de proyecto</a></li>
+                            <li class="breadcrumb-item active">Eliminar</li>
                         {% endblock %}
                     </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -39,20 +49,25 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
+                    <h5 class="text-center">
                         ¿Está seguro que desea eliminar la información de la entrada de proyecto <strong>{{ object.fecha_entrada }} del {{ object.proyecto.nombre_proyecto }}</strong>?
-                        La información no podrá restaurarse.
-                    </h4>
-                    <h5>Quizás desee desactivar la Entrada. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
-                        <a href="{% url 'listar_proyecto' %}" style="color: #007bff">Ir a desactivar entrada</a> 
+                        <br />La información no podrá restaurarse.
                     </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'eliminar_entrada_proyecto' object.id %}"
+                        formsuccess="{% url 'adicionar_entrada_proyecto' object.proyecto.id %}"
+                    >
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar
                             </button>
-                            <a class="btn btn-primary" href="{% url 'listar_proyecto' %}">
+                            <a class="btn btn-primary" href="{% url 'adicionar_entrada_proyecto' object.proyecto.id %}">
                                 Cancelar
                             </a>
                         </p>

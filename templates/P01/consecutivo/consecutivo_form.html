@@ -1,10 +1,10 @@
 {% extends 'P01/consecutivo/consecutivo.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
-<script src="{% static 'django_select2/django_select2.js' %}"></script>
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
-<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
     <title>SISGEPO | Adicionar Consecutivo</title>
@@ -40,6 +40,14 @@
                         <h3 class="card-title">Formulario de Roles del trabajador</h3>
                     </div> {% endcomment %}
                     <!-- /.card-header -->
+                    {% comment %} {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %} {% endcomment %}
+
 
                     <div class="card-body">
                     <div class="portlet-body form">
@@ -174,9 +182,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="control-label"><label for="id_jefe_proyecto">Jefe de proyecto*:</label></label>
+                                        <label class="control-label"><label for="id_employee">Jefe de proyecto*:</label></label>
                                         <div>
-                                            <select name="jefe_proyecto" class=" form-control texto select2" autocomplete="on" required id="id_jefe_proyecto">
+                                            <select name="employee" class=" form-control texto select2" autocomplete="on" required id="id_employee">
                                                 <option value="">Escriba y seleccione...</option>                                        
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}">
@@ -399,8 +407,8 @@
             validate_select($('#id_area'), e);
         });
 
-        $('#id_jefe_proyecto').on('change', function(e){
-            validate_select($('#id_jefe_proyecto'), e);
+        $('#id_employee').on('change', function(e){
+            validate_select($('#id_employee'), e);
         });
 
         $('#id_fuente_financiamiento').on('change', function(e){
@@ -548,29 +556,24 @@
                     data: form_data,
                     processData: false,
                     contentType: false,
-                    success: function (data, status)
-                    {
-                        window.location.replace(listarConsecutivo);
-                    },
-                    error: function (xhr, desc, err)
-                    {
-                        if (response.result == 'error'){
-                            Toast.fire({
-                                type: 'error',
-                                title: response.message,
-                            });
-                        }      
-                        $('button[type="submit"]').prop("disabled", false);      
-                    },
-                    always: function (response){
-                        if (response.result == 'error'){
-                            Toast.fire({
-                                type: 'error',
-                                title: response.message,
-                            });
-                        }
-                        if (response.result == 'success'){
+                    success: function (data, status) {
+                        if (data.result == 'success') {
                             window.location.replace(listarConsecutivo);
+                        }
+                    },
+                    error: function (xhr, desc, err) {
+                        Toast.fire({
+                            type: 'error',
+                            title: 'Hubo un error en la solicitud.',
+                        });
+                        $('button[type="submit"]').prop("disabled", false);
+                    },
+                    complete: function (data) {
+                        if (data.responseJSON && data.responseJSON.result == 'error') {
+                            Toast.fire({
+                                type: 'error',
+                                title: data.responseJSON.message,
+                            });
                         }
                         $('button[type="submit"]').prop("disabled", false);
                     }

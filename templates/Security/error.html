@@ -55,9 +55,18 @@
       {% if error_code %}Error {{ error_code }}{% endif %} {% if error_code != 403 %}<br>Parece que hubo un problema. <br>:({% else %}<br>Acción no permitida. {% endif %}
     </h1>
     <h3 class="error-subtitle" style="text-align: center;">
-      Mientras tanto, usted puede <a href="{% url 'inicio' %}">Volver al inicio</a>.
+      Mientras tanto, usted puede <a id="volver" href="javascript:void(0);">volver a la página anterior</a>.
       <br>Contacte con el administrador del sitio
     </h3>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var volver = document.getElementById('volver');
+      volver.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.history.back();
+      });
+    });
+  </script>
 </body>
 </html>

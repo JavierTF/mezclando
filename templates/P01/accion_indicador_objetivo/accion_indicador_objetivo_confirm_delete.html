@@ -1,9 +1,6 @@
-{% extends 'P01/indicador_objetivo/indicador_objetivo_form.html' %}
+{% extends 'P01/accion_indicador_objetivo/accion_indicador_objetivo_form.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-{% block page_title %}
-    <title>SISGEPO | Eliminar Acción de Indicador de Objetivo</title>
-{% endblock %}
 {% block content %}
     <section class="content">
         <div class="row">
@@ -19,15 +16,20 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
-                        ¿Está seguro que desea eliminar la información del indicador de objetivo <strong>{{ object.nombre |capfirst }}</strong>?
-                        La información no podrá restaurarse.
-                    </h4>
-                    <h5>Quizás desee desactivar la Entidad. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
-                        <a href="{% url 'listar_indicador_objetivo' %}" style="color: #007bff">Ir a desactivar indicador de objetivo</a> 
+                    <h5 class="text-center">
+                        ¿Está seguro que desea eliminar la información del Tarea de Objetivo de trabajo <strong>{{ object.nombre |capfirst }}</strong> y sus descripciones asociadas?
+                        <br>La información no podrá restaurarse.
                     </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'eliminar_accion_indicador_objetivo' object.id %}"
+                        formsuccess="{% url 'listar_accion_indicador_objetivo' %}"
+                    >   
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar

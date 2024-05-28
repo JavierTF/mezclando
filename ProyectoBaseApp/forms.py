@@ -5,8 +5,7 @@ from django.contrib.auth.models import Group, User, Permission
 from django.views.generic import UpdateView
 from django.views.generic.edit import BaseUpdateView, DeleteView
 from notifications.signals import notify
-from PIL import Image
-from captcha.fields import CaptchaField
+# from captcha.fields import ReCaptchaField
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib import messages
@@ -24,6 +23,16 @@ from django.shortcuts import redirect
 from SISGDDO.views_sisgddo import handle_exceptions, is_superuser
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+import uuid
+from django.contrib.auth.hashers import make_password
+import os
+from PIL import Image, ImageOps
+from io import BytesIO
+import base64
+from django.contrib.sessions.models import Session
+from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
 
 # class SignUpForm(UserCreationForm):
 #     captcha = CaptchaField()
@@ -92,7 +101,17 @@ from django.utils.decorators import method_decorator
 
 
 class GroupForm(forms.ModelForm):
-    permissions = forms.ModelMultipleChoiceField(queryset = Permission.objects.all(), required = True, label = 'Permisos*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on', 'placeholder': 'Rol', 'style': 'height: 400px'}))
+    modelos = ['sosi', 'entrada_proyecto', 'premio', 'acuerdo', 'objetivo', 'proyecto', 
+           'actividadplan', 'afectaciones', 'auditoria_interna', 'auditoria_externa', 
+           'incidencia', 'process', 'procedure', 'effectiveness', 'license', 'complaint', 
+           'industrialproperty']
+    contents = ContentType.objects.filter(model__in=modelos)
+
+    content_ids = [content.id for content in contents]
+    
+    permisos = Permission.objects.filter(content_type__in=content_ids)
+    
+    permissions = forms.ModelMultipleChoiceField(queryset = permisos, required = True, label = 'Permisos*', widget = widgets.SelectMultiple(attrs = {'class': ' form-control texto select2','autocomplete': 'on', 'placeholder': 'Rol', 'style': 'height: 400px'}))
 
     @method_decorator(login_required)
     @method_decorator(staff_member_required)
@@ -113,18 +132,17 @@ class GroupUpdate(UpdateView):
     model = Group
     success_url = reverse_lazy('group_list')
 
-    @method_decorator(login_required)
-    @method_decorator(staff_member_required)
-    @method_decorator(permission_required('auth.change_group'))
-    @method_decorator(handle_exceptions)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    
     def post(self, request, *args, **kwargs):
         register_logs(request, Group, self.get_object().pk, self.get_object().__str__(), 2)
         self.object = self.get_object()
         messages.success(request, "Rol modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+        super(BaseUpdateView, self).post(request, *args, **kwargs)
+        response = {
+            'result': 'success',
+            'title': 'Rol modificado con éxito'
+        }
+
+        return JsonResponse(response)
 
 class GroupDelete(DeleteView):
     model = Group
@@ -136,14 +154,19 @@ class GroupDelete(DeleteView):
     @method_decorator(handle_exceptions)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-    
-    def delete(self, request, *args, **kwargs):
-        register_logs(request, Group, self.get_object().pk, self.get_object().__str__(), 3)
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        self.object.delete()
-        messages.success(request, "Rol eliminado con éxito")
-        return HttpResponseRedirect(success_url)
+
+    def form_valid(self, form):
+        # Lógica personalizada de eliminación
+        group = self.get_object()
+        register_logs(self.request, Group, group.pk, group.__str__(), 3)
+        group.delete()
+
+        response = {
+            'result': 'success',
+            'title': 'Rol eliminado con éxito'
+        }
+
+        return JsonResponse(response)
 
 class UserForm(UserCreationForm):
     # captcha = CaptchaField()
@@ -318,11 +341,11 @@ class UserUpdateAdmin(UpdateView):
     model = models.UserApp
     form_class = UserProfile
     template_name = ('auth/profile.html')
-    success_url = reverse_lazy('inicio')
+    success_url = reverse_lazy('logout')
     
     def post(self, request, *args, **kwargs):
         register_logs(request, models.UserApp, self.get_object().uui, self.get_object().__str__(), 2)
-        notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
+        # notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
         self.object = self.get_object()
         messages.success(request, "Usuario modificado con éxito")
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
@@ -335,15 +358,121 @@ class UserUpdateAdmin(UpdateView):
                 w = float(self.request.POST.get('width'))
                 h = float(self.request.POST.get('height'))
 
-                image = Image.open(self.get_object().image)
+                image = Image.open(self.get_object().image).convert('RGB')
                 cropped_image = image.crop((x, y, w + x, h + y))
-                resized_image = cropped_image.resize((200, 200), Image.ANTIALIAS)
-                resized_image.save(self.get_object().image.path)
-            url = force_str(self.success_url)
+                resized_image = cropped_image.resize((200, 200), Image.Resampling.LANCZOS)
+                
+                # print('\n', 'IMAGE IMAGE IMAGE', self.get_object().image, '\n')
+
+                # Guardar la imagen en BytesIO
+                # with BytesIO() as buffer:
+                #     resized_image.save(buffer, format="JPEG")
+                #     image_bytes = buffer.getvalue()
+
+                # base64_image = base64.b64encode(image_bytes).decode('utf-8')
+                # self.request.COOKIES['user_photo'] = base64_image
+                # try:
+                #     userapp = models.UserApp.objects.get(pk = self.get_object().pk)
+                #     # print('\n', 'userapp userapp userapp', userapp[0].image, '\n')
+                #     
+                #     userapp.image = self.get_object().image
+                # except Exception as e:
+                #     print(f'Hubo un error {e}')
+
+            # url = force_str(self.success_url)
         else:
             raise ImproperlyConfigured(
                 "No URL to redirect to. Provide a success_url.")
-        return url
+        # return url
+        response = {}
+        response['result'] = 'success'
+        response['title'] = 'Imagen actualizada con éxito'
+        response['text'] = 'Se cerrará la sesión para mejor carga de los datos'
+        return JsonResponse(response)
+        # return response
+        # return render(self.request, url)
+
+# class UserUpdate(UpdateView):
+#     model = models.UserApp
+#     form_class = UserAdminProfile
+#     template_name = ('auth/user_update.html')
+#     success_url = reverse_lazy('user_list')
+    
+#     contexto = {'form': form_class}
+    
+#     def get(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         user = models.User.objects.get(pk=self.request.user.pk)
+#         print('\n', 'user', user, '\n')
+#         user_app = models.UserApp.objects.filter(user_ptr=user)
+#         print('\n', 'user_app', user_app, '\n')
+#         if len(user_app) == 0:
+#             u = models.UserApp(
+#                 password=user.password,
+#                 last_login=user.last_login,
+#                 is_superuser=user.is_superuser,
+#                 username=user.username,
+#                 first_name=user.first_name,
+#                 last_name=user.last_name,
+#                 email=user.email,
+#                 is_staff=user.is_staff,
+#                 is_active=user.is_active,
+#                 date_joined=user.date_joined,
+#                 user_ptr = user,
+#                 referUser=uuid.uuid4(),
+#             )
+#             u.save()
+#             print('\n', 'user_app', u, '\n')
+        
+#         self.contexto['object'] = self.object
+        
+#         return render(request, self.template_name, self.contexto)
+    
+#     def get_success_url(self):
+#         return reverse_lazy(self.success_url)
+    
+#     def post(self, request, *args, **kwargs):
+#         form = self.get_form(UserAdminProfile)  
+#         self.object = self.get_object()
+#         us = User.objects.filter(pk = self.get_object().pk)
+#         userapp = models.UserApp.objects.filter(pk = self.get_object().pk)
+
+#         us.update(
+#             username = form['username'].value(),
+#             email = form['email'].value(),
+#             first_name = form['first_name'].value(),
+#             last_name = form['last_name'].value(),   
+#             password = form['password1'].value(),   
+#         )
+
+#         userapp.update(  
+#             image = form['image'].value() if form['image'].value() else None,   
+#         )
+
+#         us = self.get_object()
+#         us.groups.clear()
+#         grupos = form['groups'].value()
+#         for f in grupos:
+#             try:
+#                 felem = Group.objects.get(pk = f)
+#                 us.groups.add(felem)
+#             except Exception as e:
+#                 print(f'Error al actualizar grupos en usuario {e}')
+#                 response = {
+#                     'result': 'error',
+#                     'title': 'Error al modificar'
+#                 }
+#                 return JsonResponse(response)
+                
+#         us.save()
+
+#         notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
+#         register_logs(request, us, self.get_object().uui, self.get_object().__str__(), 2)
+#         response = {
+#                 'result': 'success',
+#                 'title': 'Usuario modificado con éxito'
+#             }
+#         return JsonResponse(response)
 
 class UserUpdate(UpdateView):
     model = models.UserApp
@@ -362,34 +491,43 @@ class UserUpdate(UpdateView):
             email = form['email'].value(),
             first_name = form['first_name'].value(),
             last_name = form['last_name'].value(),   
-            password1 = form['password1'].value(),   
-            password2 = form['password2'].value(),   
-            image = form['image'].value(),   
         )
+        
+        if form['password1'].value():
+            us.update(
+                password = make_password(form['password1'].value()),
+            )
 
-        userapp.update(  
-            image = form['image'].value(),   
-        )
+        # if form['image'].value():
+        #     image = form['image'].value()
+        #     userapp.update(  
+        #         image = "foto/" + image.name
+        #     )
 
-        """hago una lista y para cada formato guardo el elemento,
-            la intencion es luego pasarle la lista a consecutivo"""
-        # mus = User.objects.get(pk = self.get_object().pk)
-
+        us = self.get_object()
         us.groups.clear()
         grupos = form['groups'].value()
         for f in grupos:
             try:
-                felem = Group.objects.get(id = f)
+                felem = Group.objects.get(pk = f)
                 us.groups.add(felem)
-            except:
-                pass
-        
+            except Exception as e:
+                print(f'Error al actualizar grupos en usuario {e}')
+                response = {
+                    'result': 'error',
+                    'title': 'Error al modificar'
+                }
+                return JsonResponse(response)
+                
         us.save()
 
         notify.send(request.user, recipient=self.get_object(), verb='Se han modificado sus datos', level='warning')
         register_logs(request, us, self.get_object().uui, self.get_object().__str__(), 2)
-        messages.success(request, "Usuario modificado con éxito")
-        return super(BaseUpdateView, self).post(request, *args, **kwargs)
+        response = {
+                'result': 'success',
+                'title': 'Usuario modificado con éxito'
+            }
+        return JsonResponse(response)
     
 class UserDetail(UpdateView):
     model = models.UserApp
@@ -402,32 +540,73 @@ class UserDetail(UpdateView):
         register_logs(request, models.UserApp, self.get_object().uui, self.get_object().__str__(), 0)
         return super(BaseUpdateView, self).post(request, *args, **kwargs)
 
-class UserDelete(DeleteView):
-    model = User
-    success_url = reverse_lazy('user_list')
+# class UserDelete(DeleteView):
+#     model = User
+#     success_url = reverse_lazy('user_list')
     
+#     def get(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         if self.object.is_superuser:
+#             return redirect('error403')  # Reemplaza 'otra_vista' por la URL de la vista a la que deseas redireccionar
+#         return self.render_to_response(self.get_context_data())
+
+#     def delete(self, request, *args, **kwargs):
+#         register_logs(request, models.UserApp, self.get_object().pk, self.get_object().__str__(), 3)
+#         self.object = self.get_object()
+#         success_url = self.get_success_url()
+#         if LogEntry.objects.filter(user_id = self.get_object().pk).count() == 0:
+#             self.object.delete()
+#             response = {
+#                 'result': 'success',
+#                 'title': 'Usuario eliminado con éxito'
+#             }
+#             return JsonResponse(response)
+#         else:
+#             response = {
+#                 'result': 'info',
+#                 'title': 'El usuario posee datos de interés para la entidad por tanto no se puede borrar'
+#             }
+#             return JsonResponse(response)
+class UserDelete(DeleteView):
+    model = models.User
+    success_url = reverse_lazy('user_list')
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         if self.object.is_superuser:
-            return redirect('error403')  # Reemplaza 'otra_vista' por la URL de la vista a la que deseas redireccionar
+            return redirect('error403')  
         return self.render_to_response(self.get_context_data())
 
-    def delete(self, request, *args, **kwargs):
-        register_logs(request, models.UserApp, self.get_object().pk, self.get_object().__str__(), 3)
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        if LogEntry.objects.filter(user_id = self.get_object().pk).count() == 0:
-            self.object.delete()
-            messages.success(request, "Usuario eliminado con éxito")
-        else:
-            messages.error(request, "El usuario posee datos de interés para la entidad por tanto no se puede borrar")
-        return HttpResponseRedirect(success_url)
+    def form_valid(self, form):
+        self.object.is_active = False
+        self.object.save()
+        register_logs(self.request, models.UserApp, self.object.pk, self.object.__str__(), 3)
 
+        if LogEntry.objects.filter(user_id=self.object.pk).count() == 0:
+            response = {
+                'result': 'success',
+                'title': 'Usuario eliminado con éxito'
+            }
+            return JsonResponse(response)
+        else:
+            response = {
+                'result': 'info',
+                'title': 'El usuario posee datos de interés para la entidad por tanto no se puede borrar'
+            }
+            return JsonResponse(response)
+        
 class UserActivate(UpdateView):
     model = models.UserApp
     form_class = UserAdminProfile
     # template_name = ('auth/user_form.html')
     success_url = reverse_lazy('user_list')
+
+    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
+    @method_decorator(permission_required('auth.change_user'))
+    @method_decorator(handle_exceptions)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
         formu = self.get_form(UserAdminProfile)

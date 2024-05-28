@@ -121,6 +121,7 @@ tr.shown td.details-control {
                         <form action="{% url 'complaints:export_complaints' %}" class="form-horizontal">
                             <div class="row col-6">
                                 <div class="col-6">
+                                    <input type="text" name="search" style="display: none">
                                     <select class="form-control select2" name="export_status">
                                         <option value="0">TODOS</option>
                                         <option value="1">EN PROCESO</option>

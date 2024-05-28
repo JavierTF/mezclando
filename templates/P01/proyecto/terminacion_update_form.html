@@ -1,0 +1,993 @@
+{% extends 'P01/proyecto/proyecto.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
+
+{% block page_title %}
+    <title>SISGEPO | Modificar Proyecto</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Modificar terminación del Proyecto </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">Proyectos</a></li>
+                            <li class="breadcrumb-item active">Modificar</li>
+                        {% endblock %}
+                    </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+    hr {
+        border-top: 1px solid rgba(0,0,0,.05);
+    }
+
+    .encabezado-proyecto {
+        margin-bottom: 15px; 
+        color: #007BFF; 
+        padding: 5px 5px 5px 8px; 
+        border: 2px solid #007BFF; 
+        border-radius: 4px
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form 
+                        id="formAddProyecto" 
+                        class="form-horizontal" 
+                        method="post" 
+                        enctype="multipart/form-data" 
+                        formaction="{% url 'modificar_terminacion' form.pk %}" 
+                        formsuccess="{% url 'listar_proyecto' %}"
+                    >
+                        {% csrf_token %}
+                        <div class="col-md-3 col-md-offset-9 encabezado-proyecto">Datos generales del proyecto</div>
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class=" control-label"><label for="id_no">Número:</label></label><br>
+                                <span>{{ form.no }}</span>
+                            </div>   
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_codigo">Código generado:</label></label><br>
+                                <span>{{ form.codigo }}</span>
+                            </div>
+                            <div class="col-md-9">
+                                <label class="control-label"><label for="id_nombre_proyecto">Nombre*:</label></label><br>
+                                <span>{{ form.nombre_proyecto }}</span>
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_tipo_codigo">Clasificación*:</label></label><br>
+                                <span>{{ form.subclasificacion.clasificacion.nombre }}</span>
+                            </div>                       
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_subclasificacion">Subclasificación*:</label></label><br>
+                                <span>{{ form.subclasificacion.nombre }}</span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_formato">Formato:</label></label><br>
+                                <span>
+                                    {% for option in myformats %}
+                                        {{ option.nombre }} {% if myformats|length > 1 %} {% if not loop.last %} | {% endif %} {% endif %}
+                                    {% empty %}
+                                        -----
+                                    {% endfor %}
+                                </span>
+                            </div>                            
+                        </div>
+                        <hr />
+                        <div class="col-md-3 col-md-offset-9 encabezado-proyecto">Datos del registro de terminación</div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label class="control-label"><label for="id_observaciones">Observaciones*:</label></label>
+                                <div>
+                                    <textarea name="observaciones" cols="40" rows="2" class="form-control" autocomplete="on" placeholder="Introduzca las observaciones del Control de Calidad" maxlength="250" id="id_observaciones">{{ form.proyecto_registro_terminacion.recomendaciones }}</textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_revisado_por">Revisado por*:</label></label>
+                                <div>
+                                    <select name="revisado_por" class=" form-control texto select2" autocomplete="on" required id="id_revisado_por">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}" {% if form.proyecto_registro_terminacion.revisado_por.id == option.id %} selected {% endif %}>
+                                                {{ option.first_name }} {{ option.last_name }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_revision">Fecha de revisión*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_revision" value="{{ form.proyecto_registro_terminacion.fecha_revision | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_revision">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_verificado_por">Verificado por*:</label></label>
+                                <div>
+                                    <select name="verificado_por" class=" form-control texto select2" autocomplete="on" required id="id_verificado_por">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}" {% if form.proyecto_registro_terminacion.verificado_por.id == option.id %} selected {% endif %}>
+                                                {{ option.first_name }} {{ option.last_name }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_verificacion">Fecha de verificación*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_verificacion" value="{{ form.proyecto_registro_terminacion.fecha_verificacion | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_verificacion">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        {% comment %} <div class="row">
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_contrato">No. contrato*:</label></label>
+                                <div>
+                                    <input type="text" name="contrato" class="form-control texto" placeholder="Introduzca no. contrato" maxlength="10" id="id_contrato" value="" required>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_area">(Centro de costo) Área*:</label></label>
+                                <div>
+                                    <select name="centro_costo" class="form-control texto select2" autocomplete="on" required id="id_area">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tareas %}
+                                            <option value="{{ option.id }}">({{ option.centro_costo }}) {{ option.nombre }}</option>
+                                        {% endfor %}                                       
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_comercial">Comercial que atiende*:</label></label>
+                                <div>
+                                    <select name="comercial" class=" form-control texto select2" autocomplete="on" required id="id_comercial">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tcom %}
+                                            <option value="{{ option.id }}">
+                                                {{ option.first_name }} {{ option.last_name }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_linea_tematica">Línea temática*:</label></label>
+                                <div>
+                                    <select name="linea_tematica" class=" form-control texto select2" autocomplete="on" id="id_linea_tematica" required>
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tlin %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %}   
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_inicio">Fecha de inicio*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_inicio" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_inicio">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_terminacion">Fecha de terminación*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_terminacion" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_terminacion" required>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        <hr />
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_financista_mlc">Financista MLC:</label></label>
+                                <div>
+                                    <select name="financista_mlc" class=" form-control texto select2" autocomplete="on" id="id_financista_mlc">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tfue %}
+                                            <option value="{{ option.id }}" {% if option.id == fuente_mlc.fuente_financiamiento.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %} 
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_financiamiento_mlc">Financiamiento MLC:</label></label>
+                                <div>
+                                    <input type="text" name="financiamiento_mlc" min="0" class="form-control texto" placeholder="Introduzca el costo" id="id_financiamiento_mlc" value="{{ fuente_mlc.valor }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_ingreso_mlc">Plan ingresos en MLC:</label></label>
+                                <div>
+                                    <input type="text" name="ingreso_mlc" min="0" class="form-control texto" placeholder="Introduzca ingreso MLC" id="id_ingreso_mlc" value="{{ form.proyecto_registro_terminacion.ingreso_mlc }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                            
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_financista_cup">Financista CUP:</label></label>
+                                <div>
+                                    <select name="financista_cup" class=" form-control texto select2" autocomplete="on" id="id_financista_cup">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tfue %}
+                                            <option value="{{ option.id }}" {% if option.id == fuente_cup.fuente_financiamiento.id %} selected {% endif %}>
+                                                {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}  
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_financiamiento_cup">Financiamiento CUP:</label></label>
+                                <div>
+                                    <input type="text" name="financiamiento_cup" min="0" class="form-control texto" placeholder="Introduzca el costo" id="id_financiamiento_cup" value="{{ fuente_cup.valor }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_ingreso_cup">Plan ingresos en CUP:</label></label>
+                                <div>
+                                    <input type="text" name="ingreso_cup" min="0" class="form-control texto" placeholder="Introduzca ingreso MLC" id="id_ingreso_cup" value="{{ form.proyecto_registro_terminacion.ingreso_cup }}">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                            
+                        </div>
+                        <hr /> 
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_aprobado_por">Aceptación del cliente (Aprobado por)*:</label></label>
+                                <div>
+                                    <select name="aprobado_por" class=" form-control texto select2" autocomplete="on" required id="id_aprobado_por">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tcli %}
+                                            <option value="{{ option.id }}" {% if form.proyecto_registro_terminacion.aprobado_por.id == option.id %} selected {% endif %}>
+                                                ({{ option.codigo }}) {{ option.nombre }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    {% comment %} <input type="text" name="aprobado_por" class="form-control texto" placeholder="Introduzca el que aprueba" id="id_aprobado_por" value="{{ form.proyecto_registro_terminacion.aprobado_por }}"> {% endcomment %}
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class=" control-label"><label for="id_no_ficha_tecnica">No. ficha:</label></label>
+                                <div>
+                                    <input type="number" name="no_ficha_tecnica" class=" form-control" min="1" max="100000" value="{{ form.proyecto_registro_terminacion.no_ficha_tecnica }}" maxlength="10" required placeholder="No.">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>  
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_recibido_por_ficha_tecnica">Ficha técnica recibida por*:</label></label>
+                                <div>
+                                    <select name="recibido_por_ficha_tecnica" class=" form-control texto select2" autocomplete="on" required id="id_recibido_por_ficha_tecnica">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}" {% if form.proyecto_registro_terminacion.recibido_por_ficha_tecnica.id == option.id %} selected {% endif %}>
+                                                {{ option.first_name }} {{ option.last_name }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_ficha_tecnica">Fecha de recibida*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_ficha_tecnica" value="{{ form.proyecto_registro_terminacion.fecha_ficha_tecnica | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_ficha_tecnica">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="form-group col-md-1">
+                                <label class=" control-label"><label for="id_no_sosi">SOSI:</label></label>
+                                <div>
+                                    <input id="existeSosi" type="hidden" value="{% if sosi == None %}none{% endif %}">
+                                    <input type="text" name="no_sosi" class=" form-control" value="{{ form.sosi.numero_salva }}" placeholder="{{ form.sosi.numero_salva }}" readonly>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_recibida_por_sosi">SOSI recibido por*:</label></label>
+                                <div>
+                                    <select name="recibida_por_sosi" class=" form-control texto select2" autocomplete="on" id="id_recibida_por_sosi" readonly>
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in ttrab %}
+                                            <option value="{{ option.id }}" {% if form.proyecto_registro_terminacion.recibida_por_sosi.id == option.id %} selected {% endif %} readonly>
+                                                {{ option.first_name }} {{ option.last_name }}
+                                            </option>
+                                        {% endfor %}     
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label"><label for="id_fecha_sosi">Fecha de recibido*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_sosi" value="{{ form.proyecto_registro_terminacion.fecha_sosi | date:"Y-m-d" }}" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_sosi" readonly>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        {% comment %} <div class="row">
+                            <div class="form-group col-md-3">
+                                <label class="control-label"><label for="id_fecha_aprobacion">Fecha de terminación*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_aprobacion" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_aprobacion" required>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div> {% endcomment %}
+                        {% comment %}<div class="row">
+                            {% comment %} <input name="estado" type="hidden" value="{{ estado.id }}">
+                            <div class="form-group col-md-3" style="display: none">
+                                <label class="control-label"><label for="id_estado">Estado:</label></label>
+                                <div>
+                                    <select name="estado" class=" form-control texto select2" autocomplete="on" id="id_estado">
+                                        {% for option in test %}
+                                            {% if option.nombre|lower == 'aprobado' %} 
+                                                <option value="{{ option.id }}" {% if option.nombre|lower == 'solicitado' %} selected {% endif %}>{{ option.nombre }}</option>
+                                            {% endif %} 
+                                        {% endfor %} 
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha_entrada">Fecha de entrada*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_entrada" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_entrada">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            
+                             <div class="col-md-8">
+                                <div class="form-row">
+                                    
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_tipo">Tipo de proyecto*:</label></label>
+                                        <div>
+                                            <select name="tipo" class=" form-control texto select2" autocomplete="on" required id="id_tipo">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in tproy %}
+                                                    <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_area">Área*:</label></label>
+                                        <div>
+                                            <select name="area" class="form-control texto select2" autocomplete="on" required id="id_area">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in tareas %}
+                                                    <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                                {% endfor %}                                       
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_jefe_proyecto">Jefe de proyecto*:</label></label>
+                                        <div>
+                                            <select name="jefe_proyecto" class=" form-control texto select2" autocomplete="on" required id="id_jefe_proyecto">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in ttrab %}
+                                                    <option value="{{ option.id }}">
+                                                        {{ option.first_name }} {{ option.last_name }}
+                                                    </option>
+                                                {% endfor %}     
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>{% endcomment %}
+                        {% comment %} <div class="row">   
+                            {% comment %} <div class="col-md-8">
+                                <div class="form-row">
+                                    
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_tipo">Tipo de proyecto*:</label></label>
+                                        <div>
+                                            <select name="tipo" class=" form-control texto select2" autocomplete="on" required id="id_tipo">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in tproy %}
+                                                    <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_area">Área*:</label></label>
+                                        <div>
+                                            <select name="area" class="form-control texto select2" autocomplete="on" required id="id_area">
+                                                <option value="">Escriba y seleccione...</option>                                        
+                                                {% for option in tareas %}
+                                                    <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                                {% endfor %}                                       
+                                            </select>
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>                       
+                            <div class="col-md-8">
+                                
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_extension">Fecha de extensión:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_extension" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_extension">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="control-label"><label for="id_fecha_cierre">Fecha de cierre:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_cierre" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_cierre">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_observacion">Observación:</label></label>
+                                <div>
+                                    <textarea name="observacion" cols="40" rows="5" class="form-control" autocomplete="on" placeholder="Introduzca la observación" maxlength="250" id="id_observacion"></textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>
+                        {% comment %} <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_costo">Costo (CUP)*:</label></label>
+                                <div>
+                                    <input type="text" name="costo" minlength="4" maxlength="7" class="form-control texto" placeholder="Introduzca el costo" required id="id_costo" value="">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_informe_apertura">Informe apertura:</label></label>
+                                <div>
+                                    <input type="file" name="informe_apertura" id="id_informe_apertura" value="" accept=".pdf,.doc,.docx">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>   
+                        
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_informe_cierre">Informe cierre:</label></label>
+                                <div>
+                                    <input type="file" name="informe_cierre" id="id_informe_cierre" value="" accept=".pdf,.doc,.docx">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                   
+                        </div>   {% endcomment %}
+                        {% comment %} <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_linea_tematica">Línea temática:</label></label>
+                                <div>
+                                    <select name="linea_tematica" class=" form-control texto select2" autocomplete="on" id="id_linea_tematica">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tlin %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %}   
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fuente_financiamiento">Fuente de financiamiento*:</label></label>
+                                <div>
+                                    <select name="fuente_financiamiento" class=" form-control texto select2" autocomplete="on" id="id_fuente_financiamiento">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tfue %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %}  
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_estado">Estado*:</label></label>
+                                <div>
+                                    <select name="estado" class=" form-control texto select2" autocomplete="on" id="id_estado">
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in test %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %} 
+                                    </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>     
+                                                                      
+                        </div>   {% endcomment %}
+                        {% comment %} <div class="row">                            
+                            <div class="col-md-4">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_aprobacion_consejo">Terminación del Consejo:</label></label>
+                                        <div>
+                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" maxlength="25" id="id_aprobacion_consejo" value="">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_fecha_aprobacion">Fecha de terminación:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_aprobacion" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_aprobacion">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="control-label"><label for="id_fecha_interrupcion">Fecha de interrupción:</label></label>
+                                        <div>
+                                            <input type="date" name="fecha_interrupcion" value="" class="form-control" append="fa fa-calendar" icon_toggle id="id_fecha_interrupcion">
+                                            <small class="text-red"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="form-group col-md-8">
+                                <label class="control-label"><label for="id_causa_interrupcion">Causa(s) de la interrupción:</label></label>
+                                <div>
+                                    <textarea name="causa_interrupcion" cols="40" rows="9" class="form-control" autocomplete="on" placeholder="Introduzca las causas de la interrupción" maxlength="250" id="id_causa_interrupcion"></textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>
+                        </div>      {% endcomment %}
+                    {% block error %}
+                    {% endblock %}
+                    {% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
+    <script type="application/javascript">
+        if ($('#id_tipo_codigo').val() === ''){
+            $('#id_subclasificacion').prop('disabled', true);
+        } else {
+            $('#id_subclasificacion').prop('disabled', false);
+        }
+
+        {/* $('#id_codigo').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        }); */}
+
+        $('#id_nombre_proyecto').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+        
+        $('#id_codigo').change(function(event){
+            validate_select($('#id_codigo'), event);
+        });
+
+        $('#id_prioridad').change(function(event){
+            validate_select($('#id_prioridad'), event);
+        });
+        
+        $('#id_contrato').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_area').change(function(event){
+            validate_select($('#id_area'), event);
+        });
+
+        $('#id_jefe_proyecto').change(function(event){
+            validate_select($('#id_jefe_proyecto'), event);
+        });
+
+        $('#id_comercial').change(function(event){
+            validate_select($('#id_comercial'), event);
+        });
+
+        $('#id_linea_tematica').change(function(event){
+            validate_select($('#id_linea_tematica'), event);
+        });                
+
+        $('#id_fecha_inicio').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual', $('#id_fecha_inicio'));
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_terminacion'), 'menor', $('#id_fecha_inicio'));
+        });
+
+        $('#id_fecha_terminacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_inicio'), 'mayor', $('#id_fecha_terminacion'));
+        });        
+
+        $('#id_financista_mlc').change(function(event){
+            validate_select($('#id_financista_mlc'), event);
+        }); 
+
+        $('#id_financista_cup').change(function(event){
+            validate_select($('#id_financista_cup'), event);
+        }); 
+
+        $('#id_financista_mlc').bind('focusout',function(e){
+            validate_value_number($('#id_financista_mlc'), e)
+        }); 
+
+        $('#id_financiamiento_mlc').bind('focusout',function(e){
+            validate_value_number($('#id_financiamiento_mlc'), e)
+        }); 
+
+        $('#id_fecha_aprobacion').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+
+        $('#id_ingreso_mlc').bind('focusout',function(e){
+            validate_value_number($('#id_ingreso_mlc'), e)
+        });
+
+        $('#id_ingreso_cup').bind('focusout',function(e){
+            validate_value_number($('#id_ingreso_cup'), e)
+        });
+
+        function setCodigo(){
+            let siglas = $('#id_tipo_codigo option:selected').attr('data-siglas').trim();
+            let anno = new Date();
+            anno = anno.getUTCFullYear().toString().substr(2);
+            //let anno = $('#id_tipo_codigo option:selected').attr('data-creado').substr(2);
+            let no = $('#id_tipo_codigo').attr('data-no');
+            numerosCod = $('#id_codigo').val().substr(3).trim();
+            if (parseInt(no) < 10){
+                no = `0${no}`;
+            }
+            //let siglasServ = $('#id_tipo_codigo option:selected').text().trim().substr(0,3).toUpperCase();
+            if ($('#id_tipo_codigo').val() != ''){
+                document.getElementById('id_codigo').value = `${siglas}${anno}${no}`;
+            } else {
+                document.getElementById('id_codigo').value = '';
+            }
+        } 
+
+        // $('#id_especialista_calidad').change(function(event){
+        //     validate_select($('#id_especialista_calidad'), event);
+        // });
+
+        // $('#id_disennador').change(function(event){
+        //     validate_select($('#id_disennador'), event);
+        // });
+
+        $('#id_tipo_codigo').change(function (event) {
+            validate_select($('#id_tipo_codigo'), event);
+            setCodigo();
+
+            if ($('#id_tipo_codigo option:selected').attr('data-siglas') != 'SER'){
+                $('#id_formato').attr('disabled', false);
+                $('#id_formato').attr('required', true);
+                var labelElement = $(".form-group.col-md-4 label[for='id_formato']");
+                var labelText = labelElement.text();
+                var insertIndex = labelText.length - 1;
+                labelText = labelText.slice(0, insertIndex) + '<span style="color: red;">*</span>' + labelText.slice(insertIndex);
+                labelElement.html(labelText);
+            } else {
+                $('#id_formato').attr('required', false);
+                $('#id_formato').attr('disabled', true);
+                var labelElement = $(".form-group.col-md-4 label[for='id_formato']");
+                var labelText = labelElement.html(); // Usamos html() para obtener el contenido HTML completo
+                labelText = labelText.replace('<span style="color: red;">*</span>', '');
+                labelElement.html(labelText);
+            }
+        
+            if ($('#id_tipo_codigo').val() == '') {
+                $('#id_subclasificacion').prop('disabled', true);
+            } else {
+                var data = {
+                    csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                    id_clasificacion: parseInt($('#id_tipo_codigo').val())
+                };
+        
+                $.ajax({
+                    url: "{% url 'cargar_subclasificacion' %}",
+                    type: "POST",
+                    dataType: "JSON",
+                    data: data,
+                    success: function (data) {
+                        $('#id_subclasificacion').empty();
+                        var array = data['tsubclasificacion'];
+                        console.log("array array", array);
+                        array.forEach(element => {
+                            $('#id_subclasificacion').append(`<option value="${element.id}">${element.nombre}</option>`)
+                        })
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error al cargar la frase:", error);
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se pudieron cargar los datos",
+                            type: "error",
+                        })
+                    },
+                    complete: function () {
+                        $('#id_subclasificacion').prop('disabled', false);
+                    }
+                });
+            }
+        });
+
+        if ($('#id_tipo_codigo option:selected').attr('data-siglas') != 'SER'){
+            $('#id_formato').on('change', function(event){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+                validar_comparar_valores_contables($(this), 6, 'menor_igual');
+            });
+        }
+        
+
+        {/* $('#id_tipo').change(function(event){
+            validate_select($('#id_tipo'), event);
+        });
+
+        $('#id_area').on('change', function(e){
+            validate_select($('#id_area'), e);
+        });
+
+        $('#id_jefe_proyecto').on('change', function(e){
+            validate_select($('#id_jefe_proyecto'), e);
+        });
+
+        $('#id_fuente_financiamiento').on('change', function(e){
+            validate_select($('#id_fuente_financiamiento'), e);
+        }); */}
+
+        {% comment %} $('#id_estado').on('change', function(e){
+            validate_select($('#id_estado'), e);
+        }); {% endcomment %}
+
+        {/* $('#id_formato').on('change', function(event){
+            if ($('#id_codigo').val().substr(0, 2) == 'DES'){
+                validar_comparar_valores_contables($(this), 0, 'mayor');
+            }            
+            validar_comparar_valores_contables($(this), 6, 'menor_igual');
+        }); */}
+
+        {/* $('#id_fecha_entrada').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_terminacion'), 'menor', $('#id_fecha_entrada'));
+            validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_extension'), 'menor', $('#id_fecha_entrada'));
+        });
+
+        $('#id_fecha_aprobacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_aprobacion'), '', 'menor_igual', $('#id_fecha_aprobacion'));
+        });
+
+        $('#id_fecha_inicio').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_inicio'), '', 'menor_igual', $('#id_fecha_inicio'));
+            if ($('#id_fecha_cierre').val() !== undefined){
+                validar_comparar_fechas(document.getElementById('id_fecha_inicio'), document.getElementById('id_fecha_cierre'), 'menor', $('#id_fecha_cierre'));
+            }            
+        });
+
+        $('#id_fecha_interrupcion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_interrupcion'), '', 'menor_igual', $('#id_fecha_interrupcion'));
+        });
+
+        $('#id_fecha_terminacion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_terminacion'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_terminacion'));
+        });
+
+        $('#id_fecha_extension').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_extension'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_extension'));
+        });
+
+        $('#id_fecha_cierre').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_cierre'), document.getElementById('id_fecha_inicio'), 'mayor_igual', $('#id_fecha_cierre'));
+        }); */}
+
+        {/* $('#id_informe_apertura').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);            
+        });
+
+        $('#id_informe_cierre').on('change', function(){
+            validar_archivos($('#id_informe_apertura'), ['pdf', 'doc', 'docx']);
+        }); */}
+
+        //$('#id_no').prop("disabled", true);
+
+        $('#formAddProyecto').on('submit', function (e) {
+            e.preventDefault();
+
+            /*if ($('#id_informe_apertura').val().length > 0){
+                if ($('#id_fecha_inicio').val().length = 0){
+                    Toast.fire({
+                        type: 'error',
+                        title: 'El campo informe de apertura está cargado. Llene la fecha de inicio',
+                    });
+                    $('#id_informe_apertura').removeClass("is-valid").addClass("is-invalid");
+                    return false;
+                }
+            }*/
+            
+            // if ($('#id_informe_cierre').val().length > 0){
+            //     if ($('#id_fecha_cierre').val().length = 0){
+            //         Toast.fire({
+            //             type: 'error',
+            //             title: 'El campo informe de cierre está cargado. Llene la fecha de cierre',
+            //         });
+            //         $('#id_fecha_cierre').removeClass("is-valid").addClass("is-invalid");
+            //         return false;
+            //     }
+            // }
+
+            /*let f1 = validar_existencia_ambos(document.getElementById('id_financista_mlc'), document.getElementById('id_financiamiento_mlc'));
+                let f2 = validar_existencia_ambos(document.getElementById('id_financista_cup'), document.getElementById('id_financiamiento_cup'));     
+                
+                if (typeof f1 !== 'undefined'){
+                    if (!f1){
+                        return false;
+                    }
+                }
+    
+                if (typeof f2 !== 'undefined'){
+                    if (!f2){
+                        return false;
+                    }
+                }       
+            
+            if ($('#id_ingreso_mlc').val() == '' || $('#id_ingreso_cup').val() == ''){
+                Swal.fire({
+                    title: "Error",
+                    text: "Seleccione ingreso en MLC y/o en CUP",
+                    type: "error",
+                })
+            }*/
+
+            var href = $(this).attr('formaction');
+            var listarProyecto = $(this).attr('formsuccess');
+            var data = $(this).serializeArray();
+
+            if ($('.is-invalid').length > 0){
+                return false;
+            }
+            else{
+                $('button[type="submit"]').prop("disabled", true);
+
+                var form = document.getElementById("formAddProyecto");
+                var form_data = new FormData(form);
+                var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+                // form_data.append("informe_apertura", document.getElementById('id_informe_apertura').files[0]);
+                // form_data.append("informe_cierre", document.getElementById('id_informe_cierre').files[0]);
+                form_data.append("csrfmiddlewaretoken", csrf_token);
+
+                $.ajax({
+                    url: $(this).attr("formaction"),
+                    type: $(this).attr("method"),
+                    dataType: "JSON",
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data, status)
+                    {
+                        console.log('DATA DATA DATA', data.result);
+                        if (data.result === "success") {
+                            Swal.fire({
+                                title: data.title,
+                                type: data.result,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', listarProyecto); 
+                            });
+                        } else if (data.result === "errorField") {
+                            Swal.fire({
+                                title: data.title,
+                                text: data?.text + ": " + data?.error_message,
+                                type: "error",
+                            })
+                        } else if (data.result === "error") {
+                            var element = document.querySelector(`[name="${data.field}"]`);
+                                if (element){
+                                    element.focus();
+                                }
+                            updateErrorMessage(element, data.title);
+                            $('button[type="submit"]').prop("disabled", true);
+                        }
+                    }
+                });
+            }
+        });
+
+        /*if ($('#existeSosi').val() == 'none'){
+            Swal.fire({
+                title: 'Error: SOSI no existe',
+                text: 'Cree un SOSI para este proyecto',
+                type: 'error',
+                allowOutsideClick: false
+            }).then(() => {
+                window.location.href = '{% url "adicionar_sosi" form.pk %}';
+            });
+        }*/
+
+{/* VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO */}
+
+</script>
+{% endblock %}

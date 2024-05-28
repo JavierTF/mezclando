@@ -44,17 +44,17 @@
                 Nombre
             </th>
             <th>
-                Entidad
+                Entidad que otorga el reconocimiento
             </th>
             <th>
-                Fecha entrega
+                Fecha de entrega
             </th>
             <th>
                 Ubicación de archivo (ruta relativa)
             </th>
-            <th>
+            {% comment %} <th>
                 Activo
-            </th>
+            </th> {% endcomment %}
         </tr>
         </thead>
         <tbody>
@@ -75,17 +75,17 @@
                 <td>
                     {{ lt.archivo }}
                 </td>  
-                <td>
+                {% comment %} <td>
                     {% if lt.activo %}
                         Sí
                     {% else %}
                         No
                     {% endif %}
-                </td>  
+                </td>   {% endcomment %}
             </tr>
         {% endfor %}
         <tr id="total">
-            <td colspan="5">
+            <td colspan="4">
                 <b>Total</b>
             </td>
             <td style="text-align: right;">

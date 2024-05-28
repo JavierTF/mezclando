@@ -3,10 +3,12 @@
 {% block estado_entrada %}
     active
 {% endblock %}
-
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
-
+{% block menu_nomencladores_proyectos2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos2_active %} active {% endblock %}
+{% block menu_nomencladores_proyectos %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos_active %} active {% endblock %}
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -151,7 +153,7 @@ left: 24px !important;
                                     {% endif %}
                                     {% if perms.SISGDDO.change_estado_entrada %}
                                     <a href="{% url 'modificar_estado_entrada' lt.pk %}"
-                                        class="btn btn-sm btn-primary" title="modificar">
+                                        class="btn btn-sm btn-primary" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     </span>

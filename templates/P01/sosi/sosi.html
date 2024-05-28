@@ -11,21 +11,56 @@
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
 
+{% block menu_p01 %}
+    menu-open
+{% endblock %}
+{% block menu_p01_active %}
+    active
+{% endblock %}
+{% block menu_gestion_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_gestion_proyectos_active %}
+    active
+{% endblock %}
+{% block menu_proyectos %}
+    menu-open
+{% endblock %}
+{% block menu_proyectos_active %}
+    active
+{% endblock %}
+{% block gestion_proyectos %}
+    active
+{% endblock %}
+{% block proyectos %}
+    active
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar SOSI</h1>
+                    <h1 class="m-0 text-dark">Listar SOSI </h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la innovación</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de proyectos</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">SOSI.</li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_sosi' %}">SOSI</a></li>
+                            <li class="breadcrumb-item active">Listar</li>
                         {% endblock %}
                     </ol>
+                    {% comment %} <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_proyecto' %}">P01 / Proyecto</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol> {% endcomment %}
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -33,75 +68,6 @@
 {% endblock %}
 {% block miestilo %}
 <style>
-.btn-primary-transparent{
-    color: #007bff;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
-    }
-
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
-
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
 </style>
 {% endblock %}
 
@@ -110,14 +76,13 @@ left: 24px !important;
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    {% comment %} <div class="card-header">
-                        <h3 class="card-title">Listado de SOSI </h3>
-                        {% if perms.SISGDDO.add_sosi %}
-                        <a href="{% url 'adicionar_sosi' 0 %}" class="btn btn-primary fa-pull-right">
-                            <span class="fa fa-plus"> Adicionar </span>
+                    {% if perms.xavi.view_proyecto %}
+                    <div class="card-header">
+                        <a href="{% url 'listar_proyecto' %}" class="btn btn-primary fa-pull-right">
+                            Listado de proyectos
                         </a>
-                        {% endif %}
-                    </div> {% endcomment %}
+                    </div>
+                    {% endif %}
                     <!-- /.card-header -->
 
                     <div class="card-body">
@@ -128,7 +93,7 @@ left: 24px !important;
                                     Número
                                 </th>
                                 <th>
-                                    Consecutivo
+                                    Proyecto
                                 </th>
                                 <th>
                                     Num. salva
@@ -137,19 +102,19 @@ left: 24px !important;
                                     Código
                                 </th>
                                 <th>
-                                    Formato
+                                    Ubicación
                                 </th>
                                 <th>
-                                    Área
+                                    Recibido por
                                 </th>
                                 <th>
-                                    Fecha de entrega
+                                    Entregado por
                                 </th>
                                 <th>
                                     Año
                                 </th>
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -161,60 +126,43 @@ left: 24px !important;
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ lt.consecutivo.nombre_proyecto }}
+                                        {{ lt.proyecto.nombre_proyecto }}
                                     </td>
                                     <td>
                                         {{ lt.numero_salva }}
                                     </td>
                                     <td>
-                                        {{ lt.consecutivo.codigo }}
+                                        {{ lt.proyecto.codigo }}
                                     </td>
                                     <td>
-                                        {% if lt.consecutivo.formato > 0 %}
-                                            {% for formato in lt.consecutivo.formato.all %}
-                                                {{ formato }} {% if not forloop.last %} - {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                        -----
-                                        {% endif %}
+                                        {{ lt.ubicacion_salva }}
                                     </td>                                    
                                     <td>
-                                        {{ lt.consecutivo.area }}
+                                        {{ lt.recibe.first_name }} {{ lt.recibe.last_name }}
                                     </td>
                                     <td>
-                                        {{ lt.consecutivo.fecha_entrada }}
+                                        {{ lt.especialista.first_name }} {{ lt.especialista.last_name }}
                                     </td>   
                                     <td>
-                                        {{ lt.anno }}
+                                        {{ lt.fecha|date:"Y" }}
                                     </td>                                   
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_sosi %} 
-                                    <label>
-                                        <form action="{% url 'act_desactsosi' lt.id %}" method="POST" class="form-activate">
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.view_sosi %}
+                                    {% if perms.xavi.view_sosi %}
                                     <a href="{% url 'detalle_sosi' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}                                     
-                                    {% if perms.SISGDDO.change_sosi %}
+                                    {% if perms.xavi.change_sosi %}
                                     <a href="{% url 'modificar_sosi' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_sosi %}
+                                    {% if perms.xavi.delete_sosi %}
                                         <a href="{% url 'eliminar_sosi' lt.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 

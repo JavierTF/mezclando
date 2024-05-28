@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td class="image-employee-container">
+                    </td>
+                    <td>
+                        <h3 style="color: black; font-weight: bold">{{ model.get_full_name }}</h3>
+                        <p style="color: black; font-weight: bold">Identificación: {{ model.identification }}</p>
+                        <p class="text-left" style="color: black; font-weight: bold">Cargo: {{ model.position }}</p>
+                    </td>
+                    <td class="text-right">
+                        <p>{% now "d-m-Y" %}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="row col-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th class="text-center">Fecha Inicio</th>
+                            <th class="text-center">Fecha Terminación</th>
+                            <th class="text-center">Imagen</th>
+                            <th class="text-center">Planilla</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">Reserva: {% if model.info.is_reserve %} SI {% else %} NO {% endif %}</td>
+                            <td class="text-center">{{ model.info.init_date_reserve|date:"Y-m-d"|default:"-" }}</td>
+                            <td class="text-center">{{ model.info.finish_date_reserve|date:"Y-m-d"|default:"-" }}</td>
+                            <td class="text-center">
+                                {% if model.info.image_reserve %}
+                                <a href="{{ model.info.image_reserve.url }}" target="_blank">{{ model.info.image_reserve }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if model.info.spreadsheet_reserve %}
+                                <a href="{{ model.info.spreadsheet_reserve.url }}" target="_blank">{{ model.info.spreadsheet_reserve }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">Cuadro: {% if model.info.is_executive %} SI {% else %} NO {% endif %}</td>
+                            <td class="text-center">{{ model.info.init_date_executive|date:"Y-m-d"|default:"-" }}</td>
+                            <td class="text-center">{{ model.info.finish_date_executive|date:"Y-m-d"|default:"-" }}</td>
+                            <td class="text-center">
+                                {% if model.info.image_executive %}
+                                <a href="{{ model.info.image_executive.url }}" target="_blank">{{ model.info.image_executive }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if model.info.spreadsheet_executive %}
+                                <a href="{{ model.info.spreadsheet_executive.url }}" target="_blank"></a>{{ model.info.spreadsheet_executive }}</a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                    <p>Elaborado por: {{ owner.get_full_name }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

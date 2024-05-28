@@ -26,18 +26,27 @@
                 </td>
                 <td>
                     <span class="input-group">
-                    {% if perms.complaints.change_wayofreception %}
+                   
+                    <label>
+                        <form action="{% url 'complaints:activate_reception' model.id %}" method="POST" class="form-activate">
+                            {% csrf_token %}
+                            <span style="display: none">{{ model.active }}</span>
+                            <input type="checkbox" name="activate" {% if model.active %} checked {% endif %} class="checkbox-activate"/>
+                        </form>
+                        <div class="switch {% if model.active %} switchOn {% endif %}">
+                        </div>
+                    </label>
+                  
                         <a href="{% url 'complaints:update_reception' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.complaints.delete_wayofreception %}
+                   
                         <a href="#" model-url="{% url 'complaints:delete_reception' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_reception" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                  
                     </span>
                 </td>
             </tr>

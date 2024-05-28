@@ -46,20 +46,54 @@ label.required::after {
                             <form id="form_create_complaint" class="form-horizontal" method="post" action="{% url 'complaints:create_complaint' %}">
                                 {% csrf_token %}
                                 <div class="row form-body">
-                                    {% for field in form %}
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label">{{ field.label_tag }}</label>
-                                                <div class="input-content">
-                                                    {{ field }}
-                                                    <small class="text-red">{{ field.errors }}</small>
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.reception_date.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.reception_date }}
+                                                <small class="text-red">{{ form.reception_date.errors }}</small>
                                             </div>
                                         </div>
-                                    {%  endfor %}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.client.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.client }}
+                                                <small class="text-red">{{ form.client.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.process.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.process }}
+                                                <small class="text-red">{{ form.process.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.way_of_reception.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.way_of_reception }}
+                                                <small class="text-red">{{ form.way_of_reception.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.reason.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.reason }}
+                                                <small class="text-red">{{ form.reason.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr>
-                                <h2>Seguimiento</h2>
+                                <!-- <h2>Seguimiento</h2>
                                 <div class="row">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -99,11 +133,11 @@ label.required::after {
                                             <button id="add_action" type="button" class="btn btn-info btn-sm">{% trans 'Add' %}</button>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-actions fluid">
                                     <div class="col-md-offset-3 col-md-9">
                                         <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
-                                        <a href="{% url 'complaints:list_complaints' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                        <a href="{% url 'complaints:list_complaints' %}" type="button" class="btn btn-danger">Cancelar</a>
                                     </div>
                                 </div>
                             </form>

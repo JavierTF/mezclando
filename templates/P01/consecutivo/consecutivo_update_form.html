@@ -1,12 +1,12 @@
 {% extends 'P01/consecutivo/consecutivo.html' %}
 {% load static %}
 {% comment %} {% load staticfiles %} {% endcomment %}
-<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'django_select2/django_select2.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
-<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'assets/plugins/bootstrap-fileinput/bootstrap-fileinput.css' %}"></script>
-<script src="{% static 'assets/plugins/bootstrap-fileinput/bootstrap-fileinput.js' %}"></script>
-<script src="{% static 'assets/dist/js/csrf.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap-fileinput/bootstrap-fileinput.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/dist/js/csrf.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
     <title>SISGEPO | Modificar Consecutivo</title>
@@ -160,17 +160,16 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="control-label"><label for="id_jefe_proyecto">Jefe de proyecto*:</label></label>
-                                        <div>
-                                            <select name="jefe_proyecto" class=" form-control texto select2" autocomplete="on" required id="id_jefe_proyecto">
+                                        <label class="control-label"><label for="id_employee">Jefe de proyecto*:</label></label>
+                                        <div> 
+                                            <select name="employee" class=" form-control texto select2" autocomplete="on" required id="id_employee">
                                                 {% for option in ttrab %}
                                                     <option value="{{ option.id }}"
-                                                        {% if option.id == form.trabajador.id %} selected {% endif %}>
-                                                        {{ option.nombre }} {{ option.primer_apellido }} {{ option.segundo_apellido }}
+                                                        {% if option.id == form.employee.id %} selected {% endif %}>
+                                                        {{ option.prefix }} {{ option.first_name }} {{ option.last_name }}
                                                     </option>
                                                 {% endfor %}    
-                                        
-                                        </select>
+                                            </select>
                                             <small class="text-red"></small>
                                         </div>
                                     </div>
@@ -307,7 +306,7 @@
                                     <div class="form-group col-md-12">
                                         <label class="control-label"><label for="id_costo">Aprobación del Consejo:</label></label>
                                         <div>
-                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" id="id_aprobacion_consejo" value="{% if form.observacion %}{{ form.aprobacion_consejo }}{% endif %}">
+                                            <input type="text" name="aprobacion_consejo" class="form-control texto" placeholder="Introduzca el acuerdo" id="id_aprobacion_consejo" value="{% if form.aprobacion_consejo %}{{ form.aprobacion_consejo }}{% endif %}">
                                             <small class="text-red"></small>
                                         </div>
                                     </div>
@@ -358,6 +357,11 @@
 {% block script %}
 
     <script type="application/javascript">
+        {% comment %} var observacionTextarea = document.getElementById('id_observacion');
+
+        observacionTextarea.addEventListener('change', function () {
+            this.value = this.value.trim();
+        }); {% endcomment %}
 
 //VALIDACION CAMPOS VACIOS
         $('#id_codigo').bind('focusout',function(){
@@ -402,8 +406,8 @@
             validate_select($('#id_area'), e);
         });
 
-        $('#id_jefe_proyecto').on('change', function(e){
-            validate_select($('#id_jefe_proyecto'), e);
+        $('#id_employee').on('change', function(e){
+            validate_select($('#id_employee'), e);
         });
 
         $('#id_fuente_financiamiento').on('change', function(e){
@@ -566,29 +570,24 @@
                     data: form_data,
                     processData: false,
                     contentType: false,
-                    success: function (data, status)
-                    {
-                        window.location.replace(listarConsecutivo);
-                    },
-                    error: function (xhr, desc, err)
-                    {
-                        if (response.result == 'error'){
-                            Toast.fire({
-                                type: 'error',
-                                title: response.message,
-                            });
-                        }      
-                        $('button[type="submit"]').prop("disabled", false);      
-                    },
-                    always: function (response){
-                        if (response.result == 'error'){
-                            Toast.fire({
-                                type: 'error',
-                                title: response.message,
-                            });
-                        }
-                        if (response.result == 'success'){
+                    success: function (data, status) {
+                        if (data.result == 'success') {
                             window.location.replace(listarConsecutivo);
+                        }
+                    },
+                    error: function (xhr, desc, err) {
+                        Toast.fire({
+                            type: 'error',
+                            title: 'Hubo un error en la solicitud.',
+                        });
+                        $('button[type="submit"]').prop("disabled", false);
+                    },
+                    complete: function (data) {
+                        if (data.responseJSON && data.responseJSON.result == 'error') {
+                            Toast.fire({
+                                type: 'error',
+                                title: data.responseJSON.message,
+                            });
                         }
                         $('button[type="submit"]').prop("disabled", false);
                     }

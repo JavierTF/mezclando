@@ -11,6 +11,9 @@ class UserApp(User):
                               null=True, default='foto/userDefault1.png')
     referUser = models.UUIDField(null=True)
     fa2 = models.BooleanField(verbose_name="2FA", default=False)
+    notificado = models.BooleanField(default = False, verbose_name = "notificado*")
+    fecha_frase = models.DateTimeField(verbose_name="Fecha de última frase'", null = True)
+    frase = models.CharField(max_length = 255, verbose_name = "frase", null = True)
 
     def __str__(self):
         return str(self.username)

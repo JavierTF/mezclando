@@ -44,36 +44,171 @@ label.required::after {
                             <form id="form_update_employee" class="form-horizontal" method="post" action="{% url 'base:update_employee' instance.id %}"  enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="row form-body">
-                                    {% for field in form %}
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label">{{ field.label_tag }}</label>
-                                                <div class="input-content">
-                                                    {{ field }}
-                                                    <small class="text-red">{{ field.errors }}</small>
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.scientific_category.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.scientific_category }}
+                                                <small class="text-red">{{ form.scientific_category.errors }}</small>
                                             </div>
                                         </div>
-                                    {%  endfor %}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.first_name.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.first_name }}
+                                                <small class="text-red">{{ form.first_name.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.last_name.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.last_name }}
+                                                <small class="text-red">{{ form.last_name.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.identification.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.identification }}
+                                                <small class="text-red">{{ form.identification.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.position.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.position }}
+                                                <small class="text-red">{{ form.position.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.image.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.image }}
+                                                <small class="text-red">{{ form.image.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form.active.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form.active }}
+                                                <small class="text-red">{{ form.active.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="row form-body">
-                                    {% for field in form_info %}
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label">{{ field.label_tag }}</label>
-                                                <div class="input-content">
-                                                    {{ field }}
-                                                    <small class="text-red">{{ field.errors }}</small>
-                                                </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.is_reserve.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.is_reserve }}
+                                                <small class="text-red">{{ form_info.is_reserve.errors }}</small>
                                             </div>
                                         </div>
-                                    {%  endfor %}
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.init_date_reserve.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.init_date_reserve }}
+                                                <small class="text-red">{{ form_info.init_date_reserve.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.finish_date_reserve.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.finish_date_reserve }}
+                                                <small class="text-red">{{ form_info.finish_date_reserve.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.image_reserve.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.image_reserve }}
+                                                <small class="text-red">{{ form_info.image_reserve.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.spreadsheet_reserve.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.spreadsheet_reserve }}
+                                                <small class="text-red">{{ form_info.spreadsheet_reserve.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row form-body">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.is_executive.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.is_executive }}
+                                                <small class="text-red">{{ form_info.is_executive.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.init_date_executive.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.init_date_executive }}
+                                                <small class="text-red">{{ form_info.init_date_executive.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.finish_date_executive.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.finish_date_executive }}
+                                                <small class="text-red">{{ form_info.finish_date_executive.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.image_executive.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.image_executive }}
+                                                <small class="text-red">{{ form_info.image_executive.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label">{{ form_info.spreadsheet_executive.label_tag }}</label>
+                                            <div class="input-content">
+                                                {{ form_info.spreadsheet_executive }}
+                                                <small class="text-red">{{ form_info.spreadsheet_executive.errors }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="form-actions fluid">
                                     <div class="col-md-offset-3 col-md-9">
                                         <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
-                                        <a href="{% url 'base:employees' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                        <a href="{% url 'base:employees' %}" type="button" class="btn btn-danger">Cancelar</a>
                                     </div>
                                 </div>
                             </form>
@@ -85,5 +220,9 @@ label.required::after {
     </section>
 {% endblock %}
 {% block script %}
-    <script src="{% static 'base/js/employees/update.js' %}" type="text/javascript"></script>
+    <script>
+        const employee_id = '{{ instance.id }}';
+        const validate_url = '{% url "base:validate_employee" %}';
+    </script>
+    <script src="{% static 'base/js/employees/updates.js' %}" type="text/javascript"></script>
 {% endblock %}

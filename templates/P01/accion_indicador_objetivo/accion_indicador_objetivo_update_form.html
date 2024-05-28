@@ -1,10 +1,10 @@
 {% extends 'P01/accion_indicador_objetivo/accion_indicador_objetivo.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
-    <title>SISGEPO | Modificar Acción de Indicador de Objetivo</title>
+    <title>SISGEPO | Modificar Tarea de Objetivo de trabajo</title>
 {% endblock %}
 
 {% block wrapper %}
@@ -12,14 +12,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Modificar Acción de Indicador de Objetivo</h1>
+                    <h1 class="m-0 text-dark">Modificar Tarea de Objetivo de trabajo</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_accion_indicador_objetivo' %}">Acción de Indicador de Objetivo</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_accion_indicador_objetivo' %}">Tarea de Objetivo de trabajo</a></li>
                             <li class="breadcrumb-item active">Modificar </li>
                         {% endblock %}
                     </ol>
@@ -40,53 +41,173 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'modificar_accion_indicador_objetivo' objeto.id %}"
+                        formsuccess="{% url 'listar_accion_indicador_objetivo' %}"
+                    >
                         {% csrf_token %}
                         <div class="form-body">
-                            <div class="form-group col-md-1">
-                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
-                                <div>
-                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" {% if objeto.activo %} checked {% endif %}>
-                                    <small class="text-red"></small>
-                                </div>                                
-                            </div>  
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_nombre">Nombre*:</label></label>
-                                <div>
-                                    <textarea name="nombre" cols="40" rows="4" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre">{% if objeto.nombre %} {{ objeto.nombre }} {% endif %}</textarea>
-                                    <small class="text-red"></small>
+                            <div class="row">
+                                <div class="form-group col-md-1">
+                                    <label class="control-label"><label for="id_nombre">Código:</label></label>
+                                    {% if objeto.codigo %}
+                                        <p>{{ objeto.codigo }}</p>
+                                    {% else%}
+                                        <p>--------</p>
+                                    {% endif %}
+                                    {% comment %} <div>
+                                        <textarea name="nombre" cols="40" rows="1" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre">{{ objeto.nombre }}</textarea>
+                                        <small class="text-red"></small>
+                                    </div> {% endcomment %}
                                 </div>
-                            </div>  
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_indicador">Indicador*:</label></label>
-                                <div>
-                                    <select name="indicador" class=" form-control texto select2" autocomplete="on" id="id_indicador"                                  
-                                    >
-                                        {% comment %} {% if ind %}
-                                            <option value="{{ ind.id }}" selected>{{ ind.nombre }}</option> {% endcomment %}
-                                        {% comment %} {% else %}                                     {% endcomment %}
-                                            <option value="">Escriba y seleccione...</option>                                        
-                                            {% for option in tind %}
-                                                <option value="{{ option.id }}" {% if objeto.indicador.id == option.id %} selected {% endif %}>{{ option.nombre }}</option>
-                                            {% endfor %} 
-                                        {% comment %} {% endif %} {% endcomment %}
-                                    </select>
-                                    <small class="text-red"></small>
+                                <div class="form-group col-md-11">
+                                    <label class="control-label"><label for="id_nombre">Objetivo de trabajo:</label></label>
+                                    {% if objeto.indicador %}
+                                        <p>{{ objeto.indicador.nombre }}</p>
+                                    {% else%}
+                                        <p>--------</p>
+                                    {% endif %}
+                                    {% comment %} <div>
+                                        <textarea name="nombre" cols="40" rows="1" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre">{{ objeto.nombre }}</textarea>
+                                        <small class="text-red"></small>
+                                    </div> {% endcomment %}
                                 </div>
-                            </div> 
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_area">Área*:</label></label>
-                                <div>
-                                    <select name="area" class=" form-control texto select2" autocomplete="on" required id="id_area">
-                                        <option value="">Escriba y seleccione...</option>                                        
-                                        {% for option in tarea %}
-                                            <option value="{{ option.id }}" {% if objeto.area.id == option.id %} selected {% endif %}>{{ option.nombre }}</option>
-                                        {% endfor %} 
-                                    </select>
-                                    <small class="text-red"></small>
+                            </div>
+                            <div class="row">                                
+                                <div class="form-group col-md-6">
+                                    <label class="control-label"><label for="id_nombre">Nombre*:</label></label>
+                                    <div>
+                                        <textarea name="nombre" cols="40" rows="1" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre">{{ objeto.nombre }}</textarea>
+                                        <small class="text-red"></small>
+                                    </div>
                                 </div>
-                            </div>    
+                                <div class="form-group col-md-6">
+                                    <label class="control-label"><label for="id_area">Área responsable*:</label></label>
+                                    <div>
+                                        <select name="area" class=" form-control texto select2" autocomplete="on" required id="id_area">
+                                            <option value="">Escriba y seleccione...</option>
+                                            {% for option in tarea %}
+                                                <option value="{{ option.id }}"
+                                                {% if option.id == mydesc.area.id %} selected {% endif %}>{{ option.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>
+                                {% if perms.xavi.add_objetivo or perms.xavi.change_objetivo or perms.xavi.change_accion_indicador_objetivo  %}
+                                <div class="col-md-12">
+                                    <label class="control-label"><label for="id_descripcion">{% if last_desc.descripcion %} Última descripción: <span style="font-weight: normal"><em>(por {{ last_desc.area.nombre }})</em></span> {% else %} Descripción: {% endif%}</label></label>
+                                    <div> 
+                                        <textarea name="descripcion" cols="40" rows="4" class="form-control" autocomplete="on" placeholder="Introduzca la descripción" maxlength="250" id="id_descripcion">{% if last_desc.descripcion %} {{ last_desc.descripcion }} {% endif%}</textarea>
+                                        <small class="text-red"></small>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>   
                         </div>
+                        <br />
+                        <hr />
+                        <div class="col-md-12">
+                            <h6 style="margin-top: 4px; margin-bottom: 15px;"><strong>Listado de descripciones:</strong></h6>
+                        </div>
+                        <div style="padding-top: 20px;">  
+                            {% block content2 %}
+                            <section class="content">
+                                {% comment %} <div class="row"> {% endcomment %}
+                                    {% comment %} <div class="col-12"> {% endcomment %}
+                                        <div class="card">
+                                            {% comment %} <div class="card-header">
+                                                <h3 class="card-title">Listado de Entrada de Proyecto </h3>
+                                                {% if perms.xavi.add_entrada_proyecto %}
+                                                <a href="{% url 'adicionar_entrada_proyecto' %}" class="btn btn-primary fa-pull-right">
+                                                    <span class="fa fa-plus"> Adicionar </span>
+                                                </a>
+                                                {% endif %}
+                                            </div> {% endcomment %}
+                                            <!-- /.card-header -->
+                        
+                                            <div class="card-body">
+                                                <table id="example1" class="table table-bordered table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Número
+                                                        </th>
+                                                        <th>
+                                                            Fecha
+                                                        </th>
+                                                        <th>
+                                                            Área
+                                                        </th>
+                                                        <th>
+                                                            Descripción
+                                                        </th>
+                                                        <th>
+                                                            Acciones
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% comment %} {% c = 0 %} {% endcomment %}
+                                                    {% for lt in tdesc %}
+                                                        <tr id="{{ lt.id }}">
+                                                            <td>
+                                                                {{ forloop.counter }}
+                                                            </td>
+                                                            <td style="width: 160px;">
+                                                                {{ lt.fecha_creacion }}
+                                                            </td>
+                                                            <td style="width: 180px;">
+                                                                {% if lt.area.id == mydesc.area.id %} 
+                                                                    <li style="list-style-type: '\2714';">{{ lt.area.nombre }}</li>
+                                                                {% else %}
+                                                                    {{ lt.area.nombre }}
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                {% if lt.descripcion %} {{ lt.descripcion}} {% else %} ----- {% endif %}
+                                                            </td> 
+                                                            <td>
+                                                                <span class="input-group">
+                                                                {% if perms.xavi.change_entrada_proyecto %}
+                                                                <a href="{% url 'modificar_entrada_proyecto' lt.id %}"
+                                                                    class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
+                                                                <i class="fa fa-edit"></i>
+                                                                </a>
+                                                                {% endif %}
+                                                                {% if perms.xavi.delete_entrada_proyecto %}
+                                                                    <a href="{% url 'eliminar_entrada_proyecto' lt.pk %}"
+                                                                        class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
+                                                                    <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                {% endif %} 
+                                                            </span>
+                                                            </td>
+                                                        </tr>
+                                                        {% comment %} {% c = c + 1 %} {% endcomment %}
+                                                    {% endfor %}
+                                                    </tbody>
+                        
+                                                </table>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.card -->
+                        
+                                        <!-- /.card -->
+                                    {% comment %} </div> {% endcomment %}
+                                    <!-- /.col -->
+                                {% comment %} </div> {% endcomment %}
+                                <!-- /.row -->
+                            </section>
+                            {% endblock %} 
+                        </div>
+                    <br />
                     {% block error %}
                     {% endblock %}{% block correcto %}
                     {% endblock %}
@@ -94,11 +215,11 @@
                          <div class="form-actions fluid">
                             <div class="col-md-offset-3 col-md-9">
                                 <button type="submit" class="btn btn-primary">Guardar</button>
-                                <a href="{% url 'listar_indicador_objetivo' %}" type="button" class="btn btn-danger">Cancelar</a>
+                                <a href="{% url 'listar_accion_indicador_objetivo' %}" type="button" class="btn btn-danger">Cancelar</a>
                             </div>
                         </div>
                         {% endblock %}
-                    </form>
+                    </form>                    
                     <!-- END FORM-->
                     </div><!-- /.card-body -->
                     </div><!-- /.card -->
@@ -111,22 +232,64 @@
 
     <script type="application/javascript">
 
-//VALIDACION CAMPOS VACIOS
-$('#id_nombre').bind('focusout',function(){
-    validate_campos_vacios($(this));
-});
-
-$('#id_indicador').on('change', function(e){
-    validate_select($('#id_indicador'), e);
-});
-
-$('#id_area').on('change', function(e){
-    validate_select($('#id_area'), e);
-});
-
-{% comment %} {% if ind %} $('#id_indicador').prop('disabled', 'true'); {% endif %} {% endcomment %}
-
-   //VALIDACION SOLO LETRAS INCLUYENDO Ñ Y ñ
+        $('#id_nombre').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });
+        
+        $('#id_area').on('change', function(e){
+            validate_select($('#id_area'), e);
+        });
+        
+        function submitForm(formulario) {
+            console.log('first first first')
+            formulario.on("submit", function (e) {
+                e.preventDefault();
+                var href = formulario.attr("formaction");
+                var listar = formulario.attr("formsuccess");
+                var data = formulario.serializeArray();
+          
+                if ($(".is-invalid").length > 0) {
+                    return false;
+                } else {
+                    $('button[type="submit"]').prop("disabled", true);
+          
+                    var form = document.getElementById(formulario.attr("id"));
+                    var form_data = new FormData(form);
+                    var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+                    form_data.append("csrfmiddlewaretoken", csrf_token);
+          
+                    $.ajax({
+                        url: formulario.attr("formaction"),
+                        type: formulario.attr("method"),
+                        dataType: "JSON",
+                        data: form_data,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.result == "success") {
+                                Swal.fire({
+                                    title: data.title,
+                                    type: data.result,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then((result) => {
+                                    $(location).attr('href', listar); 
+                                });
+                            } else if (data.result == "error") {
+                                var element = document.querySelector(`[name="${data.field}"]`);
+                                if (element){
+                                    element.focus();
+                                }
+                                updateErrorMessage(element, data.title);
+                                $('button[type="submit"]').prop("disabled", true);
+                            }
+                        },
+                    });
+                }
+            });
+          }
+          
+          submitForm($("#formulario"));
 
 </script>
 {% endblock %}

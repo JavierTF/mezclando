@@ -12,9 +12,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.encoding import force_str
 from django.views.generic import View
-
-
-
+import random
+import string
+import os
+from Tesis_Citmatel import settings
+# from SISGDDO.views_sisgddo import handle_exceptions
 
 class RequiredSecurityMixin(object):
     """
@@ -89,7 +91,8 @@ def register_logs(request, model, object_id, object_unicode, action):
             object_id=object_id,
             object_repr=object_unicode,
             change_message=get_client_ip(request),
-            # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+            # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar,
+            # 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 salvar Base de datos, 12 restaurar Base de datos
             action_flag=action
         )
     else:
@@ -99,7 +102,8 @@ def register_logs(request, model, object_id, object_unicode, action):
             object_id=object_id,
             object_repr=object_unicode,
             change_message=get_client_ip(request),
-            # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 base de datos
+            # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar,
+            # 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 salvar base de datos, 12 restaurar Base de datos
             action_flag=action
         )
 
@@ -379,6 +383,14 @@ def validate_passport_number(value):
     if not m:
         raise ValidationError(u'Número de pasaporte no válido.')
 
+def generate_random_text():
+    # Caracteres permitidos (letras y números)
+    characters = string.ascii_letters + string.digits
+
+    # Generar texto aleatorio de tres dígitos
+    random_text = ''.join(random.choice(characters) for _ in range(3))
+
+    return random_text
 
 def validate_cheque(value):
     """
@@ -394,11 +406,36 @@ def delete_address_db(address):
     fich.writelines(["Cleaned"])
     fich.close()
 
+# @handle_exceptions
+def exist_db_root():
+    try:
+        path = os.path.join(settings.MEDIA_ROOT + '/db/')
+        isExist = os.path.exists(path)
+
+        if not isExist:
+            os.makedirs(path)
+        
+        file_path = os.path.join(path, 'dblist.mytxt')
+
+        # if not os.path.exists(file_path):
+        #     with open(file_path, 'w') as db_file:
+        #         db_file.write('#LISTADO DE BASES DE DATOS SALVADAS\n')
+        if not os.path.exists(file_path):
+            open(file_path, 'a').close()
+
+        
+        return path
+    except Exception as e:
+        print(f'Error al chequear /media/db/ {e}')    
+
 def list_address_db():
-    fich = open("static/db/dblist.mytxt")
+    exist_db_root()
+        
+    fich = open("media/db/dblist.mytxt")
     lines = fich.readlines()
     fich.close()
     res = []
+    # print('lines lines', lines)
     if lines:
         for line in lines:
             parts = line.split("/")
@@ -413,24 +450,32 @@ def list_address_db():
 
 
 def save_address_dbs(address):
-    print('---address', address)
-    fich = open("static/db/dblist.mytxt")
-    lines = fich.readlines()
-    print('---lines', lines)
-    fich.close()
+    with open("media/db/dblist.mytxt", "r") as fich:
+        lines = fich.readlines()
+
     address = address + "\n"
+
     if address not in lines:
-        print('---llegue')        
-        if lines.__len__() == 0:
-            lines.append(address)
-        if lines.__len__() == 2:
-            delete_address_db(lines[1][0:-1])
-        if lines.__len__() > 0 or lines.__len__() < 3:
-            first = lines[0]
-            lines.clear()
-            lines.append(address)
-            lines.append(first)
-    fich = open("static/db/dblist.mytxt", "w")
-    fich.writelines(lines)
-    fich.close()
+        lines.append(address)
+                   
+            
+            
+    # if address not in lines:
+    #     if len(lines) == 0:
+    #         lines.append(address)
+    #         print('\n', 'len(lines)', len(lines), '\n')
+    #     elif len(lines) == 2:
+    #         delete_address_db(lines[1][0:-1])
+    #     elif 0 < len(lines) < 3:
+    #         first = lines[0]
+    #         lines.clear()
+    #         lines.append(address)
+    #         lines.append(first)
+
+    with open("media/db/dblist.mytxt", "w") as fich:
+        fich.writelines(lines)
+
+    with open("media/db/dblist.mytxt", "r") as fich:
+        content_after_write = fich.read()
+        print("Contenido después de escribir:", content_after_write)
 

@@ -1,10 +1,13 @@
-{% extends 'P01/accion_indicador_objetivo/accion_indicador_objetivo.html' %}
+{% extends 'P01/objetivo/objetivo.html' %}
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
-<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
 
 {% block page_title %}
-    <title>SISGEPO | Detalle de Acción de Indicador de Objetivo</title>
+    <title>SISGEPO | Detalle de Tarea de Objetivo de trabajo</title>
 {% endblock %}
 
 {% block wrapper %}
@@ -12,15 +15,16 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Modificar Acción de Indicador de Objetivo</h1>
+                    <h1 class="m-0 text-dark">Detalles de Tarea de Objetivo de trabajo.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active"><a href="{% url 'listar_accion_indicador_objetivo' %}">Acción de Indicador de Objetivo</a></li>
-                            <li class="breadcrumb-item active">Modificar </li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_accion_indicador_objetivo' %}">Tarea de Objetivo de trabajo</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -34,71 +38,81 @@
             <div class="col-12">
                 <div class="card">
                     {% comment %} <div class="card-header">
-                        <h3 class="card-title">Formulario de Indicador de Objetivo</h3>
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
                     </div> {% endcomment %}
                     <!-- /.card-header -->
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form id="formAddTarea" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_objetivo' %}">
                         {% csrf_token %}
                         <div class="form-body">
-                            <div class="form-group col-md-1">
-                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
-                                <div>
-                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" {% if objeto.activo %} checked {% endif %}>
-                                    <small class="text-red"></small>
-                                </div>                                
-                            </div>  
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_nombre">Nombre*:</label></label>
-                                <div>
-                                    <textarea name="nombre" cols="40" rows="4" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre">{% if objeto.nombre %} {{ objeto.nombre }} {% endif %}</textarea>
-                                    <small class="text-red"></small>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label class="control-label"><label for="id_fecha_definicion">Objetivo de trabajo:</label></label>
+                                    {% if objeto.indicador %}
+                                        <p>{{ objeto.indicador.nombre }}</p>
+                                    {% else %}
+                                        <p>-----------</p>
+                                    {% endif %}
                                 </div>
-                            </div>  
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_indicador">Indicador*:</label></label>
-                                <div>
-                                    <select name="indicador" class=" form-control texto select2" autocomplete="on" id="id_indicador"                                  
-                                    >
-                                        {% comment %} {% if ind %}
-                                            <option value="{{ ind.id }}" selected>{{ ind.nombre }}</option> {% endcomment %}
-                                        {% comment %} {% else %}                                     {% endcomment %}
-                                            <option value="">Escriba y seleccione...</option>                                        
-                                            {% for option in tind %}
-                                                <option value="{{ option.id }}" {% if objeto.indicador.id == option.id %} selected {% endif %}>{{ option.nombre }}</option>
-                                            {% endfor %} 
-                                        {% comment %} {% endif %} {% endcomment %}
-                                    </select>
-                                    <small class="text-red"></small>
+                                <div class="form-group col-md-2">
+                                    <label class="control-label"><label for="id_nombre">Código:</label></label>
+                                    {% if objeto.indicador %}
+                                        <p>{{ objeto.codigo }} del {{ objeto.indicador.objetivo.fecha_definicion|date:"Y" }}</p>
+                                    {% else %}
+                                        <p>-------</p>
+                                    {% endif %}
                                 </div>
-                            </div> 
-                            <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_area">Área*:</label></label>
-                                <div>
-                                    <select name="area" class=" form-control texto select2" autocomplete="on" required id="id_area">
-                                        <option value="">Escriba y seleccione...</option>                                        
-                                        {% for option in tarea %}
-                                            <option value="{{ option.id }}" {% if objeto.area.id == option.id %} selected {% endif %}>{{ option.nombre }}</option>
-                                        {% endfor %} 
-                                    </select>
-                                    <small class="text-red"></small>
+                                <div class="form-group col-md-10">
+                                    <label class="control-label"><label for="id_nombre">Nombre:</label></label>
+                                    <p>{{ objeto.nombre }}</p>
                                 </div>
-                            </div>    
-                        </div>
+                                <div class="form-group col-md-12">
+                                    <label class="control-label"><label for="id_fecha_definicion">Áreas responsables:</label></label>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px">#</th>
+                                                <th style="width: 280px">Área</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for descripcion in desc %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    {% if descripcion.area %}
+                                                        {{ descripcion.area.nombre }}
+                                                    {% else %}
+                                                        Sin asignar
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if descripcion.descripcion %}
+                                                        {{ descripcion.descripcion }}
+                                                    {% else %}
+                                                        ----------
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>                                       
+                        </div>    
                     {% block error %}
-                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                    {% block correcto %}
                     {% endblock %}
                         {% block botones %}
-                         <div class="form-actions fluid">
-                            <div class="col-md-offset-3 col-md-9">
-                                <a href="{% url 'listar_accion_indicador_objetivo' %}" type="button" class="btn btn-danger">Atrás</a>
-                            </div>
+                        <div class="col-md-offset-3 col-md-9">
+                            <a href="{% url 'listar_accion_indicador_objetivo' %}" type="button" class="btn btn-danger">Atrás</a>
                         </div>
                         {% endblock %}
-                    </form>
-                    <!-- END FORM-->
+                    </form><!-- END FORM-->
                     </div><!-- /.card-body -->
                     </div><!-- /.card -->
                  </div><!-- /.card -->
@@ -106,19 +120,8 @@
         </div>  <!-- /.row -->
 </section>
 {% endblock %}
+
 {% block script %}
-
-    <script type="application/javascript">
-
-//VALIDACION CAMPOS VACIOS
-$('#id_activo').prop('disabled', 'true');
-$('#id_nombre').prop('disabled', 'true');
-$('#id_area').prop('disabled', 'true');
-$('#id_indicador').prop('disabled', 'true');
-
-{% comment %} {% if ind %} $('#id_indicador').prop('disabled', 'true'); {% endif %} {% endcomment %}
-
-   //VALIDACION SOLO LETRAS INCLUYENDO Ñ Y ñ
-
+<script type="application/javascript">
 </script>
 {% endblock %}

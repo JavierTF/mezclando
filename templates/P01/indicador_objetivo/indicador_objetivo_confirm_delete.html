@@ -2,7 +2,29 @@
 {% comment %} {% load staticfiles %} {% endcomment %}
 {% load static %}
 {% block page_title %}
-    <title>SISGEPO | Eliminar Indicador de Objetivos</title>
+    <title>SISGEPO | Eliminar Objetivos de trabajo</title>
+{% endblock %}
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Eliminar Objetivo de trabajo.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_indicador_objetivo' %}">Objetivo de trabajo.</a></li>
+                            <li class="breadcrumb-item active">Eliminar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
 {% endblock %}
 {% block content %}
     <section class="content">
@@ -19,15 +41,20 @@
                     <!-- BEGIN FORM-->
                     <div class="alert">
 
-                    <h4>
+                    <h5 class="text-center">
                         ¿Está seguro que desea eliminar la información del indicador de objetivo <strong>{{ object.nombre |capfirst }}</strong>?
-                        La información no podrá restaurarse.
-                    </h4>
-                    <h5>Quizás desee desactivar la Entidad. Al desactivarla usted no la podrá utilizar pero no quedará eliminada. Esta opción es reversible.
-                        <a href="{% url 'listar_indicador_objetivo' %}" style="color: #007bff">Ir a desactivar indicador de objetivo</a> 
+                        <br />La información no podrá restaurarse.
                     </h5>
                     &nbsp;
-                    <form action="" method="post">{% csrf_token %}
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'eliminar_indicador_objetivo' object.id %}"
+                        formsuccess="{% url 'listar_indicador_objetivo' %}"
+                    >
+                        {% csrf_token %}
                         <p class="text-center">
                             <button type="submit" class="btn btn-danger">
                                 Borrar
@@ -53,5 +80,3 @@
     </section>
 
 {% endblock %}
-
-

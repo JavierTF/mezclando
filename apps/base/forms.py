@@ -1,6 +1,6 @@
 from django import forms
 from SISGDDO.models import Afectaciones
-from apps.base.models import Country, Entity, LogoEntity, Position, Employee, InfoEmployee, Process, Procedure
+from apps.base.models import Country, Entity, LogoEntity, Position, ScientificCategory, ProcessClassifier, Employee, InfoEmployee, Process, Procedure
 
 
 class CountryModelForm(forms.ModelForm):
@@ -45,18 +45,44 @@ class PositionModelForm(forms.ModelForm):
         }
 
 
+class ScientificCategoryModelForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = ScientificCategory
+        fields = ['name', 'prefix', 'active', ]
+        widgets = {
+            'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
+            'prefix': forms.TextInput(attrs={"class": "form-control", "placeholder": "Sigla"}),
+        }
+
+class ProcessClassifierModelForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = ProcessClassifier
+        fields = ['name', 'active', ]
+        widgets = {
+            'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
+        }
+
+
+
 class EmployeeModelForm(forms.ModelForm):
+    position = forms.ModelChoiceField(label="Cargo", queryset=Position.objects.all(), widget=forms.Select(attrs={"class": "form-control select2", "prompt": ""}), required=True)
+    
     required_css_class = 'required'
 
     class Meta:
         model = Employee
-        fields = ['prefix', 'first_name', 'last_name', 'identification', 'position', 'active', ]
+        fields = ['scientific_category', 'first_name', 'last_name', 'identification', 'position', 'image', 'active', ]
         widgets = {
-            'prefix': forms.TextInput(attrs={"class": "form-control", "placeholder": "Categoría científica"}),
+            'scientific_category': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
             'first_name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
             'last_name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Apellidos"}),
             'identification': forms.TextInput(attrs={"class": "form-control", "placeholder": "Identificación"}),
-            'position': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
+            'image': forms.FileInput(attrs={"accept": "image/*,"}),
+            # 'position': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
         }
 
 
@@ -72,8 +98,12 @@ class InfoEmployeeModelForm(forms.ModelForm):
         widgets = {
             'init_date_reserve': forms.TextInput(attrs={"class": "form-control", "placeholder": "fecha de inicio como reserva de cuadro"}),
             'finish_date_reserve': forms.TextInput(attrs={"class": "form-control", "placeholder": "fecha de terminación como reserva de cuadro"}),
+            'image_reserve': forms.FileInput(attrs={"accept": "image/*,"}),
+            'spreadsheet_reserve': forms.FileInput(attrs={"accept": "application/pdf,application/msword"}),
             'init_date_executive': forms.TextInput(attrs={"class": "form-control", "placeholder": "fecha de inicio como cuadro"}),
             'finish_date_executive': forms.TextInput(attrs={"class": "form-control", "placeholder": "fecha de terminación como cuadro"}),
+            'image_executive': forms.FileInput(attrs={"accept": "image/*,"}),
+            'spreadsheet_executive': forms.FileInput(attrs={"accept": "application/pdf,application/msword"}),
         }
 
 
@@ -82,8 +112,9 @@ class ProcessModelForm(forms.ModelForm):
 
     class Meta:
         model = Process
-        fields = ['name', 'abbreviation', 'responsible', 'edition', 'revision', 'active', ]
+        fields = ['classifier', 'name', 'abbreviation', 'responsible', 'edition', 'revision', 'file', 'active', ]
         widgets = {
+            'classifier': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
             'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
             'abbreviation': forms.TextInput(attrs={"class": "form-control", "placeholder": "Código"}),
             'responsible': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
@@ -97,7 +128,7 @@ class ProcedureModelForm(forms.ModelForm):
 
     class Meta:
         model = Procedure
-        fields = ['process', 'name', 'abbreviation', 'edition', 'revision', 'file', 'active', ]
+        fields = ['process','abbreviation' ,'name' , 'edition', 'revision', 'file', 'active', ]
         widgets = {
             'process': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
             'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
@@ -107,20 +138,3 @@ class ProcedureModelForm(forms.ModelForm):
         }
 
 
-class AfectationModelForm(forms.ModelForm):
-    required_css_class = 'required'
-
-    class Meta:
-        model = Afectaciones
-        fields = ['numero', 'fecha_recepcion', 'propuesto', 'responsable', 'mesplaneado', 'fechacierre','observacionesactual','observacionesfutura','estado' ]
-        widgets = {
-            'numero': forms.NumberInput(attrs={"class": "form-control", "placeholder": "Numero"}),
-            'fecha_recepcion': forms.DateInput(attrs={"class": "form-control", "placeholder": "Fecha de Recepción"}),
-            'propuesto': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
-            'responsable': forms.Select(attrs={"class": "form-control select3", "prompt": ""}),
-            'mesplaneado': forms.DateInput(attrs={"class": "form-control", "placeholder": "Mes Planificado"}),
-            'fechacierre': forms.DateInput(attrs={"class": "form-control", "placeholder": "Fecha Cierre"}),
-            'observacionesactual': forms.TextInput(attrs={"class": "form-control", "placeholder": "Observacion Actual"}),
-            'observacionesfutura': forms.TextInput(attrs={"class": "form-control", "placeholder": "Observacion Futura"}),
-            'estado': forms.Select(attrs={"class": "form-control select4", "prompt":"Estado"}),
-        }

@@ -1,5 +1,5 @@
 from django.urls import path
-from apps.effectiveness.views import list_indicator, create_indicator, update_indicator, delete_indicator, get_measurers,\
+from apps.effectiveness.views import list_indicator, create_indicator, update_indicator, activate_indicator, delete_indicator, get_measurers,\
     get_indicators, list_effectiveness, tableall_effectiveness, details_effectiveness, create_effectiveness, create_semester, clone_semester, \
     update_effectiveness, delete_effectiveness, delete_semester, export_effectiveness, export_details_effectiveness, \
     verify_semester, reports_effectiveness, get_chartprocess_data, get_chartprocess_teacher_data, exportall_effectiveness
@@ -26,6 +26,7 @@ urlpatterns = [
     path('listar/indicadores/', list_indicator, name='indicators'),
     path('crear/indicador/', create_indicator, name='create_indicator'),
     path('modificar/indicador/<int:indicator_id>/', update_indicator, name='update_indicator'),
+    path('activar/indicador/<int:indicator_id>/', activate_indicator, name='activate_indicator'),
     path('eliminar/indicador/<int:indicator_id>/', delete_indicator, name='delete_indicator'),
 
     # Measurers

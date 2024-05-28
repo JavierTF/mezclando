@@ -12,6 +12,14 @@ if (typeof Swal == null){
     }) 
 }
 
+if (typeof COMPARISON_TYPES == null){
+  const COMPARISON_TYPES = {
+    MAYOR_IGUAL: "mayor_igual",
+    MENOR_IGUAL: "menor_igual",
+    MAYOR: "mayor",
+    MENOR: "menor",
+  };
+}
 
 // Para llenar los campos del modal a la hora de editar
 function toModal(pdesc, pabbr) {
@@ -141,33 +149,151 @@ function validate_email(node, dominio) {
   }    
 }
 
-function validate_only_text(node, event) {
-  if (
-    (event.charCode >= 65 && event.charCode <= 90) ||
-    (event.charCode >= 97 && event.charCode <= 122) ||
-    event.charCode == 225 ||
-    event.charCode == 44 ||
-    event.charCode == 233 ||
-    event.charCode == 237 ||
-    event.charCode == 243 ||
-    event.charCode == 250 ||
-    event.charCode == 209 ||
-    event.charCode == 241 ||
-    event.charCode == 32 ||
-    event.charCode == 13
-  ) {
-    // 13-> 'Enter' 32-> ' '
-    node.removeClass("is-invalid").addClass("is-valid");
-    node[0].nextElementSibling.textContent = "";
-    $('button[type="submit"]').removeAttr("disabled");
-  } else {
-    event.preventDefault();
-    node.removeClass("is-valid").addClass("is-invalid");
-    node[0].nextElementSibling.textContent = "Este campo solo acepta letras";
+function validar_tareas(selector, num) {
+  // Obtener el elemento select por su ID
+  var selectElement = document.querySelector(selector);
 
-    $('button[type="submit"]').prop("disabled", "true");
+  // Obtener el número de opciones dentro del select
+  var numberOfOptions = selectElement.options.length;
+
+  if (numberOfOptions <= num) {
+      // Deshabilitar el botón de submit y otros campos
+      $('button[type="submit"]').prop("disabled", true);
+      $('#id_objetivo').prop("disabled", true);
+      $('#id_nombre').prop("disabled", true);
+
+      // Actualizar el mensaje de error
+      updateErrorMessage(selectElement, "No quedan tareas sin asignar");
   }
 }
+
+// const show_error_message = function (element, message) {
+//   var x = element.closest('.input-content')[0].querySelector('small');
+//   x.innerHTML = message;
+// };
+
+// const hiden_error_message = function (element) {
+//   var x = element.closest('.input-content')[0].querySelector('small');
+//   x.innerHTML = '';
+// };
+
+function colorEstado(selector) {
+  const element = document.querySelector(selector); 
+
+  if (!element) {
+      console.error(`Elemento no encontrado con el selector: ${selector}`);
+      return;
+  }
+
+  const estado = element.innerHTML.toLowerCase().trim();
+
+  const rojo = ['atrasado', 'cancelado', '1. muy mal', '2. bastante mal', '3. regular', 'incumplido', '3', '2', '1', 'pendiente'];
+  const naranja = ['solicitado', 'reiniciado', 'interrumpido', '4. casi bien', 'tomado', '4', 'en proceso'];
+  const verde = ['aprobado', 'en fecha', 'terminado', 'adelantado', 'excelente', '5. muy bien', 'cumplido', '5', 'cumplido'];
+
+  if (verde.includes(estado)) {
+      element.style.backgroundColor = "#4fcd4f";
+  } else if (naranja.includes(estado)) {
+      element.style.backgroundColor = "rgb(235, 156, 58)";
+  } else if (rojo.includes(estado)) {
+      element.style.backgroundColor = "#f95858";
+  } else {
+      console.log(`Estado no reconocido: ${estado}`);
+  }
+}
+
+function validate_only_text(node, event) {
+  const validCharacters = [
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+      'á', ',', 'é', 'í', 'ó', 'ú', ' ', '\r', '\n', '\t', 'ñ', 'Ñ',
+  ];
+
+  if (validCharacters.includes(event.key)) {
+      node.removeClass("is-invalid").addClass("is-valid");
+      node[0].nextElementSibling.textContent = "";
+      $('button[type="submit"]').removeAttr("disabled");
+  } else {
+      event.preventDefault();
+      node.removeClass("is-valid").addClass("is-invalid");
+      node[0].nextElementSibling.textContent = "Este campo solo acepta letras";
+
+      $('button[type="submit"]').prop("disabled", true);
+  }
+}
+
+function updateErrorMessage(element, newText, invalidar=true) {
+  console.log('updateErrorMessage updateErrorMessage updateErrorMessage')
+  console.log('element', element)
+  console.log('newText', newText)
+  if (invalidar){
+    element.classList.add('is-invalid');
+  } else {
+    element.classList.remove('is-invalid');
+  }
+
+  // Verificar si el elemento es de tipo select
+  if (element.tagName.toLowerCase() === 'select') {
+    // Obtener el tercer hermano después del select
+    var smallSibling = element.nextElementSibling.nextElementSibling;
+  } else {
+    // Obtener el hermano siguiente del elemento
+    var smallSibling = element.nextElementSibling;
+  }
+
+  // Verificar si existe y actualizar el texto del small
+  if (smallSibling && smallSibling.tagName.toLowerCase() === 'small') {
+      smallSibling.textContent = newText;
+  }
+  // console.log('UPDATE', element)
+}
+
+
+/*function submitForm(formulario) {
+  console.log('first first first');
+  formulario.on("submit", function (e) {
+      e.preventDefault();
+      var href = formulario.attr("formaction");
+      var listar = formulario.attr("formsuccess");
+      var data = formulario.serializeArray();
+
+      if ($(".is-invalid").length > 0) {
+          return false;
+      } else {
+          $('button[type="submit"]').prop("disabled", true);
+
+          var form = document.getElementById(formulario.attr("id"));
+          var form_data = new FormData(form);
+          var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+          form_data.append("csrfmiddlewaretoken", csrf_token);
+
+          $.ajax({
+              url: formulario.attr("formaction"),
+              type: formulario.attr("method"),
+              dataType: "JSON",
+              data: form_data,
+              processData: false,
+              contentType: false,
+              success: function (data) {
+                  if (data.result == "success") {
+                      Swal.fire({
+                          title: data.title,
+                          type: data.result,
+                          timer: 2000,
+                          showConfirmButton: false
+                      }).then((result) => {
+                          $(location).attr('href', listar); 
+                      });
+                  } else if (data.result == "error") {
+                      var element = document.querySelector(`[name="${data.field}"]`);
+                      updateErrorMessage(element, data.title);
+                      $('button[type="submit"]').prop("disabled", true);
+                  }
+              },
+          });
+      }
+  });
+}*/
 
 function validate_only_number_and_text(node, event) {
   if (
@@ -198,9 +324,9 @@ function validate_only_number_and_text(node, event) {
 }
 
 function validate_select(node, event) {
-  if (node.val()) {
+  if (node.val() !== null && node.val().length > 0 && node.val() != '') {
     node.removeClass("is-invalid").addClass("is-valid");
-    node[0].nextElementSibling.nextElementSibling.textContent = "";    
+    node[0].nextElementSibling.nextElementSibling.textContent = ""; 
     $('button[type="submit"]').removeAttr("disabled");
   } else {
     event.preventDefault();
@@ -239,7 +365,8 @@ function validate_only_number(node, event) {
   }
 }
 
-function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy") {  
+/*function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy") {  
+  // console.log('ENTRE A VALIDAR FECHAS')
   var d = new Date(v1.value.replace(/-/g, ","));
   d1 = d.toLocaleString('en-CA').slice(0, 10);
   if (!v2.value) {
@@ -255,24 +382,28 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
       if (d1 < d2) {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
+
         if (!v2) {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser mayor o igual que " + dia,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser mayor o igual que " + dia,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser mayor o igual que ${dia}`);
+
           // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + dia;
         } else {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser mayor o igual que " + v2.name,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser mayor o igual que " + v2.name,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser mayor o igual que ${v2.name}`);
           // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
-        node[0].nextElementSibling.textContent = "";
+        updateErrorMessage(v1, "", false);
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -280,24 +411,28 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
       if (d1 > d2) {
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
+        console.log('V1 1', v1)
+
         if (!v2) {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser menor o igual que " + dia,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser menor o igual que " + dia,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser menor o igual que ${dia}`);
           // node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + dia;
         } else {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser menor o igual que " + v2.name,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser menor o igual que " + v2.name,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser menor o igual que ${v2.name}`);
           // node[0].nextElementSibling.textContent = v1.name + " debe ser menor o igual que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
-        node[0].nextElementSibling.textContent = "";
+        updateErrorMessage(v1, "", false);
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -306,16 +441,19 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser mayor que " + dia,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser mayor que " + dia,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser mayor que ${dia}`);
           // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + dia;
         } else {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser mayor que " + v2.name,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser mayor que " + v2.name,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser mayor que ${v2.name}`);
+
           // node[0].nextElementSibling.textContent = v1.name + " debe ser mayor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
@@ -323,7 +461,7 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
-        node[0].nextElementSibling.textContent = "";
+        updateErrorMessage(v1, "", false);
         $('button[type="submit"]').removeAttr("disabled");
       }
       break;
@@ -332,25 +470,90 @@ function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
         v1.classList.remove("is-valid");
         v1.classList.add("is-invalid");
         if (!v2) {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser menor que " + dia,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser menor que " + dia,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser menor que ${dia}`);
+
           // node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + dia;
         } else {
-          Toast.fire({
-            type: 'error',
-            title: v1.name + " debe ser menor que " + v2.name,
-          });
+          // Toast.fire({
+          //   type: 'error',
+          //   title: v1.name + " debe ser menor que " + v2.name,
+          // });
+          updateErrorMessage(v1, `${v1.name} debe ser menor que ${v2.name}`);
+
           // node[0].nextElementSibling.textContent = v1.name + " debe ser menor que " + v2.name;
         }
         $('button[type="submit"]').prop("disabled", "true");
       } else {
         v1.classList.remove("is-invalid");
         v1.classList.add("is-valid");
-        node[0].nextElementSibling.textContent = "";
+        updateErrorMessage(v1, "", false);
         $('button[type="submit"]').removeAttr("disabled");
       }
+      break;
+    default:
+      break;
+  }
+}*/
+
+
+
+function updateValidationState(element, isValid, errorMessage = "") {
+  if (isValid) {
+    element.classList.remove("is-invalid");
+    element.classList.add("is-valid");
+    updateErrorMessage(element, "", false);
+    $('button[type="submit"]').prop("disabled", false);
+  } else {
+    element.classList.remove("is-valid");
+    element.classList.add("is-invalid");
+    updateErrorMessage(element, errorMessage);
+    $('button[type="submit"]').prop("disabled", true);
+  }
+}
+
+function validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy") {
+  const COMPARISON_TYPES = {
+    MAYOR_IGUAL: "mayor_igual",
+    MENOR_IGUAL: "menor_igual",
+    MAYOR: "mayor",
+    MENOR: "menor",
+  };
+
+  const d1 = new Date(v1.value.replace(/-/g, ","));
+  const d2 = v2.value ? new Date(v2.value.replace(/-/g, ",")) : new Date();
+
+  switch (tipo) {
+    case COMPARISON_TYPES.MAYOR_IGUAL:
+      updateValidationState(
+        v1,
+        d1 >= d2,
+        v2 ? `${v1.name} debe ser mayor o igual que ${v2.name}` : `${v1.name} debe ser mayor o igual que ${dia}`
+      );
+      break;
+    case COMPARISON_TYPES.MENOR_IGUAL:
+      updateValidationState(
+        v1,
+        d1 <= d2,
+        v2 ? `${v1.name} debe ser menor o igual que ${v2.name}` : `${v1.name} debe ser menor o igual que ${dia}`
+      );
+      break;
+    case COMPARISON_TYPES.MAYOR:
+      updateValidationState(
+        v1,
+        d1 > d2,
+        v2 ? `${v1.name} debe ser mayor que ${v2.name}` : `${v1.name} debe ser mayor que ${dia}`
+      );
+      break;
+    case COMPARISON_TYPES.MENOR:
+      updateValidationState(
+        v1,
+        d1 < d2,
+        v2 ? `${v1.name} debe ser menor que ${v2.name}` : `${v1.name} debe ser menor que ${dia}`
+      );
       break;
     default:
       break;
@@ -453,7 +656,14 @@ function validar_existencia_ambos(v1, v2) {
       type: 'error',
       title: "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor",
     });
-    v1.nextElementSibling.textContent = "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor";
+    //v1.nextElementSibling.textContent = "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor";
+    if (v1.type !== 'select-one') {
+        // Si v1 no es un elemento de tipo select, realiza esta acción
+        v1.nextElementSibling.innerHTML  = "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v1.parentNode.querySelector('small').innerHTML  = "Debe llenar el campo " + v1.name + ", porque " + v2.name + " tiene valor";
+    }
     // $('button[type="submit"]').prop("disabled", "true");
     flag = false;
   }
@@ -465,7 +675,15 @@ function validar_existencia_ambos(v1, v2) {
       type: 'error',
       title: "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor",
     });
-    v2.nextElementSibling.textContent = "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor";
+    //v2.nextElementSibling.textContent = "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor";
+    if (v2.type !== 'select-one') {
+      console.log('TYPE', v2.type)
+        // Si v1 no es un elemento de tipo select, realiza esta acción
+        v2.nextElementSibling.innerHTML = "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v2.parentNode.querySelector('small').innerHTML  = "Debe llenar el campo " + v2.name + ", porque " + v1.name + " tiene valor";
+    }
     // $('button[type="submit"]').prop("disabled", "true");
     flag = false;
   }
@@ -475,8 +693,21 @@ function validar_existencia_ambos(v1, v2) {
     v1.classList.add("is-valid");
     v2.classList.remove("is-invalid");
     v2.classList.add("is-valid");
-    v1.nextElementSibling.textContent = "";
-    v2.nextElementSibling.textContent = "";
+    
+    if (v1.type !== 'select-one') {
+        // Si v1 no es un elemento de tipo select, realiza esta acción
+        v1.nextElementSibling.innerHTML = "";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v1.parentNode.querySelector('small').innerHTML  = "";
+    }
+    if (v2.type !== 'select-one') {
+        // Si v1 no es un elemento de tipo select, realiza esta acción
+        v2.nextElementSibling.innerHTML = "";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v2.parentNode.querySelector('small').innerHTML  = "";
+    }
     // $('button[type="submit"]').removeAttr("disabled");
     flag = true;
   }
@@ -486,8 +717,20 @@ function validar_existencia_ambos(v1, v2) {
     v1.classList.add("is-valid");
     v2.classList.remove("is-invalid");
     v2.classList.add("is-valid");
-    v1.nextElementSibling.textContent = "";
-    v2.nextElementSibling.textContent = "";
+    if (v1.type !== 'select-one') {
+      // Si v1 no es un elemento de tipo select, realiza esta acción
+        v1.nextElementSibling.textContent = "";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v1.parentNode.querySelector('small').innerHTML  = "";
+    }
+    if (v2.type !== 'select-one') {
+        // Si v1 no es un elemento de tipo select, realiza esta acción
+        v2.nextElementSibling.textContent = "";
+    } else {
+        // Si v1 es un elemento de tipo select, realiza esta otra acción
+        v2.parentNode.querySelector('small').innerHTML  = "";
+    }
     // $('button[type="submit"]').removeAttr("disabled");
     flag = true;
   }
@@ -590,7 +833,7 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
   }
 }
 
-/*function validar_archivos(selector, extensions) {
+function validar_archivos(selector, extensions) {
   let filePath = selector.val();
   // Seperar nombre de archivo por . y obtener último elemento (extensión)
   let extension = filePath.split(".").pop().toLowerCase();
@@ -614,7 +857,7 @@ function validar_comparar_valores_contables(v1, v2, tipo) {
     //$('button[type="submit"]').prop("disabled", "false");
   }
   $('button[type="submit"]').prop("disabled", false);
-}*/
+}
 
 function validate_only_number_and_text_and_guion(node, event) {
   if (

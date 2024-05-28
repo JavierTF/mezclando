@@ -111,6 +111,14 @@ left: 24px !important;
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
                         {% endif %}
+                        <form action="{% url 'iproperty:export_property' %}" class="form-horizontal">
+                            <div class="row">
+                                <input type="text" name="search" style="display: none">
+                                <button type="submit" class="btn btn-outline-secondary fa-pull-left">
+                                    <span class="fa fa-file-pdf"> Exportar</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                     {% include template_models_list %}
                 </div>

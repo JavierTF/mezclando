@@ -11,7 +11,7 @@ import string
 import random
 
 # Opening a URL in the browser.
-driver = webdriver.Opera()
+driver = webdriver.Chrome()
 driver.get("http://127.0.0.1:8000")
 
 username = driver.find_element_by_name('username')

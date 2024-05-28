@@ -1,0 +1,82 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<div class="kt-portlet kt-portlet--mobile">
+    <header id="header" class="header">
+        <div class="row header-recipe">
+            <div class="logo-header-container">
+                <span class="logo-header-recipe">
+                </span>
+            </div>
+            <div class="logo1-header-container">
+                <span class="logo1-header-recipe"></span>
+            </div>
+        </div>
+    </header>
+    <div class="kt-separator"></div>
+    <div class="kt-portlet__body">
+        <div class="col-12 content-recipe">
+            <table style="width: 100%;">
+                <tr>
+                    <td>
+                        <h6 style="color: black; font-weight: bold">SISTEMA INTEGRADO DE GESTIÓN. Actividades del Plan de Cuadro</h6>
+                    </td>
+                    <td class="text-right">
+                        <p>{{ date }}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th><strong>Descripción</strong></th>
+                    <th><strong>Día de reunion</strong></th>
+                    <th><strong>Hora programada</strong></th>
+                    <th><strong>Lugar Previsto</strong></th>
+                    <th><strong>Trabajador que preside</strong></th>
+                    <th><strong>Trabajadores que Paticipan</strong></th>
+                </tr>
+                </thead>
+                <tbody>
+                
+                    <tr class="dtrg-group"></tr>
+                    {% for afec in models %}
+                        <tr>
+                            <td>{{ afec.descripcion }}</td>
+                            <td>{{afec.dia }}</td>
+                            <td>{{ afec.hora }}</td>
+                            <td>{{ afec.lugar }}</td>
+                            <td>{{ afec.preside }}</td>
+                            
+                            <td>{%for p in afec.participantes.all%}
+                                {{p}}
+                            {%endfor%}</td>
+                        </tr>
+                    {% endfor %}
+               
+                </tbody>
+                
+            </table>
+            <p>Elaborado por : {{ owner.get_full_name }}</p>
+        </div>
+        <div class="kt-separator"></div>
+        <footer>
+            <div class="row footer-recipe ">
+                <div class="contact-footer-recipe">
+                    <p>Ave. 47 No 1802 e/ 18 A y 20, Miramar, Playa. La Habana, CUBA. CP 11300.</p>
+                    <p>Tel: (537) 204 3600 / 206 9300.  Fax (537) 204 8202</p>
+                    <p>E-mail: comercial@citmatel.com / www.citmatel.com / www.compra-dtodo.com / www.editorialcitmatel.com / www.cuba.cu</p>
+                   
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>

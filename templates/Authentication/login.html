@@ -3,7 +3,7 @@
 <head>
     {% load static %}
     {% comment %} {% load staticfiles %} {% endcomment %}
-    <script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+    <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
     {% load notifications_tags %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,6 +21,11 @@
     <link rel="stylesheet" href="{% static 'assets/dist/css/adminlte.min.css' %}">
     <!-- Google Font: Source Sans Pro -->
     {% comment %} <link href="{% static 'assets/dist/css/font.css' %}" rel="stylesheet"> {% endcomment %}
+    <style>
+        a.nav-link > span:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page" style="background:#87CEFA">
 <div class="login-box">
@@ -55,7 +60,7 @@
                         <input name="password" type="password" class="form-control" placeholder="Contraseña">
                         <div class="input-group-append">
                             <div id="id_toogle" class="input-group-text">
-                                <span class="fas fa-lock"></span>
+                                <span class="fa fa-eye"></span>
                             </div>
                         </div>
                         <input name="redireccion_url" type="hidden" value="{{ redireccion_url }}">
@@ -67,7 +72,13 @@
                         <!-- /.col -->
                     </div>
                 </form>
-
+	     <br>
+		    <a href="/media/manual_usuario/ayuda.pdf" target="_blank" class="nav-link text-center">
+                <i class="nav-icon fas fa-book"></i>
+                <span>
+                    Consultar Manual de Ayuda
+                </span>
+            </a>
 
             {% endblock %}
 
@@ -78,11 +89,11 @@
 <!-- /.login-box -->
 
 <!-- jQuery -->
-<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" type="text/javascript"></script>
 <!-- Bootstrap 4 -->
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
 <!-- AdminLTE App -->
-<script src="{% static 'assets/dist/js/adminlte.min.js' %}"></script>
+<script src="{% static 'assets/dist/js/adminlte.min.js' %}" type="text/javascript"></script>
 
 
 
@@ -97,11 +108,6 @@
       }*/
 
     $('#id_toogle').on('click', function(e){
-        //let value = document.getElementsByName("password")[0];
-        //$('input[name="password"]')
-        //let span = $('#id_toogle').find('span')[0]
-        //span.removeClass('fas fa-lock').addClass('fa fa-eye');
-        //console.log('elementCCC', $('#id_toogle').find('span')[0]);        
         tooglePassword($('input[name="password"]')[0], $('#id_toogle').children());
     });
 

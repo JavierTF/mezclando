@@ -47,6 +47,46 @@
     <link rel="stylesheet" href="{% static 'assets/plugins/datatable-file-export/buttons.dataTables.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/mis_estilos/mi-estilo.css' %}">
     {% comment %} <link rel="stylesheet" href="{% static 'assets/plugins/datatables/jquery.dataTables.min.css' %}"> {% endcomment %}
+
+    <style>
+        .informacion_proyecto_header{
+            color: #004080;
+        }
+
+        .content-wrapper label[for*="*"] {
+            color: red !important;
+        }
+        li.breadcrumb-item.active {
+            color: black !important;
+        }
+        .btn-primary-transparent{
+            color: #007bff;
+            background-color: transparent;
+            border-color: transparent;
+        }
+        aside > a > img {
+            width: 35px;
+            max-width: 35px;
+            height: 40px;
+            max-height: 40px;
+        }
+        .d-block > img {
+            width: 35px;
+            max-width: 35px;
+            height: 35px;
+            max-height: 35px;
+        }
+        .btn-outline-info,
+        .btn-outline-primary,
+        .btn-outline-danger,
+        .btn-outline-success,
+        .btn-outline-secondary,
+        .btn-outline-dark,
+        .btn-outline-warning {
+            font-weight: 500;
+            border: solid 2px;
+        }
+    </style>
         
     {% block miestilo %}
         {# aqui va el estilo CSS de cada pagina en particular #}
@@ -65,13 +105,6 @@
             {% comment %} <li class="nav-item d-none d-sm-inline-block">
                 <a href="{% url 'profile' request.user.pk %}" class="nav-link" style="color: white">Perfil</a>
             </li> {% endcomment %}
-        {% if not user.is_staff or user.is_superuser %}
-            {% if perms.base.add_logoentity %}
-            <li class="nav-item d-none d-sm-inline-block">
-                <a href="{% url 'base:create_logoentity' %}" class="nav-link" style="color: white">Actualizar Logo</a>
-            </li>
-            {% endif %}
-        {% endif %}
             {% if not user.is_staff or user.is_superuser %}
             {% comment %} <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" style="color: white">Entrar Datos</a>
@@ -124,43 +157,26 @@
                 </div>
             </li> {% endcomment %}
             {% endif %}
-            {% if not user.is_staff or user.is_superuser %}
+            {% comment %} {% if not user.is_staff or user.is_superuser %}
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#" style="color: white">Reportes</a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    {% comment %} <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_cert' %}" target="_blank">Certificaciones jefe de proyectos</a>
+                    <span class="dropdown-item dropdown-header" id="entrada">
+                        <a href="{% url 'effectiveness:tableall_effectiveness' %}">Indicadores de Eficacia del Sistema</a>
                     </span>
                     <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_reclam' %}" target="_blank">Reclamaciones de los clientes externos</a>
+                        <a href="{% url 'effectiveness:reports_effectiveness' %}">Eficacia de los procesos</a>
                     </span>
                     <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_inc' %}" target="_blank">Incidencias de los clientes internos</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_cap' %}" target="_blank">Capacitaciones</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_proyecto_aprobado' %}" target="_blank">Proyectos Aprobados</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_proyecto_atrasado' %}" target="_blank">Proyectos Atrasados</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'reporte_proyecto_term' %}" target="_blank">Proyectos Terminados</a>
-                    </span> {% endcomment %}
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'effectiveness:tableall_effectiveness' %}" target="_blank">Indicadores de Eficacia del Sistema</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'effectiveness:reports_effectiveness' %}" target="_blank">Eficacia de los procesos</a>
-                    </span>
-                    <span class="dropdown-item dropdown-header" id="entrada">
-                        <a href="{% url 'complaints:reports_complaints' %}" target="_blank">Quejas por estados</a>
-                    </span>                    
+                        <a href="{% url 'complaints:reports_complaints' %}">Quejas por estados</a>
+                    </span>                  
                 </div>
             </li>
-            {% endif %}
+            {% endif %} {% endcomment %}
+
+            <li class="nav-item dropdown">
+                <a id="fraseMotivacional" class="nav-link" data-toggle="dropdown" href="javascript:void(0);" style="color: white; font-weight: 375;" title="Ver imagen y frase"></a>
+            </li>
         </ul>
 
 
@@ -195,7 +211,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'logout' %}" title="Salir" style="color: white">
+                <a id="cerrarSesion" class="nav-link" href="{% url 'logout' %}" title="Salir" style="color: white">
                     <i class="fas fa-arrow-right mr-2"></i>
                 </a>
             </li>
@@ -207,9 +223,9 @@
     <aside class="main-sidebar sidebar-light-red elevation-4">
         <!-- Brand Logo -->
 
-        <a href="{% url 'inicio' %}" class="brand-link navbar-primary">
+        <a href="{% url 'inicio' %}" class="brand-link navbar-primary" title="Ir a inicio">
             <img src="{% static 'assets/dist/img/logo sisgepov2.png' %}" alt="SISGEPO Logo"
-                 class="brand-image img-circle elevation-3" style="width: 35px; height: 40px;">
+                 class="brand-image img-circle elevation-3">
             <span class="brand-text font-weight-light" style="color: white"><b>SISGEPO</b></span>
         </a>
 
@@ -219,17 +235,21 @@
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <a href="{% url 'profile' request.user.pk %}"
-                       class="d-block">
-                       {% if userPhoto %}
-                            <img src="/media/{{ userPhoto }}" class="img-circle elevation-2" alt="Imagen de usuario">
+                       class="d-block" title="Ir a mi perfil de usuario">
+                       {% comment %} Foto: {{ user_photo }}                  {% endcomment %}
+                       {% comment %} {% if request.COOKIES.user_photo %} {% endcomment %}
+                       {% if request.COOKIES.user_photo %}
+                            <img src="/media/{{ request.COOKIES.user_photo }}" class="img-circle elevation-2" alt="Imagen de usuario">
                         {% else %}
                             <img src="{% static 'users/userDefault4.png' %}" class="img-circle elevation-2" alt="Imagen de usuario" title="Sube tu foto">
                         {% endif %}
-                    </a>                       
+                    </a>                     
                 </div>
-                <div class="info">
+                <div class="info" style="margin-left: -5px; margin-top: -11px;">
                     <a href="{% url 'profile' request.user.pk %}"
-                       class="d-block">{{ request.user.first_name }} {{ request.user.last_name }}
+                       class="d-block" title="Ir a mi perfil de usuario">
+                       <p style="padding: 0; margin: 0; margin-bottom: -6px; "><small>{{ request.user.first_name }} {{ request.user.last_name }}</small></p>
+                       <p style="padding: 0; margin: 0;">{{ request.user.username }}</p>
                     </a>
                 </div>
             </div>
@@ -240,10 +260,10 @@
                     data-accordion="true">
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
-                    {% if not user.is_staff or user.is_superuser %}
+                         {% if user.is_superuser or perms.xavi.view_premio or perms.xavi.view_proyecto or perms.xavi.view_acuerdo or perms.xavi.view_objetivo or perms.xavi.view_sosi  or perms.SISGDDO.view_incidencias  or perms.SISGDDO.view_afectaciones  or perms.SISGDDO.view_auditoria_externa  or perms.SISGDDO.view_auditoria_interna  or perms.SISGDDO.view_actividadplan  or perms.complaints.view_complaint  or perms.iproperty.view_industrialproperty or perms.effectiveness.view_effectiveness %}
                     <li class="nav-header" style="color: blue"></li>
 
-
+                    {% comment %} {% if user.is_superuser %} {% endcomment %}
                     <li class="nav-item has-treeview  {% block menu_gestion %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_gestion_active %}{% endblock %}">
                             <i class="nav-icon fa fa-refresh"></i>
@@ -252,6 +272,8 @@
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
+			{% if perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna or perms.effectiveness.view_effectiveness or perms.SISGDDO.view_incidencia or perms.licenses.view_license or perms.xavi.view_premio or perms.iproperty.view_industrialproperty or perms.complaints.view_complaint %}
+
                         <ul class="nav nav-treeview">
                         <li class="nav-item has-treeview {% block menu_p00 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p00_active %}{% endblock %}">
@@ -261,45 +283,12 @@
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
-                        {#                        {% if perms.SISGDDO.view_incidencias %}#}
-{#                        <ul class="nav nav-treeview">#}
-{#                            <li class="nav-item">#}
-{#                                <a href="{% url 'listar_visualizarincidencias' %}"#}
-{#                                   class="nav-link {% block visincidencia %}{% endblock %}">#}
-{#                                    <i class="far fa-circle nav-icon"></i>#}
-{#                                    <p>Lista Maestra</p>#}
-{#                                </a>#}
-{#                            </li>#}
-{#                        </ul>#}
-{#                        {% endif %}#}
-                        {% if perms.base.view_process %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'base:processes' %}"
-                                   class="nav-link {% block process %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Procesos</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.base.view_procedures %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'base:procedures' %}"
-                                   class="nav-link {% block procedures %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Lista Maestra</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_auditoria_externa and perms.SISGDDO.view_auditoria_interna %}
+                        {% if perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item has-treeview {% block menu_acciones %}{% endblock %}">
                                 <a href=""
                                    class="nav-link {% block acciones %}{% endblock %}">
-                                    <i class="nav-icon far fa-circle  "></i>
+                                    <i class="nav-icon fa fa-bar-chart  "></i>
                                     <p>Acciones de Control
                                     <i class="fas fa-angle-left right"></i>
                                     </p>
@@ -307,36 +296,96 @@
 
                             <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{% url "listar_auditoriaint" %}"
+                                <a href="{% url 'listar_auditoriainterna' %}"
                                    class="nav-link {% block auditoria_interna %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-chevron-right nav-icon"></i>
                                     <p>Auditoría Interna</p>
                                 </a>
                             </li>
                             </ul>
                             <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{% url "listar_auditoriaext" %}"
+                                <a href="{% url 'listar_auditoriaexterna' %}"
                                    class="nav-link {% block auditoria_externa %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-chevron-left nav-icon"></i>
                                     <p>Auditoría Externa</p>
                                 </a>
                             </li>
-                            </ul>
+                            </ul> 
                             </li>
                         </ul>
-                        {% endif %}
+                        {% endif %} 
                         {% if perms.effectiveness.view_effectiveness %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'effectiveness:list_effectiveness' %}"
                                    class="nav-link {% block effectiveness %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                    <i class="fa fa-bolt nav-icon"></i>
                                     <p>Eficacia de los Procesos</p>
                                 </a>
                             </li>
                         </ul>
                         {% endif %}
+                        {% if perms.SISGDDO.view_incidencia %}
+                        <ul class="nav nav-treeview">
+                           <li class="nav-item">
+                                <a href="{% url 'listar_incidencias' %}"
+                                   class="nav-link {% block visincidencia %}{% endblock %}">
+                                    <i class="fa fa-warning nav-icon"></i>
+                                    <p>Incidencias</p>
+                               </a>
+                            </li>
+                       </ul>
+                        {% endif %}
+                        {% if perms.licenses.view_license %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'licenses:list_licenses' %}"
+                                   class="nav-link {% block licenses %}{% endblock %}">
+                                    <i class="fa fa-vcard nav-icon" aria-hidden="true"></i>
+                                    <p>Licencias</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% if perms.complaints.view_complaint or perms.licenses.view_license or perms.effectiveness.view_effectiveness or perms.SISGDDO.view_incidencia or perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'base:procedures' %}"
+                                   class="nav-link {% block procedures %}{% endblock %}">
+                                    <i class="fa fa-list-alt nav-icon"></i>
+                                    <p>Lista Maestra</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        
+                        {% if perms.xavi.view_premio %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_premio' %}"
+                                   class="nav-link {% block premio %}{% endblock %}">
+                                    <i class="fa fa-trophy nav-icon"></i>
+                                    <p>Premios<br /> y Reconocimientos</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        
+                        {% if perms.complaints.view_complaint or perms.licenses.view_license or perms.effectiveness.view_effectiveness or perms.SISGDDO.view_incidencia or perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'base:processes' %}"
+                                   class="nav-link {% block process %}{% endblock %}">
+                                    <i class="fa fa-server nav-icon"></i>
+                                    <p>Procesos</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        
+                        
+                       
                         {% if perms.SISGDDO.view_valoracion_encuesta %}
                         <ul class="nav nav-treeview">
                         <li class="nav-item">
@@ -348,191 +397,121 @@
                         </li>
                         </ul>
                         {% endif %}
-                        {% if perms.licenses.view_license %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'licenses:list_licenses' %}"
-                                   class="nav-link {% block licenses %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Licencias</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.complaints.view_complaint %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'complaints:list_complaints' %}"
-                                   class="nav-link {% block complaint %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Quejas</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
+                        
+                        
                         {% if perms.iproperty.view_industrialproperty %}
                         <ul class="nav nav-treeview">
+                            <li class="nav-item has-treeview {% block propertyops %}{% endblock %}">
+                                <a href=""
+                                   class="nav-link {% block propertydesp %}{% endblock %}">
+                                    <i class="nav-icon fa fa-book"></i>
+                                    <p>Propiedad Intelectual
+                                    <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                        <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <a href="{% url 'iproperty:list_properties' %}"
-                                   class="nav-link {% block property %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
+                                <a href="{% url 'iproperty:list_properties' %}" class="nav-link {% block property %}{% endblock %}">
+                                    <i class="fa fa-industry nav-icon"></i>
                                     <p>Propiedad industrial</p>
                                 </a>
                             </li>
                         </ul>
-                        {% endif %}
+                    </ul>
+                 {% endif %} 
+                    {% if perms.complaints.view_complaint %}
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'complaints:list_complaints' %}"
+                               class="nav-link {% block complaint %}{% endblock %}">
+                                <i class="fa fa-thumbs-down nav-icon"></i>
+                                <p>Quejas</p>
+                            </a>
+                        </li>
+                    </ul>
+                    {% endif %}
                     </li>
+                    
+                  
                         
-                    {% if perms.SISGDDO.view_premio %}
-                    <li class="nav-item has-treeview {% block menu_p03 %}{% endblock %}">
-                        <a href="#" class="nav-link {% block menu_p03_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-code"></i>
-                            <p>
-                                Desarrollo
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        {% if perms.SISGDDO.view_premio %}
+                    </ul>
+		    {% endif %}
+                    {% if perms.xavi.view_proyecto or perms.xavi.view_sosi or perms.xavi.view_entrada_proyecto %}
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'listar_premio' %}"
-                                   class="nav-link {% block premio %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Premios</p>
+                            <li class="nav-item has-treeview {% block menu_p01 %}{% endblock %}">
+                                <a href="#" class="nav-link {% block menu_p01_active %}{% endblock %}">
+                                    <i class="nav-icon fa fa-lightbulb"></i>
+                                    <p>
+                                        Gestión de la <br>innovación y desarrollo
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
                                 </a>
+
+                                {% if perms.xavi.view_proyecto or perms.xavi.view_sosi or perms.xavi.view_entrada_proyecto %}
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item has-treeview {% block menu_gestion_proyectos %}{% endblock %}">
+                                            <a href="" class="nav-link {% block gestion_proyectos %}{% endblock %}">
+                                                <i class="nav-icon fa fa-refresh"></i>
+                                                <p>
+                                                    Gestión de proyectos 
+                                                    <i class="fas fa-angle-left right"></i>
+                                                </p>
+                                            </a>
+
+                                            <ul class="nav nav-treeview">
+                                                <li class="nav-item">
+                                                    <a href="{% url 'listar_proyecto' %}" class="nav-link {% block proyectos %}{% endblock %}">
+                                                        <i class="fa fa-file nav-icon"></i>
+                                                        <p>Recepción y control</p>
+                                                    </a>
+                                                    
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+
+                                {% comment %} 
+                                {% if perms.SISGDDO.view_consecutivo %}
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{% url 'listar_consecutivo' %}" class="nav-link {% block consecutivo %}{% endblock %}">
+                                                <i class="fa fa-copyright nav-icon"></i>
+                                                <p>Consecutivos</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                                {% endcomment %}
+
+                                {% comment %} 
+                                {% if perms.SISGDDO.view_proyecto %}
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{% url 'listar_proyecto' %}" class="nav-link {% block proyecto %}{% endblock %}">
+                                                <i class="fa fa-credit-card-alt nav-icon"></i>
+                                                <p>Proyectos</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
+                                {% endcomment %}
                             </li>
                         </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_historico_entradas_proyectos %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                {% comment %} <a href="{% url 'listar_histentproy' %}"
-                                   class="nav-link {% block historicoentradas %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Histórico Entradas</p>
-                                </a> {% endcomment %}
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_dictamen_tecnico %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                {% comment %} <a href="{% url 'listar_dictamenes' %}"
-                                   class="nav-link {% block dictamen %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Dictamen Proyectos</p>
-                                </a> {% endcomment %}
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_historico_dictamen_tecnico %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                {% comment %} <a href="{% url 'listar_historicodictamen' %}"
-                                   class="nav-link {% block historicodictamen %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p> Histórico Dictamen</p>
-                                </a> {% endcomment %}
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% comment %} {% if perms.SISGDDO.view_proyecto %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'listar_estadoproy' %}"
-                                   class="nav-link {% block estados %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Estados Proyectos</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %} {% endcomment %}
-                    </li>
                     {% endif %}
 
-                    <li class="nav-item has-treeview {% block menu_p01 %}{% endblock %}">
-                        <a href="#" class="nav-link {% block menu_p01_active %}{% endblock %}">
-                            <i class="nav-icon fa fa-lightbulb"></i>
-                            <p>
-                                Gestión de Innovación
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        {% if perms.SISGDDO.view_consecutivo %}
-                        <li class="nav-item">
-                            <a href="{% url 'listar_consecutivo' %}" class="nav-link {% block consecutivo %}{% endblock %}">
-                                <i class="fa fa-copyright nav-icon"></i>
-                                <p>Consecutivos</p>
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_afectacion %}
-                        <li class="nav-item">
-                            <a href="{% url 'listar_afectacion' %}" class="nav-link {% block Afectaciones %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Afectaciones</p>
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_plan %}
-                        <li class="nav-item">
-                            <a href="{% url 'listar_plan' %}" class="nav-link {% block PlanesdeTrabajo %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Plan de acividad del Grupo</p>
-                            </a>
-                            <a href="{% url 'listar_plan1' %}" class="nav-link {% block Planes %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Plan de acividad de la empresa</p>
-                            </a>
-                            <a href="{% url 'listar_plan2' %}" class="nav-link {% block PlanesCuadro %}{% endblock %}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Plan de acividad de cuadro</p>
-                            </a>
-                        </li>
-                        {% endif %}
-
-                        {% if perms.SISGDDO.view_proyecto %}
-                        <li class="nav-item">
-                            <a href="{% url 'listar_proyecto' %}" class="nav-link {% block proyecto %}{% endblock %}">
-                                <i class="fa fa-paypal nav-icon"></i>
-                                <p>Proyectos</p>
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_sosi %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'listar_sosi' %}"
-                                   class="nav-link {% block sosi %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>SOSI</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                        
-                        {% if perms.SISGDDO.view_proyecto %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'listar_proyecto' %}"
-                                   class="nav-link {% block proyectos %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p> Control de Proyectos</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                    </li>
+                {% if perms.SISGDDO.view_afectaciones or perms.SISGDDO.view_actividadplan or perms.xavi.view_acuerdo or perms.xavi.view_objetivo %}
+                <ul class="nav nav-treeview">
 
                     <li class="nav-item has-treeview {% block menu_p14 %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_p14_active %}{% endblock %}">
                             <i class="nav-icon fa fa-book-reader"></i>
                             <p>
-                                Gestión de Información
+                                Gestión de la <br> Información
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
-                        {% if perms.SISGDDO.view_incidencias %}
+                        {% comment %} {% if perms.SISGDDO.view_incidencias %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'listar_incidencias' %}"
@@ -542,56 +521,98 @@
                                 </a>
                             </li>
                         </ul>
+                        {% endif %} {% endcomment %}
+                        {% if perms.SISGDDO.view_afectaciones %} 
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'listar_afectacion' %}" class="nav-link {% block afectaciones %}{% endblock %}">
+                                <i class="fa fa-window-close nav-icon" ></i>
+                                <p>Afectaciones a la <br> producción</p>
+                            </a>
+                        </li>
+                        </ul>
                         {% endif %}
-                        {% if perms.SISGDDO.view_acuerdo %}
+                        {% if perms.xavi.view_acuerdo %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'listar_acuerdo' %}"
                                    class="nav-link {% block acuerdo %}{% endblock %}">
                                     <i class="fa fa-font nav-icon"></i>
-                                    <p>Acuerdos</p>
+                                    <p>Acuerdos <br />del Consejo de Dirección</p>
                                 </a>
                             </li>
                         </ul>
                         {% endif %}
-                        {% if perms.SISGDDO.view_indicador_objetivo %}
+                        {% if perms.xavi.view_objetivo %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'listar_indicador_objetivo' %}"
                                    class="nav-link {% block indicador_objetivo %}{% endblock %}">
                                     <i class="fa fa-industry nav-icon"></i>
-                                    <p>Indicador de Objetivo</p>
+                                    <p>Objetivos de trabajo</p>
                                 </a>
                             </li>
                         </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_accion_indicador_objetivo %}
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{% url 'listar_accion_indicador_objetivo' %}"
-                                   class="nav-link {% block accion_indicador_objetivo %}{% endblock %}">
-                                    <i class="fa fa-plus-circle nav-icon"></i>
-                                    <p>Acciones de Indicadores</p>
-                                </a>
-                            </li>
-                        </ul>
-                        {% endif %}
-                        {% if perms.SISGDDO.view_objetivo %}
+                        {% endif %}                        
+                        {% if perms.xavi.view_objetivo %}
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
                                 <a href="{% url 'listar_objetivo' %}"
                                    class="nav-link {% block objetivo %}{% endblock %}">
                                     <i class="fa fa-crosshairs nav-icon"></i>
-                                    <p>Objetivos</p>
+                                    <p>Objetivos estratégicos</p>
                                 </a>
                             </li>
                         </ul>
                         {% endif %}
+                        {% if perms.SISGDDO.view_actividadplan %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item has-treeview {% block PlanesdeTrabajo %}{% endblock %}">
+                                <a href=""
+                                   class="nav-link {% block Planes %}{% endblock %}">
+                                    <i class="nav-icon fa fa-check-square"></i>
+                                    <p>Planes de trabajo
+                                    <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url 'listar_plan1' %}" class="nav-link {% block plan1 %}{% endblock %}">
+                                <i class="fa fa-hourglass-half nav-icon"></i>
+                                <p>Plan de actividad <br> de la empresa</p>
+                            </a>
+                            <a href="{% url 'listar_plan2' %}" class="nav-link {% block plan2 %}{% endblock %}">
+                                <i class="fa fa-hourglass-end nav-icon"></i>
+                                <p>Plan de actividad <br> de cuadro</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+                        {% endif %}
+
+                        
+                        {% if perms.xavi.view_objetivo %}
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'listar_accion_indicador_objetivo' %}"
+                                   class="nav-link {% block accion_indicador_objetivo %}{% endblock %}">
+                                    <i class="fa fa-plus-circle nav-icon"></i>
+                                    <p>Tareas</p>
+                                </a>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        
                     </li>
                     </ul>
                     </li>
-                    {% endif %}
-                    {% if not user.is_staff or user.is_superuser %}
+                    
+                    {% endif %}  
+                    {% endif %}  
+                    {% if user.is_superuser or perms.licenses.add_license or perms.SISGDDO.add_auditoria_externa or perms.SISGDDO.add_auditoria_interna or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.complaints.add_complaint  or perms.effectiveness.add_effectiveness or perms.SISGDDO.add_incidencia or perms.xavi.add_proyecto or perms.SISGDDO.add_afectaciones or perms.xavi.add_sosi %}
                     <li class="nav-header" style="color: blue"></li>
                     <li class="nav-item has-treeview {% block menu_nomencladores %}{% endblock %}">
                         <a href="#" class="nav-link {% block menu_nomencladores_active %}{% endblock %}">
@@ -602,7 +623,51 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            {% if perms.base.view_country %}
+			{% if perms.licenses.add_license or perms.SISGDDO.add_auditoria_externa or perms.SISGDDO.add_auditoria_interna or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.complaints.add_complaint  or perms.effectiveness.add_effectiveness or perms.SISGDDO.add_incidencia or perms.xavi.add_proyecto or perms.SISGDDO.add_afectaciones or perms.xavi.add_premio or perms.xavi.add_objetivo %}
+                            <li class="nav-item has-treeview {% block menu_nomencladores_generales %}{% endblock %}">
+                                <a href="" class="nav-link {% block menu_nomencladores_generales2 %}{% endblock %}">
+                                    <i class="fa fa-star nav-icon"></i>
+                                    <p>
+                                        Generales 
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    {% if perms.SISGDDO.add_afectaciones or perms.xavi.add_proyecto or perms.xavi.add_accion_indicador_objetivo or perms.SISGDDO.add_incidencia or perms.xavi.add_objetivo %}
+                                <li class="nav-item">
+                                    <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
+                                        <i class="fa fa-sitemap nav-icon"></i>
+                                        <p>Áreas</p>
+                                    </a>
+                                </li>
+                                {% endif %}
+								{% if perms.licenses.view_license or perms.SISGDDO.view_auditoria_externa or perms.xavi.add_premio or perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'base:entities' %}" class="nav-link {% block entity %}{% endblock %}">
+                                            <i class="fa fa-building nav-icon"></i>
+                                            <p>Entidades</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+				{% if perms.SISGDDO.add_afectaciones or perms.xavi.add_proyecto or perms.xavi.add_entrada_proyecto %}
+
+                                <li class="nav-item">
+                                    <a href="{% url 'listar_formato' %}" class="nav-link {% block formato %}{% endblock %}">
+                                        <i class="fa fa-file-text nav-icon"></i>
+                                        <p>Formatos</p>
+                                    </a>
+                                </li>
+				{% endif %}
+                                {% if perms.licenses.add_license or perms.SISGDDO.add_auditoria_externa or perms.SISGDDO.add_auditoria_interna or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.complaints.add_complaint  or perms.effectiveness.add_effectiveness or perms.SISGDDO.add_incidencia or perms.xavi.add_proyecto %}                            
+                                <li class="nav-item">
+                                <a href="{% url 'base:scientific_categories' %}" class="nav-link {% block scientific_categories %}{% endblock %}">
+                                    <i class="fa fa-graduation-cap nav-icon"></i>
+                                    <p>Categorías científicas</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% if perms.iproperty.view_industrialproperty %}
                                 <li class="nav-item">
                                     <a href="{% url 'base:countries' %}" class="nav-link {% block country %}{% endblock %}">
                                         <i class="fa fa-globe nav-icon"></i>
@@ -610,14 +675,8 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if perms.base.view_entity %}
-                            <li class="nav-item">
-                                <a href="{% url 'base:entities' %}" class="nav-link {% block entity %}{% endblock %}">
-                                    <i class="fa fa-building nav-icon"></i>
-                                    <p>Entidades</p>
-                                </a>
-                            </li>
-                            {% endif %}
+                            
+                         
                             {% comment %} {% if perms.base.view_client %}
                             <li class="nav-item">
                                 <a href="{% url 'base:clients' %}" class="nav-link {% block client %}{% endblock %}">
@@ -626,15 +685,8 @@
                                 </a>
                             </li>
                             {% endif %} {% endcomment %}
-                            {% if perms.SISGDDO.view_area %}
-                            <li class="nav-item">
-                                <a href="{% url 'listar_areas' %}" class="nav-link {% block areas %}{% endblock %}">
-                                    <i class="fa fa-sitemap nav-icon"></i>
-                                    <p>Áreas</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.base.view_position %}
+                            
+                            {% if perms.licenses.add_license or perms.SISGDDO.add_auditoria_externa or perms.SISGDDO.add_auditoria_interna or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.complaints.add_complaint  or perms.effectiveness.add_effectiveness or perms.SISGDDO.add_incidencia or perms.xavi.add_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'base:positions' %}" class="nav-link {% block position %}{% endblock %}">
                                     <i class="fa fa-briefcase nav-icon"></i>
@@ -642,7 +694,7 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.base.view_employee %}
+                            {% if perms.licenses.add_license or perms.SISGDDO.add_auditoria_externa or perms.SISGDDO.add_auditoria_interna or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.complaints.add_complaint  or perms.effectiveness.add_effectiveness or perms.SISGDDO.add_incidencia or perms.xavi.add_proyecto or perms.xavi.add_entrada_proyecto or perms.xavi.add_sosi %}
                             <li class="nav-item">
                                 <a href="{% url 'base:employees' %}" class="nav-link {% block employee %}{% endblock %}">
                                     <i class="fa fa-id-badge nav-icon"></i>
@@ -650,71 +702,278 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.SISGDDO.view_linea_tematica %}
+
+                            </ul>
+                            </li>
+ 				{% endif %}
+                            {% if perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna or perms.effectiveness.view_effectiveness or perms.SISGDDO.view_incidencia or perms.licenses.view_license or perms.iproperty.view_industrialproperty or perms.complaints.view_complaint %}
+                            <li class="nav-item has-treeview {% block menu_nomencladores_gestion_integrada %}{% endblock %}">
+                                <a href="" class="nav-link {% block menu_nomencladores_gestion_integrada2 %}{% endblock %}">
+                                    <i class="nav-icon fa fa-share-alt"></i>
+                                    <p>
+                                        Gestión Integrada 
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                
+                                <ul class="nav nav-treeview">
+                                    
+                            
+                            
+                            {% if perms.iproperty.view_industrialproperty %}
                             <li class="nav-item">
-                                <a href="{% url 'listar_linea_tematica' %}" class="nav-link {% block linea_tematica %}{% endblock %}">
-                                    <i class="fa fa-bookmark nav-icon"></i>
-                                    <p>Líneas temáticas</p>
+                                <a href="{% url 'iproperty:list_products' %}" class="nav-link d-flex align-items-center {% block products %}{% endblock %}">
+                                    <i class="fa fa-bars nav-icon"></i>
+                                    <p>Clasificación de <br>productos y servicios</p>
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.SISGDDO.view_estado_acuerdo %}
+                            {% if perms.iproperty.view_industrialproperty %}
                             <li class="nav-item">
-                                <a href="{% url 'listar_estado_acuerdo' %}" class="nav-link {% block estado_acuerdo %}{% endblock %}">
-                                    <i class="fa fa-check-circle nav-icon"></i>
-                                    <p>Estados de acuerdo</p>
+                                <a href="{% url 'iproperty:list_patents' %}" class="nav-link {% block patents %}{% endblock %}">
+                                    <i class="fa fa-copyright nav-icon"></i>
+                                    <p>Clasificación de patentes</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.iproperty.view_industrialproperty %}
+                            <li class="nav-item">
+                                <a href="{% url 'iproperty:list_figurative' %}" class="nav-link d-flex align-items-center {% block figurative %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Clasificación de <br>elementos figurativos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.iproperty.view_industrialproperty %}
+                            <li class="nav-item">
+                                <a href="{% url 'iproperty:list_drawings' %}" class="nav-link {% block drawings %}{% endblock %}">
+                                    <i class="fa fa-object-group nav-icon"></i>
+                                    <p>Clasificación de dibujos</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if perms.complaints.view_complaint or perms.licenses.view_license or perms.effectiveness.view_effectiveness or perms.SISGDDO.view_incidencia or perms.SISGDDO.view_auditoria_externa or perms.SISGDDO.view_auditoria_interna %}
+                            <li class="nav-item">
+                                <a href="{% url 'base:processes_classifier' %}" class="nav-link {% block processes_classifier %}{% endblock %}">
+                                    <i class="fa fa-tags nav-icon"></i>
+                                    <p>Clasificadores de proceso</p>
                                 </a>
                             </li>
                             {% endif %}
                             
-                            {% if perms.SISGDDO.view_estado_proyecto %}
+                                    {% if perms.effectiveness.view_effectiveness %}
                             <li class="nav-item">
-                                <a href="{% url 'listar_estado_proyecto' %}" class="nav-link {% block estado_proyecto %}{% endblock %}">
-                                    <i class="fa fa-clock nav-icon"></i>
-                                    <p>Estados de proyecto</p>
+                                <a href="{% url 'effectiveness:indicators' %}" class="nav-link {% block indicator %}{% endblock %}">
+                                    <i class="fa fa-tachometer nav-icon"></i>
+                                    <p>Indicadores</p>
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.SISGDDO.view_tipo_codigo %}
+                            {% if perms.iproperty.view_industrialproperty %}
                             <li class="nav-item">
-                                <a href="{% url 'listar_tipo_codigo' %}" class="nav-link {% block tipo_codigo %}{% endblock %}">
-                                    <i class="fa fa-text-width nav-icon"></i>
-                                    <p>Tipos de código</p>
+                                <a href="{% url 'iproperty:list_typelegaldocument' %}" class="nav-link d-flex align-items-center {% block typelegaldocuments %}{% endblock %}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tipos de documentos <br>legales</p>
                                 </a>
                             </li>
                             {% endif %}
-                            {% if perms.SISGDDO.view_tipo_proyecto %}
+                            {% if perms.complaints.view_complaint %}
+                            <li class="nav-item">
+                                <a href="{% url 'complaints:receptions' %}" class="nav-link {% block reception %}{% endblock %}">
+                                    <i class="fa fa-location-arrow nav-icon"></i>
+                                    <p>Vías de recepción</p>
+                                </a>
+                            </li>
+                            {% endif %}
+                                </ul>
+                                
+                            </li>
+ 				{% endif %}
+				{% if perms.xavi.add_proyecto or perms.xavi.add_sosi %}
+                            <li class="nav-item has-treeview {% block menu_nomencladores_proyectos2 %}{% endblock %}">
+                                <a href="" class="nav-link {% block menu_nomencladores_proyectos %}{% endblock %}">
+                                    <i class="nav-icon fa fa-refresh"></i>
+                                    <p>
+                                        Gestión de proyectos 
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+                                <ul class="nav nav-treeview">
+                                    {% if perms.xavi.add_sosi %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_autor' %}" class="nav-link {% block autor_sosi %}{% endblock %}">
+                                            <i class="fa fa-font nav-icon"></i>
+                                            <p>Autor</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_clasificacion' %}" class="nav-link {% block clasificacion_proyecto %}{% endblock %}">
+                                            <i class="fa fa-file-text nav-icon"></i>
+                                            <p>Clasificaciones <br />de proyecto</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+					                <li class="nav-item">
+                                        <a href="{% url 'listar_clientes' %}" class="nav-link {% block clientes %}{% endblock %}">
+                                            <i class="fa fa-user nav-icon"></i>
+                                            <p>Clientes</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_estado_proyecto' %}" class="nav-link {% block estado_proyecto %}{% endblock %}">
+                                            <i class="fa fa-bar-chart nav-icon"></i>
+                                            <p>Estados de proyecto</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_entrada_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_estado_entrada' %}" class="nav-link {% block estado_entrada %}{% endblock %}">
+                                            <i class="fa fa-calendar nav-icon"></i>
+                                            <p>Estados de proyecto<br /> en DGCA</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_etapa_proyecto' %}" class="nav-link {% block etapa_proyecto %}{% endblock %}">
+                                            <i class="fa fa-ellipsis-h nav-icon"></i>
+                                            <p>Etapas de proyecto</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_fuente_financiamiento' %}" class="nav-link {% block fuente_financiamiento %}{% endblock %}">
+                                            <i class="fa fa-credit-card nav-icon"></i>
+                                            <p>Fuentes de financiamiento</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_sosi %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_idiomas' %}" class="nav-link {% block idioma %}{% endblock %}">
+                                            <i class="fa fa-flag nav-icon"></i>
+                                            <p>Idioma</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_linea_tematica' %}" class="nav-link {% block linea_tematica %}{% endblock %}">
+                                            <i class="fa fa-bookmark nav-icon"></i>
+                                            <p>Líneas temáticas</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                    {% comment %} <li class="nav-item">
+                                        <a href="{% url 'listar_prioridades' %}" class="nav-link {% block prioridades %}{% endblock %}">
+                                            <i class="far fa-star nav-icon"></i>
+                                            <p>Prioridades</p>
+                                        </a>
+                                    </li> {% endcomment %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_subclasificacion' %}" class="nav-link {% block subclasificacion_proyecto %}{% endblock %}">
+                                            <i class="fa fa-tasks nav-icon"></i>
+                                            <p>Sublasificaciones <br />de proyecto</p>
+                                        </a>
+                                    </li> 
+                                    {% endif %}
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_representantes' %}" class="nav-link {% block representantes %}{% endblock %}">
+                                            <i class="fa fa-user-circle nav-icon"></i>
+                                            <p>Representantes</p>
+                                        </a>
+                                    </li>  
+                                    {% endif %}                               
+                                    {% if perms.xavi.add_proyecto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_tipo_moneda' %}" class="nav-link {% block tipo_moneda %}{% endblock %}">
+                                            <i class="fa fa-usd nav-icon"></i>
+                                            <p>Tipo de moneda</p>
+                                        </a>
+                                    </li>  
+                                    {% endif %}                               
+                                </ul>
+                            </li>
+                            {% endif %}
+			    {% if perms.SISGDDO.add_afectaciones or perms.SISGDDO.add_actividadplan or perms.xavi.add_acuerdo or perms.xavi.add_objetivo %}
+
+                            <li class="nav-item has-treeview {% block menu_nomencladores_gestion_informacion2 %}{% endblock %}">
+                                <a href="" class="nav-link {% block menu_nomencladores_gestion_informacion %}{% endblock %}">
+                                    <i class="nav-icon fa fa-book-reader"></i>
+                                    <p>
+                                        Gestión de la <br> Información
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+                                <ul class="nav nav-treeview">
+                                    {% if perms.SISGDDO.add_actividadplan %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_contactos' %}" class="nav-link {% block contactos %}{% endblock %}">
+                                            <i class="fa fa-address-book nav-icon"></i>
+                                            <p>Contactos</p>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+				                    {% if perms.xavi.add_acuerdo %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_estado_acuerdo' %}" class="nav-link {% block estado_acuerdo %}{% endblock %}">
+                                            <i class="fa fa-check-circle nav-icon"></i>
+                                            <p>Estados de acuerdo</p>
+                                        </a>
+                                    </li> 
+                                    {% endif %}
+                                    {% if perms.xavi.add_objetivo %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_evaluaciones' %}" class="nav-link {% block evaluaciones %}{% endblock %}">
+                                            <i class="fas fa-poll nav-icon"></i>
+                                            <p>Evaluaciones</p>
+                                        </a>
+                                    </li> 
+                                    {% endif %}
+                                    {% if perms.xavi.add_objetivo %}                                   
+                                    <li class="nav-item">
+                                        <a href="{% url 'listar_periodos' %}" class="nav-link {% block periodos %}{% endblock %}">
+                                            <i class="fas fa-calendar nav-icon"></i>
+                                            <p>Periodos</p>
+                                        </a>
+                                    </li>    
+				{% endif %}
+
+                                                                       
+                                </ul>
+                            </li>
+ 			    {% endif %}
+                            <hr />
+                                                  
+                            {% comment %} {% if perms.xavi.view_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_tipo_proyecto' %}" class="nav-link {% block tipo_proyecto %}{% endblock %}">
                                     <i class="fa fa-certificate nav-icon"></i>
                                     <p>Tipos de proyecto</p>
                                 </a>
                             </li>
-                            {% endif %}
-                            {% if perms.SISGDDO.view_fuente_financiamiento %}
+                            {% endif %} {% endcomment %}
+                            {% comment %} {% if perms.SISGDDO.view_estado_indicador_objetivos %}
                             <li class="nav-item">
-                                <a href="{% url 'listar_fuente_financiamiento' %}" class="nav-link {% block fuente_financiamiento %}{% endblock %}">
-                                    <i class="fa fa-credit-card nav-icon"></i>
-                                    <p>Fuentes de financiamiento</p>
+                                <a href="{% url 'listar_estado_indicador' %}" class="nav-link {% block estado_indicador %}{% endblock %}">
+                                    <i class="fa fa-italic nav-icon"></i>
+                                    <p>Estados de indicador</p>
                                 </a>
                             </li>
-                            {% endif %}
-                            {% if perms.SISGDDO.view_formato %}
-                            <li class="nav-item">
-                                <a href="{% url 'listar_formato' %}" class="nav-link {% block formato %}{% endblock %}">
-                                    <i class="fa fa-file-text nav-icon"></i>
-                                    <p>Formatos</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.SISGDDO.view_estado_entrada %}
-                            <li class="nav-item">
-                                <a href="{% url 'listar_estado_entrada' %}" class="nav-link {% block estado_entrada %}{% endblock %}">
-                                    <i class="fa fa-calendar nav-icon"></i>
-                                    <p>Estados entradas-proyecto</p>
-                                </a>
-                            </li>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
+                            
+                            
 {#                            {% if perms.SISGDDO.view_entidad %}#}
 {#                            <li class="nav-item">#}
 {#                                <a href="{% url 'listar_entidad' %}" class="nav-link {% block entidad %}{% endblock %}">#}
@@ -723,14 +982,7 @@
 {#                                </a>#}
 {#                            </li>#}
 {#                            {% endif %}#}
-                            {% if perms.SISGDDO.view_estado_indicador_objetivos %}
-                            <li class="nav-item">
-                                <a href="{% url 'listar_estado_indicador' %}" class="nav-link {% block estado_indicador %}{% endblock %}">
-                                    <i class="fa fa-italic nav-icon"></i>
-                                    <p>Estados de indicador</p>
-                                </a>
-                            </li>
-                            {% endif %}
+                            
                             {% comment %} {% if perms.SISGDDO.view_rol_trabajador_consecutivo %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_rol_trabajador_consecutivo' %}" class="nav-link {% block rol_trabajador_consecutivo %}{% endblock %}">
@@ -739,14 +991,14 @@
                                 </a>
                             </li>
                             {% endif %} {% endcomment %}
-                            {% if perms.SISGDDO.view_rol_trabajador_proyecto %}
+                            {% comment %} {% if perms.SISGDDO.view_rol_trabajador_proyecto %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_rol_trabajador_proyecto' %}" class="nav-link {% block rol_trabajador_proyecto %}{% endblock %}">
                                     <i class="fa fa-street-view nav-icon"></i>
                                     <p>Roles trabajador-proyecto</p>
                                 </a>
                             </li>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             {% comment %} {% if perms.SISGDDO.view_tipo_de_obra %}
                                     <li class="nav-item">
                                         <a href="{% url 'listar_tipo_de_obra' %}"
@@ -757,54 +1009,7 @@
                                     </li>
                             {% endif %} {% endcomment %}
                             
-                            {% if perms.effectiveness.view_indicator %}
-                            <li class="nav-item">
-                                <a href="{% url 'effectiveness:indicators' %}" class="nav-link {% block indicator %}{% endblock %}">
-                                    <i class="fa fa-tachometer nav-icon"></i>
-                                    <p>Indicadores</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.complaints.view_wayofreception %}
-                            <li class="nav-item">
-                                <a href="{% url 'complaints:receptions' %}" class="nav-link {% block reception %}{% endblock %}">
-                                    <i class="fa fa-location-arrow nav-icon"></i>
-                                    <p>Vías de recepción</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.iproperty.view_productclassification %}
-                            <li class="nav-item">
-                                <a href="{% url 'iproperty:list_products' %}" class="nav-link {% block products %}{% endblock %}">
-                                    <i class="fa fa-barcode nav-icon"></i>
-                                    <p>Clasificación de productos y servicios</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.iproperty.view_patentclassification %}
-                            <li class="nav-item">
-                                <a href="{% url 'iproperty:list_patents' %}" class="nav-link {% block patents %}{% endblock %}">
-                                    <i class="fa fa-copyright nav-icon"></i>
-                                    <p>Clasificación de patentes</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.iproperty.view_figurativeelementclassification %}
-                            <li class="nav-item">
-                                <a href="{% url 'iproperty:list_figurative' %}" class="nav-link {% block figurative %}{% endblock %}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Clasificación de elementos figurativos</p>
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if perms.iproperty.view_drawingclassification %}
-                            <li class="nav-item">
-                                <a href="{% url 'iproperty:list_drawings' %}" class="nav-link {% block drawings %}{% endblock %}">
-                                    <i class="fa fa-object-group nav-icon"></i>
-                                    <p>Clasificación de dibujos</p>
-                                </a>
-                            </li>
-                            {% endif %}
+                            
                             {% comment %} {% if perms.SISGDDO.view_proceso %}
                             <li class="nav-item">
                                 <a href="{% url 'listar_procesos' %}" class="nav-link {% block proceso %}{% endblock %}">
@@ -877,27 +1082,77 @@
                             </li>
                             <li class="nav-item">
                                 <a href="{% url 'group_list' %}" class="nav-link {% block grupo %}{% endblock %}">
-                                    <i class="fa fa-registered nav-icon"></i>
-                                    <p>Roles</p>
+                                    <i class="fa fa-registered"></i>
+                                    <p>Roles y permisos</p>
                                 </a>
-                            </li>
+                            </li>                            
                             <li class="nav-item">
-                                <a href="{% url 'history_list_300' %}"
-                                   class="nav-link {% block historial %}{% endblock %}">
-                                    <i class="fa fa-dot-circle nav-icon"></i>
-                                    <p>Trazas</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'db_save' %}"
+                                <a href="{% url 'db_list' %}"
                                    class="nav-link {% block salvabd %}{% endblock %}">
                                     <i class="fa fa-database"></i>
                                     <p>Salva y Restaura BD</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{% url 'history_list_300' %}"
+                                   class="nav-link {% block historial %}{% endblock %}">
+                                    <i class="fa fa-dot-circle"></i>
+                                    <p>Trazas</p>
+                                </a>
+                            </li>
+                            {% if not user.is_staff or user.is_superuser %}
+                                {% comment %} {% if perms.base.add_logoentity %} {% endcomment %}
+                                <li class="nav-item">
+                                    <a href="{% url 'base:create_logoentity' %}"
+                                       class="nav-link {% block actualizar_logo %}{% endblock %}">
+                                        <i class="fa fa-image"></i>
+                                        <p>Actualizar Logo</p>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a href="{% url 'prueba_LDAP' %}"
+                                   class="nav-link">
+                                    <i class="fa fa-cloud-download"></i>
+                                    <p>Probar LDAP</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'prueba_MigrarRodas' %}"
+                                   class="nav-link">
+                                    <i class="fa fa-external-link-square"></i>
+                                    <p>Probar Migrar Rodas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'prueba_Correo' %}"
+                                   class="nav-link">
+                                    <i class="fa fa-envelope"></i>
+                                    <p>Probar Correo</p>
+                                </a>
+                            </li>
                         </ul>
+
                     </li>
                     {% endif %}
+                    <li class="nav-header" style="color: blue"></li>
+                    <li class="nav-item has-treeview">
+                        <a href="/media/manual_usuario/ayuda.pdf" target="_blank" class="nav-link">
+                            <i class="nav-icon fas fa-book"></i>
+                            <p>
+                                Ayuda
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-header" style="color: blue"></li>
+                    <li class="nav-item has-treeview">
+                        <a href="{% url 'acerca_de' %}" class="nav-link {% block acerca_de %}{% endblock %}">
+                            <i class="nav-icon fas fa-info-circle"></i>
+                            <p>
+                                Acerca de SISGEPO
+                            </p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -1025,57 +1280,84 @@
     <!-- /.control-sidebar -->
 
 </div>
-    <!-- Gráficos -->
-{% comment %} <script src="{% static 'assets/plugins/highcharts-8.1.2/highcharts.js' %}"></script>
-<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/exporting.js' %}"></script>
-<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/export-data.js' %}"></script>
-<script src="{% static 'assets/plugins/highcharts-8.1.2/modules/accessibility.js' %}"></script> {% endcomment %}
-<!-- jQuery -->
-{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
-<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}"></script>
+ <!-- jQuery -->
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script> {% endcomment %}
+<script src="{% static 'assets/plugins/jquery/jquery.min.js' %}" type="text/javascript"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="{% static 'assets/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-ui/jquery-ui.min.js' %}" type="text/javascript"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
-<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/select2/js/select2.full.min.js' %}" type="text/javascript"></script>
 
-<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+<script src="{% static 'assets/plugins/sweetalert2/sweetalert2.min.js' %}" type="text/javascript"></script>
 <!-- Toastr -->
-<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'assets/plugins/toastr/toastr.min.js' %}" type="text/javascript"></script>
+<!-- ArmChat -->
+{% comment %} <script src="{% static 'assets/plugins/chart.js/chart.js' %}" type="text/javascript"></script> {% endcomment %}
 <!-- ChartJS -->
-{% comment %} <script src="{% static 'assets/plugins/chart.js/chart.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'assets/plugins/chart.js/chart.js' %}" type="text/javascript"></script> {% endcomment %}
 <!-- Sparkline -->
-<script src="{% static 'assets/plugins/sparklines/sparkline.min.js' %}"></script>
+<script src="{% static 'assets/plugins/sparklines/sparkline.min.js' %}" type="text/javascript"></script>
 <!-- JQVMap -->
-<script src="{% static 'assets/plugins/jqvmap/jquery.vmap.min.js' %}"></script>
-<script src="{% static 'assets/plugins/jqvmap/maps/jquery.vmap.usa.js' %}"></script>
+<script src="{% static 'assets/plugins/jqvmap/jquery.vmap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/jqvmap/maps/jquery.vmap.usa.js' %}" type="text/javascript"></script>
 <!-- jQuery Knob Chart -->
-<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}"></script>
+<script src="{% static 'assets/plugins/jquery-knob/jquery.knob.min.js' %}" type="text/javascript"></script>
 <!-- daterangepicker -->
-<script src="{% static 'assets/plugins/moment/moment.min.js' %}"></script>
-<script src="{% static 'assets/plugins/daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'assets/plugins/moment/moment.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/daterangepicker/daterangepicker.js' %}" type="text/javascript"></script>
 
 <!-- Tempusdominus Bootstrap 4 -->
-{% comment %} <script src="{% static 'assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'assets/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}" type="text/javascript"></script> {% endcomment %}
 <!-- Summernote -->
-<script src="{% static 'assets/plugins/summernote/summernote-bs4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/summernote/summernote-bs4.min.js' %}" type="text/javascript"></script>
 <!-- overlayScrollbars -->
-<script src="{% static 'assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}"></script>
+<script src="{% static 'assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js' %}" type="text/javascript"></script>
 <!-- AdminLTE App -->
-<script src="{% static 'assets/dist/js/adminlte.js' %}"></script>
+<script src="{% static 'assets/dist/js/adminlte.js' %}" type="text/javascript"></script>
 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-{% comment %} <script src="{% static 'assets/dist/js/pages/dashboard.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'assets/dist/js/pages/dashboard.js' %}" type="text/javascript"></script> {% endcomment %}
 <!-- AdminLTE for demo purposes -->
-{% comment %} <script src="{% static 'assets/dist/js/demo.js' %}"></script> {% endcomment %}
+{% comment %} <script src="{% static 'assets/dist/js/demo.js' %}" type="text/javascript"></script> {% endcomment %}
 
-<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-rowgroup/js/dataTables.rowGroup.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatables-rowgroup/js/dataTables.rowGroup.min.js' %}" type="text/javascript"></script>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#cerrarSesion').on('click', function(e){
+            e.preventDefault();
+            const logout = $(this).attr('href');
+            Swal.fire({
+                title: "¿Desea cerrar su sesión?",
+                //text: "You won't be able to revert this!",
+                type: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#DC3545",
+                cancelButtonColor: "#007BFF",
+                cancelButtonText: "Cancelar",
+                confirmButtonText: "Cerrar sesión"
+              }).then((result) => {
+                //console.log('result', result.value);
+                if (result.value == true) {
+                    $(location).attr('href', logout);
+                }
+            });
+        });
+    })
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('label:contains("*")').html(function(_, html) {
+            return html.replace('*', '<span style="color: red;">*</span>');
+        });
+    })
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         const Toast = Swal.mixin({
@@ -1155,6 +1437,20 @@
                    /*"width": 200,
                    "targets": 0*/
                 }],
+                "columnDefs": [
+                    {
+                        "targets": [0], // Indica el índice o el nombre de la columna
+                        "width": "50px"
+                    },
+                    {
+                        "targets": [-1], // Indica el índice o el nombre de la última columna (Acciones)
+                        "width": "130px" // Ajusta el ancho como desees
+                    },
+                    {
+                        "targets": 'no-sort',
+                        "orderable": false,
+                    }
+                ],
                 //fixedColumns: true,
                 language: {
                     "decimal": "",
@@ -1179,7 +1475,7 @@
                 "search": {
                     "caseInsensitive": true
                 },
-        });
+            });
 
     $('#example1 tbody').on('click', 'tr', function () {
         if ($(this).hasClass('selected')) {
@@ -1214,16 +1510,34 @@
         else {
             $(this).html('');
         }
-
-        if (!title.includes("ID")){
+        
+        if (!title.includes("Acciones")){
+            $(this).html( '<input type="text" placeholder="Buscar..." class="form-control"/>' );
+            $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+            });        
+        }
+        else {
+            $(this).html('');
+        }
+        
+        /*if (!title.includes("ID")){
             if ( table.column(i).name == "ID" ) {
                 table
                 .column(i)
                 .visible(false);
             }     
         }
+        if (title.includes("ID")) {
+            table.column(i).visible(false);
+        }*/
 
-        if (title.includes("Activo")){
+        /*if (title.includes("Activo")){
             sele = '<select class="custom-select form-select form-select-sm">'
             sele += '<option value="" selected>Todos</option>'
             sele += '<option value="true">Activados</option>'
@@ -1238,7 +1552,7 @@
                         .draw();
                 }
             });
-        }
+        }*/
     });
 });
 
@@ -1301,31 +1615,1122 @@
 
     })
 </script>
-<script src="{% static 'assets/plugins/datatables/jquery.dataTables.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-fixedheader/js/fixedHeader.bootstrap4.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatables-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables/jquery.dataTables.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatables-fixedheader/js/fixedHeader.bootstrap4.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatables-fixedheader/js/dataTables.fixedHeader.min.js' %}" type="text/javascript"></script>
 <!-- Plugin Tildes -->
-<script src="{% static 'assets/plugins/datatables-accent/accent-neutralise.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/dataTables.buttons.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/jszip.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/pdfmake.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/vfs_fonts.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/buttons.html5.min.js' %}"></script>
-<script src="{% static 'assets/plugins/datatable-file-export/buttons.print.min.js' %}"></script>
-<script src="{% static 'assets/plugins/moment-2.25.3/moment-with-locales.js' %}"></script>
-<script src="{% static 'assets/plugins/moment/locale/es.js' %}"></script>
-<script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}"></script>
-<script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}"></script>
-<script src="{% static 'assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}"></script>
+<script src="{% static 'assets/plugins/datatables-accent/accent-neutralise.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/dataTables.buttons.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/jszip.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/pdfmake.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/vfs_fonts.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/buttons.html5.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/datatable-file-export/buttons.print.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/moment-2.25.3/moment-with-locales.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/moment/locale/es.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/select2-4.0.13/js/select2.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/select2-4.0.13/js/i18n/es.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}" type="text/javascript"></script>
 
-<script src="{% static 'assets/plugins/amcharts4/core.js' %}"></script>
-<script src="{% static 'assets/plugins/amcharts4/charts.js' %}"></script>
-<script src="{% static 'assets/plugins/amcharts4/themes/animated.js' %}"></script>
-<script src="{% static 'assets/plugins/amcharts4/lang/es_ES.js' %}"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/highcharts.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/modules/data.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/modules/series-label.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/modules/exporting.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/modules/export-data.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/plugins/Highcharts-11.2.0/code/modules/accessibility.js' %}" type="text/javascript"></script>
 
-<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
+<script>
+    Highcharts.setOptions({
+        lang: {
+            decimalPoint: ',',
+            thousandsSep: '.',
+            loading: 'Cargando...',
+            contextButtonTitle: 'Menú contextual',
+            printChart: 'Imprimir gráfico',
+            downloadPNG: 'Descargar imagen PNG',
+            downloadJPEG: 'Descargar imagen JPEG',
+            downloadPDF: 'Descargar documento PDF',
+            downloadSVG: 'Descargar imagen SVG',
+            downloadCSV: 'Descargar archivo CSV',
+            downloadXLS: 'Descargar libro de Excel',
+            viewData: 'Ver tabla de datos',
+            openInCloud: 'Abrir en Highcharts Cloud',
+            viewFullscreen: 'Ver en pantalla completa',
+            exitFullscreen: 'Salir de pantalla completa',
+        }
+    });
+</script>
+<script>
+    function obtenerNombreMes(mes) {
+        switch (mes) {
+          case 1:
+            return "enero";
+          case 2:
+            return "febrero";
+          case 3:
+            return "marzo";
+          case 4:
+            return "abril";
+          case 5:
+            return "mayo";
+          case 6:
+            return "junio";
+          case 7:
+            return "julio";
+          case 8:
+            return "agosto";
+          case 9:
+            return "septiembre";
+          case 10:
+            return "octubre";
+          case 11:
+            return "noviembre";
+          case 12:
+            return "diciembre";
+          default:
+            return "mes no válido";
+        }
+      }
+</script>
+<script>
+    
+</script>
+{% if perms.xavi.view_acuerdo %}
+<script>
+    function createHighchartContainer1(data){
+        (function (H) {
+            H.seriesTypes.pie.prototype.animate = function (init) {
+                const series = this,
+                    chart = series.chart,
+                    points = series.points,
+                    {
+                        animation
+                    } = series.options,
+                    {
+                        startAngleRad
+                    } = series;
+        
+                function fanAnimate(point, startAngleRad) {
+                    const graphic = point.graphic,
+                        args = point.shapeArgs;
+        
+                    if (graphic && args) {
+        
+                        graphic
+                            .attr({
+                                start: startAngleRad,
+                                end: startAngleRad,
+                                opacity: 0.85  // Ajusta el valor de opacidad aquí
+                            })
+                            .animate({
+                                start: args.start,
+                                end: args.end
+                            }, {
+                                duration: animation.duration / points.length
+                            }, function () {
+                                if (points[point.index + 1]) {
+                                    fanAnimate(points[point.index + 1], args.end);
+                                }
+                                if (point.index === series.points.length - 1) {
+                                    series.dataLabelsGroup.animate({
+                                        opacity: 1
+                                    },
+                                    void 0,
+                                    function () {
+                                        points.forEach(point => {
+                                            point.opacity = 1;
+                                        });
+                                        series.update({
+                                            enableMouseTracking: true
+                                        }, false);
+                                        chart.update({
+                                            plotOptions: {
+                                                pie: {
+                                                    innerSize: '40%',
+                                                    borderRadius: 8
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                    }
+                }
+        
+                if (init) {
+                    points.forEach(point => {
+                        point.opacity = 0.85;  // Ajusta el valor de opacidad aquí
+                    });
+                } else {
+                    fanAnimate(points[0], startAngleRad);
+                }
+            };
+        }(Highcharts));
+        
+        Highcharts.chart('container1', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: '<a href="{% url 'listar_acuerdo' %}" title="Listar Premios y reconocimientos">Estado de acuerdos</a>',
+                align: 'left'
+            },
+            subtitle: {
+                text: 'Consejo de Dirección',
+                align: 'left'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    borderWidth: 2,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b><br>{point.percentage:.1f}%', // Ajuste aquí
+                        distance: 20
+                    }
+                }
+            },
+            series: [{
+                enableMouseTracking: false,
+                animation: {
+                    duration: 2000
+                },
+                colorByPoint: true,
+                data: data
+            }]
+        });
+    }
+    
+    
+    
+</script>
+{% endif %}
+{% if perms.xavi.view_premio %}
+<script>
+    function createHighchartContainer2(data){
+        
+        var fechaActual = new Date();
+        var numeroMes = fechaActual.getMonth() + 1;
+        var nombreMes = obtenerNombreMes(numeroMes);
+        Highcharts.chart('container2', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Premios y reconocimientos'
+            },
+            subtitle: {
+                text: (fechaActual.getUTCFullYear() - 1) + ' vs ' + fechaActual.getUTCFullYear()
+            },
+            xAxis: {
+                categories: [
+                    nombreMes
+                ]
+            },
+            yAxis: [{
+                min: 0,
+                title: {
+                    text: ''
+                }
+            }, {
+                title: {
+                    text: ''
+                },
+                opposite: true
+            }],
+            legend: {
+                shadow: false
+            },
+            tooltip: {
+                shared: true
+            },
+            plotOptions: {
+                column: {
+                    grouping: false,
+                    shadow: false,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: fechaActual.getUTCFullYear() - 1,
+                //color: 'rgba(248,161,63,1)',            
+                data: data['anno_pasado'],
+                tooltip: {
+                    valuePrefix: '$',
+                    valueSuffix: ' M'
+                },
+                pointPadding: 0.38,
+                pointPlacement: -0.2,
+                //yAxis: 1
+            }, {
+                name: fechaActual.getUTCFullYear(),
+                //color: 'rgba(186,60,61,.9)',
+                data: data['anno_actual'],
+                tooltip: {
+                    valuePrefix: '$',
+                    valueSuffix: ' M'
+                },
+                pointPadding: 0.38,
+                pointPlacement: 0.2,
+                //yAxis: 1
+            }]
+        });
+    }
+    
+</script>
+{% endif %}
 
+<script>
+    // Create the chart
+function createHighchartContainer5(data){
+    Highcharts.chart('container5', {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: '<a href="{% url 'listar_proyecto' %}" title="Listar Entradas de proyecto DGCA">Estado de entradas de proyecto DGCA</a>',
+            align: 'left'
+        },
+        subtitle: {
+            text: 'Entradas de proyectos DGCA',
+            align: 'left'
+        },
+    
+        accessibility: {
+            announceNewData: {
+                enabled: true
+            },
+            point: {
+                valueSuffix: '%'
+            }
+        },
+    
+        plotOptions: {
+            series: {
+                borderRadius: 5,
+                dataLabels: [{
+                    enabled: true,
+                    distance: 15,
+                    format: '{point.name}'
+                }, {
+                    enabled: true,
+                    distance: '-30%',
+                    filter: {
+                        property: 'percentage',
+                        operator: '>',
+                        value: 5
+                    },
+                    format: '{point.y:.1f}%',
+                    style: {
+                        fontSize: '0.9em',
+                        textOutline: 'none'
+                    }
+                }]
+            }
+        },
+    
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
+    
+        series: [
+            {
+                name: 'Estados',
+                colorByPoint: true,
+                data: data,
+            }
+        ],
+        drilldown: {
+            series: [
+                {
+                    name: 'Chrome',
+                    id: 'Chrome',
+                    data: [
+                        [
+                            'v97.0',
+                            36.89
+                        ],
+                        [
+                            'v96.0',
+                            18.16
+                        ],
+                        [
+                            'v95.0',
+                            0.54
+                        ],
+                        [
+                            'v94.0',
+                            0.7
+                        ],
+                        [
+                            'v93.0',
+                            0.8
+                        ],
+                        [
+                            'v92.0',
+                            0.41
+                        ],
+                        [
+                            'v91.0',
+                            0.31
+                        ],
+                        [
+                            'v90.0',
+                            0.13
+                        ],
+                        [
+                            'v89.0',
+                            0.14
+                        ],
+                        [
+                            'v88.0',
+                            0.1
+                        ],
+                        [
+                            'v87.0',
+                            0.35
+                        ],
+                        [
+                            'v86.0',
+                            0.17
+                        ],
+                        [
+                            'v85.0',
+                            0.18
+                        ],
+                        [
+                            'v84.0',
+                            0.17
+                        ],
+                        [
+                            'v83.0',
+                            0.21
+                        ],
+                        [
+                            'v81.0',
+                            0.1
+                        ],
+                        [
+                            'v80.0',
+                            0.16
+                        ],
+                        [
+                            'v79.0',
+                            0.43
+                        ],
+                        [
+                            'v78.0',
+                            0.11
+                        ],
+                        [
+                            'v76.0',
+                            0.16
+                        ],
+                        [
+                            'v75.0',
+                            0.15
+                        ],
+                        [
+                            'v72.0',
+                            0.14
+                        ],
+                        [
+                            'v70.0',
+                            0.11
+                        ],
+                        [
+                            'v69.0',
+                            0.13
+                        ],
+                        [
+                            'v56.0',
+                            0.12
+                        ],
+                        [
+                            'v49.0',
+                            0.17
+                        ]
+                    ]
+                },
+                {
+                    name: 'Safari',
+                    id: 'Safari',
+                    data: [
+                        [
+                            'v15.3',
+                            0.1
+                        ],
+                        [
+                            'v15.2',
+                            2.01
+                        ],
+                        [
+                            'v15.1',
+                            2.29
+                        ],
+                        [
+                            'v15.0',
+                            0.49
+                        ],
+                        [
+                            'v14.1',
+                            2.48
+                        ],
+                        [
+                            'v14.0',
+                            0.64
+                        ],
+                        [
+                            'v13.1',
+                            1.17
+                        ],
+                        [
+                            'v13.0',
+                            0.13
+                        ],
+                        [
+                            'v12.1',
+                            0.16
+                        ]
+                    ]
+                },
+                {
+                    name: 'Edge',
+                    id: 'Edge',
+                    data: [
+                        [
+                            'v97',
+                            6.62
+                        ],
+                        [
+                            'v96',
+                            2.55
+                        ],
+                        [
+                            'v95',
+                            0.15
+                        ]
+                    ]
+                },
+                {
+                    name: 'Firefox',
+                    id: 'Firefox',
+                    data: [
+                        [
+                            'v96.0',
+                            4.17
+                        ],
+                        [
+                            'v95.0',
+                            3.33
+                        ],
+                        [
+                            'v94.0',
+                            0.11
+                        ],
+                        [
+                            'v91.0',
+                            0.23
+                        ],
+                        [
+                            'v78.0',
+                            0.16
+                        ],
+                        [
+                            'v52.0',
+                            0.15
+                        ]
+                    ]
+                }
+            ]
+        }
+    });
+}
+
+    
+</script>
+
+{% if perms.xavi.view_objetivo %}
+
+<script>
+    // Create the chart
+Highcharts.chart('container3', {
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: '<a href="{% url 'listar_objetivo' %}" title="Listar Objetivos estratégicos">Estado cumplimiento</a>',
+        align: 'left'
+    },
+    subtitle: {
+        text: 'Objetivos estratégicos',
+        align: 'left'
+    },
+
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        },
+        point: {
+            valueSuffix: '%'
+        }
+    },
+
+    plotOptions: {
+        series: {
+            borderRadius: 5,
+            dataLabels: [{
+                enabled: true,
+                distance: 15,
+                format: '{point.name}'
+            }, {
+                enabled: true,
+                distance: '-30%',
+                filter: {
+                    property: 'percentage',
+                    operator: '>',
+                    value: 5
+                },
+                format: '{point.y:.1f}%',
+                style: {
+                    fontSize: '0.9em',
+                    textOutline: 'none'
+                }
+            }]
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+    },
+
+    series: [
+        {
+            name: 'Evaluaciones',
+            colorByPoint: true,
+            data: [
+                {
+                    name: 'Muy bien',
+                    y: 61.04,
+                    drilldown: 'Muy bien'
+                },
+                {
+                    name: 'Casi bien',
+                    y: 9.47,
+                    drilldown: 'Casi bien'
+                },
+                {
+                    name: 'Regular',
+                    y: 9.32,
+                    drilldown: 'Regular'
+                },
+                {
+                    name: 'Algo mal',
+                    y: 8.15,
+                    drilldown: 'Algo mal'
+                },
+                {
+                    name: 'Muy mal',
+                    y: 11.02,
+                    drilldown: null
+                }
+            ]
+        }
+    ],
+    drilldown: {
+        series: [
+            {
+                name: 'Chrome',
+                id: 'Chrome',
+                data: [
+                    [
+                        'v97.0',
+                        36.89
+                    ],
+                    [
+                        'v96.0',
+                        18.16
+                    ],
+                    [
+                        'v95.0',
+                        0.54
+                    ],
+                    [
+                        'v94.0',
+                        0.7
+                    ],
+                    [
+                        'v93.0',
+                        0.8
+                    ],
+                    [
+                        'v92.0',
+                        0.41
+                    ],
+                    [
+                        'v91.0',
+                        0.31
+                    ],
+                    [
+                        'v90.0',
+                        0.13
+                    ],
+                    [
+                        'v89.0',
+                        0.14
+                    ],
+                    [
+                        'v88.0',
+                        0.1
+                    ],
+                    [
+                        'v87.0',
+                        0.35
+                    ],
+                    [
+                        'v86.0',
+                        0.17
+                    ],
+                    [
+                        'v85.0',
+                        0.18
+                    ],
+                    [
+                        'v84.0',
+                        0.17
+                    ],
+                    [
+                        'v83.0',
+                        0.21
+                    ],
+                    [
+                        'v81.0',
+                        0.1
+                    ],
+                    [
+                        'v80.0',
+                        0.16
+                    ],
+                    [
+                        'v79.0',
+                        0.43
+                    ],
+                    [
+                        'v78.0',
+                        0.11
+                    ],
+                    [
+                        'v76.0',
+                        0.16
+                    ],
+                    [
+                        'v75.0',
+                        0.15
+                    ],
+                    [
+                        'v72.0',
+                        0.14
+                    ],
+                    [
+                        'v70.0',
+                        0.11
+                    ],
+                    [
+                        'v69.0',
+                        0.13
+                    ],
+                    [
+                        'v56.0',
+                        0.12
+                    ],
+                    [
+                        'v49.0',
+                        0.17
+                    ]
+                ]
+            },
+            {
+                name: 'Safari',
+                id: 'Safari',
+                data: [
+                    [
+                        'v15.3',
+                        0.1
+                    ],
+                    [
+                        'v15.2',
+                        2.01
+                    ],
+                    [
+                        'v15.1',
+                        2.29
+                    ],
+                    [
+                        'v15.0',
+                        0.49
+                    ],
+                    [
+                        'v14.1',
+                        2.48
+                    ],
+                    [
+                        'v14.0',
+                        0.64
+                    ],
+                    [
+                        'v13.1',
+                        1.17
+                    ],
+                    [
+                        'v13.0',
+                        0.13
+                    ],
+                    [
+                        'v12.1',
+                        0.16
+                    ]
+                ]
+            },
+            {
+                name: 'Edge',
+                id: 'Edge',
+                data: [
+                    [
+                        'v97',
+                        6.62
+                    ],
+                    [
+                        'v96',
+                        2.55
+                    ],
+                    [
+                        'v95',
+                        0.15
+                    ]
+                ]
+            },
+            {
+                name: 'Firefox',
+                id: 'Firefox',
+                data: [
+                    [
+                        'v96.0',
+                        4.17
+                    ],
+                    [
+                        'v95.0',
+                        3.33
+                    ],
+                    [
+                        'v94.0',
+                        0.11
+                    ],
+                    [
+                        'v91.0',
+                        0.23
+                    ],
+                    [
+                        'v78.0',
+                        0.16
+                    ],
+                    [
+                        'v52.0',
+                        0.15
+                    ]
+                ]
+            }
+        ]
+    }
+});
+
+    
+</script>
+
+<script>
+    function createHighchartContainer4(data) {
+        Highcharts.chart('container4', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Evaluación de cada objetivo estratégico'
+            },
+            subtitle: {
+                text: '(último trimestre evaluado)'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    autoRotation: [-45, -90],
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Evaluación'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Puntuación en el último trimestre: <b>{point.y:.1f}</b>'
+            },
+            series: [{
+                name: 'Puntuación',
+                colorByPoint: true,
+                groupPadding: 0,
+                data: data,
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    format: '{point.y:.1f}',
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            }]
+        });
+    }
+    
+    
+</script>
+{% endif %}
+
+<script>
+    var urlActual = window.location.href;
+
+    var urlDeseada = "http://127.0.0.1:8000/";
+
+    if (urlActual === "http://127.0.0.1:8000/" || urlActual === "http://127.0.0.1:8000/#" || 
+    urlActual === 'https://gestion.vm.citmatel.inf.cu:4443/' || urlActual === 'https://gestion.vm.citmatel.inf.cu:4443/#'){
+        $.ajax({
+            url: "{% url 'cargar_datos' %}",
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                console.log("DATA DATTTTT", data);
+                try {
+                    let perms = $('#permisosParaJavaScript');
+                    if (perms.attr('data-viewPremio') == 'True'){
+                        createHighchartContainer2(data['comparativa_premios'][0]);
+                    }
+                    if (perms.attr('data-viewObjetivo') == 'True'){
+                        createHighchartContainer4(data['objetivos_columna']);
+                    }
+                    if (perms.attr('data-viewAcuerdo') == 'True'){
+                        createHighchartContainer1(data['porciento_acuerdos']);
+                    }
+                    if (perms.attr('data-viewEntrada') == 'True'){
+                        createHighchartContainer5(data['estados_dgca']);
+                    }
+
+
+                    /*if (data['objetivos_columna'].length > 0) {
+                    } else {
+                        console.log("No se encontraron datos para cargar el gráfico");
+                        $("#container4").text("No se encontraron datos para cargar el gráfico");
+                    }
+                    if (data['porciento_acuerdos'].length > 0) {
+                        
+                        
+                    } else {
+                        console.log("No se encontraron datos para cargar el gráfico");
+                        $("#container1").text("No se encontraron datos para cargar el gráfico");
+                    }
+                    if (data['comparativa_premios'].length > 0) {
+                        //console.log(data['comparativa_premios'][0]['anno_actual'])
+                        
+                    } else {
+                        console.log("No se encontraron datos para cargar el gráfico");
+                        $("#container2").text("No se encontraron datos para cargar el gráfico");
+                    }*/
+                } catch (error){
+                    console.log('Ha ocurrido un error manejado:', error.message)
+                }
+                
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al cargar datos:", error);
+            }
+        });
+    }
+</script>
+<script>
+    $.ajax({
+        url: "{% url 'cargar_frase' %}",
+        type: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            //console.log("DADADADA", data);
+            //console.log("DADADADA", data['escribir']);
+            //console.log("DADADADA", data['frase']);
+            let frase = decodeURIComponent(escape(data['frase']))
+            $('#fraseMotivacional').html(`"${frase}"`);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error al cargar la frase:", error);
+        }
+    });
+
+    
+    $('#fraseMotivacional').on('click', function () {
+        try {
+            Swal.fire({
+                title: 'Cargando...',
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        
+            const currentQuote = $('#fraseMotivacional').html();
+            const storedQuote = localStorage.getItem('motivationalQuote');
+    
+            if (!currentQuote) {
+                console.error("Error: El contenido de la cita actual es nulo o indefinido");
+                return;
+            }
+        
+            if (!storedQuote || storedQuote !== currentQuote) {
+                //const imageUrl = 'https://picsum.photos/600/400.webp';
+                const staticImagePath = '/static/frases/'; // Assuming your image folder is named 'images'
+                const imageNames = [
+                    "pexels-andrejcook-131723.jpg",
+                    "pexels-david-bartus-43782-1166209.jpg",
+                    "pexels-divinetechygirl-1181414.jpg",
+                    "pexels-ekrulila-2452379.jpg",
+                    "pexels-fauxels-3184668.jpg",
+                    "pexels-fotios-photos-1107717.jpg",
+                    "pexels-gabby-k-9429554.jpg",
+                    "pexels-jiang-jin-1066744667-20543264.jpg",
+                    "pexels-jorge-acre-239933086-13755865.jpg",
+                    "pexels-karolina-grabowska-4498607.jpg",
+                    "pexels-lorna-watson-142769-431652.jpg",
+                    "pexels-m-venter-792254-1659435.jpg",
+                    "pexels-margen-cero-3534216-18676549.jpg",
+                    "pexels-olly-3756042.jpg",
+                    "pexels-olly-3768894.jpg",
+                    "pexels-olly-3769002.jpg",
+                    "pexels-olly-3769021.jpg",
+                    "pexels-olly-3775603.jpg",
+                    "pexels-olly-3891135.jpg",
+                    "pexels-pixabay-147411.jpg",
+                    "pexels-pixabay-158063.jpg",
+                    "pexels-pixabay-206359.jpg",
+                    "pexels-pixabay-355465.jpg",
+                    "pexels-pixabay-36478.jpg",
+                    "pexels-pixabay-462162.jpg",
+                    "pexels-rachel-xiao-253850-772429.jpg",
+                    "pexels-samandgos-709552.jpg",
+                    "pexels-seventov-1194502.jpg",
+                    "pexels-shvetsa-3727463.jpg",
+                    "pexels-tirachard-kumtanom-112571-347135.jpg"
+                ];
+
+                // Function to pick a random image
+                function pickRandomImage() {
+                    const randomIndex = Math.floor(Math.random() * imageNames.length);
+                    return staticImagePath + imageNames[randomIndex];
+                }
+
+                const imageUrl = pickRandomImage();
+                console.log('imageUrl', imageUrl)
+
+                const img = new Image();
+        
+                img.onload = function () {
+                    if (!img) {
+                        console.error("Error: El objeto de imagen es nulo o indefinido");
+                        return;
+                    }
+                    // Guardar la frase y la URL de la imagen en el almacenamiento local
+                    localStorage.setItem('motivationalQuote', currentQuote);
+                    localStorage.setItem('motivationalImageUrl', imageUrl);
+        
+                    // Mostrar la frase y la imagen en el SweetAlert
+                    Swal.fire({
+                        title: currentQuote,
+                        imageUrl: imageUrl,
+                        imageAlt: 'A beautiful landscape',
+                        showConfirmButton: false,
+                        //color: '#716add',
+                        backdrop: `
+                            rgba(0,0,123,0.3)
+                            left top
+                            no-repeat
+                        `
+                    });
+        
+                    Swal.update(); // Actualizar el SweetAlert después de mostrar la imagen
+                };
+        
+                img.onerror = function () {
+                    if (!img) {
+                        console.error("Error: El objeto de imagen es nulo o indefinido");
+                        return;
+                    }
+                    console.error("Error al cargar la imagen");
+                    Swal.fire({
+                        title: currentQuote,
+                        showConfirmButton: false,
+                        //color: '#716add',
+                        backdrop: `
+                            rgba(0,0,123,0.3)
+                            left top
+                            no-repeat
+                        `
+                    });
+                };
+        
+                img.src = imageUrl; // Cargar la imagen
+            } else {
+                const storedImageUrl = localStorage.getItem('motivationalImageUrl');
+        
+                if (storedImageUrl) {
+                    // Mostrar la frase y la imagen almacenada en el SweetAlert
+                    Swal.fire({
+                        title: currentQuote,
+                        imageUrl: storedImageUrl,
+                        imageAlt: 'A beautiful landscape',
+                        showConfirmButton: false,
+                        //color: '#716add',
+                        backdrop: `
+                            rgba(0,0,123,0.4)
+                            left top
+                            no-repeat
+                        `
+                    });
+                }
+            }
+
+        } catch (error){
+            console.log(`Ha ocurrido un error ${error.message}`)
+        }
+        
+    });
+     
+</script>
 
 <script>
 let temp = $("#btn1").clone();
@@ -1357,8 +2762,8 @@ $(document).ready(function(){
     } );
 });
 </script>
-<script type="application/javascript">
-        {% comment %} Highcharts.chart('container', {
+{% comment %} <script type="application/javascript">
+        Highcharts.chart('container', {
             lang: {
                 downloadCSV:"Descargar CSV",
                 downloadXLS:"Descargar XLC",
@@ -1422,9 +2827,9 @@ $(document).ready(function(){
                 colorByPoint: true,
                 data: {{ datos_grafico_barra|safe }}
             }]
-        }); {% endcomment %}
+        });
 
-</script>
+</script> {% endcomment %}
 <script type="application/javascript">
 {% comment %} Highcharts.chart('container-pie', {
     lang: {

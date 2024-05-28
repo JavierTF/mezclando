@@ -26,18 +26,27 @@
                 </td>
                 <td>
                     <span class="input-group">
-                    {% if perms.iproperty.change_typelegaldocument %}
+                  
+                    <label>
+                        <form action="{% url 'iproperty:activate_typelegaldocument' model.id %}" method="POST" class="form-activate">
+                            {% csrf_token %}
+                            <span style="display: none">{{ model.active }}</span>
+                            <input type="checkbox" name="activate" {% if model.active %} checked {% endif %} class="checkbox-activate"/>
+                        </form>
+                        <div class="switch {% if model.active %} switchOn {% endif %}">
+                        </div>
+                    </label>
+                   
                         <a href="{% url 'iproperty:update_typelegaldocument' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
                         <i class="fa fa-edit"></i>
                         </a>
-                    {% endif %}
-                    {% if perms.iproperty.delete_typelegaldocument %}
+                  
                         <a href="#" model-url="{% url 'iproperty:delete_typelegaldocument' model.id %}"
                             class="btn btn-sm btn-primary btn-primary-transparent ml-2 delete_typelegaldocument" title="eliminar">
                         <i class="fa fa-trash"></i>
                         </a>
-                    {% endif %}
+                   
                     </span>
                 </td>
             </tr>

@@ -1,0 +1,80 @@
+{% extends 'P00/Auditorias Internas/auditoria_interna.html' %}
+{% load static %}
+
+{% block page_title %}
+    <title>SISGEPO | Auditoría Interna | Eliminar</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Eliminar Auditoría.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_auditoriainterna' %}" onclick="return confirmarAccesoURL()"> P00 / Auditorías Internas</a></li>
+                            <li class="breadcrumb-item active">Eliminar</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header alert-danger">
+                        <h3 class="card-title">Advertencia!</h3>
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <div class="alert">
+
+                    <h4>
+                        ¿Está seguro que desea eliminar la información de la auditoría interna <strong>{{ object.titulo |capfirst }}</strong>?
+                        La información no podrá restaurarse.
+                    </h4>
+                    &nbsp;
+                    <form action="" method="post">{% csrf_token %}
+                        <p class="text-center">
+                            <button type="submit" class="btn btn-danger">
+                                Borrar
+                            </button>
+                            <a class="btn btn-primary" href="{% url 'listar_auditoriainterna' %}">
+                                Cancelar
+                            </a>
+                        </p>
+                    </form>
+                </div>
+                    <!-- END FORM-->
+                </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+<script> 
+    //Cuadro de diálogo de confirmación en JavaScript
+    function confirmarAccesoURL()
+    {
+  return confirm("¿Está seguro que desea descartar los cambios?");
+    }
+</script>

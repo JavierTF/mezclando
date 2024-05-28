@@ -114,11 +114,12 @@ left: 24px !important;
                         <form action="{% url 'licenses:export_licenses' %}" class="form-horizontal">
                             <div class="row col-6">
                                 <div class="col-6">
+                                    <input type="text" name="search" style="display: none">
                                     <select class="form-control select2" name="export_status">
                                         <option value="0">TODOS</option>
-                                        <option value="1">ACTIVO</option>
-                                        <option value="2">EN PROCESO</option>
-                                        <option value="3">VENCIDO</option>
+                                        <option value="1">Vigente</option>
+                                        <option value="2">En proceso de renovación</option>
+                                        <option value="3">Vencido</option>
                                     </select>
                                 </div>
                                 <div class="col-5">

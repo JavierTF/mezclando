@@ -1,7 +1,7 @@
 {% extends 'nomencladores/fuente_financiamiento/fuente_financiamiento.html' %}
 {% load static %}
 {% comment %} {% load staticfiles %} {% endcomment %}
-<script src="{% static 'assets/dist/js/myjs.js' %}"></script>
+<script src="{% static 'assets/dist/js/myjs.js' %}" type="text/javascript"></script>
 
 {% block page_title %}
     <title>SISGEPO | Modificar Fuentes de financiamiento</title>
@@ -41,7 +41,14 @@
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form
+                        id="formulario"
+                        class="form-horizontal"
+                        method="post"
+                        enctype="multipart/form-data"
+                        formaction="{% url 'modificar_fuente_financiamiento' object.id %}"
+                        formsuccess="{% url 'listar_fuente_financiamiento' %}"
+                    >
                         {% csrf_token %}
                         <div class="form-body">
                             {% for campo in form %}
@@ -79,16 +86,57 @@
 
     <script type="application/javascript">
 
-//VALIDACION CAMPOS VACIOS
    $('#id_nombre').bind('focusout',function(){
       validate_campos_vacios($(this));
    });
-   //VALIDACION SOLO LETRAS INCLUYENDO Ñ Y ñ
-$('#id_nombre').keypress(function( event )
-{
-    //CAMPOS VACIOS
-    return validate_only_text($(this), event);
-
-});
+   
+   function submitForm(formulario) {
+    console.log('first first first')
+    formulario.on("submit", function (e) {
+        e.preventDefault();
+        var href = formulario.attr("formaction");
+        var listar = formulario.attr("formsuccess");
+        var data = formulario.serializeArray();
+  
+        if ($(".is-invalid").length > 0) {
+            return false;
+        } else {
+            $('button[type="submit"]').prop("disabled", true);
+  
+            var form = document.getElementById(formulario.attr("id"));
+            var form_data = new FormData(form);
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            form_data.append("csrfmiddlewaretoken", csrf_token);
+  
+            $.ajax({
+                url: formulario.attr("formaction"),
+                type: formulario.attr("method"),
+                dataType: "JSON",
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.result == "success") {
+                        console.log('LLEGUEEE')
+                        Swal.fire({
+                            title: data.title,
+                            type: data.result,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then((result) => {
+                            $(location).attr('href', listar); 
+                        });
+                    } else if (data.result == "error") {
+                        var element = document.querySelector(`[name="${data.field}"]`);
+                        updateErrorMessage(element, data.title);
+                        $('button[type="submit"]').prop("disabled", true);
+                    }
+                },
+            });
+        }
+    });
+  }
+  
+  submitForm($("#formulario"));
 </script>
 {% endblock %}

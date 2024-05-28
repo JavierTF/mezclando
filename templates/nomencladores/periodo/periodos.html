@@ -1,0 +1,98 @@
+{% extends 'index.html' %}
+{% block page_title %}
+    <title>SISGEPO | Periodos</title>
+{% endblock %}
+{% block periodos %} active {% endblock %}
+{% block menu_nomencladores %} active menu-open {% endblock %}
+{% block menu_nomencladores_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion2_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Listar Periodos.</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Periodos.</li>
+                        {% endblock %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block miestilo %}
+    
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {% if perms.xavi.add_periodo %}
+                            <a href="{% url 'agregar_periodo' %}" class="btn btn-primary fa-pull-right">
+                                <span class="fa fa-plus"> Adicionar</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Nombre</th>
+                                    <th style="width: 30px;">Orden</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for periodo in lista %}
+                                    <tr id="{{ periodo.id }}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ periodo.nombre }}</td>
+                                        <td style="width: 30px;">{% if periodo.orden %}{{ periodo.orden }}{% else %}------{% endif %}</td>
+                                        <td>
+                                            <span class="input-group">
+                                                {% if perms.xavi.change_periodo %}
+                                                    <a href="{% url 'modificar_periodo' periodo.pk %}"
+                                                        class="btn btn-sm btn-primary btn-primary-transparent"
+                                                        title="Modificar">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if perms.xavi.delete_periodo %}
+                                                    <a href="{% url 'eliminar_periodo' periodo.pk %}"
+                                                        class="btn btn-sm btn-primary btn-primary-transparent ml-2"
+                                                        title="Eliminar">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}

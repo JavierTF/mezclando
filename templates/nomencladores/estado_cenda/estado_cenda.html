@@ -4,7 +4,10 @@
 {% endblock %}
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
-
+{% block menu_nomencladores_proyectos2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos2_active %} active {% endblock %}
+{% block menu_nomencladores_proyectos %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos_active %} active {% endblock %}
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -153,13 +156,13 @@ left: 24px !important;
                                         {% endif %}
                                         {% if perms.SISGDDO.change_estado_cenda %}
                                             <a href="{% url 'modificar_estado_cenda' cenda.pk %}"
-                                                class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                                class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                             <i class="fa fa-edit"></i>
                                             </a>
                                         {% endif %}
                                         {% if perms.SISGDDO.delete_estado_cenda %}
                                             <a href="{% url 'eliminar_estado_cenda' cenda.pk %}"
-                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                             <i class="fa fa-trash"></i>
                                             </a>
                                         {% endif %}

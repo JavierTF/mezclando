@@ -19,7 +19,7 @@ from apps.effectiveness.forms import IndicatorModelForm, IndicatorMeasurerModelF
 from apps.effectiveness.utils import get_year_effectiveness, get_total_evaluation
 
 
-@permission_required('effectiveness.view_indicator', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def list_indicator(request):
     """
     En esta vista se listan los indicadores,
@@ -29,8 +29,8 @@ def list_indicator(request):
     models = Indicator.objects.all()
     template_models_list = 'effectiveness/indicators/list.html'
 
-    if request.GET.get('search'):
-        indicators = Indicator.objects.filter(name__icontains=request.GET.get('search')).exclude(id__in=request.GET.getlist('excludes[]')) if request.GET.get('search') != '__all__' else Indicator.objects.all().exclude(id__in=request.GET.getlist('excludes[]'))
+    if request.GET.get('process_id') and request.GET.get('search'):
+        indicators = models.filter(process_id__exact=request.GET.get('process_id'), name__icontains=request.GET.get('search')).exclude(id__in=request.GET.getlist('excludes[]')) if request.GET.get('search') != '__all__' else models.filter(process_id__exact=request.GET.get('process_id')).exclude(id__in=request.GET.getlist('excludes[]'))
         return JsonResponse({"results": [{"id": indicator.id, "text": indicator.name} for indicator in indicators]})
 
     return render(
@@ -43,7 +43,7 @@ def list_indicator(request):
     )
 
 
-@permission_required('effectiveness.add_indicator', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_indicator(request):
     form = IndicatorModelForm()
     form_measurer = IndicatorMeasurerModelForm(prefix='measurer')
@@ -65,7 +65,7 @@ def create_indicator(request):
     return render(request, 'effectiveness/indicators/create.html', {'form': form, 'form_measurer': form_measurer})
 
 
-@permission_required('effectiveness.change_indicator', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def update_indicator(request, indicator_id):
     instance = get_object_or_404(Indicator, pk=indicator_id)
     form = IndicatorModelForm(instance=instance)
@@ -89,7 +89,15 @@ def update_indicator(request, indicator_id):
     return render(request, 'effectiveness/indicators/update.html', {'instance': instance, 'form': form, 'form_measurer': form_measurer})
 
 
-@permission_required('effectiveness.delete_indicator', login_url=reverse_lazy('inicio'), raise_exception=True)
+
+def activate_indicator(request, indicator_id):
+    instance = get_object_or_404(Indicator, pk=indicator_id)
+    instance.active = True if request.POST.get('activate') == "on" else False
+    instance.save()
+    return redirect(reverse_lazy('effectiveness:indicators'))
+
+
+
 def delete_indicator(request, indicator_id):
     model = get_object_or_404(Indicator, pk=indicator_id)
     logs(request, Indicator, model, 3)
@@ -98,7 +106,7 @@ def delete_indicator(request, indicator_id):
 
 
 # Effectiveness
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def list_effectiveness(request):
     """
     En esta vista se listan los procesos de eficacias,
@@ -118,15 +126,15 @@ def list_effectiveness(request):
     )
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def details_effectiveness(request, effectiveness_id):
     model = get_object_or_404(Effectiveness, pk=effectiveness_id)
     return render(request, 'effectiveness/effectiveness/details.html', {'model': model})
 
 
-@permission_required('effectiveness.add_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_effectiveness(request):
-    form = EffectivenessModelForm(initial={"year": datetime.date.today().year})  # initial={"is_foreign": True}
+    form = EffectivenessModelForm(initial={"process": Process.objects.first(), "year": datetime.date.today().year})  # initial={"is_foreign": True}
 
     if request.method == 'POST':
         process = request.POST.get('process')
@@ -145,7 +153,7 @@ def create_effectiveness(request):
     return render(request, 'effectiveness/effectiveness/create.html', {'form': form})
 
 
-@permission_required('effectiveness.add_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_semester(request, effectiveness_id, semester):
     effectiveness = get_object_or_404(Effectiveness, pk=effectiveness_id)
     semester_id = semester
@@ -169,7 +177,7 @@ def create_semester(request, effectiveness_id, semester):
     return render(request, 'effectiveness/effectiveness/create_semester.html', {'instance': effectiveness, 'semester': semester, 'form': form})
 
 
-@permission_required('effectiveness.change_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def clone_semester(request, effectiveness_id, semester):
     instance = get_object_or_404(Effectiveness, pk=effectiveness_id)
     original_semester = instance.semesters.get(semester=semester)
@@ -189,7 +197,7 @@ def clone_semester(request, effectiveness_id, semester):
     return redirect(reverse_lazy('effectiveness:details_effectiveness', kwargs={'effectiveness_id': effectiveness_id}))
 
 
-@permission_required('effectiveness.delete_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def delete_semester(request, effectiveness_id, semester_id):
     effectiveness_semester = get_object_or_404(EffectivenessSemester, pk=semester_id)
     logs(request, EffectivenessSemester, effectiveness_semester, 1)
@@ -197,7 +205,7 @@ def delete_semester(request, effectiveness_id, semester_id):
     return redirect(reverse_lazy('effectiveness:details_effectiveness', kwargs={'effectiveness_id': effectiveness_id}))
 
 
-@permission_required('effectiveness.change_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def update_effectiveness(request, effectiveness_id, semester):
     instance = get_object_or_404(Effectiveness, pk=effectiveness_id)
     effectiveness_semester = instance.semesters.get(semester=semester)
@@ -221,7 +229,7 @@ def update_effectiveness(request, effectiveness_id, semester):
     return render(request, 'effectiveness/effectiveness/update.html', {'instance': instance, 'semester': effectiveness_semester, 'form': form})
 
 
-@permission_required('effectiveness.delete_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def delete_effectiveness(request, effectiveness_id):
     effectiveness = get_object_or_404(Effectiveness, pk=effectiveness_id)
     logs(request, Effectiveness, effectiveness, 3)
@@ -229,16 +237,31 @@ def delete_effectiveness(request, effectiveness_id):
     return redirect(reverse_lazy('effectiveness:list_effectiveness'))
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_effectiveness(request):
     if request.method == 'GET':
         logos = get_logos()
         logo1 = logos['logo1']
         logo2 = logos['logo2']
         models = Effectiveness.objects.all()
+        filters = Q(pk__gt=0)
+
+        if request.GET.get('export_status') and int(request.GET.get('export_status')) != 0:
+            filters = filters & Q(status=request.GET.get('export_status'))
+
+        if request.GET.get('search') and request.GET.get('search') != '':
+            filters = filters & \
+                    (
+                        Q(process__abbreviation__icontains=request.GET.get('search'))
+                        | Q(process__name__icontains=request.GET.get('search'))
+                        | Q(process__responsible__first_name__icontains=request.GET.get('search'))
+                        | Q(process__responsible__last_name__icontains=request.GET.get('search'))
+                        | Q(year__icontains=request.GET.get('search'))
+                    )
+
         html_string = render_to_string(
             'effectiveness/effectiveness/export_list.html',
-            {'models': models, 'owner': request.user, 'date': request.GET.get('export_date')}
+            {'models': models.filter(filters).distinct(), 'owner': request.user, 'date': datetime.date.today()}
         )
         html = HTML(string=html_string, base_url=request.build_absolute_uri())
         uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
@@ -261,7 +284,7 @@ def export_effectiveness(request):
     return redirect(reverse_lazy('effectiveness:list_effectiveness'))
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_details_effectiveness(request, effectiveness_id):
     if request.method == 'GET':
         logos = get_logos()
@@ -291,7 +314,7 @@ def export_details_effectiveness(request, effectiveness_id):
     return redirect(reverse_lazy('effectiveness:list_effectiveness'))
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def tableall_effectiveness(request):
     """
         En esta vista se listan los procesos de eficacias,
@@ -313,7 +336,7 @@ def tableall_effectiveness(request):
     )
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def exportall_effectiveness(request):
     if request.method == 'GET':
         logos = get_logos()
@@ -342,7 +365,7 @@ def exportall_effectiveness(request):
     return redirect(reverse_lazy('effectiveness:list_effectiveness'))
 
 
-@permission_required('effectiveness.view_effectiveness', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def reports_effectiveness(request):
     """
     En esta vista muestra reportes grśficos de la eficacia de los procesos,

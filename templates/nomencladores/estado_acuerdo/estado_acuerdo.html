@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block page_title %}
-    <title>SISGEPO | Estados de acuerdo</title>
+    <title>SISGEPO | Estados de Acuerdo del Consejo de Dirección</title>
 {% endblock %}
 
 {% block estado_acuerdo %}
@@ -10,13 +10,17 @@
 
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion2_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_informacion %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_informacion_active %} active {% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Estados de acuerdo.</h1>
+                    <h1 class="m-0 text-dark">Listar Estados de Acuerdo del Consejo de Dirección.</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -109,8 +113,8 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        {% comment %} <h3 class="card-title">Listado de Estados de acuerdo </h3> {% endcomment %}
-                        {% if perms.SISGDDO.add_estado_acuerdo %}
+                        {% comment %} <h3 class="card-title">Listado de Estados de Acuerdo del Consejo de Dirección </h3> {% endcomment %}
+                        {% if perms.xavi.add_estado_acuerdo or perms.xavi.add_acuerdo %}
                         <a href="{% url 'agregar_estado_acuerdo' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
@@ -128,9 +132,8 @@ left: 24px !important;
                                 <th>
                                     Nombre
                                 </th>
-
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -144,12 +147,9 @@ left: 24px !important;
                                         <td>
                                             {{ lt.nombre }}
                                         </td>
-
-
-                                        
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_estado_acuerdo %}
+                                    {% comment %} {% if perms.xavi.change_estado_acuerdo %}
                                     <label>
                                         <form action="{% url 'act_desactestado_acuerdo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -159,16 +159,16 @@ left: 24px !important;
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>
                                     </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.change_estado_acuerdo %}
+                                    {% endif %} {% endcomment %}
+                                    {% if perms.xavi.change_estado_acuerdo or perms.xavi.change_acuerdo %}
                                     <a href="{% url 'modificar_estado_acuerdo' lt.pk %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_estado_acuerdo %}
+                                    {% if perms.xavi.delete_estado_acuerdo or perms.xavi.delete_acuerdo %}
                                         <a href="{% url 'eliminar_estado_acuerdo' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %}

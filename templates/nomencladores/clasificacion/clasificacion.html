@@ -1,0 +1,134 @@
+{% extends 'index.html' %}
+{% block page_title %}
+    <title>SISGEPO | Clasificaciones</title>
+{% endblock %}
+{% block clasificacion_proyecto %}
+    active
+{% endblock %}
+
+{% block menu_nomencladores %} active menu-open {% endblock %}
+{% block menu_nomencladores_active %} active {% endblock %}
+{% block menu_nomencladores_proyectos2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos2_active %} active {% endblock %}
+{% block menu_nomencladores_proyectos %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Listar Clasificaciones.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Nomencladores</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active">Clasificación.</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        {% comment %} <h3 class="card-title">Listado de Tipos de codigo </h3> {% endcomment %}
+                        {% if perms.xavi.add_clasificacion %}
+                        <a href="{% url 'agregar_clasificacion' %}" class="btn btn-primary fa-pull-right">
+                            <span class="fa fa-plus"> Adicionar</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Número
+                                </th>
+                                <th style="width: 120px;">
+                                    Siglas
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for lt in lista %}
+
+                                <tr id="{{ lt.id }}">
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+                                    <td style="width: 120px;">
+                                        {{ lt.siglas }}
+                                    </td>
+                                    <td>
+                                        {{ lt.nombre }}
+                                    </td>
+                                    <td>
+                                    <span class="input-group">
+                                    
+                                    <a href="{% url 'modificar_clasificacion' lt.pk %}"
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
+                                    <i class="fa fa-edit"></i>
+                                    </a>
+                                    
+                                        <a href="{% url 'eliminar_clasificacion' lt.pk %}"
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
+                                        <i class="fa fa-trash"></i>
+                                        </a>
+                                    
+                                    </span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function(){
+        $('.switch').click(function(){
+            $(this).toggleClass("switchOn");
+        });
+
+    });
+            $('.checkbox-activate').change(function()
+        {
+        $(this).closest('form').submit();
+    });
+
+</script>
+{% endblock %}

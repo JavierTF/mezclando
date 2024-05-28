@@ -1,0 +1,176 @@
+{% extends 'P00/Auditorias Internas/auditoria_interna.html' %}
+{% load static %}
+
+{% block menu_acciones %} active menu-open {% endblock %}
+{% block menu_acciones_active %} active {% endblock %}
+{% block acciones %} active menu-open {% endblock %}
+{% block acciones_active %} active {% endblock %}
+{% block auditoria_interna %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+
+{% block page_title %}
+    <title>SISGEPO | Detalle de la Auditoría Interna</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Detalles de la Auditoría Interna </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_auditoriainterna' %}">P00 / Auditorías Internas</a></li>
+                            <li class="breadcrumb-item active">Detalles</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<style>
+    .no-padding-left{
+        padding-left: 0 !important;
+    }
+
+    .bordear{
+        border-radius: 16px;
+        border: 1px solid #ccc !important;
+        padding: 0.01em 16px;
+    }
+</style>
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %}<div class="card-header">
+                        <h3 class="card-title">Detalle de la Incidencia</h3>
+                    </div>
+                    <!-- /.card-header -->{% endcomment %}
+                    <div class="card-body">
+                    <div class="row portlet-body form">
+                    <!-- BEGIN FORM-->
+
+                        <div class="col-md-12 modal-body">
+                            
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Titulo:</label><br>
+                                    <span id="titulo" style="padding: 5px; border-radius: 16px;
+                                    border: 1px solid #ccc !important;">{{ object.titulo }}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de inicio de auditoría:</label><br>
+                                    <span>{{ object.fechainicio }}</span> 
+                                </div><div class="col-md-4" style="display: inline-block">
+                                    <label>Fecha de fin de auditoría:</label><br>
+                                    <span>{{ object.fechafin }}</span> 
+                                </div>
+                               
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Proceso que se audita:</label><br>
+                                    {% if object.proceso %}
+                                        {{ object.proceso }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                            
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Equipo Auditor:</label><br>
+                                    <span>
+                                        {% for eq in equip %}
+                                        {{ eq }}
+                                        <br>
+                                        {% endfor %}
+                                    </span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Objetivos de la auditoría:</label><br>
+                                    <span>
+                                        {% if object.objetivos %}
+                                        {{ object.objetivos }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}
+                                    </span> 
+                                </div>
+                               
+                                
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Alcance de la auditoría:</label><br>
+                                    <span>{% if object.alcance %}
+                                        {{ object.alcance }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Criterios de la auditoría:</label><br>
+                                    <span>{% if object.criterios %}
+                                        {{ object.criterios }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                                <div class="col-md-4" style="display: inline-block">
+                                    <label>Observaciones de la auditoría:</label><br>
+                                    <span>{% if object.observaciones %}
+                                        {{ object.observaciones }}
+                                    {% else %}
+                                        -----
+                                    {% endif %}</span> 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row no-padding-left">
+                                
+                                <div class="col-md-4" style="display: inline-block">
+                                <label>Informe de la auditoria:</label><br>
+                                {% if object.informe %}
+                                    <a href="/media/{{ object.informe }}" target="_blank">Descargar</a>
+                                {% else %}
+                                    <span>-----</span>
+                                {% endif %}
+                                </div>
+                            </div>           
+                        </div>
+                    {% block error %}
+                    {% endblock %}{% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                        <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'cambiar_auditoriasinternas' object.id %}" type="button" class="btn btn-primary btn-primary">Modificar</a>
+                            </div>
+                          </div>
+                          <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a href="{% url 'listar_auditoriainterna' %}" type="button" class="btn btn-danger">Atrás</a>
+                            </div>
+                          </div>
+                        {% endblock %}
+                    </div>
+                    </div>
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}

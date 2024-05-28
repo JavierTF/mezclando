@@ -56,7 +56,7 @@ label.required::after {
                                 </div>
                                 <hr>
                                 <div class="row">
-                                    <table class="table table-bordered table-striped">
+                                    <table id="myTableIndicators" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
@@ -98,7 +98,7 @@ label.required::after {
                                 <div class="form-actions fluid">
                                     <div class="col-md-offset-3 col-md-9">
                                         <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
-                                        <a href="{% url 'effectiveness:list_effectiveness' %}" type="button" class="btn btn-danger">{% trans 'Cancel' %}</a>
+                                        <a href="{% url 'effectiveness:list_effectiveness' %}" type="button" class="btn btn-danger">Cancelar</a>
                                     </div>
                                 </div>
                             </form>

@@ -16,7 +16,7 @@ from apps.complaints.models import COMPLAINT_STATUS, WayOfReception, Complaint, 
 from apps.complaints.forms import ReceptionModelForm, ComplaintModelForm, ComplaintActionModelForm, FilterForm
 
 
-@permission_required('complaints.view_wayofreception', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def ReceptionView(request):
     """
     En esta vista se listan los paises,
@@ -36,7 +36,7 @@ def ReceptionView(request):
     )
 
 
-@permission_required('complaints.add_wayofreception', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_reception(request):
     form = ReceptionModelForm()
 
@@ -51,7 +51,7 @@ def create_reception(request):
     return render(request, 'complaints/reception/create.html', {'form': form})
 
 
-@permission_required('complaints.change_wayofreception', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def update_reception(request, reception_id):
     instance = get_object_or_404(WayOfReception, pk=reception_id)
     form = ReceptionModelForm(instance=instance)
@@ -67,7 +67,15 @@ def update_reception(request, reception_id):
     return render(request, 'complaints/reception/update.html', {'instance': instance, 'form': form})
 
 
-@permission_required('complaints.delete_wayofreception', login_url=reverse_lazy('inicio'), raise_exception=True)
+
+def activate_reception(request, reception_id):
+    instance = get_object_or_404(WayOfReception, pk=reception_id)
+    instance.active = True if request.POST.get('activate') == "on" else False
+    instance.save()
+    return redirect(reverse_lazy('complaints:receptions'))
+
+
+
 def delete_reception(request, reception_id):
     model = get_object_or_404(WayOfReception, pk=reception_id)
     logs(request, WayOfReception, model, 3)
@@ -75,7 +83,7 @@ def delete_reception(request, reception_id):
     return redirect(reverse_lazy('complaints:receptions'))
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def list_complaints(request):
     """
     En esta vista se listan los paises,
@@ -95,38 +103,42 @@ def list_complaints(request):
     )
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def detail_complaint(request, complaint_id):
     instance = get_object_or_404(Complaint, pk=complaint_id)
     return render(request, 'complaints/complaints/detail.html', {'instance': instance})
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_complaint(request):
     form = ComplaintModelForm()
     form_action = ComplaintActionModelForm()
 
     if request.method == 'POST':
         form = ComplaintModelForm(request.POST)
-        form_action = ComplaintActionModelForm(request.POST)
+        # form_action = ComplaintActionModelForm(request.POST)
 
         if form.is_valid():
             complaint = form.save()
             logs(request, Complaint, complaint, 1)
-            if form_action.is_valid():
-                for jsona in request.POST.getlist('actions[]'):
-                    action = json.loads(jsona)
-                    ComplaintAction.objects.create(complaint_id=complaint.id, date=action['date'], action=action['action'])
-            else:
-                print(form_action.errors)
+            # if form_action.is_valid():
+            #     for jsona in request.POST.getlist('actions[]'):
+            #         action = json.loads(jsona)
+            #         ComplaintAction.objects.create(complaint_id=complaint.id, date=action['date'], action=action['action'])
+            # else:
+            #     print(form_action.errors)
             return JsonResponse({'results': {'url': reverse_lazy('complaints:list_complaints')}})
         else:
             print(form.errors)
 
-    return render(request, 'complaints/complaints/create.html', {'form': form, 'form_action': form_action})
+    return render(request, 'complaints/complaints/create.html', {
+        'form': form, 
+        # 'form_action': form_action
+        }
+    )
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def update_complaint(request, complaint_id):
     instance = get_object_or_404(Complaint, pk=complaint_id)
     form = ComplaintModelForm(instance=instance)
@@ -150,7 +162,7 @@ def update_complaint(request, complaint_id):
     return render(request, 'complaints/complaints/update.html', {'instance': instance, 'form': form, 'form_action': form_action})
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def delete_complaint(request, complaint_id):
     model = get_object_or_404(Complaint, pk=complaint_id)
     logs(request, Complaint, model, 1)
@@ -158,18 +170,30 @@ def delete_complaint(request, complaint_id):
     return redirect(reverse_lazy('complaints:list_complaints'))
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_complaints(request):
     if request.method == 'GET':
         logos = get_logos()
         logo1 = logos['logo1']
         logo2 = logos['logo2']
         models = Complaint.objects.all()
+        filters = Q(pk__gt=0)
 
         if request.GET.get('export_status') and int(request.GET.get('export_status')) != 0:
-            models = Complaint.objects.filter(status=request.GET.get('export_status')).distinct()
+            filters = filters & Q(status=request.GET.get('export_status'))
 
-        html_string = render_to_string('complaints/complaints/export_list.html', {'models': models})
+        if request.GET.get('search') and request.GET.get('search') != '':
+            filters = filters & \
+                    (
+                        Q(reception_date__icontains=request.GET.get('search'))
+                        | Q(client__icontains=request.GET.get('search'))
+                        | Q(process__abbreviation__icontains=request.GET.get('search'))
+                        | Q(way_of_reception__name__icontains=request.GET.get('search'))
+                        | Q(reason__icontains=request.GET.get('search'))
+                        | Q(deadline__icontains=request.GET.get('search'))
+                    )
+
+        html_string = render_to_string('complaints/complaints/export_list.html', {'models': models.filter(filters).distinct()})
         html = HTML(string=html_string, base_url=request.build_absolute_uri())
         uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
         html.write_pdf(
@@ -192,7 +216,7 @@ def export_complaints(request):
     return redirect(reverse_lazy('complaints:list_complaints'))
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_details_complaints(request, complaint_id):
     if request.method == 'GET':
         logos = get_logos()
@@ -232,12 +256,12 @@ def get_actions(request):
         for action in actions:
             actions_json.append({"date": action.date, "action": action.action})
 
-        return JsonResponse({'actions': actions_json})
+        return JsonResponse({'deadline': instance.deadline, 'actions': actions_json})
 
     return JsonResponse({'error': 'Method not Allowed'}, status=405)
 
 
-@permission_required('complaints.view_complaint', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def reports_complaints(request):
     """
     En esta vista muestra reportes grśficos de la eficacia de los procesos,

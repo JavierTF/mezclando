@@ -1,0 +1,97 @@
+{% extends 'P00/Auditorias Externas/auditoria_externa.html' %}
+{% block page_title %}
+    <title>SISGEPO | Auditoría Externa | Adicionar</title>
+{% endblock %}
+{% load static i18n %}
+{% block menu_acciones %} active menu-open {% endblock %}
+{% block menu_acciones_active %} active {% endblock %}
+{% block acciones %} active menu-open {% endblock %}
+{% block acciones_active %} active {% endblock %}
+{% block auditoria_externa %}
+    active
+{% endblock %}
+{% block menu_gestion %} active menu-open {% endblock %}
+{% block menu_gestion_active %} active {% endblock %}
+{% block menu_p00 %} active menu-open{% endblock %}
+{% block menu_p00_active %} active {% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Adicionar Auditoría Externa.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_auditoriaexterna' %}" onclick="return confirmarAccesoURL()">P00 / Auditoría Externa</a></li>
+                            <li class="breadcrumb-item active">Adicionar</li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block miestilo %}
+<style>
+label.required::after {
+    content: ' *';
+    color: red;
+}
+.input-content{
+    overflow: auto;
+}
+</style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="portlet-body form">
+                            <form id="form_crear_auditoriaExt" class="form-horizontal" method="post" action="{% url 'agregar_auditoriaExt' %}">
+                                {% csrf_token %}
+                                <div class="row form-body">
+                                    {% for field in form %}
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                             <label class="control-label">{{ field.label_tag }}</label>
+                                                <div class="input-content">
+                                                    {{ field }}
+                                                    <small class="text-red">{{ field.errors }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {%  endfor %}
+                                </div>
+                                <div class="form-actions fluid">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        
+                                        <button id="form_submit" type="button" class="btn btn-primary">{% trans 'Save' %}</button>
+                                        <a href="{% url 'listar_auditoriaexterna' %}" type="button" class="btn btn-danger">{% trans 'Cancelar' %}</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'AuditoriaExterna/crear.js' %}" type="text/javascript"></script>
+    <script> 
+        //Cuadro de diálogo de confirmación en JavaScript
+        function confirmarAccesoURL()
+        {
+      return confirm("¿Está seguro que desea descartar los cambios?");
+        }
+  </script>
+{% endblock %}

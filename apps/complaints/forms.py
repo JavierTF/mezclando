@@ -7,7 +7,7 @@ class ReceptionModelForm(forms.ModelForm):
 
     class Meta:
         model = WayOfReception
-        fields = ['name', ]
+        fields = ['name', 'active', ]
         widgets = {
             'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
         }

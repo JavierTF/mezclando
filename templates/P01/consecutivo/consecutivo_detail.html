@@ -139,7 +139,13 @@
                                 </div>
                                 <div class="col-md-4" style="display: inline-block">
                                     <label>Jefe de proyecto:</label><br>
-                                    <span>{{ jefe }}</span> 
+                                    <span>
+                                    {% if jefe %}
+                                        {{ jefe }}
+                                    {% else %}
+                                        e-----
+                                    {% endif %}
+                                    </span> 
                                 </div>
                             </div>
                             <br>
@@ -251,7 +257,9 @@
             colorEstado();
         });
 
-        function colorEstado(){
+        colorEstado('#estado');
+
+        {% comment %} function colorEstado(){
             const x = document.getElementById('estado').innerHTML;
             const rojo = ['atrasado', 'cancelado'];
             const naranja = ['solicitado', 'reiniciado', 'interrumpido'];
@@ -266,7 +274,7 @@
                 console.log('ok');
                 document.getElementById('estado').style.backgroundColor = "#f95858";
             }
-        }
+        } {% endcomment %}
 
 </script>
 {% endblock %}

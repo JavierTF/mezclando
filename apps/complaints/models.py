@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+import datetime
 
 from apps.base.models import Process
 from apps.complaints.validators import DateInFutureValidator, validate_char
@@ -16,6 +17,7 @@ COMPLAINT_STATUS = (
 
 class WayOfReception(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre')
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +32,7 @@ class Complaint(models.Model):
     process = models.ForeignKey(Process, verbose_name='Proceso', on_delete=models.CASCADE, related_name='complaints')
     way_of_reception = models.ForeignKey(WayOfReception, verbose_name='Vía de recepción', on_delete=models.CASCADE, related_name='complaints')
     reason = models.CharField(max_length=150, verbose_name='Motivo')
-    status = models.PositiveIntegerField(verbose_name='Estado', choices=COMPLAINT_STATUS, default=1)
+    status = models.PositiveIntegerField(verbose_name='Estado', choices=COMPLAINT_STATUS, default=1, null=True, blank=True)
 
     @property
     def get_status(self):
@@ -57,3 +59,5 @@ def preset_license(sender, **kwargs):
         instance = kwargs.get("instance")
         if not instance.number:
             set_complaints_number(instance=instance, sender=Complaint)
+        if instance.status == 2 and not instance.deadline:
+            instance.deadline = datetime.date.today()

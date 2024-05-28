@@ -1,29 +1,31 @@
 {% extends 'index.html' %}
 
 {% block page_title %}
-    <title>SISGEPO | Objetivos</title>
-{% endblock %}
-
-{% block objetivo %}
-    active
+    <title>SISGEPO | Objetivos estratégicos</title>
 {% endblock %}
 
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
+{% block menu_p14 %} active menu-open {% endblock %}
+{% block menu_p14_active %} active {% endblock %}
+{% block objetivo %}
+    active
+{% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Objetivos</h1>
+                    <h1 class="m-0 text-dark">Listar Objetivos estratégicos</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Procesos</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Gestión de la información</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Objetivo.</li>
+                            <li class="breadcrumb-item active">Objetivo estratégico.</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -32,77 +34,7 @@
     </div>
 {% endblock %}
 {% block miestilo %}
-<style>
-.btn-primary-transparent{
-    color: #007bff;
-    background-color: transparent;
-    border-color: transparent;
-}
 
-/* Codigo para el boton On/Off */
-.checkbox-activate
-{
-    display:none;
-}
-
-.switch {
-    width: 42px;
-    height: 22px;
-    background: #E5E5E5;
-    z-index: 0;
-    margin-right: 5px;
-    padding: 0;
-    appearance: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    border-radius: 16px; /*IE 11*/
-    -moz-border-radius: 16px; /*Mozilla*/
-    -webkit-border-radius: 16px;/*Chrome and Safari*/
-    }
-
-.switch:before
-{
-    width: 42px;
-    height: 22px;
-background: #E5E5E5;
-z-index: 0;
-margin: 0;
-padding: 0;
-appearance: none;
-border: none;
-cursor: pointer;
-position: relative;
-border-radius:16px; /*IE 11*/
--moz-border-radius:16px; /*Mozilla*/
--webkit-border-radius:16px; /*Chrome and Safari*/
-}
-
-.switch:after
-{
-content: ' ';
-height: 19px;
-width: 19px;
-border-radius: 28px;
-z-index: 2;
-background: #FFFFFF;
-position: absolute;
--webkit-transition-duration: 300ms;
-transition-duration: 300ms;
-top: 1px;
-left: 1px;
--webkit-box-shadow: 0 2px 5px #999999;
-box-shadow: 0 2px 5px #999999;
-}
-.switchOn , .switchOn:before
-{
-background: #007bff !important;
-}
-.switchOn:after
-{
-left: 24px !important;
-}
-</style>
 {% endblock %}
 
 {% block content %}
@@ -110,14 +42,33 @@ left: 24px !important;
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Listado de Objetivos </h3>
-                        {% if perms.SISGDDO.add_objetivo %}
-                        <a href="{% url 'adicionar_objetivo' %}" class="btn btn-primary fa-pull-right">
-                            <span class="fa fa-plus"> Adicionar </span>
-                        </a>
+                    {% if perms.xavi.view_objetivo and perms.xavi.add_objetivo %}
+                    <div class="row card-header">
+                        {% if perms.xavi.view_objetivo %}
+                        <div class="col-md-4">
+                            <form 
+                                id="formExportar" 
+                                class="form-horizontal col-10" 
+                                method="post" 
+                                enctype="multipart/form-data" 
+                                formaction="{% url 'exportar' %}" 
+                                formerror="{% url 'base:create_logoentity' %}"
+                            >
+                                <a id="exportar" href="#" class="btn btn-outline-info"><span class="fa fa-file"> Exportar </span></a>
+                            </form>
+                        </div>
+                        {% endif %}
+                        {% if perms.xavi.add_objetivo %}
+                        <div class="col-md-8">
+                            {% if perms.xavi.add_objetivo %}
+                            <a href="{% url 'adicionar_objetivo' %}" class="btn btn-primary fa-pull-right">
+                                <span class="fa fa-plus"> Adicionar </span>
+                            </a>
+                            {% endif %}
+                        </div>
                         {% endif %}
                     </div>
+                    {% endif %}
                     <!-- /.card-header -->
 
                     <div class="card-body">
@@ -127,14 +78,17 @@ left: 24px !important;
                                 <th>
                                     Número
                                 </th>
+                                <th style="width: 100px;">
+                                    Identificador
+                                </th>
                                 <th>
                                     Nombre
                                 </th>
-                                <th>
+                                {% comment %} <th>
                                     Fecha de definición
-                                </th>
+                                </th> {% endcomment %}
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -146,14 +100,17 @@ left: 24px !important;
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ lt.nombre }}
+                                        {{ lt.no }} / {{ lt.fecha_definicion|date:"Y" }}
                                     </td>
                                     <td>
+                                        {{ lt.nombre }}
+                                    </td>
+                                    {% comment %} <td>
                                         {{ lt.fecha_definicion }}
-                                    </td>                                      
+                                    </td>                                       {% endcomment %}
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_objetivo %}
+                                    {% comment %} {% if perms.xavi.change_objetivo %}
                                     <label>
                                         <form action="{% url 'act_desactobjetivo' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -163,29 +120,34 @@ left: 24px !important;
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>
                                     </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.view_objetivo %}
+                                    {% endif %} {% endcomment %}
+                                    {% if perms.xavi.view_objetivo %}
                                     <a href="{% url 'detalle_objetivo' lt.id %}"
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
+                                         class="btn btn-sm btn-primary btn-primary-transparent" title="Detalle">
                                     <i class="fa fa-eye"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.change_objetivo %}
+                                    {% if perms.xavi.change_objetivo %}
                                     <a href="{% url 'modificar_objetivo' lt.id %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
                                     {% endif %}
-                                    {% if perms.SISGDDO.delete_objetivo %}
+                                    {% if perms.xavi.delete_objetivo %}
                                         <a href="{% url 'eliminar_objetivo' lt.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
                                     {% endif %} 
-                                    {% if perms.SISGDDO.add_indicador_objetivo %}
+                                    {% if perms.xavi.add_indicador_objetivos %}
                                         <a href="{% url 'adicionar_indicador_objetivo' lt.id %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar indicador objetivo">
-                                        <i class="fa fa-angle-double-right"></i>
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Adicionar Objetivo de trabajo">
+                                        <i class="fab fa-opera"></i>
+                                            {% if lt.num_indicadores_activos > 0 %}
+                                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                                                    {{ lt.num_indicadores_activos }}
+                                                </span>
+                                            {% endif %}
                                         </a>
                                     {% endif %}
                                 </span>
@@ -212,16 +174,88 @@ left: 24px !important;
 <script>
       $(document).ready(function()
 {
+    var href = $('#formExportar').attr('formaction');
+    
+    var table = $('#example1').DataTable();
 
-$('.switch').click(function()
-    {
-        $(this).toggleClass("switchOn");
-    });
+    function selectOnlyFiltered(){
+        var filteredRows = table.rows({filter: 'applied'}).data().toArray();
+        return filteredRows;
+    }
 
-});
-    $('.checkbox-activate').change(function()
-{
-$(this).form().submit();
+    $('#exportar').on('click', function(e) {
+        Toast.fire({
+            type: 'info',
+            title: 'Exportando PDF...',
+        });
+    
+        let arreglo = selectOnlyFiltered();
+    
+        if (arreglo.length === 0) {
+            Toast.fire({
+                type: 'warning',
+                title: 'Nada que exportar...',
+            });
+            return;
+        }
+    
+        let arr = arreglo.map(x => x['DT_RowId']);
+    
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        var xhr = new XMLHttpRequest();
+        var url = href;  // Usar una variable para almacenar el URL
+    
+        xhr.open('POST', url, true);
+        xhr.responseType = 'blob';
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', csrf_token);
+
+        var urlError = $('#formExportar').attr("formerror");
+    
+        var data = {
+            tabla: 'objetivo',
+            arr: arr,
+            titulo: 'Listado de Objetivos estratégicos',
+        };
+    
+        var jsonData = JSON.stringify(data);
+
+        var jsonResponse = null;
+    
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Crear una URL del Blob de la respuesta
+                var blob = xhr.response;
+                var pdfUrl = URL.createObjectURL(blob);
+    
+                // Crear un enlace para mostrar el PDF en el navegador
+                var link = document.createElement('a');
+                link.href = pdfUrl;
+                link.target = '_blank';
+                link.click();
+            } else if (xhr.status === 404) {
+                //console.log('STATUS CODE', xhr.status)
+                Swal.fire({
+                    type: "error",
+                    title: "Error al obtener el archivo PDF",
+                    text: 'Actualice los logos',
+                })
+                .then((result) => {
+                    //console.log(urlError)
+                    window.location.href = urlError;
+                });
+            } else {
+                //console.log('ELSE FINAL', xhr.status)
+                Swal.fire({
+                    type: "error",
+                    title: "Hubo un error",
+                    text: jsonResponse ? jsonResponse.title : 'Error desconocido',
+                });
+            }
+        };
+    
+        xhr.send(jsonData);
+    });   
 });
 
 </script>

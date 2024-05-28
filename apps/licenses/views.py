@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
+from django.db.models import Q
 from weasyprint import HTML, CSS
 import datetime
 import os
@@ -15,7 +16,7 @@ from apps.licenses.forms import LicenseModelForm
 
 
 # Licenses
-@permission_required('licences.view_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def list_licenses(request):
     """
     En esta vista se listan los procesos de eficacias,
@@ -35,13 +36,13 @@ def list_licenses(request):
     )
 
 
-@permission_required('licences.view_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def details_licenses(request, license_id):
     model = get_object_or_404(License, pk=license_id)
     return render(request, 'licenses/licenses/details.html', {'model': model})
 
 
-@permission_required('licences.add_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def create_licenses(request):
     form = LicenseModelForm()
 
@@ -56,7 +57,7 @@ def create_licenses(request):
     return render(request, 'licenses/licenses/create.html', {'form': form})
 
 
-@permission_required('licences.change_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def update_licenses(request, license_id):
     instance = get_object_or_404(License, pk=license_id)
     form = LicenseModelForm(instance=instance)
@@ -72,7 +73,7 @@ def update_licenses(request, license_id):
     return render(request, 'licenses/licenses/update.html', {'instance': instance, 'form': form})
 
 
-@permission_required('licences.delete_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def delete_licenses(request, license_id):
     license = get_object_or_404(License, pk=license_id)
     logs(request, License, license, 3)
@@ -80,18 +81,35 @@ def delete_licenses(request, license_id):
     return redirect(reverse_lazy('licenses:list_licenses'))
 
 
-@permission_required('licences.view_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_licenses(request):
     if request.method == 'GET':
         logos = get_logos()
         logo1 = logos['logo1']
         logo2 = logos['logo2']
         models = License.objects.all()
+        filters = Q(pk__gt=0)
 
         if request.GET.get('export_status') and int(request.GET.get('export_status')) != 0:
-            models = License.objects.filter(status=request.GET.get('export_status')).distinct()
+            filters = filters & Q(status=request.GET.get('export_status'))
 
-        html_string = render_to_string('licenses/licenses/export_list.html', {'models': models})
+        if request.GET.get('search') and request.GET.get('search') != '':
+            filters = filters & \
+                    (
+                        Q(process__abbreviation__icontains=request.GET.get('search'))
+                        | Q(process__name__icontains=request.GET.get('search'))
+                        | Q(process__responsible__first_name__icontains=request.GET.get('search'))
+                        | Q(process__responsible__last_name__icontains=request.GET.get('search'))
+                        | Q(associated_process__abbreviation__icontains=request.GET.get('search'))
+                        | Q(entity__name__icontains=request.GET.get('search'))
+                        | Q(grant_date__icontains=request.GET.get('search'))
+                        | Q(expiration_date__icontains=request.GET.get('search'))
+                    )
+
+        html_string = render_to_string(
+            'licenses/licenses/export_list.html',
+            {'models': models.filter(filters).distinct()}
+        )
         html = HTML(string=html_string, base_url=request.build_absolute_uri())
         uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
         html.write_pdf(
@@ -108,13 +126,13 @@ def export_licenses(request):
         fs = FileSystemStorage(uri_tmp)
         with fs.open('Licencia.pdf') as pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="Licencia.pdf"'
+            response['Content-Disposition'] = 'attachment; filename="Licencias Operacionales.pdf"'
             return response
 
     return redirect(reverse_lazy('licenses:list_licenses'))
 
 
-@permission_required('licences.view_licence', login_url=reverse_lazy('inicio'), raise_exception=True)
+
 def export_details_licenses(request, license_id):
     if request.method == 'GET':
         logos = get_logos()
@@ -138,7 +156,7 @@ def export_details_licenses(request, license_id):
         fs = FileSystemStorage(uri_tmp)
         with fs.open('Licencia.pdf') as pdf:
             response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="Licencia.pdf"'
+            response['Content-Disposition'] = 'attachment; filename="Licencia Operacional.pdf"'
             return response
 
     return redirect(reverse_lazy('licenses:list_licenses'))

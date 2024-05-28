@@ -1,8 +1,18 @@
 {% extends 'index.html' %}
+{% block menu_seguridad %}
+    menu-open
+{% endblock %}
+{% block menu_seguridad_active %}
+    active
+{% endblock %}
+{% block actualizar_logo %}
+    active
+{% endblock %}
 {% load static %}
 {% block miestilo %}
     <link rel="stylesheet" href="{% static 'assets/cropme/css/cropper.min.css' %}">
 {% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">

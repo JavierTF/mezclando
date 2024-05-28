@@ -1,0 +1,72 @@
+{% extends 'reportes/base_reportes.html' %}
+
+{% block tabla_dinamica %}
+<table id="example2" class="table table-bordered table-hover">
+    <tbody>
+        {% for model in models %}
+            <tr style="border: 2px solid #ddd; border-collapse: collapse; box-shadow: 0 0 0 0.5px #ddd;">
+                <td colspan="3" style="background-color: #f5f5f5;">
+                    <p style="margin-top: -1px;; margin-bottom: -1px;"><b>Objetivo estratégico: {{ model.no }}/{{ model.fecha_definicion|date:"Y" }}</b></p>
+                    <p style="margin-bottom: -2px;">{{ model.nombre }}</p>
+                </td>
+            </tr>
+            {% if model.objetivos.all|length > 0 %}
+                <tr>
+                    <td colspan="3">
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                                {% for objetivo in model.objetivos.all %}
+                                    <p style="background-color: #f5faff;">
+                                        <span style="color: transparent;">.</span>
+                                        <i><b><span style="color: transparent;">...</span>
+                                            · Objetivo de trabajo No. {{ objetivo.no }}: {{ objetivo.nombre }}
+                                        </b></i>
+                                    </p>
+                                    <tr class="center-text">
+                                        <td colspan="2">TAREAS</td>
+                                    </tr>
+                                    <tr>                                        
+                                        <td colspan="2">
+                                            <table class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 10px; border-top: none !important; border-left: none !important; border-bottom: none !important;"></th>
+                                                        <th style="width: 40px;">Código.</th>
+                                                        <th>Nombre</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for tarea in objetivo.accion.all %}
+                                                        <tr>
+                                                            <td style="border-top: none !important; border-left: none !important; border-bottom: none !important;">
+                                                                <li style="list-style-type: '\2714'; color: #aaa;"></li>
+                                                            </td>
+                                                            <td>{{ tarea.codigo }}</td>
+                                                            <td>{{ tarea.nombre }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        <p style="background-color: #f5faff;">
+                            <span style="color: transparent;">.</span>
+                            <i><b><span style="color: transparent;">...</span>
+                                -------------------------
+                            </b></i>
+                        </p>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

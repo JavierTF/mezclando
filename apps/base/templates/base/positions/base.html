@@ -3,9 +3,12 @@
 {% block position %}
     active
 {% endblock %}
+{% block menu_nomencladores_generales %} active menu-open {% endblock %}
+{% block menu_nomencladores_generales_active %} active {% endblock %}
+{% block menu_nomencladores_generales2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_generales2_active %} active {% endblock %}
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
-
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -104,11 +107,11 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        {% if perms.base.add_position %}
+
                         <a href="{% url 'base:create_position' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
-                        {% endif %}
+                      
                     </div>
                     {% include template_models_list %}
                 </div>

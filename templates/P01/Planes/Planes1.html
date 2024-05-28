@@ -1,25 +1,34 @@
 {% extends 'index.html' %}
-
-{% block consecutivo %}
-    active
+{% block page_title %}
+    <title>SISGEPO | Plan de trabajo</title>
 {% endblock %}
+{% block plan1 %}
+active
+{% endblock %}
+{% block PlanesdeTrabajo %} active menu-open {% endblock %}
+{% block PlanesdeTrabajo_active %} active {% endblock %}
+{% block Planes %} active menu-open {% endblock %}
+{% block Planes_active %} active {% endblock %}
 
 {% block menu_gestion %} active menu-open {% endblock %}
 {% block menu_gestion_active %} active {% endblock %}
+{% block menu_p14 %} active menu-open{% endblock %}
+{% block menu_p14_active %} active {% endblock %}
+
 
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Listar Actividades de Empresa</h1>
+                    <h1 class="m-0 text-dark">Plan Empresarial</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">P00</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">Actividades de empresa.</li>
+                            <li class="breadcrumb-item active">Plan de Trabajo.</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -102,169 +111,101 @@ left: 24px !important;
 {% endblock %}
 
 {% block content %}
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Listado de Actividades </h3>
-                       {%comment%}  {% if perms.SISGDDO.add_consecutivo %}{%endcomment%} 
-                        <a href="{% url 'adicionar_consecutivo' %}" class="btn btn-primary fa-pull-right">
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="row card-header">
+                
+                    <form action="{% url 'exportar_plan1' %}" method = "POST" class="form-horizontal" id="exportar">
+                        <div class="row col-12 align-items-center">
+                            
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-outline-secondary fa-pull-left">
+                                    <span class="fa fa-file-pdf"> Exportar</span>
+                                </button>
+                            </div>
+                        </div>
+                        {% csrf_token %}
+                        <input type="hidden" id="filtered_data" name="filtered_data">
+                    </form>
+                    
+                    {% if perms.SISGDDO.add_plantrabajo %}
+                    <div class="col-10">
+                        {% if perms.SISGDDO.add_plantrabajo %}
+                        <a href="{% url 'crearplanEmp' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar </span>
                         </a>
-                       {%comment%}  {% endif %}{%endcomment%} 
+                        {% endif %}
                     </div>
-                    <!-- /.card-header -->
+                    {% endif %}
+                </div>
 
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th>
-                                    Número 
+                                    Número
                                 </th>
                                 <th>
-                                    Descripcion
+                                    Actividad
                                 </th>
                                 <th>
-                                    Fecha
-                                </th>
-                                
-                                <th>
-                                    Hora
+                                    Día de actividad
                                 </th>
                                 <th>
-                                    Lugar
+                                    Hora de la actividad
                                 </th>
                                 <th>
-                                    Preside
+                                    Acciones
                                 </th>
-                                <th>
-                                    Participantes
-                                </th>
-                               
-                               
                             </tr>
                             </thead>
                             <tbody>
-                            {% comment %} {% c = 0 %} {% endcomment %}
-                           {%comment%} {% for lt in lista %}
+                        
+                                {%for lt in lista%}
+                                {% if lt.plan == 'Empresa' %}
+                                {% if lt.activo %}
                                 <tr id="{{ lt.id }}">
                                     <td>
                                         {{ forloop.counter }}
                                     </td>
                                     <td>
-                                        {{ lt.codigo }}
+                                        {{ lt.descripcion }}
                                     </td>
                                     <td>
-                                        {{ lt.nombre_proyecto }}
+                                        {{ lt.dia }} 
                                     </td>
                                     <td>
-                                        {% if lt.formato.all > 0 %}
-                                            {% for formato in lt.formato.all %}
-                                                {{ formato }} {% if not forloop.last %} - {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
+                                        {{ lt.hora }} 
                                     </td>
                                     <td>
-                                        {{ lt.area }}
-                                    </td>
-                                    <td>
-                                        {{ lt.tipo }}
-                                    </td>
-                                    <td>
-                                        {% for trab in lt.trabajador.all %}
-                                            {{ trab }}
-                                        {% endfor %}
-                                    </td>
-                                    <td>
-                                        {{ lt.fecha_entrada }}
-                                    </td>
-                                    <td>
-                                        {% if lt.fecha_cierre %}
-                                            {{ lt.fecha_cierre }}
-                                        {% else %}
-                                            -----
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ lt.estado }}
-                                    </td>                                        
-                                    <td>{%endcomment%}
-                                    <span class="input-group">
-                                   {%comment%} {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                                    <label>
-                                         {%comment%}<form action="{% url 'act_desactconsecutivo' lt.id %}" method="POST" class="form-activate"> {%endcomment%}
-                                            {% csrf_token %}
-                                            <span style="display: none">{{ lt.activo }}</span>
-                                            <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
-                                        </form>
-                                    <div class="switch {% if lt.activo %} switchOn {% endif %}">
-                                    </div>
-                                    </label>
-                                   {%comment%} {% endif %}{%endcomment%}
-                                    {%comment%}{% if perms.SISGDDO.view_consecutivo %}{%endcomment%}
-                                     <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                         class="btn btn-sm btn-primary btn-primary-transparent" title="detalle">
-                                    <i class="fa fa-eye"></i>
-                                    </a>
-                                   {%comment%} {% endif %}
-                                    {% if perms.SISGDDO.change_consecutivo %}{%endcomment%}
-                                     <a {%comment%}href="{% url 'modificar_consecutivo' lt.id %}" {%endcomment%}
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
-                                    <i class="fa fa-edit"></i>
-                                    </a>
-                                    {%comment%}{% endif %}
-                                    {% if perms.SISGDDO.delete_consecutivo %}{%endcomment%}
-                                        <a {%comment%}%href="{  url 'eliminar_consecutivo' lt.pk % {%endcomment%}}" 
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
-                                        <i class="fa fa-trash"></i>
+                                       <span class="input-group">
+                                       
+                                        {% if perms.SISGDDO.view_plantrabajo %}
+                                        <a href="{% url 'detalle_plan' lt.id %}"
+                                             class="btn btn-sm btn-primary btn-primary-transparent" title="Detalles de la actividad">
+                                        <i class="fa fa-eye"></i>
                                         </a>
-                                    {%comment%} {% endif %} 
-                                    {% if perms.SISGDDO.add_sosi %} {%endcomment%}
-                                         <a {%comment%}%href="{% url 'adicionar_sosi' lt.id %}" {%endcomment%}
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="adicionar sosi">
-                                        <i class="fa fa-angle-double-right"></i>
-                                        </a >
-                                        <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                        class="form" title="Mes">
-                                        <Select>
-                                            <option selected="selected"> Enero </option>
-                                            <option>Febrero</option>
-                                            <option>Marzo </option>
-                                            <option>Abril </option>
-                                            <option>Mayo</option>
-                                            <option>Junio  </option>
-                                            <option>Julio</option>
-                                            <option>Agosto </option>
-                                            <option>Septiembre </option>
-                                            <option>Octubre</option>
-                                            <option> Noviembre</option>
-                                            <option>Diciemnbre
-                                    
-                                            </option>
-                                        <Select/><a/>
-
-
-                                       
-                                   <i class="fa fa-eye"></i>
-
-                                   <a {%comment%}%href="{% url 'detalle_consecutivo' lt.id %}" {%endcomment%}
-                                        class="form" title="Ano">
-                                        <Select>
-                                            <option selected="selected"> 2022 </option>
-                                            <option>2023</option>
-                                         <Select/><a/>
-
-                                        
-                                       
-                                   <i class="fa fa-eye"></i>
-                                   </a>
-                                    {%comment%} {% endif %} {%endcomment%}
-                                </span>
-                                    </td>
+                                        {% endif %}
+                                        {% if perms.SISGDDO.delete_plantrabajo %}
+                                            <a href="{% url 'eliminar_plan' lt.id %}"
+                                                class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar la actividad">
+                                            <i class="fa fa-trash"></i>
+                                            </a>
+                                            {% endif %}
+                                        </span>
+                                          
+                                   
+                   
+                    
+             
+                </td> 
+                {% endif %}
+                {% endif %}
+                {% endfor %}                       
+                                   
                                 </tr>
                                 {% comment %} {% c = c + 1 %} {% endcomment %}
                             {%comment%} {% endfor %} {%endcomment%}
@@ -286,8 +227,38 @@ left: 24px !important;
 {% endblock %}
 {% block script %}
 <script>
+    
       $(document).ready(function()
 {
+    function selectOnlyFiltered(){
+        var filteredRows = $('#example1').DataTable().rows({ filter: 'applied' }).data().toArray();
+        return filteredRows;
+    }
+
+    $('#exportar').on('click', function() {
+        Toast.fire({
+            type: 'info',
+            title: '   Exportando PDF...',
+        });
+        let arreglo = selectOnlyFiltered();
+        if (arreglo.length == 0) {
+            Toast.fire({
+                type: 'warning',
+                title: '   Nada que exportar...',
+            });
+            return;
+        }
+        let arr = [];
+        for (x of arreglo) {
+            arr.push(x[0]);
+        }
+    
+        var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+
+        $('#filtered_data').val(JSON.stringify(arr)); // Almacenar los datos filtrados en el campo oculto
+        $(this).submit(); // Enviar el formulario
+    });
 
 $('.switch').click(function()
     {

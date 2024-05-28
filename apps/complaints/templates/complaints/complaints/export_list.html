@@ -56,7 +56,7 @@
                     <tr id="{{ model.id }}">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ model.reception_date|date:"j, M Y" }}</td>
-                        <td>{{ model.client.name }}</td>
+                        <td>{{ model.client }}</td>
                         <td>{{ model.process.abbreviation }}</td>
                         <td>{{ model.way_of_reception.name }}</td>
                         <td>{{ model.reason }}</td>

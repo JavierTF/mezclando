@@ -7,10 +7,12 @@
 {% block linea_tematica %}
     active
 {% endblock %}
-
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
-
+{% block menu_nomencladores_proyectos2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos2_active %} active {% endblock %}
+{% block menu_nomencladores_proyectos %} active menu-open {% endblock %}
+{% block menu_nomencladores_proyectos_active %} active {% endblock %}
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -110,7 +112,7 @@ left: 24px !important;
                 <div class="card">
                     <div class="card-header">
                         {% comment %} <h3 class="card-title">Listado de Líneas temáticas </h3> {% endcomment %}
-                        {% if perms.SISGDDO.add_linea_tematica %}
+                        {% if perms.xavi.add_linea_tematica or perms.xavi.add_proyecto %}
                         <a href="{% url 'agregar_linea_tematica' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
@@ -128,12 +130,12 @@ left: 24px !important;
                                 <th>
                                     Nombre
                                 </th>
-                                <th>
+                                {% comment %} <th>
                                     Año
-                                </th>
+                                </th> {% endcomment %}
 
                                 <th>
-                                    Activo
+                                    Acciones
                                 </th>
                             </tr>
                             </thead>
@@ -147,15 +149,12 @@ left: 24px !important;
                                     <td>
                                         {{ lt.nombre }}
                                     </td>
-                                    <td>
+                                    {% comment %} <td>
                                         {{ lt.anno }}
-                                    </td>
-
-
-                                        
+                                    </td> {% endcomment %}
                                     <td>
                                     <span class="input-group">
-                                    {% if perms.SISGDDO.change_linea_tematica %}
+                                    {% comment %} {% if perms.xavi.change_linea_tematica %}
                                     <label>
                                         <form action="{% url 'act_desactlinea_tematica' lt.id %}" method="POST" class="form-activate">
                                             {% csrf_token %}
@@ -165,20 +164,20 @@ left: 24px !important;
                                     <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                     </div>
                                     </label>
-                                    {% endif %}
-                                    {% if perms.SISGDDO.change_linea_tematica %}
+                                    {% endif %} {% endcomment %}
+                                    
                                     <a href="{% url 'modificar_linea_tematica' lt.pk %}"
-                                        class="btn btn-sm btn-primary btn-primary-transparent" title="modificar">
+                                        class="btn btn-sm btn-primary btn-primary-transparent" title="Modificar">
                                     <i class="fa fa-edit"></i>
                                     </a>
-                                    {% if perms.SISGDDO.delete_linea_tematica %}
+                                    
                                         <a href="{% url 'eliminar_linea_tematica' lt.pk %}"
-                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="eliminar">
+                                            class="btn btn-sm btn-primary btn-primary-transparent ml-2" title="Eliminar">
                                         <i class="fa fa-trash"></i>
                                         </a>
-                                    {% endif %}
+                                   
                                     </span>
-                                    {% endif %}
+                                    
                                     
                                     </td>
                                 </tr>

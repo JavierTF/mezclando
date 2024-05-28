@@ -5,6 +5,10 @@
 {% endblock %}
 {% block menu_nomencladores %} active menu-open {% endblock %}
 {% block menu_nomencladores_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_integrada2 %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_integrada2_active %} active {% endblock %}
+{% block menu_nomencladores_gestion_integrada %} active menu-open {% endblock %}
+{% block menu_nomencladores_gestion_integrada_active %} active {% endblock %}
 
 {% block wrapper %}
     <div class="content-header">
@@ -104,11 +108,11 @@ left: 24px !important;
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        {% if perms.iproperty.add_patentclassification %}
+                        
                         <a href="{% url 'iproperty:create_patents' %}" class="btn btn-primary fa-pull-right">
                             <span class="fa fa-plus"> Adicionar</span>
                         </a>
-                        {% endif %}
+                       
                     </div>
                     {% include template_models_list %}
                 </div>
