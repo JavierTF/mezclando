@@ -158,6 +158,15 @@ class GroupDelete(DeleteView):
     def form_valid(self, form):
         # Lógica personalizada de eliminación
         group = self.get_object()
+
+        users_with_group_perms = group.user_set.filter(user_permissions__group=group).exists()
+        if users_with_group_perms:
+            response = {
+                'result': 'error',
+                'title': 'No se puede eliminar el rol. El rol tiene usuarios asociados.',
+            }
+            return JsonResponse(response)
+        
         register_logs(self.request, Group, group.pk, group.__str__(), 3)
         group.delete()
 

@@ -73,7 +73,7 @@
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->         
                               
-                    {% if not perms.xavi.add_proyecto and not perms.xavi.change_proyecto %}
+                    {% if perms.xavi.change_proyecto %}
                     <form id="formEditProyecto" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'modificar_proyecto' form.id %}" formsuccess="{% url 'listar_proyecto' %}">
                         {% csrf_token %}
                         <div class="row">
@@ -505,6 +505,9 @@
                     <br />
                     <hr />
                     {% endif %}
+
+                    {% comment %} {{ user.get_all_permissions }} {% endcomment %}
+
                     {% if perms.xavi.view_proyecto or perms.xavi.add_proyecto or perms.xavi.change_proyecto %}
                     <div class="col-md-12 row">
                         {% comment %} {% if perms.xavi.entrada_proyecto %}
@@ -545,6 +548,7 @@
                                 </div>
                             {% comment %} <a href="javascript:void(0);" id="botonEtapas" type="button" class="btn btn{% if not form.registro_etapas %}-outline{% endif %}-dark"  title="Ver registro">Etapas</a> {% endcomment %}
                             {% comment %} <a href="javascript:void(0);" id="botonTerminacion" type="button" class="btn btn{% if not form.registro_terminacion %}-outline{% endif %}-success"  title="Ver registro">Terminación</a> {% endcomment %}
+                            
                             <div class="btn-group" id="botonEtapas" >
                                 <button type="button" class="btn btn{% if not form.proyecto_control_etapa %}-outline{% endif %}-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false" 
                                 {% comment %} {% if not form.registro_aprobacion or form.proyecto_registro_terminacion %} disabled {% endif %} {% endcomment %}
@@ -552,20 +556,20 @@
                                     Control de etapas
                                 </button>
                                 {% if perms.xavi.view_proyecto or perms.xavi.add_proyecto or perms.xavi.change_proyecto %}
-                                <div class="dropdown-menu">
-                                {% if perms.xavi.add_proyecto %}
-                                    {% if not form.proyecto_control_etapa %}<a href="{% url 'adicionar_control_etapa' form.pk %}" type="button" class="dropdown-item">Añadir</a>{% endif %}
-                                {% endif %}
-                                {% if perms.xavi.change_proyecto %}
-                                    {% if form.proyecto_control_etapa %}<a href="{% if form.proyecto_control_etapa %}{% url 'modificar_control_etapa' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item">Modificar</a>{% endif %}
-                                {% endif %}
-                                {% if perms.xavi.view_proyecto %}
-                                    {% if form.proyecto_control_etapa %}<a href="{% if form.proyecto_control_etapa %}{% url 'detalle_control_etapa' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item">Ver detalles</a>{% endif %}
-                                {% endif %}
-                                {% comment %} <a href="{% if form.registro_aprobacion %}{% url 'modificar_aprobacion' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item" disabled>Eliminar</a> {% endcomment %}
-                                {% comment %} <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a> {% endcomment %}
-                                </div>
+                                    <div class="dropdown-menu">
+                                    {% if perms.xavi.add_proyecto %}
+                                        {% if not form.proyecto_control_etapa %}<a href="{% url 'adicionar_control_etapa' form.pk %}" type="button" class="dropdown-item">Añadir</a>{% endif %}
+                                    {% endif %}
+                                    {% if perms.xavi.change_proyecto %}
+                                        {% if form.proyecto_control_etapa %}<a href="{% if form.proyecto_control_etapa %}{% url 'modificar_control_etapa' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item">Modificar</a>{% endif %}
+                                    {% endif %}
+                                    {% if perms.xavi.view_proyecto %}
+                                        {% if form.proyecto_control_etapa %}<a href="{% if form.proyecto_control_etapa %}{% url 'detalle_control_etapa' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item">Ver detalles</a>{% endif %}
+                                    {% endif %}
+                                    {% comment %} <a href="{% if form.registro_aprobacion %}{% url 'modificar_aprobacion' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item" disabled>Eliminar</a> {% endcomment %}
+                                    {% comment %} <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Separated link</a> {% endcomment %}
+                                    </div>
                                 {% endif %}
                             </div>
                             {% comment %} <a href="javascript:void(0);" id="botonInterrupcion" type="button" class="btn btn{% if not form.proyecto_registro_interrupcion %}-outline{% endif %}-danger"  title="Ver registro">Interrupción</a> {% endcomment %}
@@ -578,8 +582,10 @@
                                 </button>
                                 {% if perms.xavi.view_proyecto or perms.xavi.add_proyecto or perms.xavi.change_proyecto %}
                                 <div class="dropdown-menu">
-                                {% if perms.xavi.add_proyecto and not form.proyecto_registro_interrupcion %}
-                                    <a href="{% url 'adicionar_interrupcion' form.pk %}" type="button" class="dropdown-item">Añadir</a>
+                                {% if not form.proyecto_registro_interrupcion %}
+                                    {% if perms.xavi.add_proyecto  %}
+                                        <a href="{% url 'adicionar_interrupcion' form.pk %}" type="button" class="dropdown-item">Añadir</a>
+                                    {% endif %}
                                 {% endif %}
                                 {% if perms.xavi.change_proyecto %}
                                     {% if form.proyecto_registro_interrupcion %}<a href="{% if form.proyecto_registro_interrupcion %}{% url 'modificar_interrupcion' form.pk %}{% else %}javascript:void(0);{% endif %}" type="button" class="dropdown-item">Modificar</a>{% endif %}
@@ -602,7 +608,7 @@
                                 </button>
                                 {% if perms.xavi.view_proyecto or perms.xavi.add_proyecto or perms.xavi.change_proyecto %}
                                 <div class="dropdown-menu">
-                                {% if perms.xavi.add_proyecto %}
+                                {% if perms.xavi.add_proyecto and not form.proyecto_registro_terminacion %}
                                     {% if not form.proyecto_registro_terminacion %}<a href="{% url 'adicionar_terminacion' form.pk %}" type="button" class="dropdown-item">Añadir</a>{% endif %}
                                 {% endif %}
                                 {% if perms.xavi.change_proyecto %}

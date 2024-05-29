@@ -74,10 +74,9 @@ active
                                         <i class="fa fa-edit"></i>
                                     </a>
                                     
-                                     <a href="{% url 'group_delete' rol.pk %}"
-                                    class="btn btn-sm btn-danger" title="eliminar rol">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="eliminar rol" {% if rol.is_associated %} disabled {% endif %}>
                                         <i class="fa fa-trash"></i>
-                                    </a>
+                                    </button>
                                     </td>
                                     {% endif %} 
                                 </tr>

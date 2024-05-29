@@ -86,9 +86,9 @@
         background-color: white;
     }
 
-    #id_atrasado {
+    {% comment %} #id_atrasado {
         width: 20%;
-    }
+    } {% endcomment %}
 
     select[name="idioma"] + .select2-container {
         background-color: white;
@@ -157,7 +157,7 @@
                                         <option value="none" selected>---</option> 
                                         {% if perms.xavi.view_proyecto %} 
                                             <option value="reporte_estadistico">Estadístico</option>
-                                            <option value="reporte_gestion">Estado de la gestión</option>
+                                            {% comment %} <option value="reporte_gestion">Estado de la gestión</option> {% endcomment %}
                                         {% endif %}
                                         {% if perms.xavi.view_entrada_proyecto %}
                                             <option value="reporte_dgca">DGCA</option>
@@ -223,13 +223,13 @@
                                         <small class="text-red"></small>
                                     </div>
                                 </div>                          
-                                <div class="form-group col-md-1">
+                                {% comment %} <div class="form-group col-md-1">
                                     <label class=" control-label"><label for="id_atrasado">Atrasado:</label></label>
                                     <div>
                                         <input type="checkbox" name="atrasado" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_atrasado">
                                         <small class="text-red"></small>
                                     </div>
-                                </div>    
+                                </div>     {% endcomment %}
                                 {% comment %} <div class="form-group col-md-12">
                                     <label class="control-label"><label for="id_objetivo">Objetivo:</label></label>
                                     <div>
@@ -329,7 +329,7 @@
                                 <div class="form-group col-md-2">
                                     <label class=" control-label"><label for="id_anno_sosi">Año:</label></label>
                                     <div>
-                                        <input type="number" name="anno_sosi" class=" form-control" min="1" max="9999" value="" maxlength="4">
+                                        <input type="number" name="anno_sosi" class=" form-control" min="1" max="9999" value="" maxlength="4" placeholder="Vacío para todos">
                                         <small class="text-red"></small>
                                     </div>
                                 </div>                                 
@@ -534,6 +534,8 @@
 $(document).ready(function(){
     $('#exportar').prop('disabled', true);
 
+    var currentYear = new Date().getFullYear();
+
     function controlarOpciones() {
         var tipoFecha = "{{ tipo_fecha }}"; // Obtener el valor de tipo_fecha desde el contexto de Django
         var select = document.getElementById("id_tipo_filtrado");
@@ -581,8 +583,10 @@ $(document).ready(function(){
                 $('#id_tipo_filtrado').attr('aria-tipo', 'proyecto');
                 controlarOpciones();
                 $('#filterContainer2').css('display', 'none');
-                $('#filterContaine3').css('display', 'none');
+                $('#filterContainer3').css('display', 'none');
                 $('#filterContainer').css('display', 'block');
+                $('#id_fecha_inicio_reporte').val(currentYear + '-01-01');
+                $('#id_fecha_fin_reporte').val(currentYear + '-12-31');
             } else if ($('#id_tipo_reporte option:selected').val() == 'reporte_dgca') {
                 $('#id_tipo_filtrado').attr('aria-tipo', 'proyecto');
                 controlarOpciones();
@@ -595,6 +599,7 @@ $(document).ready(function(){
                 $('#filterContainer').css('display', 'none');
                 $('#filterContainer2').css('display', 'none');
                 $('#filterContainer3').css('display', 'block');
+                //$('input[name="anno_sosi"]').val(currentYear);
             } else {
                 $('#filterContainer').css('display', 'none');
                 $('#filterContainer2').css('display', 'none');
@@ -604,6 +609,75 @@ $(document).ready(function(){
             $('#filterContainer').css('display', 'none');
         }
     });
+
+    $('#id_periodo').on('change', function(){
+        if ($('#id_periodo option:selected').val() != '---') {
+            if ($('input[name="anno"]').val() != ''){
+                currentYear = $('input[name="anno"]').val();
+            }      
+            var selectedOption = $('#id_periodo').val();
+            switch(selectedOption) {
+                case 'periodo_trimestre_i':
+                    console.log('entre trimestre 1');
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-01-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-03-31');
+                    break;
+                case 'periodo_trimestre_ii':
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-04-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-06-30');
+                    break;
+                case 'periodo_trimestre_iii':
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-07-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-09-30');
+                    break;
+                case 'periodo_trimestre_iv':
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-10-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-12-31');
+                    break;
+                case 'periodo_semestre_i':
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-01-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-06-30');
+                    break;
+                case 'periodo_semestre_ii':
+                    $('#id_fecha_inicio_reporte').val(currentYear + '-07-01');
+                    $('#id_fecha_fin_reporte').val(currentYear + '-12-31');
+                    break;
+                default:
+                    // Opción por defecto
+                    break;
+            }
+        }
+    });
+
+    $('input[name="anno"]').on('change', function(){
+        var currentYear = $(this).val();
+
+        if (!(/^\d{4}$/).test(currentYear)) {
+            Swal.fire({
+                type: "error",
+                title: "Año inválido",
+                text: "Por favor, ingresa un año válido en formato AAAA.",
+            });
+            $(this).val('');
+            return;
+        }
+        if (parseInt(currentYear) < 1997) {
+            Swal.fire({
+                type: "error",
+                title: "Año inválido",
+                text: "Por favor, ingresa un año mayor que 1996.",
+            });
+            $(this).val('');
+            return;
+        }
+
+        var startDate = $('#id_fecha_inicio_reporte').val().split('-');
+        var endDate = $('#id_fecha_fin_reporte').val().split('-');
+
+        $('#id_fecha_inicio_reporte').val(currentYear + '-' + startDate[1] + '-' + startDate[2]);
+        $('#id_fecha_fin_reporte').val(currentYear + '-' + endDate[1] + '-' + endDate[2]);
+    });
+
 
     $('#exportar').on('click', function() {       
         if ($('#id_tipo_reporte option:selected').val() == 'reporte_estadistico'){
@@ -621,15 +695,15 @@ $(document).ready(function(){
             }
 
             if ($('input[name="anno"]').val() != ''){
-                if ($('#id_periodo option:selected').val() == '---'){
-                    if ($('#id_fecha_inicio_reporte').val().trim() == '' || $('#id_fecha_fin_reporte').val().trim() == ''){
+                if ($('#id_periodo option:selected').val() == '---') {
+                    if ($('#id_fecha_inicio_reporte').val().trim() == '' || $('#id_fecha_fin_reporte').val().trim() == '') {
                         Swal.fire({
                             type: "warning",
                             title: "Seleccione Periodo o Fecha de inicio y fin",
                         });
                         return;
                     }
-                }                
+                }
             }
         }
         if ($('#id_tipo_reporte option:selected').val() == 'reporte_dgca'){
@@ -699,7 +773,7 @@ $(document).ready(function(){
                 titulo: 'Reporte estadístico para la gestión de proyectos',
                 periodo: $('#id_periodo option:selected').val(),
                 anno: $('input[name="anno"]').val(),
-                atrasado: $('#id_atrasado').prop('checked'),
+                //atrasado: $('#id_atrasado').prop('checked'),
                 fecha_inicio: $('input[name="fecha_inicio_reporte"]').val(),
                 fecha_fin: $('input[name="fecha_fin_reporte"]').val(),
                 //objetivo: $('#id_objetivo').val(),

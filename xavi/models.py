@@ -46,8 +46,8 @@ class area(models.Model):
          return str(self.nombre)
      
 class cliente(models.Model):
-     codigo = models.CharField(max_length = 20, verbose_name = "nombre*", unique = True, blank = True, null = True)
-     nombre = models.CharField(max_length = 65, verbose_name = "nombre*", unique = True)
+     codigo = models.CharField(max_length = 20, verbose_name = "nombre*", blank = True, null = True)
+     nombre = models.CharField(max_length = 65, verbose_name = "nombre*")
      activo = models.BooleanField(default = True, verbose_name = "activo*")
 
      def __str__(self):
@@ -205,7 +205,7 @@ class proyecto(models.Model):
         return '/'.join(['proyectos', f'/{self.codigo}/', filename])
 
     no = models.CharField(max_length = 10, verbose_name = "número*", null = True, blank = True)
-    codigo = models.CharField(max_length = 10, verbose_name = 'código*', null = True, unique = True)
+    codigo = models.CharField(max_length = 10, verbose_name = 'código*', null = True)
     # nombre = models.CharField(max_length = 250, verbose_name = 'nombre*', null = True)
     nombre_proyecto = models.CharField(max_length = 250, verbose_name = 'nombre de proyecto*', null = True)
     registro_aprobacion = models.OneToOneField(registro_aprobacion, verbose_name = 'registro de aprobación*',

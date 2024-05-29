@@ -1191,19 +1191,19 @@ def nomproyecto(request):
                     fecha_terminacion_str = registro_form['fecha_terminacion'].value()
                     fecha_terminacion_obj = datetime.strptime(fecha_terminacion_str, '%Y-%m-%d').date()
                     
-                    try:
-                        if fecha_terminacion_obj < datetime.now().date():
-                            est = estado_proyecto.objects.get(activo = True, nombre__iexact='atrasado')
-                            objeto.estado = est
-                            objeto.save()
-                    except:
-                        response = {
-                            'result': 'errorField',
-                            'title': 'Error de requisitos previos',
-                            'text': 'Debe existir activo: Estado de proyecto "Atrasado"',
-                            'error_message': ''
-                        }
-                        return JsonResponse(response)
+                    # try:
+                    #     if fecha_terminacion_obj < datetime.now().date():
+                    #         est = estado_proyecto.objects.get(activo = True, nombre__iexact='atrasado')
+                    #         objeto.estado = est
+                    #         objeto.save()
+                    # except:
+                    #     response = {
+                    #         'result': 'errorField',
+                    #         'title': 'Error de requisitos previos',
+                    #         'text': 'Debe existir activo: Estado de proyecto "Atrasado"',
+                    #         'error_message': ''
+                    #     }
+                    #     return JsonResponse(response)
                     
                     objeto.registro_aprobacion = registro
                     objeto.save()
@@ -3452,11 +3452,9 @@ def abrir_recurso(request):
 @handle_exceptions
 def prueba(request):
     try:
-        # Obtener todos los permisos que empiezan con 'view_' o 'add_'
-        proys = models.proyecto.objects.all()
-        #for pro in proys:
-        #    pro.delete()
-        return JsonResponse({'ok': str(len(proys))})
+        user = User.objects.get(username='permisos')
+        permission = Permission.objects.get(codename='add_proyecto')
+        return JsonResponse({'ok': str(permission) })
     except User.DoesNotExist:
         # Manejar el caso en que el usuario no existe
         return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
@@ -5585,11 +5583,11 @@ def detalle_aprobacion(request, id):
         
     myworker = objeto.registro_aprobacion.employee.get(position__name__iexact = 'Jefe de proyecto')
     
-    print(f'\nJefe de proyecto: {myworker}\n')
+    # print(f'\nJefe de proyecto: {myworker}\n')
     mycomercial = objeto.registro_aprobacion.employee.get(position__name__iexact = 'Comercial')
     
     mis_fuentes = objeto.registro_aprobacion.financiamiento.all().order_by('nombre')
-    print('\n\n\n ----> mis_fuentes', mis_fuentes, '\n\n\n')
+    # print('\n\n\n ----> mis_fuentes', mis_fuentes, '\n\n\n')
     
     try:
         fuente_mlc = financiamiento_proyecto.objects.get(activo = True, tipo_moneda__siglas__iexact = 'MLC', fuente_financiamiento__in = mis_fuentes, registro = objeto.registro_aprobacion)
@@ -7277,16 +7275,16 @@ def exportar(request):
             #     models = proyecto.objects.filter(pk__in=objs).order_by('id')
             #     template_name = 'reportes/tabla.html'
             if data['tabla'] == 'premio':
-                models = premio.objects.filter(pk__in=objs).order_by('id')                
+                models = premio.objects.filter(pk__in=objs, activo = True).order_by('-id')                
                 template_name = 'reportes/reporte_premio.html'
             elif data['tabla'] == 'acuerdo':
-                models = acuerdo.objects.filter(pk__in=objs).order_by('id')
+                models = acuerdo.objects.filter(pk__in=objs, activo = True).order_by('-id')
                 template_name = 'reportes/reporte_acuerdo.html'
             elif data['tabla'] == 'objetivo':
-                models = objetivo.objects.filter(pk__in=objs).order_by('id')
+                models = objetivo.objects.filter(pk__in=objs, activo = True).order_by('-id')
                 template_name = 'reportes/reporte_objetivo.html'
             elif data['tabla'] == 'estadistico_proyecto':
-                sosis = proyecto.objects.filter(pk__in=objs)
+                sosis = proyecto.objects.filter(pk__in=objs, activo = True)
                 
                 if data.get('periodo'):
                     inicio = None
@@ -7320,10 +7318,10 @@ def exportar(request):
                             registro_aprobacion__fecha_inicio__lte=fin
                         )
                     
-                if data.get('atrasado') == True:
-                    sosis = sosis.filter(estado__nombre__iexact = 'Atrasado')
-                else:
-                    sosis = sosis.exclude(estado__nombre__iexact = 'Atrasado')
+                # if data.get('atrasado') == True:
+                #     sosis = sosis.filter(estado__nombre__iexact = 'Atrasado')
+                # else:
+                #     sosis = sosis.exclude(estado__nombre__iexact = 'Atrasado')
                     
                 if data.get('fecha_inicio') and data.get('fecha_fin'):
                     sosis = sosis.filter(registro_aprobacion__fecha_inicio__gte = data.get('fecha_inicio'), registro_aprobacion__fecha_inicio__lte = data.get('fecha_fin'))
@@ -7348,7 +7346,7 @@ def exportar(request):
                         comercial=Subquery(comercial_subquery, output_field=CharField())
                     )
                     
-                    models = sosis.order_by('id')
+                    models = sosis.order_by('-id')
                     
                     if len(models) == 0:
                         return HttpResponse("Nada que exportar", status=410)
@@ -7358,7 +7356,7 @@ def exportar(request):
                     return HttpResponse("Nada que exportar", status=410)
             elif data['tabla'] == 'reporte_sosi':
                 sosi_list = []
-                proyectos = proyecto.objects.filter(pk__in=objs)
+                proyectos = proyecto.objects.filter(pk__in=objs, activo = True)
                 
                 if data.get('linea_tematica'):
                     linea = linea_tematica.objects.get(pk=data.get('linea_tematica'))
@@ -7396,7 +7394,7 @@ def exportar(request):
                 
                 print('\n------->sosis', sosis, '\n')
                     
-                models = sosis.order_by('id')
+                models = sosis.order_by('-id')
                 
                 if len(models) == 0:
                     return HttpResponse("Nada que exportar", status=410)
@@ -7405,7 +7403,7 @@ def exportar(request):
                     template_name = 'reportes/reporte_sosi.html'
                     
             elif data['tabla'] == 'dgca_proyecto':
-                sosis = proyecto.objects.filter(pk__in=objs)
+                sosis = proyecto.objects.filter(pk__in=objs, activo = True)
                 entradas = entrada_proyecto.objects.filter(proyecto__in=sosis)
                 if data.get('tipo_fecha'):
                     # print('\n----->>> TIPO DE FECHA', data.get('tipo_fecha'),'\n')
@@ -7442,7 +7440,7 @@ def exportar(request):
                     entradas = entradas.filter(estado = estado)
 
                 print('\n----->>>   entradas\n', entradas,'\n')
-                models = entradas.order_by('id')
+                models = entradas.order_by('-id')
                 
                 if len(models) == 0:
                     return HttpResponse("Nada que exportar", status=410)
@@ -7451,7 +7449,7 @@ def exportar(request):
                 
             elif data['tabla'] == 'gestion_proyecto':
                 models = None
-                sosis = proyecto.objects.filter(pk__in=objs)
+                sosis = proyecto.objects.filter(pk__in=objs, activo = True)
                 entradas = entrada_proyecto.objects.filter(proyecto__in=sosis)
                 
                 # Obtenemos todas las áreas incluyendo un conteo de las entradas de proyecto relacionadas

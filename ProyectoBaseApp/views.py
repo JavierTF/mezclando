@@ -46,6 +46,7 @@ from django.db import connection
 import shlex
 from subprocess import PIPE,Popen
 import uuid
+from django.db.models import Count, Case, When, IntegerField
 
 @handle_exceptions
 def just_login(request):
@@ -458,8 +459,19 @@ class PasswordResetView(PasswordContextMixin, FormView):
 @permission_required('auth.add_user')
 @handle_exceptions
 def group_list(request):
-    groups = Group.objects.all().order_by("name")
+    # groups = Group.objects.all().order_by("name")
+    groups = Group.objects.annotate(
+        is_associated=Case(
+            When(user__isnull=False, then=1),
+            default=0,
+            output_field=IntegerField()
+        )
+    ).order_by("name")
+    
     return render(request, 'Security/groups.html', {'group_list': groups})
+    
+    # groups = Group.objects.all().order_by("name")
+    # return render(request, 'Security/groups.html', {'group_list': groups})
 
 def error404(request):
     excepcion_info_str = request.GET.get('excepcion_info', None)

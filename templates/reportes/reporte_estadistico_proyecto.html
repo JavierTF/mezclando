@@ -8,10 +8,11 @@
             <th style="width: 40px;">Código</th>
             <th>Área</th>
             <th>Tipo de proyecto</th>
-            <th>Nombre</th>
+            <th>Subclasificación</th>
+            <th>Jefe de proyecto</th>
             <th>Formato(s)</th>
             <th>Fecha de inicio</th>
-            <th>Fecha de terminación</th>
+            <th>Fecha de terminación (SOSI)</th>
             <th>Estado</th>
         </tr>
     </thead>
@@ -23,6 +24,7 @@
                 <td style="text-align: center;">({{ model.registro_aprobacion.centro_costo.centro_costo }}) {{ model.registro_aprobacion.centro_costo.nombre }}</td>
                 <td style="text-align: center;">{{ model.nombre_proyecto }}</td>
                 <td style="text-align: center;">{{ model.subclasificacion.nombre }}</td>
+                <td style="text-align: center;">{{ model.jefe_proyecto }}</td>
                 <td style="text-align: center;">
                     {% if model.formato.all|length %}
                         {% for formato in model.formato.all %}
@@ -33,7 +35,7 @@
                     {% endif %}
                 </td>
                 <td style="text-align: center;">{{ model.registro_aprobacion.fecha_inicio|date:"d-m-Y" }}</td>
-                <td style="text-align: center;">{{ model.sosi.fecha|date:"d-m-Y" }}</td>
+                <td style="text-align: center;">{% if model.sosi.fecha %}{{ model.sosi.fecha|date:"d-m-Y" }}{% else %}----{% endif %}</td>
                 <td>{{ model.estado.nombre }}</td>
             </tr>
         {% endfor %}
