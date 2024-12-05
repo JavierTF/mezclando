@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, IndustrialProperty
+from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, TypeLegalDocument, IndustrialProperty
 
 
 class ProductClassificationModelForm(forms.ModelForm):
@@ -50,6 +50,17 @@ class DrawingClassificationModelForm(forms.ModelForm):
         }
 
 
+class TypeLegalDocumentModelForm(forms.ModelForm):
+    required_css_class = 'required'
+
+    class Meta:
+        model = TypeLegalDocument
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={"class": "form-control", "placeholder": "Nombre"}),
+        }
+
+
 class IndustrialPropertyModelForm(forms.ModelForm):
     products = forms.ModelMultipleChoiceField(
         label="Clasificación productos y servicios",
@@ -92,7 +103,7 @@ class IndustrialPropertyModelForm(forms.ModelForm):
             'application_date': forms.TextInput(attrs={"class": "form-control", "placeholder": "Fecha de solicitud"}),
             'application_number': forms.TextInput(attrs={"class": "form-control", "placeholder": "Número de solicitud"}),
             'certificate_number': forms.TextInput(attrs={"class": "form-control", "placeholder": "Número de certificado"}),
-            'type_legal_document': forms.TextInput(attrs={"class": "form-control", "placeholder": "Tipo de documento legal"}),
+            'type_legal_document': forms.Select(attrs={"class": "form-control select2", "prompt": ""}),
             'grant_date': forms.TextInput(attrs={"class": "form-control", "placeholder": "Fecha de otorgamiento"}),
             'expiration_date': forms.TextInput(attrs={"class": "form-control", "placeholder": "Fecha de vencimiento"}),
             'granted_resolution': forms.TextInput(attrs={"class": "form-control", "placeholder": "Concedido por resolución"}),

@@ -66,12 +66,13 @@ const CreateIndicator = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'El Indicador se ha registrado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'El indicador se ha registrado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });
@@ -95,11 +96,20 @@ const CreateIndicator = function () {
     };
 
     const removeMeasurer = function (elem, index) {
-        const x = list_measurers.filter((item) => item.name != index );
-        list_measurers = x;
+        Swal.fire({
+          title: 'Seguro desea eliminar el Medidor?',
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.value){
+                const x = list_measurers.filter((item) => item.name != index );
+                list_measurers = x;
 
-        var tr = elem.parentNode.closest('tr');
-        tr.remove();
+                var tr = elem.parentNode.closest('tr');
+                tr.remove();
+            }
+        });
     };
 
     const show_error_message = function (element, message) {

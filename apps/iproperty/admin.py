@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, IndustrialProperty
+from apps.iproperty.models import ProductClassification, PatentClassification, FigurativeElementClassification, DrawingClassification, IndustrialProperty, TypeLegalDocument
 
 
 @admin.register(ProductClassification)
@@ -19,4 +19,9 @@ class FigurativeElementClassificationAdmin(admin.ModelAdmin):
 
 @admin.register(DrawingClassification)
 class DrawingClassificationAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+
+
+@admin.register(TypeLegalDocument)
+class TypeLegalDocumentAdmin(admin.ModelAdmin):
     list_display = ('name', )

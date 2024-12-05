@@ -6,6 +6,10 @@
 <script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
 <script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
 
+{% block page_title %}
+    <title>SISGEPO | Adicionar Entrada de Proyecto</title>
+{% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -113,20 +117,22 @@ left: 24px !important;
                     <div class="card-body">
                     <div class="portlet-body form">
                     <!-- BEGIN FORM-->
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                    <form id="formAddEntrada" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_entrada_proyecto' proy.id %}" 
+                    {% comment %} formsuccess="{% url 'listar_entrada_proyecto' %}" {% endcomment %}
+                    >
                         {% csrf_token %}
                         <div class="row">
                             <div class="form-group col-md-1">
                                 <label class="control-label"><label for="id_activo">Activo*:</label></label>
                                 <div>
-                                    <input type="checkbox" name="activo2" class=" form-control checkbox sm" id="id_activo" checked>
+                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" checked>
                                     <small class="text-red"></small>
                                 </div>
                                 
                             </div>  
 
                             <div class="form-group col-md-7">
-                                <label class="control-label"><label for="id_costo">Proyecto*:</label></label>
+                                <label class="control-label"><label for="id_proy">Proyecto*:</label></label>
                                 <div>
                                     <label class="control-label">{{ proy }}</label>
                                 </div>
@@ -166,9 +172,9 @@ left: 24px !important;
                        
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label"><label for="id_formato">Formato*:</label></label>
-                                <div>
-                                    <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple required>
+                                <label class="control-label"><label for="id_formato">Formato:</label></label>
+                                <div {% if isService %} title="Los servicios no tienen formatos" {% endif %}>
+                                    <select name="formato" class=" form-control texto select2" autocomplete="on" id="id_formato" multiple required {% if isService %} disabled {% endif %} isservice={{ isService }}>
                                         <option value="">Escriba y seleccione...</option>                                        
                                         {% for option in tformatos %}
                                             <option value="{{ option.id }}">{{ option.nombre }}</option>
@@ -192,16 +198,24 @@ left: 24px !important;
                             <div class="form-group col-md-4">
                                 <label class="control-label"><label for="id_dictamen">Dictamen:</label></label>
                                 <div>
-                                    <input type="file" name="dictamen" id="id_dictamen" value="">
+                                    <input type="file" name="dictamen" id="id_dictamen" value="" accept=".pdf, .doc, .docx">
                                     <small class="text-red"></small>
                                 </div>
                             </div>
-                        </div>       
-                        <div class="row">  
+                        </div>   
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}    
+                        <div style="padding-top: 20px;">  
                             {% block content2 %}
                             <section class="content">
-                                <div class="row">
-                                    <div class="col-12">
+                                {% comment %} <div class="row"> {% endcomment %}
+                                    {% comment %} <div class="col-12"> {% endcomment %}
                                         <div class="card">
                                             {% comment %} <div class="card-header">
                                                 <h3 class="card-title">Listado de Entrada de Proyecto </h3>
@@ -212,7 +226,7 @@ left: 24px !important;
                                                 {% endif %}
                                             </div> {% endcomment %}
                                             <!-- /.card-header -->
-
+                        
                                             <div class="card-body">
                                                 <table id="example1" class="table table-bordered table-hover">
                                                     <thead>
@@ -260,16 +274,21 @@ left: 24px !important;
                                                                 {{ lt.entregado_por }}
                                                             </td>
                                                             <td>
-                                                                {% for formato in lt.formato.all %}
-                                                                    {{ formato }} {% if not forloop.last %} - {% endif %}
-                                                                {% endfor %}
+                                                                {% if lt.formato.all|length > 0 %}
+                                                                    {% for formato in lt.formato.all %}
+                                                                        {{ formato }} {% if not forloop.last %} - {% endif %}
+                                                                    {% endfor %}
+                                                                {% else %}
+                                                                    -----
+                                                                {% endif %}
                                                             </td> 
                                                             <td>
                                                                 {{ lt.estado }}
                                                             </td>  
                                                             <td>
-                                                                {% if lt.dt %}
-                                                                    {{ lt.dt }}
+                                                                {% if lt.dictamen %}
+                                                                    <a href="/media/{{ lt.dictamen }}" target="_blank">Descargar</a>
+                                                                    {% comment %} {{ lt.dictamen }} {% endcomment %}
                                                                 {% else %}
                                                                     -----
                                                                 {% endif %}
@@ -281,7 +300,7 @@ left: 24px !important;
                                                                     <form action="{% url 'act_desactentrada_proyecto' lt.id %}" method="POST" class="form-activate">
                                                                         {% csrf_token %}
                                                                         <span style="display: none">{{ lt.activo }}</span>
-                                                                        <input type="checkbox" name="activo" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
+                                                                        <input type="checkbox" name="activo2" {% if lt.activo %} checked {% endif %} class="checkbox-activate"/>
                                                                     </form>
                                                                 <div class="switch {% if lt.activo %} switchOn {% endif %}">
                                                                 </div>
@@ -305,34 +324,34 @@ left: 24px !important;
                                                         {% comment %} {% c = c + 1 %} {% endcomment %}
                                                     {% endfor %}
                                                     </tbody>
-
+                        
                                                 </table>
                                             </div>
                                             <!-- /.card-body -->
                                         </div>
                                         <!-- /.card -->
-
+                        
                                         <!-- /.card -->
-                                    </div>
+                                    {% comment %} </div> {% endcomment %}
                                     <!-- /.col -->
-                                </div>
+                                {% comment %} </div> {% endcomment %}
                                 <!-- /.row -->
                             </section>
-
+                        
                             {% endblock %} 
-                        </div>    
+                        </div>                       
                     {% block error %}
                     {% endblock %}
                     {% block correcto %}
                     {% endblock %}
-                        {% block botones %}
+                        {% comment %} {% block botones2 %}
                          <div class="form-actions fluid">
                             <div class="col-md-offset-3 col-md-9">
                                 <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
                                 <a id="cancelar" href="{% url 'listar_proyecto' %}" type="button" class="btn btn-danger">Cancelar</a>
                             </div>
                         </div>
-                        {% endblock %}
+                        {% endblock %} {% endcomment %}
                     </form>
                     <!-- END FORM-->
                     </div><!-- /.card-body -->
@@ -345,15 +364,13 @@ left: 24px !important;
 {% block script %}
 
     <script type="application/javascript">
-
 //VALIDACION CAMPOS VACIOS
     $('#id_proyecto').prop("disabled", true);
     
-    var d2 = new Date(Date.now());
-    d2 = d2.toISOString();
-    var d3 = d2.substr(0, 10);
+    const d2 = new Date();
+    let text = d2.toLocaleString('en-CA').slice(0, 10);
 
-    $('#id_fecha_entrada').val(d3);
+    $('#id_fecha_entrada').val(text);
 
     $('#id_fecha_entrada').prop("disabled", true);    
 
@@ -365,22 +382,85 @@ left: 24px !important;
         validate_select($('#id_estado'), e);
     });
 
-    $('#id_formato').on('change', function(event){
-        validar_comparar_valores_contables($(this), 0, 'mayor');
-        validar_comparar_valores_contables($(this), 6, 'menor_igual');
-    });
+    var service = $('#id_formato').attr('isservice');
 
-    $('#id_fecha_entrada').on('change', function(e){
+    if (!service){
+        $('#id_formato').on('change', function(event){
+            validar_comparar_valores_contables($(this), 0, 'mayor');
+            validar_comparar_valores_contables($(this), 6, 'menor_igual');
+        });
+    }    
+
+    /*$('#id_fecha_entrada').on('change', function(e){
         validar_comparar_fechas(document.getElementById('id_fecha_entrada'), '', 'menor_igual');
         validar_comparar_fechas(document.getElementById('id_fecha_entrada'), document.getElementById('id_fecha_salida'), 'menor');
-    });
+    });*/
 
+    // validar_comparar_fechas(v1, v2 = "", tipo = "mayor", node, dia = "hoy")
     $('#id_fecha_salida').on('change', function(e){
-        validar_comparar_fechas(document.getElementById('id_fecha_salida'), document.getElementById('id_fecha_entrada'), 'mayor_igual');
+        validar_comparar_fechas(document.getElementById('id_fecha_salida'), document.getElementById('id_fecha_entrada'), 'mayor_igual', $('#id_fecha_salida'));
+        /*validar_comparar_fechas(document.getElementById('id_fecha_salida'), "", 'mayor_igual', $('#id_fecha_salida'), 'hoy');*/
     });
 
-    $('#id_dictamen').on('change', function(){
+    /*$('#id_dictamen').on('change', function(){
         validar_archivos($('#id_dictamen'), ['pdf', 'doc', 'docx']);            
+    });*/
+
+    $('#formAddEntrada').on('submit', function (e) {
+        e.preventDefault();
+
+        var href = $(this).attr('formaction');
+        var listarEntrada = $(this).attr('formaction');
+        var data = $(this).serializeArray();
+
+        if ($('.is-invalid').length > 0){
+            return false;
+        }
+        else{
+            $('button[type="submit"]').prop("disabled", true);
+
+            var form = document.getElementById("formAddEntrada");
+            var form_data = new FormData(form);
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+            //form_data.append("dictamen", document.getElementById('dictamen').files[0]);
+            form_data.append("csrfmiddlewaretoken", csrf_token);
+
+            $.ajax({
+                url: $(this).attr("formaction"),
+                type: $(this).attr("method"),
+                dataType: "JSON",
+                data: form_data,
+                processData: false,
+                contentType: false,
+                success: function (data, status)
+                {
+                    window.location.replace(listarEntrada);
+                },
+                error: function (xhr, desc, err)
+                {
+                    if (response.result == 'error'){
+                        Toast.fire({
+                            type: 'error',
+                            title: response.message,
+                        });
+                    }      
+                    $('button[type="submit"]').prop("disabled", false);      
+                },
+                always: function (response){
+                    if (response.result == 'error'){
+                        Toast.fire({
+                            type: 'error',
+                            title: response.message,
+                        });
+                    }
+                    if (response.result == 'success'){
+                        window.location.replace(listarEntrada);
+                    }
+                    $('button[type="submit"]').prop("disabled", false);
+                }
+            });
+        }
     });
 
 //VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO

@@ -2,6 +2,25 @@
      
 const ListEffectiveness = function () {
 
+    const initInput = function () {
+        $('input[name="export_date"]').daterangepicker({
+            singleDatePicker: true,
+            startDate: moment(),
+            endDate: moment().endOf('year'),
+            maxYear: moment().year(),
+            locale: {
+                format: 'DD-MM-Y',
+                separator: ' | ',
+                applyLabel: 'Aplicar',
+                cancelLabel: 'Cancelar',
+                weekLabel: 'W',
+                customRangeLabel: 'Personalizado',
+                daysOfWeek: moment.weekdaysMin(),
+                monthNames: moment.monthsShort()
+            }
+        });
+    };
+
     const initEvent = function () {
 
         $('.delete_effectiveness').on('click', function () {
@@ -33,6 +52,7 @@ const ListEffectiveness = function () {
 
     return {
         init: function () {
+            initInput();
             initEvent();
         }
     };

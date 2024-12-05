@@ -10,7 +10,7 @@ $(function () {
   var intersect = true
 
   var $salesChart = $('#sales-chart')
-  var salesChart  = new Chart($salesChart, {
+  var salesChart  = new chart($salesChart, {
     type   : 'bar',
     data   : {
       labels  : ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
@@ -74,7 +74,7 @@ $(function () {
   })
 
   var $visitorsChart = $('#visitors-chart')
-  var visitorsChart  = new Chart($visitorsChart, {
+  var visitorsChart  = new chart($visitorsChart, {
     data   : {
       labels  : ['18th', '20th', '22nd', '24th', '26th', '28th', '30th'],
       datasets: [{

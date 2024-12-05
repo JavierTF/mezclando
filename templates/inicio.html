@@ -33,23 +33,23 @@ active
 {% endblock %}
 
 {% block content %}
-            <div class="content">
-                <div class="container-fluid">
-                    <div class="row">
+  <div class="content">
+      <div class="container-fluid">
+          <div class="row">
 
-                        <!-- Right col -->
-                        <div class="col-lg-12">
-                            {% if perms.SISGDDO.grafico_I or perms.SISGDDO.grafico_D or perms.SISGDDO.grafico_Admin or perms.SISGDDO.grafico_CA or perms.SISGDDO.grafico_Cap %}
-                                <div id="container"></div>
-                             {% endif %}
-                            {% if perms.SISGDDO.grafico_RH %}
-                                <div id="container-pie"></div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <!-- /.row (main row) -->
-                </div><!-- /.container-fluid -->
-            </div>
+              <!-- Right col -->
+              <div class="col-lg-12">
+                  {% if perms.SISGDDO.grafico_I or perms.SISGDDO.grafico_D or perms.SISGDDO.grafico_Admin or perms.SISGDDO.grafico_CA or perms.SISGDDO.grafico_Cap %}
+                      <div id="container"></div>
+                    {% endif %}
+                  {% if perms.SISGDDO.grafico_RH %}
+                      <div id="container-pie"></div>
+                  {% endif %}
+              </div>
+          </div>
+          <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+  </div>
 {% endblock %}
 
 

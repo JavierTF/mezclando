@@ -16,12 +16,13 @@ const ListProducts = function () {
                         url: $(this).attr('model-url'),
                         type: "GET",
                         success: function (data){
-                            Swal.fire(
-                                'La Clasificación de productos y servicios ha sido eliminado satisfactoriamente!', '', 'success'
-                            ).then((result) => {
-                                setTimeout(function() {
-                                    $(location).attr('href', '');
-                                }, 1250);
+                            Swal.fire({
+                                title: 'La Clasificación de productos y servicios ha sido eliminada satisfactoriamente!',
+                                type: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', ''l);
                             });
                         }
                     });

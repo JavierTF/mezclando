@@ -56,19 +56,6 @@ const ListProcedures = function () {
             "search": {
                 "caseInsensitive": true
             },
-//            dom: 'Bfrtip',
-//            buttons: [
-//                {
-//                    extend: 'print',
-//                    text: 'Imprimir'
-//                }, {
-//                    extend: 'excel',
-//                    text: 'EXCEL'
-//                }, {
-//                    extend: 'pdf',
-//                    text: 'PDF'
-//                },
-//            ]
         });
     };
 
@@ -86,12 +73,13 @@ const ListProcedures = function () {
                         url: $(this).attr('model-url'),
                         type: "GET",
                         success: function (data){
-                            Swal.fire(
-                                'El Procedimiento ha sido eliminado satisfactoriamente!', '', 'success'
-                            ).then((result) => {
-                                setTimeout(function() {
-                                    $(location).attr('href', '');
-                                }, 1250);
+                            Swal.fire({
+                                title: 'El Procedimiento ha sido eliminado satisfactoriamente!',
+                                type: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', '');
                             });
                         }
                     });

@@ -31,7 +31,7 @@ def model_upload_image(instance, filename):
 
 
 class ProductClassification(models.Model):
-    number = models.PositiveIntegerField(default=0, verbose_name='Código')
+    number = models.PositiveIntegerField(default=0, verbose_name='Código', unique=True)
     name = models.CharField(max_length=150, verbose_name='Nombre')
 
     def __str__(self):
@@ -39,14 +39,14 @@ class ProductClassification(models.Model):
 
 
 class PatentClassification(models.Model):
-    name = models.CharField(max_length=150, verbose_name='Nombre')
+    name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
 
     def __str__(self):
         return self.name
 
 
 class FigurativeElementClassification(models.Model):
-    number = models.CharField(max_length=10, default='0.0.0', verbose_name='Código')
+    number = models.CharField(max_length=10, default='0.0.0', verbose_name='Código', unique=True)
     name = models.CharField(max_length=150, verbose_name='Nombre')
 
     def __str__(self):
@@ -54,7 +54,15 @@ class FigurativeElementClassification(models.Model):
 
 
 class DrawingClassification(models.Model):
+    name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class TypeLegalDocument(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre')
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -70,7 +78,7 @@ class IndustrialProperty(models.Model):
     application_number = models.CharField(max_length=10, verbose_name='Número de solicitud')
     status = models.PositiveIntegerField(verbose_name='Estado', choices=iPROPERTY_STATUS, default=1)
     certificate_number = models.CharField(max_length=10, verbose_name='Número de certificado')
-    type_legal_document = models.CharField(max_length=150, verbose_name='Tipo de documento legal', null=True, blank=True)
+    type_legal_document = models.ForeignKey(TypeLegalDocument, on_delete=models.SET_NULL, verbose_name='Tipo de documento legal', null=True, blank=True)
     grant_date = models.DateField(verbose_name='Fecha de otorgamiento', validators=[DateInFutureValidator()], null=True, blank=True)
     expiration_date = models.DateField(verbose_name='Fecha de vencimiento', null=True, blank=True)
     granted_resolution = models.CharField(max_length=15, verbose_name='Concedido por resolución', null=True, blank=True)

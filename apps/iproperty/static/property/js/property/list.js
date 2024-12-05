@@ -61,12 +61,13 @@ const ListProperties = function () {
                         url: $(this).attr('model-url'),
                         type: "GET",
                         success: function (data){
-                            Swal.fire(
-                                'La propiedad industrial se ha eliminado satisfactoriamente!', '', 'success'
-                            ).then((result) => {
-                                setTimeout(function() {
-                                    $(location).attr('href', '');
-                                }, 1250);
+                            Swal.fire({
+                                title: 'La propiedad industrial ha sido eliminada satisfactoriamente!',
+                                type: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then((result) => {
+                                $(location).attr('href', '');
                             });
                         }
                     });

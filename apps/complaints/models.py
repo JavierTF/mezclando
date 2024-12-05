@@ -15,7 +15,7 @@ COMPLAINT_STATUS = (
 
 
 class WayOfReception(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
 
     def __str__(self):
         return self.name

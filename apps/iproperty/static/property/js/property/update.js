@@ -142,6 +142,30 @@ const UpdateProperty = function () {
             }
         });
 
+        $('#id_application_number').on('change', function () {
+            if ($('#id_application_number').val() != '') {
+                 if(!$('#id_application_number').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_application_number'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_application_number'));
+                }
+            } else {
+                show_error_message($('#id_application_number'), 'Este campo es requerido');
+            }
+        });
+
+        $('#id_certificate_number').on('change', function () {
+            if ($('#id_certificate_number').val() != '') {
+                 if(!$('#id_certificate_number').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_certificate_number'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_certificate_number'));
+                }
+            } else {
+                show_error_message($('#id_certificate_number'), 'Este campo es requerido');
+            }
+        });
+
         $('#id_grant_date').on('change', function () {
             if ($('#id_grant_date').val() != '') {
                 hiden_error_message($('#id_grant_date'));
@@ -187,6 +211,14 @@ const UpdateProperty = function () {
             }
         });
 
+        $('#id_granted_resolution').on('change', function () {
+            if(!$('#id_granted_resolution').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_granted_resolution'), 'Este campo solo admite dígitos');
+            } else {
+                hiden_error_message($('#id_granted_resolution'));
+            }
+        });
+
     };
 
     const submitForm = function () {
@@ -199,7 +231,7 @@ const UpdateProperty = function () {
             }
 
             if($('#id_modality').val() == ''){
-                show_error_message($('#id_entity'), 'Este campo es requerido');
+                show_error_message($('#id_modality'), 'Este campo es requerido');
                 return;
             }
 
@@ -218,8 +250,28 @@ const UpdateProperty = function () {
                 return;
             }
 
+            if(!$('#id_application_number').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_application_number'), 'Este campo solo admite dígitos');
+                return;
+            }
+
+            if($('#id_certificate_number').val() == ''){
+                show_error_message($('#id_certificate_number'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_certificate_number').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_certificate_number'), 'Este campo solo admite dígitos');
+                return;
+            }
+
             if($('#id_status').val() == ''){
                 show_error_message($('#id_status'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_granted_resolution').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_granted_resolution'), 'Este campo solo admite dígitos');
                 return;
             }
 
@@ -246,12 +298,13 @@ const UpdateProperty = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La propiedad industrial se ha modificado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'La propiedad industrial se ha modificado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

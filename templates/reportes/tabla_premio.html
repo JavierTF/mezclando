@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabla reporteada</title>
+    <style>
+        @page{
+            size: Letter landscape;
+            margin: 2.5px 15px 30px 3px !important;
+            @bottom-right{
+                {% comment %} content: ''; {% endcomment %}
+                content: "Página " counter(page) " de " counter(pages);
+            }
+        }
+
+        {% comment %} @top-right{
+            content: "COMPANY NAME";
+        } {% endcomment %}
+        
+        th, td {
+            border: 1px solid grey;
+        }
+        .report {
+            counter-reset: page;
+            page-break-after: always;
+        }
+    </style>
+  </head>
+  <body class="report" style="padding: 10px !important;">
+    <div style="text-align: center;">
+        <img src="{% static 'assets/dist/img/logo sisgepov2.png' %}" alt="SISGEPO img" style="height: 70px; width: 100px; float:inline-start;">
+        <h3 style="margin-top: -5px !important; margin-bottom: 2px !important;">{% if titulo %}{{ titulo }}{% else %}Listado{% endif %}</h3>
+    </div>
+    <br />
+    <table id="example1" class="table table-bordered table-hover">
+        <thead>
+        <tr style="text-align: center;">
+            <th>
+                Número
+            </th>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Entidad
+            </th>
+            <th>
+                Fecha entrega
+            </th>
+            <th>
+                Ubicación de archivo (ruta relativa)
+            </th>
+            <th>
+                Activo
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lt in lista %}           
+            <tr id="{{ lt.id }}" style="background:{% if forloop.counter|divisibleby:2 %} #dfffd6{% else %}#ffefd4{% endif %}!important; text-align: center;">
+                <td>
+                    {{ forloop.counter }}
+                </td>
+                <td>
+                    {{ lt.nombre }}
+                </td>
+                <td>
+                    {{ lt.entidad }}
+                </td>
+                <td>
+                    {{ lt.fecha }}
+                </td>
+                <td>
+                    {{ lt.archivo }}
+                </td>  
+                <td>
+                    {% if lt.activo %}
+                        Sí
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>  
+            </tr>
+        {% endfor %}
+        <tr id="total">
+            <td colspan="5">
+                <b>Total</b>
+            </td>
+            <td style="text-align: right;">
+                {{ total }}
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+  </body>
+</html>
+
+{% block script %}
+
+<script type="application/javascript">
+</script>
+{% endblock %}

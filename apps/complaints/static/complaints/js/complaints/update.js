@@ -150,6 +150,22 @@ const UpdateComplaint = function () {
             if ($('#id_date').val() == '') {
                 hiden_error_message($('#id_date'));
             }
+
+            var _date = moment($('#id_date').val());
+            var recep_date = moment($('#id_reception_date').val());
+            var deadline_date = moment($('#id_deadline').val());
+
+            if (_date <= recep_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea menor o igual a la fecha de recepción de la queja');
+            }
+
+            if (_date >= deadline_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea mayor o igual a la fecha de cierre de la queja');
+            }
+
+            if (recep_date < _date && _date < deadline_date) {
+                hiden_error_message($('#id_date'));
+            }
         });
 
         $('#id_action').on('change', function () {
@@ -163,10 +179,26 @@ const UpdateComplaint = function () {
                 show_error_message($('#id_date'), 'Este campo es requerido');
                 return;
             }
+
             if ($('#id_action').val() == ''){
                 show_error_message($('#id_action'), 'Este campo es requerido');
                 return;
             }
+
+            var _date = moment($('#id_date').val());
+            var recep_date = moment($('#id_reception_date').val());
+            var deadline_date = moment($('#id_deadline').val());
+
+            if (_date <= recep_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea menor o igual a la fecha de recepción de la queja');
+                return;
+            }
+
+            if (_date >= deadline_date) {
+                show_error_message($('#id_date'), 'Asegurese de que la fecha no sea mayor o igual a la fecha de cierre de la queja');
+                return;
+            }
+
             const date = $('#id_date');
             const action = $('#id_action');
 
@@ -239,15 +271,12 @@ const UpdateComplaint = function () {
                 processData: false,
                 success: function (data) {
                     Swal.fire({
-                        title: 'La Queja se ha modificado satisfactoriamente!', text: '',
-                        type: 'success', timer: 2000,
-                        buttons: false,
-                        showCancelButton: false,
+                        title: 'La Queja se ha modificado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
                         showConfirmButton: false
                     }).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

@@ -20,7 +20,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
                         {% block group_wrapper %}
-                            <li class="breadcrumb-item active">SalvaRestaura</li>
+                            <li class="breadcrumb-item active">Salva-Restaura</li>
                         {% endblock %}
                     </ol>
                 </div><!-- /.col -->
@@ -34,9 +34,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Listado de Salva</h3>
-                    </div>
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Listado de Salvas</h3>
+                    </div> {% endcomment %}
                     <!-- /.card-header -->
 
                     <div class="card-body">
@@ -44,10 +44,16 @@
                             {% csrf_token %}
                             <div class="form-body">
                                 <div class="form-group">
-                                    <div class="col-md-12 text-right">
-                                        <button id="submit" type="submit" class="btn btn-primary" title="Guardar salva">Guardar
-                                        </button>
+                                    <div class="col-md-12">
+                                        <div class="col-md-9">
+                                            <h2 class="card-title">Listado de Salvas</h2>
+                                        </div>
+                                        <div class="col-md-12 text-right">
+                                            <button id="submit" type="submit" class="btn btn-primary" title="Guardar salva">Guardar
+                                            </button>
+                                        </div>
                                     </div>
+                                    
                                 </div>
                                 <table id="example2" class="table table-bordered table-hover">
                                     <thead>

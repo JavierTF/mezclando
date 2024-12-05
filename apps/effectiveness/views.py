@@ -236,7 +236,10 @@ def export_effectiveness(request):
         logo1 = logos['logo1']
         logo2 = logos['logo2']
         models = Effectiveness.objects.all()
-        html_string = render_to_string('effectiveness/effectiveness/export_list.html', {'models': models})
+        html_string = render_to_string(
+            'effectiveness/effectiveness/export_list.html',
+            {'models': models, 'owner': request.user, 'date': request.GET.get('export_date')}
+        )
         html = HTML(string=html_string, base_url=request.build_absolute_uri())
         uri_tmp = os.path.join(settings.MEDIA_ROOT, 'tmp')
         html.write_pdf(

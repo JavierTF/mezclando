@@ -8,6 +8,7 @@ active
 {% block grupo %}
 active
 {% endblock %}
+
 {% block wrapper %}
     <div class="content-header">
         <div class="container-fluid">
@@ -34,7 +35,9 @@ active
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Listado de Roles</h3>
-{#                        <a href="{% url 'group_create' %}" class="btn btn-primary fa-pull-right"><span class="fa fa-plus"> Grupo</span></a>#}
+                        <a href="{% url 'group_create' %}" class="btn btn-primary fa-pull-right" title="Nuevo rol">
+                            <span class="fa fa-plus"> Adicionar</span>
+                        </a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -43,7 +46,7 @@ active
                             <tr>
                                 <th>No.</th>
                                 <th>Rol</th>
-                                <th>Activo</th>
+                                <th>Acciones</th>
 
                             </tr>
                             </thead>
@@ -56,15 +59,24 @@ active
                                     <td>
                                         {{ rol.name }}
                                     </td>
+                                    {% if request.user.is_staff %}
                                     <td>
-                                        {% if rol.activo %}
-                                                Si
-                                            {% else %}
-                                                No
-                                            {% endif %}
+                                    <span class="input-group-sm">
+                                    <a href="{% url 'group_detalle' rol.pk %}"
+                                    class="btn btn-sm btn-primary" title="detalle rol" style="background-color: green;">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'group_update' rol.pk %}"
+                                    class="btn btn-sm btn-primary" title="modificar rol">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    
+                                     <a href="{% url 'group_delete' rol.pk %}"
+                                    class="btn btn-sm btn-danger" title="eliminar rol">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                     </td>
-
-
+                                    {% endif %} 
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -80,3 +92,4 @@ active
         <!-- /.row -->
     </section>
 {% endblock %}
+

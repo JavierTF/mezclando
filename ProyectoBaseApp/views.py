@@ -6,7 +6,8 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.admin.models import LogEntry
 from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm, AdminPasswordChangeForm
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.tokens import default_token_generator
@@ -31,16 +32,17 @@ from django.utils.translation import gettext_lazy as _
 from ProyectoBaseApp.token import account_activation_token
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from SISGDDO.views_sisgddo import handle_exceptions, is_superuser
 
-
-
-
+@handle_exceptions
 def just_login(request):
     response = HttpResponseRedirect('/accounts/login/')
     response.delete_cookie('user')
     response.delete_cookie('user_photo')
     return response
 
+@handle_exceptions
 def validar(request):
     print('RRR', request.user.username)
     print('RRR', request.user.password)
@@ -52,6 +54,7 @@ def validar(request):
     response['object'] = request.user
     return JsonResponse(response)
 
+@handle_exceptions
 def loguear(request):
     # dir_ip = request.META['REMOTE_ADDR']
     # dir_ip = request.META['HTTP_X_FORWARDED_FOR']
@@ -69,6 +72,10 @@ def loguear(request):
         if access is not None:
             if access.is_active:
                 login(request, access)
+                try:
+                    userApp = models.UserApp.objects.get(pk=request.user.pk)
+                except ObjectDoesNotExist:
+                    userApp = None
                 register_logs(request, User, "", "", 4)
                 messages.success(request, "Usted se ha autenticado con éxito")
                 if 'redireccion_url' in request.POST:
@@ -78,13 +85,12 @@ def loguear(request):
                 response = HttpResponseRedirect(redireccion_url)
                 response.set_cookie("user", request.user.username)
 
-                userApp = models.UserApp.objects.filter(pk=request.user.pk)
                 if userApp:
-                    userApp.first()
-                    if userApp.image:
+                    if hasattr(userApp, "image"):
+                        print('\n', userApp.image, '\n')
                         response.set_cookie("user_photo", userApp.image)
                 else:
-                    response.set_cookie("user_photo", "static/users/userDefault4.png")
+                    response.set_cookie("user_photo", "static/users/userDefault1.png")
                 return response
             else:
                 messages.error(request, "Usuario inactivo")
@@ -151,10 +157,13 @@ def loguear(request):
     # return render(request, 'registration/register.html', {'form': form})
 
 @login_required()
+@handle_exceptions
 def count_activated(request):
     return render(request, 'registration/good_message_activated.html')
 
-@login_required()
+
+@user_passes_test(is_superuser)
+@handle_exceptions
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -170,11 +179,13 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'registration/error_message_activated.html')
 
+@handle_exceptions
 def logout(request):
     register_logs(request, User, "", "", 5)
     return logout_then_login(request, 'ce_login')
 
 @login_required()
+@handle_exceptions
 def notificacion_read(request, action):
     if request.GET:
         id = request.GET['id']
@@ -191,6 +202,7 @@ def notificacion_read(request, action):
             return render(request, 'Ajax/notifications.html', {"notifications": notifications, "one": "1"})
 
 @login_required()
+@handle_exceptions
 def notification_offer_all_mark_read(request):
     noti = models_notify.Notification.objects.exclude(description=None).filter(recipient_id=request.user.id)
     if noti.count() > 0:
@@ -200,6 +212,7 @@ def notification_offer_all_mark_read(request):
     return render(request, 'Ajax/notifications.html')
 
 @login_required()
+@handle_exceptions
 def notification_all_mark_read(request):
     noti = models_notify.Notification.objects.filter(description=None, recipient_id=request.user.id)
     if noti.count() > 0:
@@ -207,7 +220,6 @@ def notification_all_mark_read(request):
             n.unread = False
             n.save()
     return render(request, 'Ajax/notifications.html')
-
 
 class PasswordResetView(PasswordContextMixin, FormView):
     email_template_name = 'registration/password_reset_email.html'
@@ -239,14 +251,35 @@ class PasswordResetView(PasswordContextMixin, FormView):
         form.save(**opts)
         return super().form_valid(form)
 
-
-@permission_required('auth.add_group')
+@login_required()
+@permission_required('auth.view_group')
+@handle_exceptions
 def group_list(request):
     groups = Group.objects.all()
     return render(request, 'Security/groups.html', {'group_list': groups})
 
-def error404(request,exception):
-    return render(request, "Security/404.html")
+def error404(request, exception = None):
+    return render(request, "Security/error.html", { 'error_code': 404, })
+
+def error500(request):
+    return render(request, "Security/error.html", { 'error_code': 500, })
+
+def error403(request, exception = None):
+    return render(request, "Security/error.html", { 'error_code': 403, })
+
+@login_required()
+@permission_required('auth.view_group')
+@handle_exceptions
+def detalle_grupo(request, id):
+    objeto = Group.objects.get(id = id)
+
+    template_name = 'P01/premio/premio_detail.html'
+    contexto = {
+        'objeto' : objeto,
+    }
+
+    register_logs(request, objeto, objeto.pk, str(objeto), 0)
+    return render(request, template_name, contexto)
 
 @permission_required('auth.view_group')
 def detalle_grupo(request, id):
@@ -262,7 +295,9 @@ def detalle_grupo(request, id):
 
 
 # CRUD Rol
+@login_required()
 @permission_required('auth.add_group')
+@handle_exceptions
 def group_create(request):
     if request.POST:
         form = forms.GroupForm(request.POST)
@@ -284,8 +319,10 @@ def group_create(request):
 
 @login_required()
 @permission_required('auth.view_user')
+@handle_exceptions
 def user_list(request):
-    users_list = User.objects.filter(is_superuser=False).exclude(pk=request.user.pk).order_by("-date_joined")
+    # users_list = User.objects.filter(is_superuser=False).exclude(pk=request.user.pk).order_by("-date_joined")
+    users_list = User.objects.exclude(pk=request.user.pk).order_by("-date_joined")
     users = []
     for user in users_list:
         users.append([user, None])
@@ -293,6 +330,7 @@ def user_list(request):
 
 @login_required()
 @permission_required('auth.add_user')
+@handle_exceptions
 def user_create(request):
     print('USER_CREATE')
     if request.POST:
@@ -359,6 +397,28 @@ def user_activate(request, id):
 
 @login_required()
 @permission_required('auth.change_user')
+@handle_exceptions
+def user_activate(request, id):
+    valor = request.POST.get('activo')
+    user = models.UserApp.objects.get(id = id)
+    user.is_active = True if valor == "on" else False
+    user.save()        
+
+    # def register_logs(request, model, object_id, object_unicode, action):
+    # action flag es 0 listar,1 agregar,2 modificar,3 eliminar,4 entrar, 5 salir, 6 activar, 7 desactivar, 8 reactivar, 9 Error User Password, 10 user login apk, 11 Base de datos
+    def valor_log(self):
+        if self.activo:
+            action = 6
+        else:
+            action = 7
+        return action
+    register_logs(request, user, user.id, str(user), valor_log(user))
+
+    return redirect('user_list')
+
+@login_required()
+@permission_required('auth.change_user')
+@handle_exceptions
 def password_update_admin(request, pk):
     user = User.objects.get(pk=pk)
     if request.method == 'POST':
@@ -378,9 +438,9 @@ def password_update_admin(request, pk):
         form = AdminPasswordChangeForm(user=user, data=request.POST)
         return render(request, 'Security/Auth/password_update_admin.html', {'form': form, 'usuario': user})
 
-
-
 @login_required()
+@permission_required('auth.change_user')
+@handle_exceptions
 def password_update(request, pk):
     user = User.objects.get(pk=pk)
     if request.method == 'POST':
@@ -402,17 +462,22 @@ def password_update(request, pk):
 
 
 @permission_required('auth.view_user')
+@handle_exceptions
 def history_list_300(request):
     history = LogEntry.objects.order_by('-action_time').all()[:300]
     return render(request, 'Security/Logs/history.html', {'history': history})
 
 
 @permission_required('auth.view_user')
+@handle_exceptions
 def history_list(request):
     history = LogEntry.objects.order_by('-action_time').all()
     return render(request, 'Security/Logs/history.html', {'history': history})
 
 #SOLO SE HACE UNA SALVA DIARIA
+@login_required
+@staff_member_required
+@handle_exceptions
 @permission_required('auth.add_user')
 def db_save(request):
     print('**** LLEGUEEE')
@@ -432,7 +497,9 @@ def db_save(request):
             return render(request, 'Security/salvarestaura.html', {'list_db': list})
     return render(request, 'Security/salvarestaura.html', {'list_db': list})
 
-@permission_required('auth.add_user')
+@login_required
+@staff_member_required
+@handle_exceptions
 def db_restore(request, name):
     list = list_address_db()
     print('NAME', name)

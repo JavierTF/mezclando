@@ -1,0 +1,121 @@
+{% extends 'P01/objetivo/objetivo.html' %}
+{% comment %} {% load staticfiles %} {% endcomment %}
+{% load static %}
+{% comment %} <script src="{% static 'assets/dist/js/myjs.js' %}"></script> {% endcomment %}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script src="{% static 'assets/dist/css/select2.min.css' %}"></script>
+<script src="{% static 'assets/dist/js/select2.min.js' %}"></script>
+
+{% block page_title %}
+    <title>SISGEPO | Adicionar Objetivo</title>
+{% endblock %}
+
+{% block wrapper %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Adicionar Objetivo.</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'inicio' %}">Inicio</a></li>
+                        {% block group_wrapper %}
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">P01</a></li>
+                            <li class="breadcrumb-item active"><a href="{% url 'listar_objetivo' %}">Objetivo</a></li>
+                            <li class="breadcrumb-item active">Adicionar </li>
+                        {% endblock %}
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+{% endblock %}
+{% block content %}
+<section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {% comment %} <div class="card-header">
+                        <h3 class="card-title">Formulario de Roles del trabajador</h3>
+                    </div> {% endcomment %}
+                    <!-- /.card-header -->
+
+                    <div class="card-body">
+                    <div class="portlet-body form">
+                    <!-- BEGIN FORM-->
+                    <form id="formAddObjetivo" class="form-horizontal" method="post" enctype="multipart/form-data" formaction="{% url 'adicionar_objetivo' %}">
+                        {% csrf_token %}
+                        <div class="form-body">
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_activo">Activo*:</label></label>
+                                <div>
+                                    <input type="checkbox" name="activo" class=" form-control checkbox sm" id="id_activo" checked>
+                                    <small class="text-red"></small>
+                                </div>                                
+                            </div>  
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_nombre">Nombre*:</label></label>
+                                <div>
+                                    <textarea name="nombre" cols="40" rows="4" class="form-control" autocomplete="on" placeholder="Introduzca el nombre" maxlength="150" required id="id_nombre"></textarea>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>   
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_fecha_definicion">Fecha de definición*:</label></label>
+                                <div>
+                                    <input type="date" name="fecha_definicion" value="" class="form-control" append="fa fa-calendar" icon_toggle required id="id_fecha_definicion">
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>     
+                            <div class="form-group col-md-4">
+                                <label class="control-label"><label for="id_indicador">Indicadores:</label></label>
+                                <div>
+                                    <select name="indicador" class=" form-control texto select2" autocomplete="on" id="id_indicador" multiple>
+                                        <option value="">Escriba y seleccione...</option>                                        
+                                        {% for option in tind %}
+                                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    <small class="text-red"></small>
+                                </div>
+                            </div>                                       
+                        </div>    
+                    {% block error %}
+                    {% endblock %}
+                    {% block correcto %}
+                    {% endblock %}
+                        {% block botones %}
+                         <div class="form-actions fluid">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="boton" type="submit" class="btn btn-primary">Guardar</button>
+                                <a id="cancelar" href="{% url 'listar_objetivo' %}" type="button" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </form>
+                    <!-- END FORM-->
+                    </div><!-- /.card-body -->
+                    </div><!-- /.card -->
+                 </div><!-- /.card -->
+             </div>  <!-- /.col -->
+        </div>  <!-- /.row -->
+</section>
+{% endblock %}
+{% block script %}
+
+    <script type="application/javascript">
+
+//VALIDACION CAMPOS VACIOS
+        $('#id_nombre').bind('focusout',function(){
+            validate_campos_vacios($(this));
+        });   
+
+        $('#id_fecha_definicion').on('change', function(e){
+            validar_comparar_fechas(document.getElementById('id_fecha_definicion'), '', 'menor_igual');
+        });
+
+//VALIDAR QUE EXISTAN LOS DOS VALORES DE INTERRUPCION NO UNO
+
+</script>
+{% endblock %}

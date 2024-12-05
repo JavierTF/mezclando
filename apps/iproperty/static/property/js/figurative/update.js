@@ -9,7 +9,11 @@ const UpdateFigurative = function () {
 
         $('#id_number').on('change', function () {
             if ($('#id_number').val() != '') {
-                hiden_error_message($('#id_number'));
+                if(!$('#id_number').val().match(/^[0-9.]+$/)) {
+                    show_error_message($('#id_number'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_number'));
+                }
             } else {
                 show_error_message($('#id_number'), 'Este campo es requerido');
             }
@@ -39,6 +43,11 @@ const UpdateFigurative = function () {
                 return;
             }
 
+            if(!$('#id_number').val().match(/^[0-9.]+$/)) {
+                show_error_message($('#id_number'), 'Este campo solo admite dígitos');
+                return;
+            }
+
             if($('#id_name').val() == ''){
                 show_error_message($('#id_name'), 'Este campo es requerido');
                 return;
@@ -58,12 +67,13 @@ const UpdateFigurative = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La Clasificación de elementos figurativos se ha modificado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'La Clasificación de elementos figurativos se ha modificado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });

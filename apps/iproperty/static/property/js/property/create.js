@@ -102,8 +102,6 @@ const CreateProperty = function () {
         });
 
         $('#id_application_date').on('change', function () {
-            console.log($('#id_application_date').val());
-            console.log($('#id_grant_date').val());
             if ($('#id_application_date').val() != '') {
                 hiden_error_message($('#id_application_date'));
 
@@ -117,6 +115,30 @@ const CreateProperty = function () {
                 }
             } else {
                 show_error_message($('#id_application_date'), 'Este campo es requerido');
+            }
+        });
+
+        $('#id_application_number').on('change', function () {
+            if ($('#id_application_number').val() != '') {
+                 if(!$('#id_application_number').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_application_number'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_application_number'));
+                }
+            } else {
+                show_error_message($('#id_application_number'), 'Este campo es requerido');
+            }
+        });
+
+        $('#id_certificate_number').on('change', function () {
+            if ($('#id_certificate_number').val() != '') {
+                 if(!$('#id_certificate_number').val().match(/^[0-9]+$/)) {
+                    show_error_message($('#id_certificate_number'), 'Este campo solo admite dígitos');
+                } else {
+                    hiden_error_message($('#id_certificate_number'));
+                }
+            } else {
+                show_error_message($('#id_certificate_number'), 'Este campo es requerido');
             }
         });
 
@@ -165,6 +187,14 @@ const CreateProperty = function () {
             }
         });
 
+        $('#id_granted_resolution').on('change', function () {
+            if(!$('#id_granted_resolution').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_granted_resolution'), 'Este campo solo admite dígitos');
+            } else {
+                hiden_error_message($('#id_granted_resolution'));
+            }
+        });
+
     };
 
     const submitForm = function () {
@@ -177,7 +207,7 @@ const CreateProperty = function () {
             }
 
             if($('#id_modality').val() == ''){
-                show_error_message($('#id_entity'), 'Este campo es requerido');
+                show_error_message($('#id_modality'), 'Este campo es requerido');
                 return;
             }
 
@@ -196,8 +226,28 @@ const CreateProperty = function () {
                 return;
             }
 
+            if(!$('#id_application_number').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_application_number'), 'Este campo solo admite dígitos');
+                return;
+            }
+
+            if($('#id_certificate_number').val() == ''){
+                show_error_message($('#id_certificate_number'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_certificate_number').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_certificate_number'), 'Este campo solo admite dígitos');
+                return;
+            }
+
             if($('#id_status').val() == ''){
                 show_error_message($('#id_status'), 'Este campo es requerido');
+                return;
+            }
+
+            if(!$('#id_granted_resolution').val().match(/^[0-9]+$/)) {
+                show_error_message($('#id_granted_resolution'), 'Este campo solo admite dígitos');
                 return;
             }
 
@@ -224,12 +274,13 @@ const CreateProperty = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La propiedad industrial se ha registrado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', data.results.url);
-                        }, 1250);
+                    Swal.fire({
+                        title: 'La propiedad industrial se ha registrado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', data.results.url);
                     });
                 }
             });
@@ -290,12 +341,13 @@ const CreateProperty = function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    Swal.fire(
-                        'La propiedad industrial se ha modificado satisfactoriamente!', '', 'success'
-                    ).then((result) => {
-                        setTimeout(function() {
-                            $(location).attr('href', '');
-                        }, 1250);
+                    Swal.fire({
+                        title: 'La propiedad industrial se ha modificado satisfactoriamente!',
+                        type: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then((result) => {
+                        $(location).attr('href', '');
                     });
                 }
             });
